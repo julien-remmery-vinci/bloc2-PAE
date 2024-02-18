@@ -4,7 +4,7 @@ import be.vinci.pae.services.UserDS;
 import jakarta.inject.Inject;
 
 /**
- * Implementation of UserUCC
+ * Implementation of UserUCC.
  */
 public class UserUCCImpl implements UserUCC {
 

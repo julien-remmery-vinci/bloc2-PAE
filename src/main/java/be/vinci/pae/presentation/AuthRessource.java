@@ -15,6 +15,9 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+/**
+ * Login and register routes.
+ */
 @Singleton
 @Path("/auths")
 public class AuthRessource {
@@ -23,6 +26,12 @@ public class AuthRessource {
   UserUCC userUCC;
   JsonMapper jsonMapper = new JsonMapper();
 
+  /**
+   * Get the email and password. Check if email and password are not null.
+   *
+   * @param json contains the email and password
+   * @return a token and the logged user
+   */
   @POST
   @Path("login")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -39,6 +48,8 @@ public class AuthRessource {
     UserDTO user = userUCC.login(email, password);
 
     ObjectNode data = jsonMapper.createObjectNode();
+    // TODO
+    // Add token
     return data;
   }
 

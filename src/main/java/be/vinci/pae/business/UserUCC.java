@@ -1,12 +1,12 @@
 package be.vinci.pae.business;
 
 /**
- * Interface of UserUCCImpl
+ * Interface of UserUCCImpl.
  */
 public interface UserUCC {
 
   /**
-   * Try to log in a user
+   * Try to log in a user.
    *
    * @param email    the email of the user
    * @param password the password of the user
