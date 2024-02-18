@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * This class is used to load a config file and get values of properties in it.
+ */
 public class Config {
 
   private static Properties props;

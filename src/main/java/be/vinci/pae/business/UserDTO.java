@@ -3,7 +3,9 @@ package be.vinci.pae.business;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.sql.Date;
 
-// Interface of UserImpl
+/**
+ * Interface of UserImpl.
+ */
 @JsonDeserialize(as = UserImpl.class)
 public interface UserDTO {
 
@@ -119,6 +121,9 @@ public interface UserDTO {
    */
   void setRole(Role role);
 
+  /**
+   * Enum of possible user roles.
+   */
   enum Role {
     ETUDIANT("E"), PROFESSEUR("P"), ADMINISTRATIF("A");
 
