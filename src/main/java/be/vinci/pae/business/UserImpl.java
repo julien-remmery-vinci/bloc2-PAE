@@ -3,6 +3,7 @@ package be.vinci.pae.business;
 import java.sql.Date;
 import org.mindrot.jbcrypt.BCrypt;
 
+// Implementation of User which inherits of UserDTO
 public class UserImpl implements User {
 
   private int idUser;
