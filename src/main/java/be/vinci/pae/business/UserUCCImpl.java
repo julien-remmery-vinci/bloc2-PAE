@@ -3,6 +3,9 @@ package be.vinci.pae.business;
 import be.vinci.pae.services.UserDS;
 import jakarta.inject.Inject;
 
+/**
+ * Implementation of UserUCC
+ */
 public class UserUCCImpl implements UserUCC {
 
   @Inject
