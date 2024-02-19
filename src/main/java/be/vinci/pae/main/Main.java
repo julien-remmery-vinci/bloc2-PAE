@@ -1,5 +1,6 @@
 package be.vinci.pae.main;
 
+import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 import java.io.IOException;
 import java.net.URI;
@@ -27,7 +28,8 @@ public class Main {
   public static HttpServer startServer() {
     // create a resource config that scans for JAX-RS resources and providers
     // in be.vinci package
-    final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae");
+    final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae")
+        .register(ApplicationBinder.class);
 
     // create and start a new instance of grizzly http server
     // exposing the Jersey application at BASE_URI

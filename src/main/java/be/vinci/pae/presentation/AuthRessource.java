@@ -29,7 +29,7 @@ public class AuthRessource {
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
-  UserUCC userUCC;
+  private UserUCC userUCC;
 
   /**
    * Get the email and password. Check if email and password are not null.
