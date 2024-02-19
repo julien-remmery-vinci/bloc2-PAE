@@ -16,7 +16,7 @@ public class Config {
   private static Properties props;
 
   /**
-   * Loads the provided file
+   * Loads the provided file.
    *
    * @param file the provided file
    */
@@ -32,7 +32,7 @@ public class Config {
   }
 
   /**
-   * Get string value associated to provided key
+   * Get string value associated to provided key.
    *
    * @param key the provided key
    * @return the value associated to the key
@@ -42,7 +42,7 @@ public class Config {
   }
 
   /**
-   * Get int value associated to provided key
+   * Get int value associated to provided key.
    *
    * @param key the provided key
    * @return the value associated to the key
@@ -52,7 +52,7 @@ public class Config {
   }
 
   /**
-   * Get boolean value associated to provided key
+   * Get boolean value associated to provided key.
    *
    * @param key the provided key
    * @return the value associated to the key
