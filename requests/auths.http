@@ -1,0 +1,18 @@
+@baseUrl=http://localhost:8080/auths
+
+### Try to login user
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "admin@vinci.be",
+  "password": "admin"
+}
+
+### Try to login user
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+
+}
