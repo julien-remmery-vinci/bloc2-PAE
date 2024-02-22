@@ -30,4 +30,10 @@ public class UserUCCImpl implements UserUCC {
     return null;
   }
 
+  public UserDTO getUser(String email){
+    UserDTO userFound = userDS.getOneByEmail(email);
+    if (userFound == null)
+      return null;
+    return userFound;
+  }
 }
