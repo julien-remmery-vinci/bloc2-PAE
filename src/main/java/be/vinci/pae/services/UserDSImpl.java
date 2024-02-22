@@ -48,7 +48,7 @@ public class UserDSImpl implements UserDS {
     try {
       getUser.setString(1, email);
       try (ResultSet rs = getUser.executeQuery()) {
-        while (rs.next()) {
+        if (rs.next()) {
           user.setIdUser(rs.getInt(1));
           user.setLastname(rs.getString(2));
           user.setFirstname(rs.getString(3));
