@@ -25,15 +25,16 @@ public class UserUCCImpl implements UserUCC {
     if (u.checkPassword(password)) {
       return u;
     }
-    
+
     //Password did not match
     return null;
   }
 
-  public UserDTO getUser(int id){
+  public UserDTO getUser(int id) {
     UserDTO userFound = null;//id
-    if (userFound == null)
+    if (userFound == null) {
       return null;
+    }
     return userFound;
   }
 }

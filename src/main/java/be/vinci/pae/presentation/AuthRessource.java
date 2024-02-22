@@ -80,7 +80,7 @@ public class AuthRessource {
   @POST
   @Path("/user")
   @Authorize
-  public UserDTO userToken(@Context ContainerRequest request){
+  public UserDTO userToken(@Context ContainerRequest request) {
     UserDTO authenticatedUser = (UserDTO) request.getProperty("user");
     return userUCC.getUser(authenticatedUser.getIdUser());
   }
