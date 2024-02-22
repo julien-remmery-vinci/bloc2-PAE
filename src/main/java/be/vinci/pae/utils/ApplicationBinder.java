@@ -8,6 +8,9 @@ import jakarta.inject.Singleton;
 import jakarta.ws.rs.ext.Provider;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 
+/**
+ * This class is used to bind the interfaces to their implementation.
+ */
 @Provider
 public class ApplicationBinder extends AbstractBinder {
 

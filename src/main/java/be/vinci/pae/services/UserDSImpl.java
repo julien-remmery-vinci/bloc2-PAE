@@ -4,7 +4,6 @@ import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.UserDTO;
 import be.vinci.pae.utils.Config;
 import jakarta.inject.Inject;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
