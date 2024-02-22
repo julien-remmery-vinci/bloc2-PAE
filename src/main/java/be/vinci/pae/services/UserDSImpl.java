@@ -5,7 +5,11 @@ import be.vinci.pae.business.UserDTO;
 import be.vinci.pae.utils.Config;
 import jakarta.inject.Inject;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Implementation of UserDS.
