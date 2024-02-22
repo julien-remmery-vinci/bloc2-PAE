@@ -16,7 +16,9 @@ import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.ext.Provider;
 import java.io.IOException;
 
-
+/**
+ * Filter to check if the user is authorized to access a resource.
+ */
 @Singleton
 @Provider
 @Authorize

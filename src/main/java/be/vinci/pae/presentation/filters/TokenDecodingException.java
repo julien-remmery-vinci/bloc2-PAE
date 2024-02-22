@@ -4,7 +4,11 @@ package be.vinci.pae.presentation.filters;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 
+/**
+ * Exception thrown when a token cannot be decoded.
+ */
 public class TokenDecodingException extends WebApplicationException {
+
 
   public TokenDecodingException() {
     super(Response.status(Response.Status.UNAUTHORIZED)
