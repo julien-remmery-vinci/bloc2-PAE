@@ -1,5 +1,7 @@
 package be.vinci.pae.utils;
 
+import be.vinci.pae.business.Factory;
+import be.vinci.pae.business.FactoryImpl;
 import be.vinci.pae.business.UserUCC;
 import be.vinci.pae.business.UserUCCImpl;
 import be.vinci.pae.services.UserDS;
@@ -18,5 +20,6 @@ public class ApplicationBinder extends AbstractBinder {
   protected void configure() {
     bind(UserUCCImpl.class).to(UserUCC.class).in(Singleton.class);
     bind(UserDSImpl.class).to(UserDS.class).in(Singleton.class);
+    bind(FactoryImpl.class).to(Factory.class).in(Singleton.class);
   }
 }
