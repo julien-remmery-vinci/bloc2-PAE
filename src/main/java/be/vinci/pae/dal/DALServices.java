@@ -13,5 +13,5 @@ public interface DALServices {
    * @param request String containing the SQL request
    * @return the prepared statement
    */
-  PreparedStatement getPrepareStatement(String request);
+  PreparedStatement getPS(String request);
 }
