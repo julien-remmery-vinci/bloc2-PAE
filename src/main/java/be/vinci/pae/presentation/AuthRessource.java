@@ -82,6 +82,9 @@ public class AuthRessource {
   @Authorize
   public UserDTO userToken(@Context ContainerRequest request) {
     UserDTO authenticatedUser = (UserDTO) request.getProperty("user");
+    if (authenticatedUser.getIdUser() <= 0) {
+      throw new WebApplicationException("User not found", Status.NOT_FOUND);
+    }
     return userUCC.getUser(authenticatedUser.getIdUser());
   }
 }

@@ -40,9 +40,6 @@ public class UserUCCImpl implements UserUCC {
    * @return the user, null if no user was found
    */
   public UserDTO getUser(int id) {
-    if (id <= 0) {
-      return null;
-    }
     return userDAO.getOneById(id);
   }
 }
