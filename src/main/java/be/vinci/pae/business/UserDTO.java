@@ -125,7 +125,10 @@ public interface UserDTO {
    * Enum of possible user roles.
    */
   enum Role {
-    ETUDIANT("E"), PROFESSEUR("P"), ADMINISTRATIF("A");
+    /**
+     * Enum of possible user roles.
+     */
+    E("E"), P("P"), A("A");
 
     private String role;
 
