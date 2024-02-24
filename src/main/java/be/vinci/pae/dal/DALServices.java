@@ -10,7 +10,7 @@ public interface DALServices {
   /**
    * Get a prepared statement from a request.
    *
-   * @param request the request
+   * @param request String containing the SQL request
    * @return the prepared statement
    */
   PreparedStatement getPrepareStatement(String request);
