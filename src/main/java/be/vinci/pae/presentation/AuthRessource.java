@@ -77,6 +77,12 @@ public class AuthRessource {
         .put("lastname", user.getLastname());
   }
 
+  /**
+   * Get the user token.
+   *
+   * @param request the request
+   * @return the user
+   */
   @POST
   @Path("/user")
   @Authorize

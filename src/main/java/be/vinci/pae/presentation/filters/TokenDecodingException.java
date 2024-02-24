@@ -15,6 +15,11 @@ public class TokenDecodingException extends WebApplicationException {
         .build());
   }
 
+  /**
+   * Constructor with a message.
+   *
+   * @param message the message
+   */
   public TokenDecodingException(String message) {
     super(Response.status(Response.Status.UNAUTHORIZED)
         .entity(message)
@@ -22,6 +27,11 @@ public class TokenDecodingException extends WebApplicationException {
         .build());
   }
 
+  /**
+   * Constructor with a cause.
+   *
+   * @param cause the cause
+   */
   public TokenDecodingException(Throwable cause) {
     super(Response.status(Response.Status.UNAUTHORIZED)
         .entity(cause.getMessage())
