@@ -59,6 +59,13 @@ public class UserDAOImpl implements UserDAO {
     return null;
   }
 
+  /**
+   * Get a user by its id.
+   *
+   * @param rs   the result set
+   * @param user the user
+   * @throws SQLException if an error occurs
+   */
   public void getUserFromRs(ResultSet rs, UserDTO user) throws SQLException {
     user.setIdUser(rs.getInt(1));
     user.setLastname(rs.getString(2));

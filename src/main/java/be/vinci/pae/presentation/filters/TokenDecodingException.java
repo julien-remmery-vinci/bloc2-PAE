@@ -9,7 +9,9 @@ import jakarta.ws.rs.core.Response;
  */
 public class TokenDecodingException extends WebApplicationException {
 
-
+  /**
+   * Constructor without a message.
+   */
   public TokenDecodingException() {
     super(Response.status(Response.Status.UNAUTHORIZED)
         .build());
