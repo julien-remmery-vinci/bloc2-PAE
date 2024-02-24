@@ -19,9 +19,7 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public UserDTO getOneByEmail(String email) {
-    try {
-      PreparedStatement getUser = dalServices.getPS(
-          "SELECT * from pae.users WHERE email = ?");
+    try (PreparedStatement getUser = dalServices.getPS("SELECT * from pae.users WHERE email = ?")){
       getUser.setString(1, email);
       try (ResultSet rs = getUser.executeQuery()) {
         if (rs.next()) {
@@ -34,8 +32,6 @@ public class UserDAOImpl implements UserDAO {
           user.setPhoneNumber(rs.getString(6));
           user.setRegisterDate(rs.getDate(7));
           user.setRole(UserDTO.Role.valueOf(rs.getString(8)));
-          rs.close();
-          getUser.close();
           return user;
         }
       }
