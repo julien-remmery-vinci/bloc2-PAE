@@ -7,6 +7,7 @@ import jakarta.inject.Inject;
  * Implementation of UserUCC.
  */
 public class UserUCCImpl implements UserUCC {
+
   /**
    * Injected UserDAO.
    */
@@ -27,7 +28,7 @@ public class UserUCCImpl implements UserUCC {
     if (u.checkPassword(password)) {
       return u;
     }
-    
+
     //Password did not match
     return null;
   }

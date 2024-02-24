@@ -21,7 +21,8 @@ public class UserDAOImpl implements UserDAO {
   public UserDTO getOneByEmail(String email) {
     UserDTO user = factory.getUser();
     try {
-      PreparedStatement getUser = dalServices.getPrepareStatement("SELECT * from pae.users WHERE email = ?");
+      PreparedStatement getUser = dalServices.getPrepareStatement(
+          "SELECT * from pae.users WHERE email = ?");
       getUser.setString(1, email);
       try (ResultSet rs = getUser.executeQuery()) {
         if (rs.next()) {
