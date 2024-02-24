@@ -13,4 +13,12 @@ public interface UserUCC {
    * @return the logged user, null if no user was found
    */
   UserDTO login(String email, String password);
+
+  /**
+   * Get a user by its id.
+   *
+   * @param id the id of the user
+   * @return the user, null if no user was found
+   */
+  UserDTO getUser(int id);
 }

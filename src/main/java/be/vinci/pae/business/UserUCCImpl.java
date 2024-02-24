@@ -33,4 +33,13 @@ public class UserUCCImpl implements UserUCC {
     return null;
   }
 
+  /**
+   * Get a user by its id.
+   *
+   * @param id the id of the user
+   * @return the user, null if no user was found
+   */
+  public UserDTO getUser(int id) {
+    return userDAO.getOneById(id);
+  }
 }
