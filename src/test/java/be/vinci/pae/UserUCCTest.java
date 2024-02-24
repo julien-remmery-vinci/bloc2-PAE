@@ -14,6 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.mindrot.jbcrypt.BCrypt;
 import org.mockito.Mockito;
 
+/**
+ * Test class for the UserUCC methods.
+ */
 public class UserUCCTest {
 
   private UserUCC userUCC;
