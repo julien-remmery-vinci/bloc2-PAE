@@ -1,14 +1,15 @@
 import { getRememberMe, setAuthenticatedUser, setRememberMe } from '../../utils/auths';
 import { clearPage, renderPageTitle } from '../../utils/render';
-
 import Navigate from '../Router/Navigate';
 
+// Define LoginPage component
 const LoginPage = () => {
   clearPage();
   renderPageTitle('Connexion');
   renderRegisterForm();
 };
 
+// Function to render the registration form
 function renderRegisterForm() {
   const main = document.querySelector('main');
   const form = document.createElement('form');
@@ -51,7 +52,6 @@ function renderRegisterForm() {
   formCheckWrapper.appendChild(rememberme);
   formCheckWrapper.appendChild(checkLabel);
 
-  
   form.appendChild(titleEmail);
   form.appendChild(username);
   form.appendChild(titlePassword);
@@ -62,10 +62,12 @@ function renderRegisterForm() {
   form.addEventListener('submit', onLogin);
 }
 
+// Function to handle checkbox click event
 function onCheckboxClicked(e) {
   setRememberMe(e.target.checked);
 }
 
+// Async function to handle form submission
 async function onLogin(e) {
   e.preventDefault();
 
@@ -87,12 +89,14 @@ async function onLogin(e) {
 
   if (!response.ok) throw new Error(`fetch error : ${response.status} : ${response.statusText}`);
 
+  // Get the authenticated user
   const authenticatedUser = await response.json();
 
   console.log('Authenticated user : ', authenticatedUser);
 
   setAuthenticatedUser(authenticatedUser);
 
+  // Navigate to the home page if the user is authenticated, otherwise navigate to the login page
   if (authenticatedUser) {
     Navigate('/');
   } else {

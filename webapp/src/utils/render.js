@@ -3,6 +3,8 @@ const clearPage = () => {
     main.innerHTML = '';
   };
   
+
+  // Function to render the page title 
   const renderPageTitle = (title) => {
     if (!title) return;
     const main = document.querySelector('main');
