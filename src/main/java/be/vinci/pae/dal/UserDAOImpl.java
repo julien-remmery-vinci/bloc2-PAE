@@ -1,11 +1,8 @@
-package be.vinci.pae.services;
+package be.vinci.pae.dal;
 
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.UserDTO;
-import be.vinci.pae.utils.Config;
 import jakarta.inject.Inject;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,39 +10,19 @@ import java.sql.SQLException;
 /**
  * Implementation of UserDS.
  */
-public class UserDSImpl implements UserDS {
+public class UserDAOImpl implements UserDAO {
 
   @Inject
   private Factory factory;
-  private static PreparedStatement getUser;
-  private static Connection conn = null;
-
-  static {
-    String url = Config.getProperty("DB_URL");
-    String username = Config.getProperty("DB_USER");
-    String password = Config.getProperty("DB_PASSWORD");
-
-    try {
-      Class.forName("org.postgresql.Driver");
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    }
-    try {
-      conn = DriverManager.getConnection(url, username, password);
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
-    try {
-      getUser = conn.prepareStatement("SELECT * from pae.users WHERE email = ?");
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
-  }
+  @Inject
+  private DALServices dalServices;
 
   @Override
   public UserDTO getOneByEmail(String email) {
     UserDTO user = factory.getUser();
     try {
+      PreparedStatement getUser = dalServices.getPrepareStatement(
+          "SELECT * from pae.users WHERE email = ?");
       getUser.setString(1, email);
       try (ResultSet rs = getUser.executeQuery()) {
         if (rs.next()) {
@@ -57,6 +34,8 @@ public class UserDSImpl implements UserDS {
           user.setPhoneNumber(rs.getString(6));
           user.setRegisterDate(rs.getDate(7));
           user.setRole(UserDTO.Role.valueOf(rs.getString(8)));
+          rs.close();
+          getUser.close();
           return user;
         }
       }

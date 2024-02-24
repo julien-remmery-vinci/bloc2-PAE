@@ -1,11 +1,11 @@
-package be.vinci.pae.services;
+package be.vinci.pae.dal;
 
 import be.vinci.pae.business.UserDTO;
 
 /**
  * Interface of UserDSImpl.
  */
-public interface UserDS {
+public interface UserDAO {
 
   /**
    * Get one user from email.
