@@ -1,6 +1,10 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const webpack = require('webpack');
+
+const API_BASE_URL = "http://localhost:8080";
+
 
 module.exports = {
   mode: 'none',
@@ -87,5 +91,8 @@ module.exports = {
       template: './src/index.html',
     }),
     new ESLintPlugin(),
+    new webpack.DefinePlugin({
+      'process.env.API_BASE_URL': JSON.stringify(API_BASE_URL)
+    }),
   ],
 };

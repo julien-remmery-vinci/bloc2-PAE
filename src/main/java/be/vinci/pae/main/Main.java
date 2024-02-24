@@ -2,6 +2,7 @@ package be.vinci.pae.main;
 
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
+import be.vinci.pae.utils.WebExceptionMapper;
 import java.io.IOException;
 import java.net.URI;
 import org.glassfish.grizzly.http.server.HttpServer;
@@ -13,8 +14,7 @@ import org.glassfish.jersey.server.ResourceConfig;
  */
 public class Main {
 
-  // Base URI the Grizzly HTTP server will listen on
-  private static final String BASE_URI = "http://localhost:8080/";
+  private static String BASE_URI;
 
   static {
     Config.load("dev.properties");
@@ -29,7 +29,11 @@ public class Main {
     // create a resource config that scans for JAX-RS resources and providers
     // in be.vinci package
     final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae")
-        .register(ApplicationBinder.class);
+        .register(ApplicationBinder.class)
+        .register(WebExceptionMapper.class);
+
+    // Base URI the Grizzly HTTP server will listen on
+    BASE_URI = Config.getProperty("BASE_URI");
 
     // create and start a new instance of grizzly http server
     // exposing the Jersey application at BASE_URI

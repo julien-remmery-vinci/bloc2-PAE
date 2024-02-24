@@ -1,6 +1,6 @@
 package be.vinci.pae.business;
 
-import be.vinci.pae.services.UserDS;
+import be.vinci.pae.dal.UserDAO;
 import jakarta.inject.Inject;
 
 /**
@@ -8,12 +8,15 @@ import jakarta.inject.Inject;
  */
 public class UserUCCImpl implements UserUCC {
 
+  /**
+   * Injected UserDAO.
+   */
   @Inject
-  private UserDS userDS;
+  private UserDAO userDAO;
 
   @Override
   public UserDTO login(String email, String password) {
-    UserDTO userFound = userDS.getOneByEmail(email);
+    UserDTO userFound = userDAO.getOneByEmail(email);
 
     // No user found for the provided email
     if (userFound == null) {
@@ -29,14 +32,17 @@ public class UserUCCImpl implements UserUCC {
     //Password did not match
     return null;
   }
+
   /**
    * Get a user by its id.
+   *
    * @param id the id of the user
    * @return the user, null if no user was found
    */
   public UserDTO getUser(int id) {
-    if( id <= 0 )
+    if (id <= 0) {
       return null;
-    return userDS.getOneById(id);
+    }
+    return userDAO.getOneById(id);
   }
 }
