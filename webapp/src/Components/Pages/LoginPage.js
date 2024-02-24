@@ -88,7 +88,11 @@ async function onLogin(e) {
 
   setAuthenticatedUser(authenticatedUser);
 
-  Navigate('/');
-}
+  if (authenticatedUser) {
+    Navigate('/');
+  } else {
+    Navigate('/login');
+  }
+};
 
 export default LoginPage;
