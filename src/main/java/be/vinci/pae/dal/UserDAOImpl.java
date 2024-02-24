@@ -13,7 +13,7 @@ import java.sql.SQLException;
 /**
  * Implementation of UserDS.
  */
-public class UserDSImpl implements UserDS {
+public class UserDAOImpl implements UserDAO {
 
   @Inject
   private Factory factory;
