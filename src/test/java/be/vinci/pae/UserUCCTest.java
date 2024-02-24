@@ -3,7 +3,7 @@ package be.vinci.pae;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import be.vinci.pae.business.Factory;
-import be.vinci.pae.business.UserDTO;
+import be.vinci.pae.business.User;
 import be.vinci.pae.business.UserUCC;
 import be.vinci.pae.dal.UserDAO;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -11,7 +11,6 @@ import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mindrot.jbcrypt.BCrypt;
 import org.mockito.Mockito;
 
 /**
@@ -34,10 +33,10 @@ public class UserUCCTest {
   @Test
   @DisplayName("Test for the login method of UserUCC")
   void loginTest() {
-    UserDTO user = factory.getUser();
+    User user = (User) factory.getUser();
     String password = "admin";
     String email = "admin@vinci.be";
-    user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+    user.setPassword(user.hashPassword(password));
     Mockito.when(userDAO.getOneByEmail(email)).thenReturn(user);
     assertNotNull(userUCC.login(email, password));
   }
