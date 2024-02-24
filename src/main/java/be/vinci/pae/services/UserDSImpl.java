@@ -11,5 +11,4 @@ public class UserDSImpl implements UserDS {
   public UserDTO getOneByEmail(String email) {
     return null;
   }
-
 }

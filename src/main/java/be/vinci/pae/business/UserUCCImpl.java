@@ -29,12 +29,14 @@ public class UserUCCImpl implements UserUCC {
     //Password did not match
     return null;
   }
-
+  /**
+   * Get a user by its id.
+   * @param id the id of the user
+   * @return the user, null if no user was found
+   */
   public UserDTO getUser(int id) {
-    UserDTO userFound = null;//id
-    if (userFound == null) {
+    if( id <= 0 )
       return null;
-    }
-    return userFound;
+    return userDS.getOneById(id);
   }
 }
