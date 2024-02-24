@@ -17,18 +17,13 @@ public class DALServicesImpl implements DALServices {
     String password = Config.getProperty("DB_PASSWORD");
 
     try {
-      Class.forName("org.postgresql.Driver");
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    }
-    try {
       conn = DriverManager.getConnection(url, username, password);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
   }
 
-  public PreparedStatement getPrepareStatement(String request) {
+  public PreparedStatement getPS(String request) {
     try {
       return conn.prepareStatement(request);
     } catch (SQLException e) {
