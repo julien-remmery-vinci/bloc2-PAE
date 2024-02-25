@@ -2,6 +2,7 @@ package be.vinci.pae.presentation;
 
 import be.vinci.pae.business.UserDTO;
 import be.vinci.pae.business.UserUCC;
+import be.vinci.pae.presentation.filters.Authorize;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -15,9 +16,11 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+import org.glassfish.jersey.server.ContainerRequest;
 
 /**
  * Login and register routes.
@@ -74,4 +77,20 @@ public class AuthRessource {
         .put("lastname", user.getLastname());
   }
 
+  /**
+   * Get the user token.
+   *
+   * @param request the request
+   * @return the user
+   */
+  @POST
+  @Path("/user")
+  @Authorize
+  public UserDTO userToken(@Context ContainerRequest request) {
+    UserDTO authenticatedUser = (UserDTO) request.getProperty("user");
+    if (authenticatedUser.getIdUser() <= 0) {
+      throw new WebApplicationException("User not found", Status.NOT_FOUND);
+    }
+    return userUCC.getUser(authenticatedUser.getIdUser());
+  }
 }
