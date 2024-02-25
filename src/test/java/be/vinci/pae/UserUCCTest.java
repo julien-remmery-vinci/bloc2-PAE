@@ -1,6 +1,8 @@
 package be.vinci.pae;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.User;
@@ -18,13 +20,14 @@ import org.mockito.Mockito;
  */
 public class UserUCCTest {
 
+  ServiceLocator locator;
   private UserUCC userUCC;
   private UserDAO userDAO;
   private Factory factory;
 
   @BeforeEach
   void setUp() {
-    ServiceLocator locator = ServiceLocatorUtilities.bind(new ApplicationBinderTest());
+    locator = ServiceLocatorUtilities.bind(new ApplicationBinderTest());
     this.userUCC = locator.getService(UserUCC.class);
     this.factory = locator.getService(Factory.class);
     this.userDAO = locator.getService(UserDAO.class);
@@ -38,6 +41,20 @@ public class UserUCCTest {
     String email = "admin@vinci.be";
     user.setPassword(user.hashPassword(password));
     Mockito.when(userDAO.getOneByEmail(email)).thenReturn(user);
-    assertNotNull(userUCC.login(email, password));
+    assertAll(
+        () -> assertNotNull(userUCC.login(email, password)),
+        () -> assertNull(userUCC.login(email, "wrongPassword")),
+        () -> assertNull(userUCC.login("wrongEmail", password)),
+//        () -> assertNull(userUCC.login("wrongEmail", "wrongPassword")),
+        () -> assertNull(userUCC.login(null, password)),
+        () -> assertNull(userUCC.login(email, null)),
+//        () -> assertNull(userUCC.login(null, null)),
+        () -> assertNull(userUCC.login("", password)),
+        () -> assertNull(userUCC.login(email, "")),
+//        () -> assertNull(userUCC.login("", "")),
+        () -> assertNull(userUCC.login(" ", password)),
+        () -> assertNull(userUCC.login(email, " "))
+//        () -> assertNull(userUCC.login(" ", " "))
+    );
   }
 }
