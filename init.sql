@@ -14,4 +14,4 @@ CREATE TABLE pae.users
 );
 
 INSERT INTO pae.users (lastname, firstname, email, password, phoneNumber, registerDate, role)
-VALUES ('admin', 'admin', 'admin@vinci.be', '$2a$10$aqGDWyP8K9xeO1a8uPzcWuzf1hfiPU8IlAR8GyhgVIYhnuKNSxP7S', '0123456789', '2024-02-22', 'A');
+VALUES ('admin', 'admin', 'admin.admin@vinci.be', '$2a$10$aqGDWyP8K9xeO1a8uPzcWuzf1hfiPU8IlAR8GyhgVIYhnuKNSxP7S', '0123456789', '2024-02-22', 'A');
