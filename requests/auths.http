@@ -16,3 +16,13 @@ Content-Type: application/json
 {
 
 }
+
+### verify token
+POST {{baseUrl}}/login
+Content-Type: application/json
+Authorization: {{response.body.token}}
+
+{
+  "email": "admin@vinci.be",
+    "password": "admin"
+}
