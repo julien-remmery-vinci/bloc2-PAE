@@ -78,4 +78,15 @@ public class UserUCCTest {
         () -> assertEquals(user.getRegisterDate(), testUser.getRegisterDate())
     );
   }
+
+  @Test
+  @DisplayName("Test for the getUser method of UserUCC")
+  void getUserTest() {
+    User testUser = (User) userUCC.getUser(1);
+    assertAll(
+        () -> assertNotNull(testUser),
+        () -> assertNull(userUCC.getUser(0)),
+        () -> assertNull(userUCC.getUser(-1))
+    );
+  }
 }
