@@ -45,16 +45,12 @@ public class UserUCCTest {
         () -> assertNotNull(userUCC.login(email, password)),
         () -> assertNull(userUCC.login(email, "wrongPassword")),
         () -> assertNull(userUCC.login("wrongEmail", password)),
-//        () -> assertNull(userUCC.login("wrongEmail", "wrongPassword")),
         () -> assertNull(userUCC.login(null, password)),
         () -> assertNull(userUCC.login(email, null)),
-//        () -> assertNull(userUCC.login(null, null)),
         () -> assertNull(userUCC.login("", password)),
         () -> assertNull(userUCC.login(email, "")),
-//        () -> assertNull(userUCC.login("", "")),
         () -> assertNull(userUCC.login(" ", password)),
         () -> assertNull(userUCC.login(email, " "))
-//        () -> assertNull(userUCC.login(" ", " "))
     );
   }
 }
