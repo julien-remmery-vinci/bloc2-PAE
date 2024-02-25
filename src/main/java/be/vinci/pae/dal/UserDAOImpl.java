@@ -2,7 +2,11 @@ package be.vinci.pae.dal;
 
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.UserDTO;
+import be.vinci.pae.business.UserImpl;
 import jakarta.inject.Inject;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -66,14 +70,23 @@ public class UserDAOImpl implements UserDAO {
    * @param user the user
    * @throws SQLException if an error occurs
    */
-  public void getUserFromRs(ResultSet rs, UserDTO user) throws SQLException {
-    user.setIdUser(rs.getInt(1));
-    user.setLastname(rs.getString(2));
-    user.setFirstname(rs.getString(3));
-    user.setEmail(rs.getString(4));
-    user.setPassword(rs.getString(5));
-    user.setPhoneNumber(rs.getString(6));
-    user.setRegisterDate(rs.getDate(7));
-    user.setRole(UserDTO.Role.valueOf(rs.getString(8)));
+  private void getUserFromRs(ResultSet rs, UserDTO user) throws SQLException {
+    // Get the fields of the UserImpl class
+    for (Field f : UserImpl.class.getDeclaredFields()) {
+      try {
+        // Get the setter method of the field
+        Method m = UserDTO.class.getDeclaredMethod("set" + f.getName().substring(0, 1).toUpperCase()
+            + f.getName().substring(1), f.getType());
+        // Set the value of the field
+        // If the field is of type Role, we need to convert the string to the enum
+        if (f.getType().equals(UserDTO.Role.class)) {
+          m.invoke(user, UserDTO.Role.valueOf(rs.getString(f.getName())));
+        } else {
+          m.invoke(user, rs.getObject(f.getName()));
+        }
+      } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+        throw new RuntimeException(e);
+      }
+    }
   }
 }

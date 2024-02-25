@@ -14,10 +14,12 @@ import org.glassfish.jersey.server.ResourceConfig;
  */
 public class Main {
 
-  private static String BASE_URI;
+  private static final String BASE_URI;
 
   static {
     Config.load("dev.properties");
+    // Base URI the Grizzly HTTP server will listen on
+    BASE_URI = Config.getProperty("BASE_URI");
   }
 
   /**
@@ -32,9 +34,6 @@ public class Main {
     final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae.presentation")
         .register(ApplicationBinder.class)
         .register(WebExceptionMapper.class);
-
-    // Base URI the Grizzly HTTP server will listen on
-    BASE_URI = Config.getProperty("BASE_URI");
 
     // create and start a new instance of grizzly http server
     // exposing the Jersey application at BASE_URI
