@@ -48,6 +48,7 @@ public class UserUCCTest {
     user.setRole(User.Role.A);
     user.setRegisterDate(Date.valueOf(LocalDate.now()));
     Mockito.when(userDAO.getOneByEmail(email)).thenReturn(user);
+    Mockito.when(userDAO.getOneById(1)).thenReturn(user);
   }
 
   @Test
