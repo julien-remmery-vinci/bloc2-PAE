@@ -1,4 +1,4 @@
-@baseUrl=http://localhost:8080/auths
+@baseUrl=http://localhost:3000/auths
 
 ### Try to login user
 POST {{baseUrl}}/login
