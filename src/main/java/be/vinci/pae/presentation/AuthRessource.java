@@ -49,6 +49,15 @@ public class AuthRessource {
     if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
       throw new WebApplicationException("email or password required", Response.Status.BAD_REQUEST);
     }
+    // verify if email is valid
+    if (!json.get("email").asText()
+        .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
+      throw new WebApplicationException("email is not valid", Response.Status.BAD_REQUEST);
+    }
+    // verify if email or password are empty
+    if (json.get("email").asText().isEmpty() || json.get("password").asText().isEmpty()) {
+      throw new WebApplicationException("email or password is empty", Response.Status.BAD_REQUEST);
+    }
     String email = json.get("email").asText();
     String password = json.get("password").asText();
 
