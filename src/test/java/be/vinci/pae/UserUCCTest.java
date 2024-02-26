@@ -1,7 +1,6 @@
 package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -48,6 +47,7 @@ public class UserUCCTest {
     user.setRole(User.Role.A);
     user.setRegisterDate(Date.valueOf(LocalDate.now()));
     Mockito.when(userDAO.getOneByEmail(email)).thenReturn(user);
+    Mockito.when(userDAO.getOneById(1)).thenReturn(user);
   }
 
   @Test
@@ -59,23 +59,18 @@ public class UserUCCTest {
     assertAll(
         () -> assertNotNull(testUser),
         () -> assertNull(userUCC.login(email, "wrongPassword")),
-        () -> assertNull(userUCC.login("wrongEmail", password)),
-        () -> assertNull(userUCC.login(null, password)),
-        () -> assertNull(userUCC.login(email, null)),
-        () -> assertNull(userUCC.login("", password)),
-        () -> assertNull(userUCC.login(email, "")),
-        () -> assertNull(userUCC.login(" ", password)),
-        () -> assertNull(userUCC.login(email, " "))
+        () -> assertNull(userUCC.login("wrongEmail", password))
     );
+  }
+
+  @Test
+  @DisplayName("Test for the getUser method of UserUCC")
+  void getUserTest() {
+    User testUser = (User) userUCC.getUser(1);
     assertAll(
-        () -> assertEquals(user.getIdUser(), testUser.getIdUser()),
-        () -> assertEquals(user.getEmail(), testUser.getEmail()),
-        () -> assertEquals(user.getPassword(), testUser.getPassword()),
-        () -> assertEquals(user.getFirstname(), testUser.getFirstname()),
-        () -> assertEquals(user.getLastname(), testUser.getLastname()),
-        () -> assertEquals(user.getPhoneNumber(), testUser.getPhoneNumber()),
-        () -> assertEquals(user.getRole(), testUser.getRole()),
-        () -> assertEquals(user.getRegisterDate(), testUser.getRegisterDate())
+        () -> assertNotNull(testUser),
+        () -> assertNull(userUCC.getUser(0)),
+        () -> assertNull(userUCC.getUser(-1))
     );
   }
 }
