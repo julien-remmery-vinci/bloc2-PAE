@@ -9,6 +9,10 @@ Content-Type: application/json
   "password": "admin"
 }
 
+> {%
+  client.global.set("adminToken", response.body.token);
+%}
+
 ### Try to login user
 POST {{baseUrl}}/login
 Content-Type: application/json
@@ -17,12 +21,7 @@ Content-Type: application/json
 
 }
 
-### verify token
-POST {{baseUrl}}/login
-Content-Type: application/json
-Authorization: {{response.body.token}}
+###verify token
+POST {{baseUrl}}/user
+Authorization: {{adminToken}}
 
-{
-  "email": "admin@vinci.be",
-    "password": "admin"
-}

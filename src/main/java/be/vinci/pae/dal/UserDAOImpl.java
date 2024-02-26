@@ -44,7 +44,7 @@ public class UserDAOImpl implements UserDAO {
   public UserDTO getOneById(int id) {
     try {
       PreparedStatement getUser = dalServices.getPS(
-          "SELECT * from pae.users WHERE id_user = ?");
+          "SELECT * from pae.users WHERE idUser = ?");
       getUser.setInt(1, id);
       try (ResultSet rs = getUser.executeQuery()) {
         if (rs.next()) {
