@@ -6,13 +6,22 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 
+/**
+ * Class to filter the JSON view.
+ *
+ * @param <T> the type of the object
+ */
 public class Json<T> {
 
   private final static ObjectMapper jsonMapper = new ObjectMapper();
 
   private Class<T> type;
 
-
+  /**
+   * Constructor.
+   *
+   * @param <T> the type of the object
+   */
   public <T> List<T> filterPublicJsonViewAsList(List<T> list) {
     try {
       JavaType type = jsonMapper.getTypeFactory().constructCollectionType(List.class, this.type);
@@ -28,9 +37,14 @@ public class Json<T> {
       e.printStackTrace();
       return null;
     }
-
   }
 
+  /**
+   * Filter the JSON view.
+   *
+   * @param item the item to filter
+   * @return the item filtered
+   */
   public <T> T filterPublicJsonView(T item) {
     try {
       // serialize using JSON Views : public view (all fields not required in the
@@ -45,8 +59,5 @@ public class Json<T> {
       e.printStackTrace();
       return null;
     }
-
   }
-
-
 }
