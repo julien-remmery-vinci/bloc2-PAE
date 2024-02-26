@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const webpack = require('webpack');
 
-const API_BASE_URL = "http://localhost:8080";
+const API_BASE_URL = "http://localhost:3000";
 
 
 module.exports = {
