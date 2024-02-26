@@ -13,14 +13,24 @@ import java.util.List;
  */
 public class Json<T> {
 
-  private final static ObjectMapper jsonMapper = new ObjectMapper();
+  private static final ObjectMapper jsonMapper = new ObjectMapper();
 
   private Class<T> type;
 
   /**
    * Constructor.
    *
-   * @param <T> the type of the object
+   * @param type the type of the object
+   */
+  public Json(Class<T> type) {
+    this.type = type;
+  }
+
+  /**
+   * Filter the JSON view.
+   *
+   * @param list the list to filter
+   * @return the list filtered
    */
   public <T> List<T> filterPublicJsonViewAsList(List<T> list) {
     try {
