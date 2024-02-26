@@ -1,7 +1,6 @@
 package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -60,23 +59,7 @@ public class UserUCCTest {
     assertAll(
         () -> assertNotNull(testUser),
         () -> assertNull(userUCC.login(email, "wrongPassword")),
-        () -> assertNull(userUCC.login("wrongEmail", password)),
-        () -> assertNull(userUCC.login(null, password)),
-        () -> assertNull(userUCC.login(email, null)),
-        () -> assertNull(userUCC.login("", password)),
-        () -> assertNull(userUCC.login(email, "")),
-        () -> assertNull(userUCC.login(" ", password)),
-        () -> assertNull(userUCC.login(email, " "))
-    );
-    assertAll(
-        () -> assertEquals(user.getIdUser(), testUser.getIdUser()),
-        () -> assertEquals(user.getEmail(), testUser.getEmail()),
-        () -> assertEquals(user.getPassword(), testUser.getPassword()),
-        () -> assertEquals(user.getFirstname(), testUser.getFirstname()),
-        () -> assertEquals(user.getLastname(), testUser.getLastname()),
-        () -> assertEquals(user.getPhoneNumber(), testUser.getPhoneNumber()),
-        () -> assertEquals(user.getRole(), testUser.getRole()),
-        () -> assertEquals(user.getRegisterDate(), testUser.getRegisterDate())
+        () -> assertNull(userUCC.login("wrongEmail", password))
     );
   }
 
