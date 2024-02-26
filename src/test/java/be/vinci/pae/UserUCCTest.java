@@ -48,6 +48,7 @@ public class UserUCCTest {
     user.setRole(User.Role.A);
     user.setRegisterDate(Date.valueOf(LocalDate.now()));
     Mockito.when(userDAO.getOneByEmail(email)).thenReturn(user);
+    Mockito.when(userDAO.getOneById(1)).thenReturn(user);
   }
 
   @Test
@@ -76,6 +77,17 @@ public class UserUCCTest {
         () -> assertEquals(user.getPhoneNumber(), testUser.getPhoneNumber()),
         () -> assertEquals(user.getRole(), testUser.getRole()),
         () -> assertEquals(user.getRegisterDate(), testUser.getRegisterDate())
+    );
+  }
+
+  @Test
+  @DisplayName("Test for the getUser method of UserUCC")
+  void getUserTest() {
+    User testUser = (User) userUCC.getUser(1);
+    assertAll(
+        () -> assertNotNull(testUser),
+        () -> assertNull(userUCC.getUser(0)),
+        () -> assertNull(userUCC.getUser(-1))
     );
   }
 }
