@@ -95,6 +95,7 @@ public class AuthRessource {
   @POST
   @Path("/user")
   @Authorize
+  @Produces(MediaType.APPLICATION_JSON)
   public UserDTO userToken(@Context ContainerRequest request) {
     UserDTO authenticatedUser = (UserDTO) request.getProperty("user");
     if (authenticatedUser.getIdUser() <= 0) {
