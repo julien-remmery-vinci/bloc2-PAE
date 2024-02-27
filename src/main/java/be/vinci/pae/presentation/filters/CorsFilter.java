@@ -7,21 +7,17 @@ import jakarta.ws.rs.ext.Provider;
 import java.io.IOException;
 
 /**
- * The CORSFilter class is a filter used to handle Cross-Origin Resource Sharing (CORS) headers for
- * HTTP requests and responses.
- *
- * <p>It adds necessary CORS headers to the response to allow cross-origin requests from a
- * specific origin.
+ * Filter to add CORS headers to the container response context.
  */
 @Provider
 public class CorsFilter implements ContainerResponseFilter {
 
   /**
-   * Filters the container response context to add CORS headers.
+   * Add CORS headers to the container response context.
    *
-   * @param requestContext  the context of the container request
-   * @param responseContext the context of the container response
-   * @throws IOException if an I/O error occurs while processing the response
+   * @param requestContext  the request context
+   * @param responseContext the response context
+   * @throws IOException if an I/O exception occurs
    */
   @Override
   public void filter(ContainerRequestContext requestContext,

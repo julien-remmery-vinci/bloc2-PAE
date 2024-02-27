@@ -22,6 +22,6 @@ Content-Type: application/json
 }
 
 ###verify token
-POST {{baseUrl}}/user
+GET {{baseUrl}}/user
 Authorization: {{adminToken}}
 
