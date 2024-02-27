@@ -75,8 +75,6 @@ async function onLogin(e) {
   const password = document.querySelector('#password').value;
 
   const options = {
-    node: 'no-cors',
-    Credentials: 'true',
     method: 'POST',
     body: JSON.stringify({
       email,
