@@ -1,7 +1,6 @@
 package be.vinci.pae.business;
 
 import be.vinci.pae.dal.UserDAO;
-import be.vinci.pae.dal.utils.Json;
 import jakarta.inject.Inject;
 
 /**
@@ -9,7 +8,6 @@ import jakarta.inject.Inject;
  */
 public class UserUCCImpl implements UserUCC {
 
-  private final Json json = new Json<>(UserDTO.class);
   /**
    * Injected UserDAO.
    */
@@ -35,7 +33,7 @@ public class UserUCCImpl implements UserUCC {
 
     // Check for matching password
     if (u.checkPassword(password)) {
-      return (UserDTO) json.filterPublicJsonView(u);
+      return u;
     }
 
     //Password did not match
@@ -49,7 +47,6 @@ public class UserUCCImpl implements UserUCC {
    * @return the user, null if no user was found
    */
   public UserDTO getUser(int id) {
-    UserDTO userFound = userDAO.getOneById(id);
-    return (UserDTO) json.filterPublicJsonView(userFound);
+    return userDAO.getOneById(id);
   }
 }

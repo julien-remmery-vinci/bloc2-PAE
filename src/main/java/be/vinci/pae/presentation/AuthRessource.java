@@ -2,6 +2,7 @@ package be.vinci.pae.presentation;
 
 import be.vinci.pae.business.UserDTO;
 import be.vinci.pae.business.UserUCC;
+import be.vinci.pae.dal.utils.Json;
 import be.vinci.pae.presentation.filters.Authorize;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -32,6 +34,7 @@ public class AuthRessource {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
+  private final Json<UserDTO> json = new Json<>(UserDTO.class);
   @Inject
   private UserUCC userUCC;
 
@@ -95,7 +98,7 @@ public class AuthRessource {
    * @param request the request
    * @return the user
    */
-  @POST
+  @GET
   @Path("/user")
   @Authorize
   @Produces(MediaType.APPLICATION_JSON)
@@ -104,6 +107,6 @@ public class AuthRessource {
     if (authenticatedUser.getIdUser() <= 0) {
       throw new WebApplicationException("User not found", Status.NOT_FOUND);
     }
-    return userUCC.getUser(authenticatedUser.getIdUser());
+    return json.filterPublicJsonView(userUCC.getUser(authenticatedUser.getIdUser()));
   }
 }
