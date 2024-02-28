@@ -1,3 +1,5 @@
+import Navigate from "../Components/Router/Navigate";
+
 const STORE_NAME = 'user';
 const REMEMBER_ME = 'remembered';
 
@@ -34,6 +36,21 @@ const clearAuthenticatedUser = () => {
   currentUser = undefined;
 };
 
+const verifyToken = async (token) => {
+    const response= await fetch('http://localhost:3000/auths/user', {
+      method:'GET',
+      headers: {
+        'Authorization': token,
+      },
+    });
+    if(response.status === 401) {
+      Navigate('/login');
+      clearAuthenticatedUser();
+      return false;
+    }
+    return true;
+};
+
 function getRememberMe() {
   const rememberedSerialized = localStorage.getItem(REMEMBER_ME);
   const remembered = JSON.parse(rememberedSerialized);
@@ -52,4 +69,5 @@ export {
   clearAuthenticatedUser,
   getRememberMe,
   setRememberMe,
+  verifyToken,
 };

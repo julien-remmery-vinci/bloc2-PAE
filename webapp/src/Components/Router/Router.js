@@ -1,5 +1,10 @@
+import {
+  getAuthenticatedUser,
+  verifyToken
+} from '../../utils/auths';
 import usePathPrefix from '../../utils/path-prefix';
 import routes from './routes';
+import Navigate from "./Navigate";
 
 // Define Router component
 const Router = () => {
@@ -37,11 +42,14 @@ function onHistoryChange() {
 
 // Function to handle frontend load events
 function onFrontendLoad() {
-  window.addEventListener('load', () => {
+  window.addEventListener('load', async () => {
     const uri = window.location.pathname;
     const componentToRender = routes[uri];
     if (!componentToRender) throw Error(`The ${uri} resource does not exist.`);
 
+    const user = getAuthenticatedUser();
+    if(!user) Navigate('/login');
+    await verifyToken(user?.token);
     componentToRender();
   });
 }
