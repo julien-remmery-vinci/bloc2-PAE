@@ -1,3 +1,5 @@
+import Navigate from "../Components/Router/Navigate";
+
 const STORE_NAME = 'user';
 const REMEMBER_ME = 'remembered';
 
@@ -35,20 +37,18 @@ const clearAuthenticatedUser = () => {
 };
 
 const verifyToken = async (token) => {
-  try {
-    const response = await fetch('https://localhost:3000/auths/user', {
-    method:'GET',
-    headers: {
-      'Authorization': token,
-    },
-  });
-
-  const user = await response.json();
-  return user.firstName;
-  } catch (error) {
-    console.error('Error verifying token', error);
-    return null;
-}
+    const response= await fetch('http://localhost:3000/auths/user', {
+      method:'GET',
+      headers: {
+        'Authorization': token,
+      },
+    });
+    if(response.status === 401) {
+      Navigate('/login');
+      clearAuthenticatedUser();
+      return false;
+    }
+    return true;
 };
 
 function getRememberMe() {
