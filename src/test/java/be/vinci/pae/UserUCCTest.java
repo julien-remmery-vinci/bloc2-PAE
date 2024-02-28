@@ -8,8 +8,6 @@ import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.User;
 import be.vinci.pae.business.UserUCC;
 import be.vinci.pae.dal.UserDAO;
-import java.sql.Date;
-import java.time.LocalDate;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,14 +36,7 @@ public class UserUCCTest {
     user = (User) factory.getUser();
     String password = "admin";
     String email = "admin@vinci.be";
-    user.setIdUser(1);
-    user.setEmail(email);
     user.setPassword(user.hashPassword(password));
-    user.setFirstname("admin");
-    user.setLastname("admin");
-    user.setPhoneNumber("123456789");
-    user.setRole(User.Role.A);
-    user.setRegisterDate(Date.valueOf(LocalDate.now()));
     Mockito.when(userDAO.getOneByEmail(email)).thenReturn(user);
     Mockito.when(userDAO.getOneById(1)).thenReturn(user);
   }
