@@ -24,7 +24,8 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public UserDTO getOneByEmail(String email) {
     try (PreparedStatement getUser = dalServices.getPS(
-        "SELECT idUser, lastname, firstname, email, password, phoneNumber, registerDate, role FROM pae.users WHERE email = ?")) {
+        "SELECT idUser, lastname, firstname, email, password, phoneNumber, registerDate, role "
+            + "FROM pae.users WHERE email = ?")) {
       getUser.setString(1, email);
       try (ResultSet rs = getUser.executeQuery()) {
         if (rs.next()) {
@@ -49,7 +50,8 @@ public class UserDAOImpl implements UserDAO {
   public UserDTO getOneById(int id) {
     try {
       PreparedStatement getUser = dalServices.getPS(
-          "SELECT idUser, lastname, firstname, email, password, phoneNumber, registerDate, role FROM pae.users WHERE idUser = ?");
+          "SELECT idUser, lastname, firstname, email, password, phoneNumber, registerDate, role "
+              + "FROM pae.users WHERE idUser = ?");
       getUser.setInt(1, id);
       try (ResultSet rs = getUser.executeQuery()) {
         if (rs.next()) {

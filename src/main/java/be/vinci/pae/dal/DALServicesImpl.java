@@ -1,16 +1,21 @@
 package be.vinci.pae.dal;
 
 import be.vinci.pae.utils.Config;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * Implementation of DALServices.
+ */
 public class DALServicesImpl implements DALServices {
 
   private static Connection conn = null;
 
+  /**
+   * Constructor of DALServicesImpl.
+   */
   public DALServicesImpl() {
     String url = Config.getProperty("DB_URL");
     String username = Config.getProperty("DB_USER");
@@ -23,6 +28,11 @@ public class DALServicesImpl implements DALServices {
     }
   }
 
+  /**
+   * Get the prepared statement with the request.
+   *
+   * @return the prepared statement with the request.
+   */
   public PreparedStatement getPS(String request) {
     try {
       return conn.prepareStatement(request);

@@ -44,6 +44,7 @@ public class Main {
    * Main method.
    *
    * @param args args
+   * @throws IOException IOException
    */
   public static void main(String[] args) throws IOException {
     final HttpServer server = startServer();
