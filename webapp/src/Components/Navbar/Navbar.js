@@ -1,7 +1,10 @@
-import { clearAuthenticatedUser } from "../../utils/auths";
+import { clearAuthenticatedUser , getAuthenticatedUser} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
 
 const Navbar = () => {
+  if (getAuthenticatedUser() === undefined) {
+    return;
+  }
   renderNavbar();
 };
 
