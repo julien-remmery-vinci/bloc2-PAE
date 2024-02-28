@@ -6,6 +6,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * Implementation of DALServices.
+ */
 public class DALServicesImpl implements DALServices {
 
   private static Connection conn = null;
