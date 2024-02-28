@@ -73,15 +73,8 @@ public class AuthRessource {
       throw new WebApplicationException("wrong email or password", Status.UNAUTHORIZED);
     }
 
-    // Create token expiring in 24 hours (1440000ms)
-    String token;
-    try {
-      token = JWT.create()
-          .withIssuer("auth0")
-          .withExpiresAt(new Date(System.currentTimeMillis() + 1440000))
-          .withClaim("user", user.getIdUser()).sign(this.jwtAlgorithm);
-    } catch (Exception e) {
-      System.out.println("Unable to create token");
+    String token = generateToken(user);
+    if (token == null) {
       return null;
     }
 
@@ -90,6 +83,21 @@ public class AuthRessource {
         .put("token", token)
         .put("firstname", user.getFirstname())
         .put("lastname", user.getLastname());
+  }
+
+  // Create token expiring in 1 hour (3600000ms)
+  private String generateToken(UserDTO user) {
+    String token;
+    try {
+      token = JWT.create()
+          .withIssuer("auth0")
+          .withExpiresAt(new Date(System.currentTimeMillis() + 3600000))
+          .withClaim("user", user.getIdUser()).sign(this.jwtAlgorithm);
+    } catch (Exception e) {
+      System.out.println("Unable to create token");
+      return null;
+    }
+    return token;
   }
 
   /**
@@ -102,11 +110,19 @@ public class AuthRessource {
   @Path("/user")
   @Authorize
   @Produces(MediaType.APPLICATION_JSON)
-  public UserDTO userToken(@Context ContainerRequest request) {
+  public ObjectNode userToken(@Context ContainerRequest request) {
     UserDTO authenticatedUser = (UserDTO) request.getProperty("user");
     if (authenticatedUser.getIdUser() <= 0) {
       throw new WebApplicationException("User not found", Status.NOT_FOUND);
     }
-    return json.filterPublicJsonView(userUCC.getUser(authenticatedUser.getIdUser()));
+    String token = generateToken(authenticatedUser);
+    if (token == null) {
+      return null;
+    }
+    ObjectNode user = jsonMapper.createObjectNode();
+    user.put("token", token);
+    user.put("user",
+        jsonMapper.convertValue(json.filterPublicJsonView(authenticatedUser), ObjectNode.class));
+    return user;
   }
 }
