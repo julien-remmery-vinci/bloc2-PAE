@@ -85,9 +85,41 @@ async function onLogin(e) {
     },
   };
 
+  // verify if email is valid
+  const emailRegex = /^[a-zA-Z0-9._%+-]+\.[a-zA-Z0-9._%+-]+@(vinci\.be|student\.vinci\.be)$/;
+  if (!emailRegex.test(email)) {
+    // clear the last error message
+    const form1 = document.querySelector('form');
+    const lastError = form1.querySelector('.text-danger');
+    if (lastError) {
+      form1.removeChild(lastError);
+    }
+    const erreur = document.createElement('p');
+    erreur.textContent = 'Email invalide';
+    erreur.className = 'text-danger';
+    const form = document.querySelector('form');
+    form.appendChild(erreur);
+    return;
+  }
+
   const response = await fetch(`/api/auths/login`, options);
 
-  if (!response.ok) throw new Error(`fetch error : ${response.status} : ${response.statusText}`);
+  if (response.status === 401) {
+    // clear the last error message
+    const form1 = document.querySelector('form');
+    const lastError = form1.querySelector('.text-danger');
+    if (lastError) {
+      form1.removeChild(lastError);
+    }
+    const erreur = document.createElement('p');
+    erreur.textContent = 'Email ou mot de passe invalide';
+    erreur.className = 'text-danger';
+    const form = document.querySelector('form');
+    form.appendChild(erreur);
+    return;
+  }
+
+  if (!response.ok) throw new Error(`fetch error : ${response.status} : ${response.statusText} `);
 
   // Get the authenticated user
   const authenticatedUser = await response.json();
