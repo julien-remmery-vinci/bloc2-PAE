@@ -85,7 +85,12 @@ public class AuthRessource {
         .put("lastname", user.getLastname());
   }
 
-  // Create token expiring in 1 hour (3600000ms)
+  /**
+   * Create token expiring in 1 hour (3600000ms).
+   *
+   * @param user the user to generate token for
+   * @return the generated token
+   */
   private String generateToken(UserDTO user) {
     String token;
     try {
