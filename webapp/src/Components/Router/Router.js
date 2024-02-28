@@ -1,3 +1,4 @@
+import { verifyToken } from '../../utils/auths';
 import usePathPrefix from '../../utils/path-prefix';
 import routes from './routes';
 
@@ -42,6 +43,7 @@ function onFrontendLoad() {
     const componentToRender = routes[uri];
     if (!componentToRender) throw Error(`The ${uri} resource does not exist.`);
 
+    verifyToken();
     componentToRender();
   });
 }

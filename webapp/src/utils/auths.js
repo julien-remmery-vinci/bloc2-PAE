@@ -34,6 +34,23 @@ const clearAuthenticatedUser = () => {
   currentUser = undefined;
 };
 
+const verifyToken = async (token) => {
+  try {
+    const response = await fetch('https://localhost:3000/auths/user', {
+    method:'GET',
+    headers: {
+      'Authorization': token,
+    },
+  });
+
+  const user = await response.json();
+  return user.firstName;
+  } catch (error) {
+    console.error('Error verifying token', error);
+    return null;
+}
+};
+
 function getRememberMe() {
   const rememberedSerialized = localStorage.getItem(REMEMBER_ME);
   const remembered = JSON.parse(rememberedSerialized);
@@ -52,4 +69,5 @@ export {
   clearAuthenticatedUser,
   getRememberMe,
   setRememberMe,
+  verifyToken,
 };

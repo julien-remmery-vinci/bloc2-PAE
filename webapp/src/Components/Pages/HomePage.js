@@ -9,14 +9,14 @@ const HomePage = () => {
         window.location.reload();
     } else {
         clearPage();
-        renderHomePage();
+        renderHomePage(authenticatedUser);
     }
 };
 
-function renderHomePage() {
+function renderHomePage(authenticatedUser) {
     const main = document.querySelector('main');
     const h1 = document.createElement('h1');
-    h1.textContent = 'Bienvenue sur VinciOBS !';
+    h1.textContent = `Bienvenue sur VinciOBS, ${authenticatedUser.firstname} !`;
     main.appendChild(h1);
 };
 
