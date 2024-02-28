@@ -1,6 +1,7 @@
-import { verifyToken } from '../../utils/auths';
+import { getAuthenticatedUser, verifyToken } from '../../utils/auths';
 import usePathPrefix from '../../utils/path-prefix';
 import routes from './routes';
+import Navigate from './Navigate';
 
 // Define Router component
 const Router = () => {
@@ -42,8 +43,15 @@ function onFrontendLoad() {
     const uri = window.location.pathname;
     const componentToRender = routes[uri];
     if (!componentToRender) throw Error(`The ${uri} resource does not exist.`);
-
-    verifyToken();
+    const user = getAuthenticatedUser();
+    if (user) {
+      if(!verifyToken(user.token)){
+        Navigate('/login');
+      }
+    }
+    else{
+      Navigate('/login');
+    }
     componentToRender();
   });
 }

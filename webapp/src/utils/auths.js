@@ -36,7 +36,7 @@ const clearAuthenticatedUser = () => {
 
 const verifyToken = async (token) => {
   try {
-    const response = await fetch('https://localhost:3000/auths/user', {
+    const response = await fetch('http://localhost:3000/auths/user', {
     method:'GET',
     headers: {
       'Authorization': token,
