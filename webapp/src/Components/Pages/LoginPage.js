@@ -103,7 +103,7 @@ async function onLogin(e) {
     return;
   }
 
-  const response = await fetch(`/api/auths/login`, options);
+  const response = await fetch(`http://localhost:3000/auths/login`, options);
 
   if (response.status === 401) {
     // clear the last error message
