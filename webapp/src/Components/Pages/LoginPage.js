@@ -1,5 +1,6 @@
 import { getRememberMe, setAuthenticatedUser, setRememberMe } from '../../utils/auths';
 import { clearPage, renderPageTitle } from '../../utils/render';
+import Navbar from '../Navbar/Navbar';
 import Navigate from '../Router/Navigate';
 
 // Define LoginPage component
@@ -130,6 +131,7 @@ async function onLogin(e) {
 
   // Navigate to the home page if the user is authenticated, otherwise navigate to the login page
   if (authenticatedUser) {
+    Navbar();
     Navigate('/');
   } else {
     Navigate('/login');
