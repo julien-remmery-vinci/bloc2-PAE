@@ -2,7 +2,6 @@ package be.vinci.pae.presentation;
 
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
-import be.vinci.pae.dal.utils.Json;
 import be.vinci.pae.presentation.filters.Authorize;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
@@ -34,7 +33,6 @@ public class AuthRessource {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
-  private final Json<UserDTO> json = new Json<>(UserDTO.class);
   @Inject
   private UserUCC userUCC;
 
@@ -126,8 +124,7 @@ public class AuthRessource {
     }
     ObjectNode user = jsonMapper.createObjectNode();
     user.put("token", token);
-    user.put("user",
-        jsonMapper.convertValue(json.filterPublicJsonView(authenticatedUser), ObjectNode.class));
+    user.put("user", jsonMapper.convertValue(authenticatedUser, ObjectNode.class));
     return user;
   }
 }
