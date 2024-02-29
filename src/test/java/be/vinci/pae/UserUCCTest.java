@@ -42,16 +42,23 @@ public class UserUCCTest {
   }
 
   @Test
-  @DisplayName("Test for the login method of UserUCC")
+  @DisplayName("Test for the login method of UserUCC with a correct email and password")
   void loginTest() {
     String password = "admin";
     String email = "admin@vinci.be";
-    User testUser = (User) userUCC.login(email, password);
-    assertAll(
-        () -> assertNotNull(testUser),
-        () -> assertNull(userUCC.login(email, "wrongPassword")),
-        () -> assertNull(userUCC.login("wrongEmail", password))
-    );
+    assertNotNull(userUCC.login(email, password));
+  }
+
+  @Test
+  @DisplayName("Test for the login method of UserUCC with a wrong email and good password")
+  void loginTestWrongEmail() {
+    assertNull(userUCC.login("wrongEmail", "admin"));
+  }
+
+  @Test
+  @DisplayName("Test for the login method of UserUCC with a good email and wrong password")
+  void loginTestWrongPassword() {
+    assertNull(userUCC.login("admin@vinci.be", "wrongPassword"));
   }
 
   @Test
