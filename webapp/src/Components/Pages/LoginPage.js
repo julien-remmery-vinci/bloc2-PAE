@@ -7,11 +7,11 @@ import Navigate from '../Router/Navigate';
 const LoginPage = () => {
   clearPage();
   renderPageTitle('Connexion');
-  renderRegisterForm();
+  renderLoginForm();
 };
 
-// Function to render the registration form
-function renderRegisterForm() {
+// Function to render the login form
+function renderLoginForm() {
   const main = document.querySelector('main');
   const form = document.createElement('form');
   form.className = 'p-5';
@@ -50,6 +50,13 @@ function renderRegisterForm() {
   checkLabel.className = 'form-check-label';
   checkLabel.textContent = 'Se souvenir de moi';
 
+  const register = document.createElement('p');
+  register.textContent = 'Pas encore de compte ? ';
+  register.className = 'd-block text-center mt-3';
+  const link = document.createElement('a');
+  link.textContent = 'Inscrivez-vous';
+  link.href = '/register';
+
   formCheckWrapper.appendChild(rememberme);
   formCheckWrapper.appendChild(checkLabel);
 
@@ -60,6 +67,8 @@ function renderRegisterForm() {
   form.appendChild(formCheckWrapper);
   form.appendChild(submit);
   main.appendChild(form);
+  main.appendChild(register);
+  register.appendChild(link);
   form.addEventListener('submit', onLogin);
 }
 
