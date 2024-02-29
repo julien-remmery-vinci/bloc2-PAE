@@ -82,13 +82,15 @@ public class UserDAOImpl implements UserDAO {
         Method m = UserDTO.class.getDeclaredMethod("set" + f.getName().substring(0, 1).toUpperCase()
             + f.getName().substring(1), f.getType());
         // Set the value of the field
-        // If the field is of type Role, we need to convert the string to the enum
-        if (f.getType().equals(UserDTO.Role.class)) {
-          m.invoke(user, UserDTO.Role.valueOf(rs.getString(f.getName())));
+        // If the field is of enum type, we need to convert the string to the value in the enum
+        if (f.getType().isEnum()) {
+          m.invoke(user, Enum.valueOf((Class<Enum>) Class.forName(f.getType().getName()),
+              rs.getString(f.getName())));
         } else {
           m.invoke(user, rs.getObject(f.getName()));
         }
-      } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+      } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException |
+               ClassNotFoundException e) {
         throw new RuntimeException(e);
       }
     }
