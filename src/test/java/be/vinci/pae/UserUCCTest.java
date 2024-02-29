@@ -44,9 +44,7 @@ public class UserUCCTest {
   @Test
   @DisplayName("Test for the login method of UserUCC with a correct email and password")
   void loginTest() {
-    String password = "admin";
-    String email = "admin@vinci.be";
-    assertNotNull(userUCC.login(email, password));
+    assertNotNull(userUCC.login("admin@vinci.be", "admin"));
   }
 
   @Test
