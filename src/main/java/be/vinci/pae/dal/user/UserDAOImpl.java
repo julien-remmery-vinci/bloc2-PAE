@@ -1,8 +1,9 @@
-package be.vinci.pae.dal;
+package be.vinci.pae.dal.user;
 
 import be.vinci.pae.business.Factory;
-import be.vinci.pae.business.UserDTO;
-import be.vinci.pae.business.UserImpl;
+import be.vinci.pae.business.user.UserDTO;
+import be.vinci.pae.business.user.UserImpl;
+import be.vinci.pae.dal.DALServices;
 import jakarta.inject.Inject;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

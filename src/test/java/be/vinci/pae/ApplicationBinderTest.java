@@ -2,9 +2,9 @@ package be.vinci.pae;
 
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.FactoryImpl;
-import be.vinci.pae.business.UserUCC;
-import be.vinci.pae.business.UserUCCImpl;
-import be.vinci.pae.dal.UserDAO;
+import be.vinci.pae.business.user.UserUCC;
+import be.vinci.pae.business.user.UserUCCImpl;
+import be.vinci.pae.dal.user.UserDAO;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.ext.Provider;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;

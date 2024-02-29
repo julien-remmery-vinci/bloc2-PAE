@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import be.vinci.pae.business.Factory;
-import be.vinci.pae.business.User;
-import be.vinci.pae.business.UserUCC;
-import be.vinci.pae.dal.UserDAO;
+import be.vinci.pae.business.user.User;
+import be.vinci.pae.business.user.UserUCC;
+import be.vinci.pae.dal.user.UserDAO;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeEach;

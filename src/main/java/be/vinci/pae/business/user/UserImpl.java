@@ -1,4 +1,4 @@
-package be.vinci.pae.business;
+package be.vinci.pae.business.user;
 
 import be.vinci.pae.views.Views;
 import com.fasterxml.jackson.annotation.JsonFormat;

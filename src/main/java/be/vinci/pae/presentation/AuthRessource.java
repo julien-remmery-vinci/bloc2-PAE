@@ -1,7 +1,7 @@
 package be.vinci.pae.presentation;
 
-import be.vinci.pae.business.UserDTO;
-import be.vinci.pae.business.UserUCC;
+import be.vinci.pae.business.user.UserDTO;
+import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.dal.utils.Json;
 import be.vinci.pae.presentation.filters.Authorize;
 import be.vinci.pae.utils.Config;
