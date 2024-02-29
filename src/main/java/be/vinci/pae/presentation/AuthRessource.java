@@ -113,18 +113,11 @@ public class AuthRessource {
   @Path("/user")
   @Authorize
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getUser(@Context ContainerRequest request) {
+  public UserDTO getUser(@Context ContainerRequest request) {
     UserDTO authenticatedUser = (UserDTO) request.getProperty("user");
     if (authenticatedUser.getIdUser() <= 0) {
       throw new WebApplicationException("User not found", Status.NOT_FOUND);
     }
-    String token = generateToken(authenticatedUser);
-    if (token == null) {
-      return null;
-    }
-    ObjectNode user = jsonMapper.createObjectNode();
-    user.put("token", token);
-    user.put("user", jsonMapper.convertValue(authenticatedUser, ObjectNode.class));
-    return user;
+    return authenticatedUser;
   }
 }
