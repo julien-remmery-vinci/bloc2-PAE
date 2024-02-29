@@ -75,12 +75,11 @@ public class AuthRessource {
     if (token == null) {
       return null;
     }
-
-    // Return token, firstname and lastname
-    return jsonMapper.createObjectNode()
-        .put("token", token)
-        .put("firstname", user.getFirstname())
-        .put("lastname", user.getLastname());
+    ObjectNode result = jsonMapper.createObjectNode();
+    result.put("token", token);
+    result.put("user", jsonMapper.convertValue(user, ObjectNode.class));
+    // Return token and user
+    return result;
   }
 
   /**
@@ -118,6 +117,7 @@ public class AuthRessource {
     if (authenticatedUser.getIdUser() <= 0) {
       throw new WebApplicationException("User not found", Status.NOT_FOUND);
     }
+    // Return the user
     return authenticatedUser;
   }
 }
