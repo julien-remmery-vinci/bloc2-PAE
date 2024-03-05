@@ -1,16 +1,20 @@
-import { clearAuthenticatedUser , getAuthenticatedUser} from "../../utils/auths";
+import { clearAuthenticatedUser, getAuthenticatedUser } from "../../utils/auths";
 import Navigate from "../Router/Navigate";
 
 const Navbar = () => {
-  if (getAuthenticatedUser() === undefined) {
-    return;
-  }
   renderNavbar();
 };
 
 function renderNavbar() {
+  const notLoggedNavbar = `
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
+      <a class="navbar-brand" href="#">VinciOBS</a>
 
-  const userNavbar = `<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    </nav>
+  `;
+
+  const loggedNavbar = `
+  <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
     <a class="navbar-brand" href="#">VinciOBS</a>
     <div class="ms-auto">
       <button class="btn btn-primary rounded" type="button" id="button1">
@@ -20,16 +24,18 @@ function renderNavbar() {
     </div>
   </nav>
   `;
-
   const navbar = document.querySelector('#navbarWrapper');
-  navbar.innerHTML = userNavbar;
-
-  const logOutButton = document.querySelector('#button2');
-  logOutButton.addEventListener('click', () => {
-    clearAuthenticatedUser();
-    Navigate('/login');
-    window.location.reload();
-});
+  if (getAuthenticatedUser() === undefined) {
+    navbar.innerHTML = notLoggedNavbar;
+  }else{
+    navbar.innerHTML = loggedNavbar;
+    const logOutButton = document.querySelector('#button2');
+    logOutButton.addEventListener('click', () => {
+      clearAuthenticatedUser();
+      Navigate('/login');
+      window.location.reload();
+    });
+  }
 }
 
 export default Navbar;
