@@ -1,6 +1,6 @@
-package be.vinci.pae.business;
+package be.vinci.pae.business.user;
 
-import be.vinci.pae.dal.UserDAO;
+import be.vinci.pae.dal.user.UserDAO;
 import jakarta.inject.Inject;
 
 /**

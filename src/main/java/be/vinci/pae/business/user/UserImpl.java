@@ -1,34 +1,24 @@
-package be.vinci.pae.business;
+package be.vinci.pae.business.user;
 
-import be.vinci.pae.views.Views;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.sql.Date;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * Implementation of User which inherits of UserDTO.
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserImpl implements User {
 
-  @JsonView(Views.Public.class)
   private int idUser;
-  @JsonView(Views.Public.class)
   private String firstname;
-  @JsonView(Views.Public.class)
   private String lastname;
-  @JsonView(Views.Public.class)
   private String email;
-  @JsonView(Views.Internal.class)
+  @JsonIgnore
   private String password;
-  @JsonView(Views.Public.class)
   private String phoneNumber;
-  @JsonView(Views.Public.class)
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yy hh:mm:ss")
   private Date registerDate;
-  @JsonView(Views.Public.class)
   private Role role;
 
   @Override

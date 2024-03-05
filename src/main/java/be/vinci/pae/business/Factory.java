@@ -1,5 +1,7 @@
 package be.vinci.pae.business;
 
+import be.vinci.pae.business.user.UserDTO;
+
 /**
  * Interface of FactoryImpl.
  */

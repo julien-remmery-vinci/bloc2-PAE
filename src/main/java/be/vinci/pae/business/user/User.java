@@ -1,4 +1,4 @@
-package be.vinci.pae.business;
+package be.vinci.pae.business.user;
 
 /**
  * Interface of UserImpl inherits of UserDTO.

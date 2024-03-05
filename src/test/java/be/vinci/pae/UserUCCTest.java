@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import be.vinci.pae.business.Factory;
-import be.vinci.pae.business.User;
-import be.vinci.pae.business.UserUCC;
-import be.vinci.pae.dal.UserDAO;
+import be.vinci.pae.business.user.User;
+import be.vinci.pae.business.user.UserUCC;
+import be.vinci.pae.dal.user.UserDAO;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,24 +34,27 @@ public class UserUCCTest {
     this.userDAO = locator.getService(UserDAO.class);
 
     user = (User) factory.getUser();
-    String password = "admin";
-    String email = "admin@vinci.be";
-    user.setPassword(user.hashPassword(password));
-    Mockito.when(userDAO.getOneByEmail(email)).thenReturn(user);
+    user.setPassword(user.hashPassword("admin"));
+    Mockito.when(userDAO.getOneByEmail("admin@vinci.be")).thenReturn(user);
     Mockito.when(userDAO.getOneById(1)).thenReturn(user);
   }
 
   @Test
-  @DisplayName("Test for the login method of UserUCC")
+  @DisplayName("Test for the login method of UserUCC with a correct email and password")
   void loginTest() {
-    String password = "admin";
-    String email = "admin@vinci.be";
-    User testUser = (User) userUCC.login(email, password);
-    assertAll(
-        () -> assertNotNull(testUser),
-        () -> assertNull(userUCC.login(email, "wrongPassword")),
-        () -> assertNull(userUCC.login("wrongEmail", password))
-    );
+    assertNotNull(userUCC.login("admin@vinci.be", "admin"));
+  }
+
+  @Test
+  @DisplayName("Test for the login method of UserUCC with a wrong email and good password")
+  void loginTestWrongEmail() {
+    assertNull(userUCC.login("wrongEmail", "admin"));
+  }
+
+  @Test
+  @DisplayName("Test for the login method of UserUCC with a good email and wrong password")
+  void loginTestWrongPassword() {
+    assertNull(userUCC.login("admin@vinci.be", "wrongPassword"));
   }
 
   @Test
