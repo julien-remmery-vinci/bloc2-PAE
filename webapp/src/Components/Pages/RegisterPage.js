@@ -46,9 +46,10 @@ function renderRegisterForm() {
   password.id = 'password';
   password.required = true;
   password.className = 'form-control mb-3';
+  const div = document.createElement('div');
+  div.hidden = true;
   const div1 = document.createElement('div');
   const div2 = document.createElement('div');
-  const div = document.createElement('div');
   const profLabel = document.createElement('label');
   const adminLabel = document.createElement('label');
   profLabel.textContent = 'Professeur';
@@ -57,6 +58,7 @@ function renderRegisterForm() {
   prof.type = 'radio';
   prof.name = 'role';
   prof.className = 'form-check';
+  prof.required = !div.hidden;
   const admin = document.createElement('input');
   admin.type = 'radio';
   admin.name = 'role';
@@ -67,7 +69,6 @@ function renderRegisterForm() {
   div2.appendChild(adminLabel);
   div.appendChild(div1);
   div.appendChild(div2);
-  div.hidden = true;
   div.style.display = 'flex';
   div.style.justifyContent = 'space-around';
   const submit = document.createElement('input');
@@ -85,11 +86,8 @@ function renderRegisterForm() {
   form.appendChild(titlePassword);
   form.appendChild(password);
   email.addEventListener('change', () => {
-    if(useRegex(email.value)) {
-      div.hidden = false;
-    } else {
-      div.hidden = true;
-    }
+    div.hidden = !useRegex(email.value);
+    prof.required = !div.hidden;
   });
   form.appendChild(div);
   form.appendChild(submit);
