@@ -1,4 +1,4 @@
-package be.vinci.pae.business;
+package be.vinci.pae.business.user;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.sql.Date;

@@ -1,5 +1,8 @@
 package be.vinci.pae.business;
 
+import be.vinci.pae.business.user.UserDTO;
+import be.vinci.pae.business.user.UserImpl;
+
 /**
  * Implementation of Factory used to create the implementation of the interfaces.
  */

@@ -1,6 +1,6 @@
-package be.vinci.pae.dal;
+package be.vinci.pae.dal.user;
 
-import be.vinci.pae.business.UserDTO;
+import be.vinci.pae.business.user.UserDTO;
 
 /**
  * Interface of UserDSImpl.

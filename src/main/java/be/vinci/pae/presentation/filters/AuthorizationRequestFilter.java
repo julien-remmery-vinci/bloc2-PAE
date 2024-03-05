@@ -1,7 +1,7 @@
 package be.vinci.pae.presentation.filters;
 
-import be.vinci.pae.business.UserDTO;
-import be.vinci.pae.business.UserUCC;
+import be.vinci.pae.business.user.UserDTO;
+import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
