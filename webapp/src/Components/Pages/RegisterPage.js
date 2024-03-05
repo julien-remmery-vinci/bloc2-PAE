@@ -74,7 +74,7 @@ function renderRegisterForm() {
   const submit = document.createElement('input');
   submit.value = "S'inscrire";
   submit.type = 'submit';
-  submit.className = 'btn btn-danger';
+  submit.className = 'btn btn-primary';
   form.appendChild(titleFirstName);
   form.appendChild(firstname);
   form.appendChild(titleLastName);
