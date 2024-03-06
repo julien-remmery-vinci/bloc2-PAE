@@ -1,6 +1,6 @@
 import Navigate from "../Components/Router/Navigate";
 
-const STORE_NAME = 'user';
+const STORE_NAME = 'user_token';
 const REMEMBER_ME = 'remembered';
 
 let currentUser;
@@ -8,24 +8,27 @@ let currentUser;
 const getAuthenticatedUser = () => {
   if (currentUser !== undefined) return currentUser;
 
+  return undefined;
+};
+
+const getUserToken = () => {
   const remembered = getRememberMe();
-  const serializedUser = remembered
+  const serializedToken = remembered
     ? localStorage.getItem(STORE_NAME)
     : sessionStorage.getItem(STORE_NAME);
 
-  if (!serializedUser) return undefined;
+  if (!serializedToken) return undefined;
 
-  currentUser = JSON.parse(serializedUser);
-  return currentUser;
-};
+  return JSON.parse(serializedToken);
+}
 
 const setAuthenticatedUser = (authenticatedUser) => {
-  const serializedUser = JSON.stringify(authenticatedUser);
+  const serializedToken = JSON.stringify(authenticatedUser.token);
   const remembered = getRememberMe();
-  if (remembered) localStorage.setItem(STORE_NAME, serializedUser);
-  else sessionStorage.setItem(STORE_NAME, serializedUser);
+  if (remembered) localStorage.setItem(STORE_NAME, serializedToken);
+  else sessionStorage.setItem(STORE_NAME, serializedToken);
 
-  currentUser = authenticatedUser;
+  currentUser = authenticatedUser.user;
 };
 
 const isAuthenticated = () => currentUser !== undefined;
@@ -48,6 +51,7 @@ const verifyToken = async (token) => {
       clearAuthenticatedUser();
       return false;
     }
+    currentUser = await response.json();
     return true;
 };
 
@@ -70,4 +74,5 @@ export {
   getRememberMe,
   setRememberMe,
   verifyToken,
+  getUserToken,
 };
