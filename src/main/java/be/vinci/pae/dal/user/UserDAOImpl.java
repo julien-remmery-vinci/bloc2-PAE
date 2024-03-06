@@ -13,7 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Implementation of UserDS.
+ * Implementation of UserDAO.
  */
 public class UserDAOImpl implements UserDAO {
 

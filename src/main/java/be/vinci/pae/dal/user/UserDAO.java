@@ -3,7 +3,7 @@ package be.vinci.pae.dal.user;
 import be.vinci.pae.business.user.UserDTO;
 
 /**
- * Interface of UserDSImpl.
+ * Interface of UserDAOImpl.
  */
 public interface UserDAO {
 
