@@ -1,15 +1,17 @@
-import { clearAuthenticatedUser, getAuthenticatedUser } from "../../utils/auths";
+import {
+  clearAuthenticatedUser,
+  getUserToken
+} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
 
 const Navbar = () => {
   renderNavbar();
 };
 
-function renderNavbar() {
+async function renderNavbar() {
   const notLoggedNavbar = `
     <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
       <a class="navbar-brand" href="#">VinciOBS</a>
-
     </nav>
   `;
 
@@ -25,9 +27,9 @@ function renderNavbar() {
   </nav>
   `;
   const navbar = document.querySelector('#navbarWrapper');
-  if (getAuthenticatedUser() === undefined) {
+  if (getUserToken() === undefined) {
     navbar.innerHTML = notLoggedNavbar;
-  }else{
+  } else {
     navbar.innerHTML = loggedNavbar;
     const logOutButton = document.querySelector('#button2');
     logOutButton.addEventListener('click', () => {

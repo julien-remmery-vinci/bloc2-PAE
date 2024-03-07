@@ -1,5 +1,5 @@
 import {
-  getAuthenticatedUser,
+  getUserToken,
   verifyToken
 } from '../../utils/auths';
 import usePathPrefix from '../../utils/path-prefix';
@@ -47,9 +47,9 @@ function onFrontendLoad() {
     const componentToRender = routes[uri];
     if (!componentToRender) throw Error(`The ${uri} resource does not exist.`);
 
-    const user = getAuthenticatedUser();
-    if(!user) Navigate('/login');
-    await verifyToken(user?.token);
+    const token = getUserToken();
+    if(!token) Navigate('/login');
+    await verifyToken(token);
     componentToRender();
   });
 }
