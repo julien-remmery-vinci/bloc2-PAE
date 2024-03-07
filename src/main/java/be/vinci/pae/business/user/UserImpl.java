@@ -3,6 +3,8 @@ package be.vinci.pae.business.user;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.sql.Date;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
@@ -14,7 +16,7 @@ public class UserImpl implements User {
   private String firstname;
   private String lastname;
   private String email;
-  @JsonIgnore
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
   private String phoneNumber;
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yy hh:mm:ss")

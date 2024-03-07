@@ -15,6 +15,12 @@ public interface UserUCC {
   UserDTO login(String email, String password);
 
   /**
+   * Register a user.
+   * @param user
+   * @return
+   */
+  UserDTO register(UserDTO user);
+  /**
    * Get a user by its id.
    *
    * @param id the id of the user

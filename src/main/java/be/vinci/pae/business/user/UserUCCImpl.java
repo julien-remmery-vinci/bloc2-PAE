@@ -1,13 +1,18 @@
 package be.vinci.pae.business.user;
 
 import be.vinci.pae.dal.user.UserDAO;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Implementation of UserUCC.
  */
 public class UserUCCImpl implements UserUCC {
-
   /**
    * Injected UserDAO.
    */
@@ -38,6 +43,34 @@ public class UserUCCImpl implements UserUCC {
 
     //Password did not match
     return null;
+  }
+
+  /**
+   * Register a user.
+   * @param user
+   * @return
+   */
+  public UserDTO register(UserDTO user) {
+    String role;
+    if (!user.getEmail()
+            .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
+      throw new WebApplicationException("email is not valid", Response.Status.BAD_REQUEST);
+    }
+    if(user.getEmail().matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@student\\.vinci\\.be$")) {
+      role = "E";
+    } else {
+      role = user.getRole().toString();
+      if(!role.equals("A") && !role.equals("P")) {
+        throw new WebApplicationException("role is not valid", Response.Status.BAD_REQUEST);
+      }
+    }
+    user.setRole(UserDTO.Role.valueOf(role));
+    UserDTO userFound = userDAO.getOneByEmail(user.getEmail());
+    if (userFound != null) {
+      return null;
+    }
+    user = userDAO.addUser(user);
+    return user;
   }
 
   /**

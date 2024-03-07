@@ -95,4 +95,32 @@ public class UserDAOImpl implements UserDAO {
       }
     }
   }
+
+  /**
+   * Register a user.
+   * @param user
+   * @return
+   */
+  public UserDTO addUser(UserDTO user) {
+    try (PreparedStatement addUser = dalServices.getPS(
+        "INSERT INTO pae.users (lastname, firstname, email, password, phoneNumber, registerDate, role) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING idUser")) {
+      addUser.setString(1, user.getLastname());
+      addUser.setString(2, user.getFirstname());
+      addUser.setString(3, user.getEmail());
+      addUser.setString(4, user.getPassword());
+      addUser.setString(5, user.getPhoneNumber());
+      addUser.setDate(6, user.getRegisterDate());
+      addUser.setString(7, user.getRole().toString());
+      try (ResultSet rs = addUser.executeQuery()) {
+        if (rs.next()) {
+          user.setIdUser(rs.getInt(1));
+          return user;
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return null;
+  }
 }

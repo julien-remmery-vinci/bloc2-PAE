@@ -1,6 +1,5 @@
 package be.vinci.pae.presentation;
 
-import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.presentation.filters.Authorize;
@@ -22,6 +21,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+
 import java.util.Date;
 import org.glassfish.jersey.server.ContainerRequest;
 
@@ -31,8 +31,6 @@ import org.glassfish.jersey.server.ContainerRequest;
 @Singleton
 @Path("/auths")
 public class AuthRessource {
-  @Inject
-  private Factory factory;
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
@@ -84,45 +82,34 @@ public class AuthRessource {
     return result;
   }
 
+  /**
+   * Create a UserDTO.
+   *
+   * @param
+   * @return a token and the registered user
+   */
   @POST
   @Path("register")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode register(JsonNode json) {
+  public ObjectNode register(UserDTO user) {
     // Get and check credentials
-    if (!json.hasNonNull("firstname") || !json.hasNonNull("lastname") || !json.hasNonNull("password") || !json.hasNonNull("email")
-            || !json.hasNonNull("phoneNumber") || !json.hasNonNull("role")){
-      throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
-              .entity("login or password required").type("text/plain").build());
-    }
-    String firstname = json.get("firstname").asText();
-    String lastname = json.get("lastname").asText();
-    String email = json.get("email").asText();
-    String phoneNumber = json.get("phoneNumber").asText();
-    String password = json.get("password").asText();
-    String role = json.get("role").asText();
-
-    if (!email
-            .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
-      throw new WebApplicationException("email is not valid", Response.Status.BAD_REQUEST);
-    }
-    if (firstname.isEmpty() || lastname.isEmpty() || phoneNumber.isEmpty() || role.isEmpty() || email.isEmpty() || password.isEmpty()) {
-      throw new WebApplicationException("email or password is empty", Response.Status.BAD_REQUEST);
+    if (user.getFirstname() == null || user.getLastname() == null || user.getPassword() == null || user.getEmail() == null
+            || user.getPhoneNumber() == null){
+      throw new WebApplicationException("parameters required", Response.Status.BAD_REQUEST);
     }
 
-    // Try to login
-    UserDTO user = factory.getUser();
-    user.setEmail(email);
-    user.setFirstname(firstname);
-    user.setLastname(lastname);
-    user.setPhoneNumber(phoneNumber);
-    user.setPassword(password);
-    user.setRole(UserDTO.Role.valueOf(role));
+    java.sql.Date registerDate = new java.sql.Date(System.currentTimeMillis());
+
+    if (user.getFirstname().isEmpty() || user.getLastname().isEmpty() || user.getPhoneNumber().isEmpty() || user.getEmail().isEmpty() || user.getPassword().isEmpty()) {
+      throw new WebApplicationException("parameters empty", Response.Status.BAD_REQUEST);
+    }
+
+    user.setRegisterDate(registerDate);
     user = userUCC.register(user);
+
     if (user == null) {
-      throw new WebApplicationException(Response.status(Response.Status.CONFLICT)
-              .entity("this resource already exists").type(MediaType.TEXT_PLAIN)
-              .build());
+      throw new WebApplicationException("User already exists", Status.CONFLICT);
     }
     String token = generateToken(user);
     if (token == null) {
