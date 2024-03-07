@@ -1,10 +1,16 @@
 import { clearPage } from "../../utils/render";
 import { getAuthenticatedUser } from "../../utils/auths";
+import Navigate from "../Router/Navigate";
 
 const HomePage = () => {
     const authenticatedUser = getAuthenticatedUser();
-    clearPage();
-    renderHomePage(authenticatedUser);
+    if(!authenticatedUser) {
+        Navigate('/login');
+        window.location.reload();
+    }else{
+        clearPage();
+        renderHomePage(authenticatedUser);
+    }
 };
 
 function renderHomePage(authenticatedUser) {
