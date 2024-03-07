@@ -21,6 +21,7 @@ public interface UserUCC {
    * @return the registered user
    */
   UserDTO register(UserDTO user);
+
   /**
    * Get a user by its id.
    *

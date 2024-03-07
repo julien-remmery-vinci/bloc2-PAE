@@ -105,8 +105,8 @@ public class UserDAOImpl implements UserDAO {
    */
   public UserDTO addUser(UserDTO user) {
     try (PreparedStatement addUser = dalServices.getPS(
-        "INSERT INTO pae.users (lastname, firstname, email, password, phoneNumber, registerDate, role) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING idUser")) {
+        "INSERT INTO pae.users (lastname, firstname, email, password, phoneNumber, registerDate,"
+            + " role) " + "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING idUser")) {
       addUser.setString(1, user.getLastname());
       addUser.setString(2, user.getFirstname());
       addUser.setString(3, user.getEmail());

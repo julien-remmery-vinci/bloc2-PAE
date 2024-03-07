@@ -1,8 +1,8 @@
 package be.vinci.pae.business.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import java.sql.Date;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.sql.Date;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
