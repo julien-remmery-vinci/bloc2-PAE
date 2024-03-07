@@ -100,6 +100,13 @@ public class AuthRessource {
       throw new WebApplicationException("parameters required", Response.Status.BAD_REQUEST);
     }
 
+    if (!user.getEmail()
+            .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
+      throw new WebApplicationException("email is not valid", Response.Status.BAD_REQUEST);
+    }
+    if (!user.getRole().toString().equals("A") && !user.getRole().toString().equals("P")) {
+      throw new WebApplicationException("role is not valid", Response.Status.BAD_REQUEST);
+    }
     java.sql.Date registerDate = new java.sql.Date(System.currentTimeMillis());
 
     if (user.getFirstname().isEmpty() || user.getLastname().isEmpty() || user.getPhoneNumber()

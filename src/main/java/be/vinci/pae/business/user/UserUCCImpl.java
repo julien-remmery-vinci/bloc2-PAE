@@ -49,20 +49,12 @@ public class UserUCCImpl implements UserUCC {
    * @return the registered user
    */
   public UserDTO register(UserDTO user) {
-    String role;
-    if (!user.getEmail()
-        .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
-      throw new WebApplicationException("email is not valid", Response.Status.BAD_REQUEST);
-    }
     if (user.getEmail().matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@student\\.vinci\\.be$")) {
-      role = "E";
-    } else {
-      role = user.getRole().toString();
-      if (!role.equals("A") && !role.equals("P")) {
-        throw new WebApplicationException("role is not valid", Response.Status.BAD_REQUEST);
-      }
+      user.setRole(UserDTO.Role.valueOf("E"));
+    } else if (user.getEmail().matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@vinci\\.be$") && user.getRole() != null && !user.getRole().toString().equals("A") && !user.getRole().toString().equals("P")) {
+      throw new WebApplicationException("Invalid role", Response.Status.BAD_REQUEST);
     }
-    user.setRole(UserDTO.Role.valueOf(role));
+
     UserDTO userFound = userDAO.getOneByEmail(user.getEmail());
     if (userFound != null) {
       return null;
