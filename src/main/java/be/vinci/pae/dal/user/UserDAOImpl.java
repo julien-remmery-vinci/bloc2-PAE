@@ -79,8 +79,9 @@ public class UserDAOImpl implements UserDAO {
     for (Field f : UserImpl.class.getDeclaredFields()) {
       try {
         // Get the setter method of the field
-        Method m = UserDTO.class.getDeclaredMethod("set" + f.getName().substring(0, 1).toUpperCase()
-            + f.getName().substring(1), f.getType());
+        Method m = UserDTO.class.getDeclaredMethod(
+            "set" + f.getName().substring(0, 1).toUpperCase() + f.getName().substring(1),
+            f.getType());
         // Set the value of the field
         // If the field is of enum type, we need to convert the string to the value in the enum
         if (f.getType().isEnum()) {
@@ -89,8 +90,8 @@ public class UserDAOImpl implements UserDAO {
         } else {
           m.invoke(user, rs.getObject(f.getName()));
         }
-      } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException |
-               ClassNotFoundException e) {
+      } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException
+               | ClassNotFoundException e) {
         throw new RuntimeException(e);
       }
     }
@@ -99,8 +100,8 @@ public class UserDAOImpl implements UserDAO {
   /**
    * Register a user.
    *
-   * @param user
-   * @return
+   * @param user the user to register
+   * @return the registered user
    */
   public UserDTO addUser(UserDTO user) {
     try (PreparedStatement addUser = dalServices.getPS(

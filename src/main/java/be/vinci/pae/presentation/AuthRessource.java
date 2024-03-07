@@ -21,7 +21,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
 import java.util.Date;
 import org.glassfish.jersey.server.ContainerRequest;
 
@@ -86,7 +85,7 @@ public class AuthRessource {
   /**
    * Create a UserDTO.
    *
-   * @param
+   * @param user the user to register
    * @return a token and the registered user
    */
   @POST

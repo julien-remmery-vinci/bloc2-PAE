@@ -29,4 +29,5 @@ public interface UserDAO {
    * @return the user added
    */
   UserDTO addUser(UserDTO user);
+
 }

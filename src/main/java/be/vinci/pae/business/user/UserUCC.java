@@ -16,8 +16,9 @@ public interface UserUCC {
 
   /**
    * Register a user.
-   * @param user
-   * @return
+   *
+   * @param user the user to register
+   * @return the registered user
    */
   UserDTO register(UserDTO user);
   /**
@@ -27,4 +28,5 @@ public interface UserUCC {
    * @return the user, null if no user was found
    */
   UserDTO getUser(int id);
+
 }

@@ -49,8 +49,8 @@ public class UserUCCImpl implements UserUCC {
   /**
    * Register a user.
    *
-   * @param user
-   * @return
+   * @param user the user to register
+   * @return the registered user
    */
   public UserDTO register(UserDTO user) {
     String role;
