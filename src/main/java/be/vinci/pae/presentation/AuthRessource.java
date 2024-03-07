@@ -1,5 +1,6 @@
 package be.vinci.pae.presentation;
 
+import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.presentation.filters.Authorize;
@@ -30,7 +31,8 @@ import org.glassfish.jersey.server.ContainerRequest;
 @Singleton
 @Path("/auths")
 public class AuthRessource {
-
+  @Inject
+  private Factory factory;
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
@@ -53,7 +55,7 @@ public class AuthRessource {
     }
     // verify if email is valid
     if (!json.get("email").asText()
-        .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
+            .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
       throw new WebApplicationException("email is not valid", Response.Status.BAD_REQUEST);
     }
     // verify if email or password are empty
@@ -82,6 +84,57 @@ public class AuthRessource {
     return result;
   }
 
+  @POST
+  @Path("register")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public ObjectNode register(JsonNode json) {
+    // Get and check credentials
+    if (!json.hasNonNull("firstname") || !json.hasNonNull("lastname") || !json.hasNonNull("password") || !json.hasNonNull("email")
+            || !json.hasNonNull("phoneNumber") || !json.hasNonNull("role")){
+      throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+              .entity("login or password required").type("text/plain").build());
+    }
+    String firstname = json.get("firstname").asText();
+    String lastname = json.get("lastname").asText();
+    String email = json.get("email").asText();
+    String phoneNumber = json.get("phoneNumber").asText();
+    String password = json.get("password").asText();
+    String role = json.get("role").asText();
+
+    if (!email
+            .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
+      throw new WebApplicationException("email is not valid", Response.Status.BAD_REQUEST);
+    }
+    if (firstname.isEmpty() || lastname.isEmpty() || phoneNumber.isEmpty() || role.isEmpty() || email.isEmpty() || password.isEmpty()) {
+      throw new WebApplicationException("email or password is empty", Response.Status.BAD_REQUEST);
+    }
+
+    // Try to login
+    UserDTO user = factory.getUser();
+    user.setEmail(email);
+    user.setFirstname(firstname);
+    user.setLastname(lastname);
+    user.setPhoneNumber(phoneNumber);
+    user.setPassword(password);
+    user.setRole(UserDTO.Role.valueOf(role));
+    user = userUCC.register(user);
+    if (user == null) {
+      throw new WebApplicationException(Response.status(Response.Status.CONFLICT)
+              .entity("this resource already exists").type(MediaType.TEXT_PLAIN)
+              .build());
+    }
+    String token = generateToken(user);
+    if (token == null) {
+      return null;
+    }
+    ObjectNode result = jsonMapper.createObjectNode();
+    result.put("token", token);
+    result.put("user", jsonMapper.convertValue(user, ObjectNode.class));
+    // Return token and user
+    return result;
+  }
+
   /**
    * Create token expiring in 1 hour (3600000ms).
    *
@@ -92,9 +145,9 @@ public class AuthRessource {
     String token;
     try {
       token = JWT.create()
-          .withIssuer("auth0")
-          .withExpiresAt(new Date(System.currentTimeMillis() + 3600000))
-          .withClaim("user", user.getIdUser()).sign(this.jwtAlgorithm);
+              .withIssuer("auth0")
+              .withExpiresAt(new Date(System.currentTimeMillis() + 3600000))
+              .withClaim("user", user.getIdUser()).sign(this.jwtAlgorithm);
     } catch (Exception e) {
       System.out.println("Unable to create token");
       return null;
