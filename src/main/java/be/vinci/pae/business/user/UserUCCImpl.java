@@ -1,12 +1,8 @@
 package be.vinci.pae.business.user;
 
 import be.vinci.pae.dal.user.UserDAO;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 /**
