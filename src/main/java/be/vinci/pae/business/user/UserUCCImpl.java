@@ -54,11 +54,13 @@ public class UserUCCImpl implements UserUCC {
     } else if (user.getEmail().matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@vinci\\.be$") && user.getRole() != null && !user.getRole().toString().equals("A") && !user.getRole().toString().equals("P")) {
       throw new WebApplicationException("Invalid role", Response.Status.BAD_REQUEST);
     }
-
     UserDTO userFound = userDAO.getOneByEmail(user.getEmail());
     if (userFound != null) {
       return null;
     }
+    java.sql.Date registerDate = new java.sql.Date(System.currentTimeMillis());
+    user.setRegisterDate(registerDate);
+
     user = userDAO.addUser(user);
     return user;
   }

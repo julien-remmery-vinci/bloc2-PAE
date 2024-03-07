@@ -99,7 +99,6 @@ public class AuthRessource {
         || user.getPhoneNumber() == null) {
       throw new WebApplicationException("parameters required", Response.Status.BAD_REQUEST);
     }
-
     if (!user.getEmail()
             .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
       throw new WebApplicationException("email is not valid", Response.Status.BAD_REQUEST);
@@ -107,14 +106,11 @@ public class AuthRessource {
     if (!user.getRole().toString().equals("A") && !user.getRole().toString().equals("P")) {
       throw new WebApplicationException("role is not valid", Response.Status.BAD_REQUEST);
     }
-    java.sql.Date registerDate = new java.sql.Date(System.currentTimeMillis());
-
     if (user.getFirstname().isEmpty() || user.getLastname().isEmpty() || user.getPhoneNumber()
         .isEmpty() || user.getEmail().isEmpty() || user.getPassword().isEmpty()) {
       throw new WebApplicationException("parameters empty", Response.Status.BAD_REQUEST);
     }
 
-    user.setRegisterDate(registerDate);
     user = userUCC.register(user);
 
     if (user == null) {
