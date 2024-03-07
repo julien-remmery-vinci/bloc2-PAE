@@ -18,7 +18,7 @@ public class ContactUCCImpl implements ContactUCC {
    * @return the contact
    */
   @Override
-  public ContactDTO refuseContact(int id) {
-    return contactDAO.refuseContact(id);
+  public ContactDTO refuseContact(int id, String refusalReason) {
+    return contactDAO.refuseContact(id, refusalReason);
   }
 }

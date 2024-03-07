@@ -27,11 +27,14 @@ public class ContactRessource {
    * @return the contact
    */
   @Path("/{id}/accept")
-  public ContactDTO refuseContact(@PathParam("id") int id) {
+  public ContactDTO refuseContact(@PathParam("id") int id, String refusalReason) {
     if (id < 0) {
       throw new WebApplicationException("Invalid id", Status.BAD_REQUEST);
     }
-    ContactDTO contact = contactUCC.refuseContact(id);
+    if (refusalReason == null || refusalReason.isEmpty()) {
+      throw new WebApplicationException("Refusal reason is required", Status.BAD_REQUEST);
+    }
+    ContactDTO contact = contactUCC.refuseContact(id, refusalReason);
     if (contact == null) {
       throw new WebApplicationException("Contact not found", Status.NOT_FOUND);
     }

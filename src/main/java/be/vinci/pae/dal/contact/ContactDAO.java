@@ -7,5 +7,5 @@ import be.vinci.pae.business.contact.ContactDTO;
  */
 public interface ContactDAO {
 
-  ContactDTO refuseContact(int id);
+  ContactDTO refuseContact(int id, String refusalReason);
 }

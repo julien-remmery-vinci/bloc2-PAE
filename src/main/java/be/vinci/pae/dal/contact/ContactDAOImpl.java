@@ -29,10 +29,11 @@ public class ContactDAOImpl implements ContactDAO {
    * @return the contact
    */
   @Override
-  public ContactDTO refuseContact(int id) {
+  public ContactDTO refuseContact(int id, String refusalReason) {
     try (PreparedStatement ps = dalServices.getPS(
-        "UPDATE pae.contacts SET status = 'refused' WHERE id = ? RETURNING *;")) {
-      ps.setInt(1, id);
+        "UPDATE pae.contacts SET status = 'refused' AND refusalReason = ? WHERE id = ? RETURNING *;")) {
+      ps.setString(1, refusalReason);
+      ps.setInt(2, id);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           return getContactFromRs(rs);
