@@ -2,6 +2,8 @@ package be.vinci.pae.business.user;
 
 import be.vinci.pae.dal.user.UserDAO;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Implementation of UserUCC.
@@ -38,6 +40,30 @@ public class UserUCCImpl implements UserUCC {
 
     //Password did not match
     return null;
+  }
+
+  /**
+   * Register a user.
+   *
+   * @param user the user to register
+   * @return the registered user
+   */
+  public UserDTO register(UserDTO user) {
+    if (user.getEmail().matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@student\\.vinci\\.be$")) {
+      user.setRole(UserDTO.Role.valueOf("E"));
+    } else if (user.getEmail().matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@vinci\\.be$")
+            && user.getRole() != null && !user.getRole().toString().equals("A") && !user.getRole().toString().equals("P")) {
+      throw new WebApplicationException("Invalid role", Response.Status.BAD_REQUEST);
+    }
+    UserDTO userFound = userDAO.getOneByEmail(user.getEmail());
+    if (userFound != null) {
+      return null;
+    }
+    java.sql.Date registerDate = new java.sql.Date(System.currentTimeMillis());
+    user.setRegisterDate(registerDate);
+
+    user = userDAO.addUser(user);
+    return user;
   }
 
   /**

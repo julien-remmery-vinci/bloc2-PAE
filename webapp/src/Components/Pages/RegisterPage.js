@@ -57,10 +57,12 @@ function renderRegisterForm() {
   const prof = document.createElement('input');
   prof.type = 'radio';
   prof.name = 'role';
+  prof.value = 'P';
   prof.className = 'form-check';
   prof.required = !div.hidden;
   const admin = document.createElement('input');
   admin.type = 'radio';
+  admin.value = 'A';
   admin.name = 'role';
   admin.className = 'form-check';
   div1.appendChild(prof);
