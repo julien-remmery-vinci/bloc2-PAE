@@ -13,6 +13,7 @@ import jakarta.ws.rs.core.Response;
  * Implementation of UserUCC.
  */
 public class UserUCCImpl implements UserUCC {
+
   /**
    * Injected UserDAO.
    */
@@ -47,20 +48,21 @@ public class UserUCCImpl implements UserUCC {
 
   /**
    * Register a user.
+   *
    * @param user
    * @return
    */
   public UserDTO register(UserDTO user) {
     String role;
     if (!user.getEmail()
-            .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
+        .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
       throw new WebApplicationException("email is not valid", Response.Status.BAD_REQUEST);
     }
-    if(user.getEmail().matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@student\\.vinci\\.be$")) {
+    if (user.getEmail().matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@student\\.vinci\\.be$")) {
       role = "E";
     } else {
       role = user.getRole().toString();
-      if(!role.equals("A") && !role.equals("P")) {
+      if (!role.equals("A") && !role.equals("P")) {
         throw new WebApplicationException("role is not valid", Response.Status.BAD_REQUEST);
       }
     }

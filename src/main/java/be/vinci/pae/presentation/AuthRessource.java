@@ -31,6 +31,7 @@ import org.glassfish.jersey.server.ContainerRequest;
 @Singleton
 @Path("/auths")
 public class AuthRessource {
+
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
@@ -53,7 +54,7 @@ public class AuthRessource {
     }
     // verify if email is valid
     if (!json.get("email").asText()
-            .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
+        .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
       throw new WebApplicationException("email is not valid", Response.Status.BAD_REQUEST);
     }
     // verify if email or password are empty
@@ -94,14 +95,16 @@ public class AuthRessource {
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode register(UserDTO user) {
     // Get and check credentials
-    if (user.getFirstname() == null || user.getLastname() == null || user.getPassword() == null || user.getEmail() == null
-            || user.getPhoneNumber() == null){
+    if (user.getFirstname() == null || user.getLastname() == null || user.getPassword() == null
+        || user.getEmail() == null
+        || user.getPhoneNumber() == null) {
       throw new WebApplicationException("parameters required", Response.Status.BAD_REQUEST);
     }
 
     java.sql.Date registerDate = new java.sql.Date(System.currentTimeMillis());
 
-    if (user.getFirstname().isEmpty() || user.getLastname().isEmpty() || user.getPhoneNumber().isEmpty() || user.getEmail().isEmpty() || user.getPassword().isEmpty()) {
+    if (user.getFirstname().isEmpty() || user.getLastname().isEmpty() || user.getPhoneNumber()
+        .isEmpty() || user.getEmail().isEmpty() || user.getPassword().isEmpty()) {
       throw new WebApplicationException("parameters empty", Response.Status.BAD_REQUEST);
     }
 
@@ -132,9 +135,9 @@ public class AuthRessource {
     String token;
     try {
       token = JWT.create()
-              .withIssuer("auth0")
-              .withExpiresAt(new Date(System.currentTimeMillis() + 3600000))
-              .withClaim("user", user.getIdUser()).sign(this.jwtAlgorithm);
+          .withIssuer("auth0")
+          .withExpiresAt(new Date(System.currentTimeMillis() + 3600000))
+          .withClaim("user", user.getIdUser()).sign(this.jwtAlgorithm);
     } catch (Exception e) {
       System.out.println("Unable to create token");
       return null;

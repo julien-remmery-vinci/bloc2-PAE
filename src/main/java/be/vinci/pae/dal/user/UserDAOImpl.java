@@ -98,6 +98,7 @@ public class UserDAOImpl implements UserDAO {
 
   /**
    * Register a user.
+   *
    * @param user
    * @return
    */
