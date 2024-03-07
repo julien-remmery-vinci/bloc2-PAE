@@ -5,4 +5,5 @@ package be.vinci.pae.business.contact;
  */
 public interface ContactUCC {
 
+  ContactDTO refuseContact(int id);
 }
