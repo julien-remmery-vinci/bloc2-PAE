@@ -19,7 +19,6 @@ public interface ContactDAO {
    * Refuse a contact.
    *
    * @param contact the contact to refuse
-   * @return the contact
    */
   void refuseContact(ContactDTO contact);
 }
