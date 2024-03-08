@@ -7,5 +7,19 @@ import be.vinci.pae.business.contact.ContactDTO;
  */
 public interface ContactDAO {
 
-  ContactDTO refuseContact(int id, String refusalReason);
+  /**
+   * Get a contact by its id.
+   *
+   * @param id the id of the contact
+   * @return the contact
+   */
+  ContactDTO getOneById(int id);
+
+  /**
+   * Refuse a contact.
+   *
+   * @param contact the contact to refuse
+   * @return the contact
+   */
+  void refuseContact(ContactDTO contact);
 }
