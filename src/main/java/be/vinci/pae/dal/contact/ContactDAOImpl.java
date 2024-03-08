@@ -22,18 +22,12 @@ public class ContactDAOImpl implements ContactDAO {
   @Inject
   private DALServices dalServices;
 
-  /**
-   * Refuse a contact.
-   *
-   * @param id the id of the contact
-   * @return the contact
-   */
   @Override
-  public ContactDTO refuseContact(int id, String refusalReason) {
+  public ContactDTO getOneById(int id) {
     try (PreparedStatement ps = dalServices.getPS(
-        "UPDATE pae.contacts SET status = 'refused' AND refusalReason = ? WHERE id = ? RETURNING *;")) {
-      ps.setString(1, refusalReason);
-      ps.setInt(2, id);
+        "SELECT idContact, company, student, state, meetPlace, refusalReason, academicYear "
+            + "FROM pae.contacts WHERE id = ?;")) {
+      ps.setInt(1, id);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           return getContactFromRs(rs);
@@ -43,6 +37,24 @@ public class ContactDAOImpl implements ContactDAO {
       throw new RuntimeException(e);
     }
     return null;
+  }
+
+  /**
+   * Refuse a contact.
+   *
+   * @param contact the contact to refuse
+   */
+  @Override
+  public void refuseContact(ContactDTO contact) {
+    try (PreparedStatement ps = dalServices.getPS(
+        "UPDATE pae.contacts SET state = ? AND refusalReason = ? WHERE idContact = ?;")) {
+      ps.setString(1, contact.getState());
+      ps.setString(2, contact.getRefusalReason());
+      ps.setInt(3, contact.getIdContact());
+      ps.executeUpdate();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   /**

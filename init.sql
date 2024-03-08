@@ -17,12 +17,12 @@ CREATE TABLE pae.companies
 (
     idCompany           SERIAL PRIMARY KEY,
     tradeName           TEXT    NOT NULL,
-    designation         TEXT    NOT NULL,
+    designation         TEXT    NULL,
     address             TEXT    NOT NULL,
-    phoneNumber         TEXT    NOT NULL,
-    email               TEXT    NOT NULL,
+    phoneNumber         TEXT    NULL,
+    email               TEXT    NULL,
     blacklisted         BOOLEAN NOT NULL,
-    blacklistMotivation TEXT    NOT NULL
+    blacklistMotivation TEXT    NULL
 );
 
 CREATE TABLE pae.contacts
@@ -31,8 +31,8 @@ CREATE TABLE pae.contacts
     company       INTEGER REFERENCES pae.companies (idCompany) NOT NULL,
     student       INTEGER REFERENCES pae.users (iduser)        NOT NULL,
     state         TEXT                                         NOT NULL,
-    meetPlace     TEXT                                         NOT NULL,
-    refusalReason TEXT                                         NOT NULL,
+    meetPlace     TEXT                                         NULL,
+    refusalReason TEXT                                         NULL,
     academicYear  TEXT                                         NOT NULL
 );
 

@@ -32,7 +32,7 @@ public class ContactRessource {
    * @return the contact
    */
   @POST
-  @Path("/{id}/accept")
+  @Path("/{id}/refuse")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ContactDTO refuseContact(@PathParam("id") int id, JsonNode json) {
