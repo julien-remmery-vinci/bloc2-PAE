@@ -44,7 +44,7 @@ Content-Type: application/json
 {
   "firstname": "haj",
   "lastname": "hajou",
-  "email": "haj.hoaau@student.vinci.be",
+  "email": "haj.hoaaopou@student.vinci.be",
   "phoneNumber": "123456789",
   "password": "haj"
 }
