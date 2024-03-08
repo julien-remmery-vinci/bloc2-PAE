@@ -103,7 +103,8 @@ public class AuthRessource {
             .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
       throw new WebApplicationException("email is not valid", Response.Status.BAD_REQUEST);
     }
-    if (user.getRole() != null && !user.getRole().toString().equals("A") && !user.getRole().toString().equals("P")) {
+    if (user.getRole() != null && !user.getRole().toString().equals("A")
+            && !user.getRole().toString().equals("P")) {
       throw new WebApplicationException("role is not valid", Response.Status.BAD_REQUEST);
     }
     if (user.getFirstname().isEmpty() || user.getLastname().isEmpty() || user.getPhoneNumber()
