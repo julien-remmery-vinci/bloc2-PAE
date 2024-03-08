@@ -16,17 +16,21 @@ public class ContactUCCImpl implements ContactUCC {
   /**
    * Refuse a contact.
    *
-   * @param idContact the id of the contact
+   * @param idContact     the id of the contact
+   * @param refusalReason the refusal reason
+   * @param idUser        the id of the user
    * @return the contact
    */
   @Override
-  public ContactDTO refuseContact(int idContact, String refusalReason) {
+  public ContactDTO refuseContact(int idContact, String refusalReason, int idUser) {
     Contact contact = (Contact) contactDAO.getOneById(idContact);
     if (contact == null) {
       return null;
     }
-    // TODO check if the student matches the user that requested the action
-
+    if (contact.getStudent() != idUser) {
+      throw new WebApplicationException("You are not allowed to refuse this contact",
+          Status.FORBIDDEN);
+    }
     if (!contact.getState().equals(Contact.STATE_TAKEN)) {
       throw new WebApplicationException("The contact must be in the state 'taken' to be refused",
           Status.BAD_REQUEST);
