@@ -13,7 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Implementation of UserDS.
+ * Implementation of UserDAO.
  */
 public class UserDAOImpl implements UserDAO {
 
@@ -79,8 +79,9 @@ public class UserDAOImpl implements UserDAO {
     for (Field f : UserImpl.class.getDeclaredFields()) {
       try {
         // Get the setter method of the field
-        Method m = UserDTO.class.getDeclaredMethod("set" + f.getName().substring(0, 1).toUpperCase()
-            + f.getName().substring(1), f.getType());
+        Method m = UserDTO.class.getDeclaredMethod(
+            "set" + f.getName().substring(0, 1).toUpperCase() + f.getName().substring(1),
+            f.getType());
         // Set the value of the field
         // If the field is of enum type, we need to convert the string to the value in the enum
         if (f.getType().isEnum()) {
@@ -89,10 +90,39 @@ public class UserDAOImpl implements UserDAO {
         } else {
           m.invoke(user, rs.getObject(f.getName()));
         }
-      } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException |
-               ClassNotFoundException e) {
+      } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException
+               | ClassNotFoundException e) {
         throw new RuntimeException(e);
       }
     }
+  }
+
+  /**
+   * Register a user.
+   *
+   * @param user the user to register
+   * @return the registered user
+   */
+  public UserDTO addUser(UserDTO user) {
+    try (PreparedStatement addUser = dalServices.getPS(
+        "INSERT INTO pae.users (lastname, firstname, email, password, phoneNumber, registerDate,"
+            + " role) " + "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING idUser")) {
+      addUser.setString(1, user.getLastname());
+      addUser.setString(2, user.getFirstname());
+      addUser.setString(3, user.getEmail());
+      addUser.setString(4, user.getPassword());
+      addUser.setString(5, user.getPhoneNumber());
+      addUser.setDate(6, user.getRegisterDate());
+      addUser.setString(7, user.getRole().toString());
+      try (ResultSet rs = addUser.executeQuery()) {
+        if (rs.next()) {
+          user.setIdUser(rs.getInt(1));
+          return user;
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return null;
   }
 }

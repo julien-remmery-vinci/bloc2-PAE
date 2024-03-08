@@ -83,6 +83,51 @@ public class AuthRessource {
   }
 
   /**
+   * Create a UserDTO.
+   *
+   * @param user the user to register
+   * @return a token and the registered user
+   */
+  @POST
+  @Path("register")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public ObjectNode register(UserDTO user) {
+    // Get and check credentials
+    if (user.getFirstname() == null || user.getLastname() == null || user.getPassword() == null
+        || user.getEmail() == null
+        || user.getPhoneNumber() == null) {
+      throw new WebApplicationException("parameters required", Response.Status.BAD_REQUEST);
+    }
+    if (!user.getEmail()
+            .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
+      throw new WebApplicationException("email is not valid", Response.Status.BAD_REQUEST);
+    }
+    if (!user.getRole().toString().equals("A") && !user.getRole().toString().equals("P")) {
+      throw new WebApplicationException("role is not valid", Response.Status.BAD_REQUEST);
+    }
+    if (user.getFirstname().isEmpty() || user.getLastname().isEmpty() || user.getPhoneNumber()
+        .isEmpty() || user.getEmail().isEmpty() || user.getPassword().isEmpty()) {
+      throw new WebApplicationException("parameters empty", Response.Status.BAD_REQUEST);
+    }
+
+    user = userUCC.register(user);
+
+    if (user == null) {
+      throw new WebApplicationException("User already exists", Status.CONFLICT);
+    }
+    String token = generateToken(user);
+    if (token == null) {
+      return null;
+    }
+    ObjectNode result = jsonMapper.createObjectNode();
+    result.put("token", token);
+    result.put("user", jsonMapper.convertValue(user, ObjectNode.class));
+    // Return token and user
+    return result;
+  }
+
+  /**
    * Create token expiring in 1 hour (3600000ms).
    *
    * @param user the user to generate token for
