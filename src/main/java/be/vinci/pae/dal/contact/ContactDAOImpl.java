@@ -26,7 +26,7 @@ public class ContactDAOImpl implements ContactDAO {
   public ContactDTO getOneById(int id) {
     try (PreparedStatement ps = dalServices.getPS(
         "SELECT idContact, company, student, state, meetPlace, refusalReason, academicYear "
-            + "FROM pae.contacts WHERE id = ?;")) {
+            + "FROM pae.contacts WHERE idContact = ?;")) {
       ps.setInt(1, id);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
