@@ -25,3 +25,27 @@ Content-Type: application/json
 GET {{baseUrl}}/user
 Authorization: {{adminToken}}
 
+### Try to register user
+POST {{baseUrl}}/register
+Content-Type: application/json
+
+{
+  "firstname": "haj",
+  "lastname": "hajou",
+  "email": "haj.h@student.vinci.be",
+  "phoneNumber": "123456789",
+  "password": "haj"
+}
+
+### Try to register user
+POST {{baseUrl}}/register
+Content-Type: application/json
+
+{
+  "firstname": "haj",
+  "lastname": "hajou",
+  "email": "haj.hoaaopou@student.vinci.be",
+  "phoneNumber": "123456789",
+  "password": "haj"
+}
+

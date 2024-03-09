@@ -3,7 +3,7 @@ package be.vinci.pae.dal.user;
 import be.vinci.pae.business.user.UserDTO;
 
 /**
- * Interface of UserDSImpl.
+ * Interface of UserDAOImpl.
  */
 public interface UserDAO {
 
@@ -22,4 +22,13 @@ public interface UserDAO {
    * @return the user found, null if no user was found
    */
   UserDTO getOneById(int id);
+
+  /**
+   * Add a user to the database.
+   *
+   * @param user the user to add
+   * @return the user added
+   */
+  UserDTO addUser(UserDTO user);
+
 }

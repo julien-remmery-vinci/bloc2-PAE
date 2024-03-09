@@ -4,10 +4,10 @@ import Navigate from "../Router/Navigate";
 
 const HomePage = () => {
     const authenticatedUser = getAuthenticatedUser();
-    if (!authenticatedUser) {
+    if(!authenticatedUser) {
         Navigate('/login');
         window.location.reload();
-    } else {
+    }else{
         clearPage();
         renderHomePage(authenticatedUser);
     }

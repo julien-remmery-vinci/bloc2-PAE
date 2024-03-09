@@ -57,10 +57,12 @@ function renderRegisterForm() {
   const prof = document.createElement('input');
   prof.type = 'radio';
   prof.name = 'role';
+  prof.value = 'P';
   prof.className = 'form-check';
   prof.required = !div.hidden;
   const admin = document.createElement('input');
   admin.type = 'radio';
+  admin.value = 'A';
   admin.name = 'role';
   admin.className = 'form-check';
   div1.appendChild(prof);
@@ -75,6 +77,13 @@ function renderRegisterForm() {
   submit.value = "S'inscrire";
   submit.type = 'submit';
   submit.className = 'btn btn-primary';
+  const login = document.createElement('p');
+  login.textContent = 'Vous avez déjà un compte ? ';
+  login.className = 'd-block text-center mt-3';
+  const link = document.createElement('a');
+  link.textContent = 'Connectez-vous';
+  link.href = '/login';
+
   form.appendChild(titleFirstName);
   form.appendChild(firstname);
   form.appendChild(titleLastName);
@@ -92,6 +101,8 @@ function renderRegisterForm() {
   form.appendChild(div);
   form.appendChild(submit);
   main.appendChild(form);
+  main.appendChild(login);
+  login.appendChild(link);
   form.addEventListener('submit', onRegister);
 }
 
