@@ -3,7 +3,7 @@ package be.vinci.pae.business.company;
 /**
  * Implementation of Company which inherits of CompanyDTO.
  */
-public class CompanyImpl implements Company {
+public class CompanyImpl implements CompanyDTO {
 
   private int idCompany;
   private String tradeName;
@@ -14,66 +14,82 @@ public class CompanyImpl implements Company {
   private boolean blacklisted;
   private String blacklistedMotivation;
 
+  @Override
   public int getIdCompany() {
     return idCompany;
   }
 
+  @Override
   public void setIdCompany(int idCompany) {
     this.idCompany = idCompany;
   }
 
+  @Override
   public String getTradeName() {
     return tradeName;
   }
 
+  @Override
   public void setTradeName(String tradeName) {
     this.tradeName = tradeName;
   }
 
+  @Override
   public String getDesignation() {
     return designation;
   }
 
+  @Override
   public void setDesignation(String designation) {
     this.designation = designation;
   }
 
+  @Override
   public String getAddress() {
     return address;
   }
 
+  @Override
   public void setAddress(String address) {
     this.address = address;
   }
 
+  @Override
   public String getPhoneNumber() {
     return phoneNumber;
   }
 
+  @Override
   public void setPhoneNumber(String phoneNumber) {
     this.phoneNumber = phoneNumber;
   }
 
+  @Override
   public String getEmail() {
     return email;
   }
 
+  @Override
   public void setEmail(String email) {
     this.email = email;
   }
 
+  @Override
   public boolean isBlacklisted() {
     return blacklisted;
   }
 
+  @Override
   public void setBlacklisted(boolean blacklisted) {
     this.blacklisted = blacklisted;
   }
 
+  @Override
   public String getBlacklistedMotivation() {
     return blacklistedMotivation;
   }
 
+  @Override
   public void setBlacklistedMotivation(String blacklistedMotivation) {
     this.blacklistedMotivation = blacklistedMotivation;
   }
