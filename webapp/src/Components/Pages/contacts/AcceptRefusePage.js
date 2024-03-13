@@ -1,5 +1,5 @@
 import {clearPage} from "../../../utils/render";
-import {getAuthenticatedUser} from "../../../utils/auths";
+import {getAuthenticatedUser, getUserToken} from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
 const AcceptRefusePage = () => {
@@ -27,6 +27,11 @@ function buildPage() {
     const rightDiv = document.createElement('div');
     rightDiv.style.width = '50%';
     rightDiv.appendChild(getForm());
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'alert alert-danger';
+    errorDiv.hidden = true;
+    errorDiv.textContent = 'Erreur lors de la sauvegarde';
+    rightDiv.appendChild(errorDiv);
     mainDiv.appendChild(leftDiv);
     mainDiv.appendChild(rightDiv);
     main.appendChild(mainDiv);
@@ -108,9 +113,30 @@ function getForm() {
     return form;
 }
 
-function onSubmit(event) {
-    // TODO: Implement onSubmit function
+async function onSubmit(event) {
     event.preventDefault();
-}
+    const contactState = document.querySelector('select').value;
+    const refusalReason = document.querySelector('textarea').value;
+    const options = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': getUserToken(),
+        },
+        body: JSON.stringify({
+            refusalReason: refusalReason,
+        }),
+    };
+    let request;
+    if (contactState) {
+        // TODO: Implement accept request
+    } else {
+        // TODO : Get contact id
+        request = await fetch(`http://localhost:3000/contact/${id}/refuse`, options);
+    }
+    if(!request.ok) {
+        document.querySelector('.alert-danger').hidden = false;
+    }
 
-export default AcceptRefusePage;
+    export default AcceptRefusePage;
+}
