@@ -1,1 +1,24 @@
-@baseUrl=http://localhost:3000/contact
+@authsUrl=http://localhost:3000/auths
+@contactUrl=http://localhost:3000/contact
+
+### Try to login user
+POST {{authsUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "julien.remmery@student.vinci.be",
+  "password": "test"
+}
+
+> {%
+  client.global.set("token", response.body.token);
+%}
+
+### Refuse a contact
+POST {{contactUrl}}/2/refuse
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "refusalReason": "L'entreprise n'a plus besoin d'étudiants."
+}
