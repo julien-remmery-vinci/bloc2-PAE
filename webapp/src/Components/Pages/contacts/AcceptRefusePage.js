@@ -117,7 +117,7 @@ function getForm() {
 async function onSubmit(event) {
     event.preventDefault();
     const id = window.location.href.split("?")[1].split("=")[1];
-    // const contactState = document.querySelector('select').value;
+    const contactState = document.querySelector('select').value;
     const refusalReason = document.querySelector('textarea').value;
     const options = {
         method: 'POST',
@@ -129,12 +129,16 @@ async function onSubmit(event) {
             refusalReason,
         }),
     };
-    fetch(`http://localhost:3000/contact/${id}/refuse`, options)
+    if (contactState === 'true') {
+        // TODO add accept contact
+    } else {
+        fetch(`http://localhost:3000/contact/${id}/refuse`, options)
         .then(request => {
             if(request.status === 401) {
                 document.querySelector('.alert-danger').hidden = false;
             }
-        })
+        });
+    }
 }
 
 export default AcceptRefusePage;
