@@ -1,5 +1,6 @@
 package be.vinci.pae.dal;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 /**
@@ -14,4 +15,10 @@ public interface DALServices {
    * @return the prepared statement
    */
   PreparedStatement getPS(String request);
+  /**
+   * Get the connection to the database.
+   *
+   * @return the connection to the database
+   */
+  Connection getConnection();
 }

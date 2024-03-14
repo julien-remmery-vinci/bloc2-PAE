@@ -2,7 +2,6 @@ package be.vinci.pae.dal;
 
 import be.vinci.pae.utils.Config;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import org.apache.commons.dbcp2.BasicDataSource;
