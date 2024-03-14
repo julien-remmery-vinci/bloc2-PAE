@@ -1,9 +1,8 @@
 /**
- * UserRessource class.
- * <p>
- * This class is responsible for handling HTTP requests related to users. It uses the UserUCC class
- * to perform business logic operations and returns the results as JSON.
+ * UserRessource class. This class is responsible for handling HTTP requests related to users. It
+ * uses the UserUCC class to perform business logic operations and returns the results as JSON.
  */
+
 package be.vinci.pae.presentation;
 
 import be.vinci.pae.business.user.UserDTO;
@@ -30,10 +29,9 @@ public class UserRessource {
   private UserUCC userUCC;
 
   /**
-   * Handles HTTP GET requests to fetch all users.
-   *
-   * This method uses the injected UserUCC instance to fetch all users and returns them as a list
-   * of UserDTO objects. The list is automatically converted to JSON by the JAX-RS runtime.
+   * Handles HTTP GET requests to fetch all users. This method uses the injected UserUCC instance to
+   * fetch all users and returns them as a list of UserDTO objects. The list is automatically
+   * converted to JSON by the JAX-RS runtime.
    *
    * @return a list of UserDTO objects representing all users
    */

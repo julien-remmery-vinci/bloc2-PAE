@@ -1,8 +1,22 @@
 import { clearPage, renderPageTitle } from "../../utils/render";
 
+const fetchUsers = async () => {
+  try {
+    fetch("http://localhost:3000/users/all")
+      .then(response => response.json())
+      .then(data => {
+        renderUsers(data);
+      })
+      .catch((error) => console.error(error));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const SearchPage = () => {
   renderPageTitle("Recherche");
   clearPage();
+  fetchUsers();
   renderSearchPage();
 };
 
@@ -37,6 +51,23 @@ function renderSearchPage() {
     </table>
     </div>
 `;
+};
+
+function renderUsers(users) {
+  const table = document.querySelector('table');
+  const tbody = document.createElement('tbody');
+  users.forEach(user => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${user.lastname}</td>
+      <td>${user.firstname}</td>
+      <td>${user.role}</td>
+      <td>${user.academicYear}</td>
+      <td>${user.internshipAccepted}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
 }
 
 export default SearchPage;

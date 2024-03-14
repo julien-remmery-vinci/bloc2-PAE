@@ -129,17 +129,16 @@ public class UserDAOImpl implements UserDAO {
   }
 
   /**
-   * Fetches all users from the database.
-   * <p>
-   * This method prepares a SQL statement to fetch all users from the database. It then executes the
-   * statement and processes the result set by calling the getResults method.
+   * Fetches all users from the database. This method prepares a SQL statement to fetch all users
+   * from the database. It then executes the statement and processes the result set by calling the
+   * getResults method.
    *
    * @return a list of UserDTO objects representing all users in the database
    * @throws RuntimeException if a SQLException is caught
    */
   public List<UserDTO> getAllUsers() {
     try (PreparedStatement getUsers = dalServices.getPS(
-        "SELECT idUser, lastname, firstname, email, phoneNumber, registerDate, role "
+        "SELECT idUser, lastname, firstname, email, password, phoneNumber, registerDate, role "
             + "FROM pae.users")) {
       try (ResultSet rs = getUsers.executeQuery()) {
         return getResults(rs);
@@ -150,11 +149,9 @@ public class UserDAOImpl implements UserDAO {
   }
 
   /**
-   * Processes a ResultSet to create a list of UserDTO objects.
-   * <p>
-   * This method iterates over the rows in the given ResultSet. For each row, it creates a new
-   * UserDTO object, populates it with the data from the row, and adds it to a list. The list of
-   * UserDTO objects is then returned.
+   * Processes a ResultSet to create a list of UserDTO objects. This method iterates over the rows
+   * in the given ResultSet. For each row, it creates a new UserDTO object, populates it with the
+   * data from the row, and adds it to a list. The list of UserDTO objects is then returned.
    *
    * @param rs the ResultSet to process
    * @return a list of UserDTO objects representing the users in the ResultSet
