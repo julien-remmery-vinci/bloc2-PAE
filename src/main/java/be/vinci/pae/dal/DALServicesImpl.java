@@ -5,13 +5,32 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
  * Implementation of DALServices.
  */
 public class DALServicesImpl implements DALServices {
+  private ThreadLocal <Connection> ds = new ThreadLocal<Connection>();
+  private BasicDataSource bds = new BasicDataSource();
 
-  private static Connection conn = null;
+  /**
+   * Get the connection to the database.
+   *
+   * @return the connection to the database
+   */
+  public Connection getConnection() {
+    Connection conn = ds.get();
+    if (conn == null) {
+      try {
+        conn = bds.getConnection();
+        ds.set(conn);
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    return conn;
+  }
 
   /**
    * Constructor of DALServicesImpl.
@@ -21,11 +40,9 @@ public class DALServicesImpl implements DALServices {
     String username = Config.getProperty("DB_USER");
     String password = Config.getProperty("DB_PASSWORD");
 
-    try {
-      conn = DriverManager.getConnection(url, username, password);
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
+    bds.setUrl(url);
+    bds.setUsername(username);
+    bds.setPassword(password);
   }
 
   /**
@@ -35,7 +52,7 @@ public class DALServicesImpl implements DALServices {
    */
   public PreparedStatement getPS(String request) {
     try {
-      return conn.prepareStatement(request);
+      return getConnection().prepareStatement(request);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
