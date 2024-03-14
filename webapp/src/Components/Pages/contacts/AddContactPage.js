@@ -13,7 +13,8 @@ const AddContactPage = () => {
     }
 }
 
-function buildPage(){
+async function buildPage(){
+    const entrepriseList = await getEntreprises();
     const main = document.querySelector('main');
     const title = document.createElement('h3');
     title.textContent = 'Ajouter un nouveau contact';
@@ -30,15 +31,12 @@ function buildPage(){
     entreprises.style.width = '25%';
     entreprises.style.marginLeft = '15%';
 
-    const option1 = document.createElement('option');
-    option1.value = 'option1';
-    option1.text = 'Option 1';
-    entreprises.appendChild(option1);
-
-    const option2 = document.createElement('option');
-    option2.value = 'option2';
-    option2.text = 'Option 2';
-    entreprises.appendChild(option2);
+    entrepriseList.forEach((e) => {
+        const option = document.createElement('option');
+        option.value = e.id;
+        option.text = e.tradeName;
+        entreprises.appendChild(option);
+    });
 
     main.appendChild(entreprises);
 
@@ -60,8 +58,21 @@ function buildPage(){
     appelations.appendChild(option4);
     main.appendChild(appelations);
     
+}
 
-
+// fetch function to get all entreprises
+async function getEntreprises() {
+    const response = await fetch('http://localhost:3000/company', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': getAuthenticatedUser().token,
+        },
+    });
+    if (response.status === 200) {
+        return response.json();
+    }
+    return undefined;
 }
 
 export default AddContactPage;
