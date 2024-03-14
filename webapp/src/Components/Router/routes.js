@@ -3,6 +3,7 @@ import LoginPage from "../Pages/LoginPage";
 import RegisterPage from "../Pages/RegisterPage";
 import AcceptRefusePage from "../Pages/contacts/AcceptRefusePage";
 import AddContactPage from "../Pages/contacts/AddContactPage";
+import SearchPage from "../Pages/SearchPage";
 
 // Define routes
 const routes = {
@@ -10,7 +11,8 @@ const routes = {
     '/login':LoginPage,
     '/contact/refusal': AcceptRefusePage,
     '/register':RegisterPage,
-    '/contact/add': AddContactPage
+    '/contact/add': AddContactPage,
+    '/search': SearchPage,
 };
 
 export default routes;
