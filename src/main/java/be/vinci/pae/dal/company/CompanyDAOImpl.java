@@ -28,7 +28,7 @@ public class CompanyDAOImpl implements CompanyDAO {
   public List<CompanyDTO> getAll() {
     List<CompanyDTO> companies = new ArrayList<>();
     try (PreparedStatement ps = dalServices.getPS(
-        "SELECT * FROM pae.companies")) {
+        "SELECT idCompany,tradeName,designation,address,phoneNumber,email,blacklisted,blacklistMotivation FROM pae.companies")) {
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
           companies.add(getCompanyFromRs(rs));
