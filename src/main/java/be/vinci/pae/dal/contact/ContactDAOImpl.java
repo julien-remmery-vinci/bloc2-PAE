@@ -45,12 +45,18 @@ public class ContactDAOImpl implements ContactDAO {
    * @param contact the contact to refuse
    */
   @Override
-  public void refuseContact(ContactDTO contact) {
+  public void updateContact(ContactDTO contact) {
     try (PreparedStatement ps = dalServices.getPS(
-        "UPDATE pae.contacts SET state = ?, refusalReason = ? WHERE idContact = ?;")) {
-      ps.setString(1, contact.getState());
-      ps.setString(2, contact.getRefusalReason());
-      ps.setInt(3, contact.getIdContact());
+        "UPDATE pae.contacts "
+            + "SET company = ?, student = ?, state = ?, meetPlace = ?, refusalReason = ?, academicYear = ?"
+            + "WHERE idContact = ?;")) {
+      ps.setInt(1, contact.getCompany());
+      ps.setInt(2, contact.getStudent());
+      ps.setString(3, contact.getState());
+      ps.setString(4, contact.getMeetPlace());
+      ps.setString(5, contact.getRefusalReason());
+      ps.setString(6, contact.getAcademicYear());
+      ps.setInt(7, contact.getIdContact());
       ps.executeUpdate();
     } catch (SQLException e) {
       throw new RuntimeException(e);

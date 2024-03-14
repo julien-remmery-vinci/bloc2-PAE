@@ -33,7 +33,7 @@ public class ContactUCCImpl implements ContactUCC {
     }
     contact.setState(Contact.STATE_TAKENDOWN);
     contact.setRefusalReason(refusalReason);
-    contactDAO.refuseContact(contact);
+    contactDAO.updateContact(contact);
     return contact;
   }
 }
