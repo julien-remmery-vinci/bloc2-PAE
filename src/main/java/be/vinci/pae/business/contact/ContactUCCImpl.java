@@ -29,7 +29,7 @@ public class ContactUCCImpl implements ContactUCC {
 
     if (!contact.getState().equals(Contact.STATE_TAKEN)) {
       throw new WebApplicationException("The contact must be in the state 'taken' to be refused",
-          Status.BAD_REQUEST);
+          Status.PRECONDITION_FAILED);
     }
     contact.setState(Contact.STATE_TAKENDOWN);
     contact.setRefusalReason(refusalReason);
