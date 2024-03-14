@@ -49,10 +49,10 @@ public class UserDAOImpl implements UserDAO {
    */
   @Override
   public UserDTO getOneById(int id) {
-    try {
-      PreparedStatement getUser = dalServices.getPS(
-          "SELECT idUser, lastname, firstname, email, password, phoneNumber, registerDate, role "
-              + "FROM pae.users WHERE idUser = ?");
+    try (
+        PreparedStatement getUser = dalServices.getPS(
+            "SELECT idUser, lastname, firstname, email, password, phoneNumber, registerDate, role "
+                + "FROM pae.users WHERE idUser = ?")) {
       getUser.setInt(1, id);
       try (ResultSet rs = getUser.executeQuery()) {
         if (rs.next()) {
@@ -125,4 +125,30 @@ public class UserDAOImpl implements UserDAO {
     }
     return null;
   }
+
+  /**
+   * Change the password of a user.
+   *
+   * @param idUser      the id of the user
+   * @param newPassword the new password of the user
+   * @return the user
+   */
+  public UserDTO changePassword(int idUser, String newPassword) {
+    try (PreparedStatement changePassword = dalServices.getPS(
+        "UPDATE pae.users SET password = ? WHERE idUser = ? RETURNING idUser")) {
+      changePassword.setString(1, newPassword);
+      changePassword.setInt(2, idUser);
+      try (ResultSet rs = changePassword.executeQuery()) {
+        if (rs.next()) {
+          UserDTO user = factory.getUser();
+          user.setIdUser(rs.getInt(1));
+          return user;
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return null;
+  }
+
 }

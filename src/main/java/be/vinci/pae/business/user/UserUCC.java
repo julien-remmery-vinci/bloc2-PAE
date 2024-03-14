@@ -30,4 +30,13 @@ public interface UserUCC {
    */
   UserDTO getUser(int id);
 
+  /**
+   * Change the password of a user.
+   *
+   * @param idUser      the id of the user
+   * @param oldPassword the old password of the user
+   * @param newPassword the new password of the user
+   * @return true if the password was changed, false otherwise
+   */
+  boolean changePassword(int idUser, String oldPassword, String newPassword);
 }

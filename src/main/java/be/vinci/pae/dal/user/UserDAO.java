@@ -31,4 +31,13 @@ public interface UserDAO {
    */
   UserDTO addUser(UserDTO user);
 
+  /**
+   * Change the password of a user.
+   *
+   * @param idUser      the id of the user
+   * @param newPassword the new password of the user
+   * @return the user with the new password
+   */
+  UserDTO changePassword(int idUser, String newPassword);
+
 }

@@ -52,8 +52,8 @@ public class UserUCCImpl implements UserUCC {
     if (user.getEmail().matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@student\\.vinci\\.be$")) {
       user.setRole(UserDTO.Role.valueOf("E"));
     } else if (user.getEmail().matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@vinci\\.be$")
-            && user.getRole() != null && !user.getRole().toString().equals("A")
-            && !user.getRole().toString().equals("P")) {
+        && user.getRole() != null && !user.getRole().toString().equals("A")
+        && !user.getRole().toString().equals("P")) {
       throw new WebApplicationException("Invalid role", Response.Status.BAD_REQUEST);
     }
     UserDTO userFound = userDAO.getOneByEmail(user.getEmail());
@@ -75,5 +75,26 @@ public class UserUCCImpl implements UserUCC {
    */
   public UserDTO getUser(int id) {
     return userDAO.getOneById(id);
+  }
+
+  /**
+   * Change the password of a user.
+   *
+   * @param idUser      the id of the user
+   * @param oldPassword the old password of the user
+   * @param newPassword the new password of the user
+   * @return true if the password was changed, false otherwise
+   */
+  public boolean changePassword(int idUser, String oldPassword, String newPassword) {
+    UserDTO user = userDAO.getOneById(idUser);
+    if (user == null) {
+      return false;
+    }
+    if (user.getPassword().equals(oldPassword)) {
+      user.setPassword(newPassword);
+      userDAO.changePassword(idUser, newPassword);
+      return true;
+    }
+    return false;
   }
 }
