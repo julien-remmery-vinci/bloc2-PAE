@@ -12,7 +12,7 @@ public class CompanyImpl implements CompanyDTO {
   private String phoneNumber;
   private String email;
   private boolean blacklisted;
-  private String blacklistedMotivation;
+  private String blacklistMotivation;
 
   @Override
   public int getIdCompany() {
@@ -85,12 +85,12 @@ public class CompanyImpl implements CompanyDTO {
   }
 
   @Override
-  public String getBlacklistedMotivation() {
-    return blacklistedMotivation;
+  public String getBlacklistMotivation() {
+    return blacklistMotivation;
   }
 
   @Override
-  public void setBlacklistedMotivation(String blacklistedMotivation) {
-    this.blacklistedMotivation = blacklistedMotivation;
+  public void setBlacklistMotivation(String blacklistMotivation) {
+    this.blacklistMotivation = blacklistMotivation;
   }
 }

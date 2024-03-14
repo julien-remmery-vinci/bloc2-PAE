@@ -108,12 +108,12 @@ public interface CompanyDTO {
    *
    * @return the blacklisted motivation of the company
    */
-  String getBlacklistedMotivation();
+  String getBlacklistMotivation();
 
   /**
    * Set the blacklisted motivation of the company.
    *
    * @param blacklistedMotivation the blacklisted motivation of the company
    */
-  void setBlacklistedMotivation(String blacklistedMotivation);
+  void setBlacklistMotivation(String blacklistedMotivation);
 }
