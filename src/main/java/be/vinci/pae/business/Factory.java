@@ -23,5 +23,10 @@ public interface Factory {
    */
   ContactDTO getContact();
 
+  /**
+   * Create a new CompanyImpl.
+   *
+   * @return a new CompanyImpl
+   */
   CompanyDTO getCompany();
 }
