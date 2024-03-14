@@ -1,7 +1,7 @@
 package be.vinci.pae.business.company;
 
 /**
- * Interface of CompanyDTO.
+ * Interface of CompanyImpl.
  */
 public interface CompanyDTO {
 
