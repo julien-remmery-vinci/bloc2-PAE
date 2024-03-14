@@ -89,14 +89,15 @@ function getForm() {
     refusalReason.hidden = true;
     refusalReason.textContent = 'Raison du refus';
     const refusalReasonValue = document.createElement('textarea');
-    refusalReasonValue.required = !refusalReasonValue.hidden;
     refusalReasonValue.placeholder = 'Entrer la raison du refus';
     refusalReasonValue.hidden = true;
+    refusalReasonValue.required = !refusalReasonValue.hidden;
     refusalReasonValue.className = 'form-control';
     refusalReasonValue.rows = 5;
     contactStateValue.addEventListener('change', (event) => {
         refusalReason.hidden = event.target.value !== 'false';
         refusalReasonValue.hidden = event.target.value !== 'false';
+        refusalReasonValue.required = !refusalReasonValue.hidden;
     });
     const submit = document.createElement('input');
     submit.type = 'submit';
@@ -115,28 +116,25 @@ function getForm() {
 
 async function onSubmit(event) {
     event.preventDefault();
-    const contactState = document.querySelector('select').value;
+    const id = window.location.href.split("?")[1].split("=")[1];
+    // const contactState = document.querySelector('select').value;
     const refusalReason = document.querySelector('textarea').value;
     const options = {
-        method: 'PUT',
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': getUserToken(),
         },
         body: JSON.stringify({
-            refusalReason: refusalReason,
+            refusalReason,
         }),
     };
-    let request;
-    if (contactState) {
-        // TODO: Implement accept request
-    } else {
-        // TODO : Get contact id
-        request = await fetch(`http://localhost:3000/contact/${id}/refuse`, options);
-    }
-    if(!request.ok) {
-        document.querySelector('.alert-danger').hidden = false;
-    }
-
-    export default AcceptRefusePage;
+    fetch(`http://localhost:3000/contact/${id}/refuse`, options)
+        .then(request => {
+            if(request.status === 401) {
+                document.querySelector('.alert-danger').hidden = false;
+            }
+        })
 }
+
+export default AcceptRefusePage;
