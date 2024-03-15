@@ -9,6 +9,7 @@ const AcceptRefusePage = () => {
         window.location.reload();
     } else {
         clearPage();
+        document.title = "Contact accept - refuse";
         buildPage();
     }
 }
