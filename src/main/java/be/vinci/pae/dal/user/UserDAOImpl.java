@@ -11,6 +11,8 @@ import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of UserDAO.
@@ -126,4 +128,44 @@ public class UserDAOImpl implements UserDAO {
     }
     return null;
   }
+
+  /**
+   * Fetches all users from the database. This method prepares a SQL statement to fetch all users
+   * from the database. It then executes the statement and processes the result set by calling the
+   * getResults method.
+   *
+   * @return a list of UserDTO objects representing all users in the database
+   * @throws RuntimeException if a SQLException is caught
+   */
+  public List<UserDTO> getAllUsers() {
+    try (PreparedStatement getUsers = dalServices.getPS(
+        "SELECT idUser, lastname, firstname, email, password, phoneNumber, registerDate, role "
+            + "FROM pae.users")) {
+      try (ResultSet rs = getUsers.executeQuery()) {
+        return getResults(rs);
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  /**
+   * Processes a ResultSet to create a list of UserDTO objects. This method iterates over the rows
+   * in the given ResultSet. For each row, it creates a new UserDTO object, populates it with the
+   * data from the row, and adds it to a list. The list of UserDTO objects is then returned.
+   *
+   * @param rs the ResultSet to process
+   * @return a list of UserDTO objects representing the users in the ResultSet
+   * @throws SQLException if an error occurs while processing the ResultSet
+   */
+  private List<UserDTO> getResults(ResultSet rs) throws SQLException {
+    List<UserDTO> users = new ArrayList<>();
+    while (rs.next()) {
+      UserDTO user = factory.getUser();
+      getUserFromRs(rs, user);
+      users.add(user);
+    }
+    return users;
+  }
+
 }

@@ -1,5 +1,6 @@
 package be.vinci.pae.business;
 
+import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.user.UserDTO;
 
@@ -21,4 +22,11 @@ public interface Factory {
    * @return a new ContactImpl
    */
   ContactDTO getContact();
+
+  /**
+   * Create a new CompanyImpl.
+   *
+   * @return a new CompanyImpl
+   */
+  CompanyDTO getCompany();
 }
