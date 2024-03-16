@@ -1,11 +1,21 @@
 package be.vinci.pae.dal.user;
 
 import be.vinci.pae.business.user.UserDTO;
+import java.sql.ResultSet;
+import java.util.List;
 
 /**
  * Interface of UserDAOImpl.
  */
 public interface UserDAO {
+
+  /**
+   * Get a user from a ResultSet.
+   *
+   * @param rs the ResultSet
+   * @return the user
+   */
+  UserDTO getUserFromRs(ResultSet rs);
 
   /**
    * Get one user from email.
@@ -30,5 +40,12 @@ public interface UserDAO {
    * @return the user added
    */
   UserDTO addUser(UserDTO user);
+
+  /**
+   * Get all users.
+   *
+   * @return the list of all users
+   */
+  List<UserDTO> getAllUsers();
 
 }
