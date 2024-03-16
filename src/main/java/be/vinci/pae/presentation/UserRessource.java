@@ -37,7 +37,14 @@ public class UserRessource {
   @Inject
   private UserUCC userUCC;
 
-
+  /**
+   * Handles HTTP POST requests to register a new user. This method uses the injected UserUCC
+   * instance to register a new user and returns the registered user as a UserDTO object. The
+   * UserDTO object is automatically converted to JSON by the JAX-RS runtime.
+   *
+   * @param json the JSON object containing the user's information
+   * @return the registered user as a UserDTO object
+   */
   @POST
   @Path("/changepassword")
   @Authorize

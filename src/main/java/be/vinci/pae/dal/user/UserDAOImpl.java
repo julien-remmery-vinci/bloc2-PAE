@@ -164,7 +164,8 @@ public class UserDAOImpl implements UserDAO {
    */
   public UserDTO updateUser(UserDTO user) {
     try (PreparedStatement updateUser = dalServices.getPS(
-        "UPDATE pae.users SET lastname = ?, firstname = ?, email = ?, password = ?, phoneNumber = ?,"
+        "UPDATE pae.users SET lastname = ?, firstname = ?,"
+            + " email = ?, password = ?, phoneNumber = ?,"
             + " registerDate = ?, role = ? WHERE idUser = ? RETURNING idUser")) {
       updateUser.setString(1, user.getLastname());
       updateUser.setString(2, user.getFirstname());

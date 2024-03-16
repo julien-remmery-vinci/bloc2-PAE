@@ -87,6 +87,14 @@ public class UserUCCImpl implements UserUCC {
     return userDAO.getAllUsers();
   }
 
+  /**
+   * Update a user.
+   *
+   * @param user        the user to update
+   * @param oldPassword the old password
+   * @param newPassword the new password
+   * @return the updated user
+   */
   public UserDTO updateUser(UserDTO user, String oldPassword, String newPassword) {
     UserDTO userFound = userDAO.getOneById(user.getIdUser());
     if (userFound == null) {
