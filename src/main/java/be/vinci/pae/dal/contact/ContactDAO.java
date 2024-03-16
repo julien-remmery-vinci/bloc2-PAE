@@ -20,5 +20,5 @@ public interface ContactDAO {
    *
    * @param contact the contact to refuse
    */
-  void refuseContact(ContactDTO contact);
+  void updateContact(ContactDTO contact);
 }
