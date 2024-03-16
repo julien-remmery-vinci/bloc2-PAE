@@ -27,9 +27,9 @@ public class ContactUCCImpl implements ContactUCC {
     if (contact == null) {
       return null;
     }
-    if (contact.getStudent() != idUser) {
-      throw new WebApplicationException("You are not allowed to refuse this contact",
-          Status.FORBIDDEN);
+    if (contact.getIdStudent() != idUser) {
+      throw new WebApplicationException("You don't have a contact with this id",
+          Status.NOT_FOUND);
     }
     if (!contact.getState().equals(Contact.STATE_TAKEN)) {
       throw new WebApplicationException("The contact must be in the state 'taken' to be refused",
