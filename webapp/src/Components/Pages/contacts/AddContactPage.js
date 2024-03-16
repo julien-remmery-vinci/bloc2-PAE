@@ -14,54 +14,54 @@ const AddContactPage = () => {
 }
 
 async function buildPage(){
-    const entrepriseList = await getEntreprises();
+    const companyList = await getCompanies();
     const main = document.querySelector('main');
     const title = document.createElement('h3');
     title.textContent = 'Ajouter un nouveau contact';
     title.style.textAlign = 'center';
     title.style.marginBottom = '5%';
     main.appendChild(title);
-    const entreprise = document.createElement('label');
-    entreprise.textContent = 'Entreprise';
-    entreprise.style.marginLeft = '15%';
-    main.appendChild(entreprise);
-    const entreprises = document.createElement('select');
+    const company = document.createElement('label');
+    company.textContent = 'Entreprise';
+    company.style.marginLeft = '15%';
+    main.appendChild(company);
+    const companies = document.createElement('select');
     
-    entreprises.className = 'form-control';
-    entreprises.style.width = '25%';
-    entreprises.style.marginLeft = '15%';
+    companies.className = 'form-control';
+    companies.style.width = '25%';
+    companies.style.marginLeft = '15%';
 
-    entrepriseList.forEach((e) => {
+    companyList.forEach((e) => {
         const option = document.createElement('option');
         option.value = e.id;
         option.text = e.tradeName;
-        entreprises.appendChild(option);
+        companies.appendChild(option);
     });
 
-    main.appendChild(entreprises);
+    main.appendChild(companies);
 
-    const appellation = document.createElement('label');
-    appellation.textContent = 'Appellation';
-    appellation.style.marginLeft = '15%';
-    main.appendChild(appellation);
-    const appelations = document.createElement('select');
-    appelations.className = 'form-control';
-    appelations.style.width = '25%';
-    appelations.style.marginLeft = '15%';
+    const designation = document.createElement('label');
+    designation.textContent = 'Appellation';
+    designation.style.marginLeft = '15%';
+    main.appendChild(designation);
+    const designations = document.createElement('select');
+    designations.className = 'form-control';
+    designations.style.width = '25%';
+    designations.style.marginLeft = '15%';
     const option3 = document.createElement('option');
     option3.value = 'option3';
     option3.text = 'Option 3';
-    appelations.appendChild(option3);
+    designations.appendChild(option3);
     const option4 = document.createElement('option');
     option4.value = 'option4';
     option4.text = 'Option 4';
-    appelations.appendChild(option4);
-    main.appendChild(appelations);
+    designations.appendChild(option4);
+    main.appendChild(designations);
     
 }
 
 // fetch function to get all entreprises
-async function getEntreprises() {
+async function getCompanies() {
     const response = await fetch('http://localhost:3000/company', {
         method: 'GET',
         headers: {
