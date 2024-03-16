@@ -66,13 +66,14 @@ public class DALServicesImpl implements DALBackServices, DALServices {
     try {
       getConnection().commit();
       getConnection().setAutoCommit(true);
+      basicDataSource.close();
     } catch (SQLException e) {
-      try {
+        try {
           basicDataSource.close();
-      } catch (SQLException ex) {
+        } catch (SQLException ex) {
           throw new RuntimeException(ex);
-      }
-      throw new RuntimeException(e);
+        }
+        throw new RuntimeException(e);
     }
   }
 
@@ -81,11 +82,12 @@ public class DALServicesImpl implements DALBackServices, DALServices {
     try {
       getConnection().rollback();
       getConnection().setAutoCommit(true);
+      basicDataSource.close();
     } catch (SQLException e) {
       try {
-          basicDataSource.close();
+        basicDataSource.close();
       } catch (SQLException ex) {
-          throw new RuntimeException(ex);
+        throw new RuntimeException(ex);
       }
     throw new RuntimeException(e);
     }
