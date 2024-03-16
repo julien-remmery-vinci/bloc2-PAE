@@ -24,6 +24,31 @@ public class UserDAOImpl implements UserDAO {
   @Inject
   private DALServices dalServices;
 
+  public UserDTO getUserFromRs(ResultSet rs) {
+    UserDTO user = factory.getUser();
+    // Get the fields of the UserImpl class
+    for (Field f : UserImpl.class.getDeclaredFields()) {
+      try {
+        // Get the setter method of the field
+        Method m = UserDTO.class.getDeclaredMethod(
+            "set" + f.getName().substring(0, 1).toUpperCase() + f.getName().substring(1),
+            f.getType());
+        // Set the value of the field
+        // If the field is of enum type, we need to convert the string to the value in the enum
+        if (f.getType().isEnum()) {
+          m.invoke(user, Enum.valueOf((Class<Enum>) Class.forName(f.getType().getName()),
+              rs.getString("user." + f.getName())));
+        } else {
+          m.invoke(user, rs.getObject("user." + f.getName()));
+        }
+      } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException |
+               ClassNotFoundException | SQLException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    return user.getIdUser() == 0 ? null : user;
+  }
+
   @Override
   public UserDTO getOneByEmail(String email) {
     try (PreparedStatement getUser = dalServices.getPS(
@@ -32,9 +57,7 @@ public class UserDAOImpl implements UserDAO {
       getUser.setString(1, email);
       try (ResultSet rs = getUser.executeQuery()) {
         if (rs.next()) {
-          UserDTO user = factory.getUser();
-          getUserFromRs(rs, user);
-          return user;
+          return getUserFromRs(rs);
         }
       }
     } catch (SQLException e) {
@@ -58,45 +81,13 @@ public class UserDAOImpl implements UserDAO {
       getUser.setInt(1, id);
       try (ResultSet rs = getUser.executeQuery()) {
         if (rs.next()) {
-          UserDTO user = factory.getUser();
-          getUserFromRs(rs, user);
-          return user;
+          return getUserFromRs(rs);
         }
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
     return null;
-  }
-
-  /**
-   * Get a user by its id.
-   *
-   * @param rs   the result set
-   * @param user the user
-   * @throws SQLException if an error occurs
-   */
-  private void getUserFromRs(ResultSet rs, UserDTO user) throws SQLException {
-    // Get the fields of the UserImpl class
-    for (Field f : UserImpl.class.getDeclaredFields()) {
-      try {
-        // Get the setter method of the field
-        Method m = UserDTO.class.getDeclaredMethod(
-            "set" + f.getName().substring(0, 1).toUpperCase() + f.getName().substring(1),
-            f.getType());
-        // Set the value of the field
-        // If the field is of enum type, we need to convert the string to the value in the enum
-        if (f.getType().isEnum()) {
-          m.invoke(user, Enum.valueOf((Class<Enum>) Class.forName(f.getType().getName()),
-              rs.getString(f.getName())));
-        } else {
-          m.invoke(user, rs.getObject(f.getName()));
-        }
-      } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException
-               | ClassNotFoundException e) {
-        throw new RuntimeException(e);
-      }
-    }
   }
 
   /**
@@ -160,11 +151,38 @@ public class UserDAOImpl implements UserDAO {
   private List<UserDTO> getResults(ResultSet rs) throws SQLException {
     List<UserDTO> users = new ArrayList<>();
     while (rs.next()) {
-      UserDTO user = factory.getUser();
-      getUserFromRs(rs, user);
-      users.add(user);
+      users.add(getUserFromRs(rs));
     }
     return users;
   }
 
+  /**
+   * Update a user in the database.
+   *
+   * @param user the user to update
+   * @return the user updated
+   */
+  public UserDTO updateUser(UserDTO user) {
+    try (PreparedStatement updateUser = dalServices.getPS(
+        "UPDATE pae.users SET lastname = ?, firstname = ?,"
+            + " email = ?, password = ?, phoneNumber = ?,"
+            + " registerDate = ?, role = ? WHERE idUser = ? RETURNING idUser")) {
+      updateUser.setString(1, user.getLastname());
+      updateUser.setString(2, user.getFirstname());
+      updateUser.setString(3, user.getEmail());
+      updateUser.setString(4, user.getPassword());
+      updateUser.setString(5, user.getPhoneNumber());
+      updateUser.setDate(6, user.getRegisterDate());
+      updateUser.setString(7, user.getRole().toString());
+      updateUser.setInt(8, user.getIdUser());
+      try (ResultSet rs = updateUser.executeQuery()) {
+        if (rs.next()) {
+          return user;
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return null;
+  }
 }

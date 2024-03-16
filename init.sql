@@ -28,8 +28,8 @@ CREATE TABLE pae.companies
 CREATE TABLE pae.contacts
 (
     idContact     SERIAL PRIMARY KEY,
-    company       INTEGER REFERENCES pae.companies (idCompany) NOT NULL,
-    student       INTEGER REFERENCES pae.users (iduser)        NOT NULL,
+    idCompany       INTEGER REFERENCES pae.companies (idCompany) NOT NULL,
+    idStudent       INTEGER REFERENCES pae.users (iduser)        NOT NULL,
     state         TEXT                                         NOT NULL,
     meetPlace     TEXT                                         NULL,
     refusalReason TEXT                                         NULL,
@@ -51,5 +51,5 @@ VALUES ('Vinci', 'Bruxelles', false);
 INSERT INTO pae.companies (tradeName, address, blacklisted)
 VALUES ('Idealis Consulting', 'Mont saint guibert', false);
 
-INSERT INTO pae.contacts (company, student, state, academicYear) VALUES (1, 2, 'initié', '2023-2024');
-INSERT INTO pae.contacts (company, student, state, academicYear) VALUES (2, 2, 'pris', '2023-2024');
+INSERT INTO pae.contacts (idCompany, idStudent, state, academicYear) VALUES (1, 2, 'initié', '2023-2024');
+INSERT INTO pae.contacts (idCompany, idStudent, state, academicYear) VALUES (2, 2, 'pris', '2023-2024');
