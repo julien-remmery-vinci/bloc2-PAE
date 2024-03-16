@@ -1,5 +1,8 @@
 package be.vinci.pae.business.contact;
 
+import be.vinci.pae.business.company.CompanyDTO;
+import be.vinci.pae.business.user.UserDTO;
+
 /**
  * Interface of ContactImpl.
  */
@@ -24,28 +27,56 @@ public interface ContactDTO {
    *
    * @return the company of the contact
    */
-  int getCompany();
+  int getIdCompany();
+
+  /**
+   * Set the company of the contact.
+   *
+   * @param idCompany the company of the contact
+   */
+  void setIdCompany(int idCompany);
+
+  /**
+   * Get the company of the contact.
+   *
+   * @return the company of the contact
+   */
+  CompanyDTO getCompany();
 
   /**
    * Set the company of the contact.
    *
    * @param company the company of the contact
    */
-  void setCompany(int company);
+  void setCompany(CompanyDTO company);
 
   /**
    * Get the student of the contact.
    *
    * @return the student of the contact
    */
-  int getStudent();
+  int getIdStudent();
+
+  /**
+   * Set the student of the contact.
+   *
+   * @param idStudent the student of the contact
+   */
+  void setIdStudent(int idStudent);
+
+  /**
+   * Get the student of the contact.
+   *
+   * @return the student of the contact
+   */
+  UserDTO getStudent();
 
   /**
    * Set the student of the contact.
    *
    * @param student the student of the contact
    */
-  void setStudent(int student);
+  void setStudent(UserDTO student);
 
   /**
    * Get the state of the contact.
