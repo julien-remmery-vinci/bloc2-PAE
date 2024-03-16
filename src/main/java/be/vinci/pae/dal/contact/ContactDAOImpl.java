@@ -3,7 +3,7 @@ package be.vinci.pae.dal.contact;
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.contact.ContactImpl;
-import be.vinci.pae.dal.DALServices;
+import be.vinci.pae.dal.DALBackServices;
 import jakarta.inject.Inject;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -20,11 +20,11 @@ public class ContactDAOImpl implements ContactDAO {
   @Inject
   private Factory factory;
   @Inject
-  private DALServices dalServices;
+  private DALBackServices dalBackServices;
 
   @Override
   public ContactDTO getOneById(int id) {
-    try (PreparedStatement ps = dalServices.getPS(
+    try (PreparedStatement ps = dalBackServices.getPS(
         "SELECT idContact, company, student, state, meetPlace, refusalReason, academicYear "
             + "FROM pae.contacts WHERE idContact = ?;")) {
       ps.setInt(1, id);
@@ -46,7 +46,7 @@ public class ContactDAOImpl implements ContactDAO {
    */
   @Override
   public void refuseContact(ContactDTO contact) {
-    try (PreparedStatement ps = dalServices.getPS(
+    try (PreparedStatement ps = dalBackServices.getPS(
         "UPDATE pae.contacts SET state = ?, refusalReason = ? WHERE idContact = ?;")) {
       ps.setString(1, contact.getState());
       ps.setString(2, contact.getRefusalReason());

@@ -9,7 +9,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 /**
  * Implementation of DALServices.
  */
-public class DALServicesImpl implements DALServices {
+public class DALBackServicesImpl implements DALBackServices {
   private ThreadLocal <Connection> ds = new ThreadLocal<Connection>();
   private BasicDataSource bds = new BasicDataSource();
 
@@ -34,7 +34,7 @@ public class DALServicesImpl implements DALServices {
   /**
    * Constructor of DALServicesImpl.
    */
-  public DALServicesImpl() {
+  public DALBackServicesImpl() {
     String url = Config.getProperty("DB_URL");
     String username = Config.getProperty("DB_USER");
     String password = Config.getProperty("DB_PASSWORD");

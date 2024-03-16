@@ -6,8 +6,8 @@ import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.business.contact.ContactUCCImpl;
 import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.business.user.UserUCCImpl;
-import be.vinci.pae.dal.DALServices;
-import be.vinci.pae.dal.DALServicesImpl;
+import be.vinci.pae.dal.DALBackServices;
+import be.vinci.pae.dal.DALBackServicesImpl;
 import be.vinci.pae.dal.contact.ContactDAO;
 import be.vinci.pae.dal.contact.ContactDAOImpl;
 import be.vinci.pae.dal.user.UserDAO;
@@ -27,7 +27,7 @@ public class ApplicationBinder extends AbstractBinder {
     bind(UserUCCImpl.class).to(UserUCC.class).in(Singleton.class);
     bind(UserDAOImpl.class).to(UserDAO.class).in(Singleton.class);
     bind(FactoryImpl.class).to(Factory.class).in(Singleton.class);
-    bind(DALServicesImpl.class).to(DALServices.class).in(Singleton.class);
+    bind(DALBackServicesImpl.class).to(DALBackServices.class).in(Singleton.class);
     bind(ContactUCCImpl.class).to(ContactUCC.class).in(Singleton.class);
     bind(ContactDAOImpl.class).to(ContactDAO.class).in(Singleton.class);
   }

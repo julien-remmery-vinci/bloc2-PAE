@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 /**
  * Interface of DALServicesImpl.
  */
-public interface DALServices {
+public interface DALBackServices {
 
   /**
    * Get a prepared statement from a request.
