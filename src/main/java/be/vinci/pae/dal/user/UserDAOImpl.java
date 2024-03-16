@@ -128,7 +128,7 @@ public class UserDAOImpl implements UserDAO {
    * @throws RuntimeException if a SQLException is caught
    */
   public List<UserDTO> getAllUsers() {
-    try (PreparedStatement getUsers = dalServices.getPS(
+    try (PreparedStatement getUsers = dalBackServices.getPS(
         "SELECT idUser, lastname, firstname, email, password, phoneNumber, registerDate, role "
             + "FROM pae.users")) {
       try (ResultSet rs = getUsers.executeQuery()) {
