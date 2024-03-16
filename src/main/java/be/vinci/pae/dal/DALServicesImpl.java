@@ -33,6 +33,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
    */
   public DALServicesImpl() {
     basicDataSource = new BasicDataSource();
+    threadLocal = new ThreadLocal<>();
 
     String url = Config.getProperty("DB_URL");
     String username = Config.getProperty("DB_USER");
@@ -53,7 +54,6 @@ public class DALServicesImpl implements DALBackServices, DALServices {
 
   @Override
   public void start() {
-    threadLocal = new ThreadLocal<>();
     try {
       getConnection().setAutoCommit(false);
     } catch (SQLException e) {
@@ -67,11 +67,11 @@ public class DALServicesImpl implements DALBackServices, DALServices {
       getConnection().commit();
       getConnection().setAutoCommit(true);
     } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
-    try {
-      basicDataSource.close();
-    } catch (SQLException e) {
+      try {
+          basicDataSource.close();
+      } catch (SQLException ex) {
+          throw new RuntimeException(ex);
+      }
       throw new RuntimeException(e);
     }
   }
@@ -82,12 +82,12 @@ public class DALServicesImpl implements DALBackServices, DALServices {
       getConnection().rollback();
       getConnection().setAutoCommit(true);
     } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
-    try {
-      basicDataSource.close();
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
+      try {
+          basicDataSource.close();
+      } catch (SQLException ex) {
+          throw new RuntimeException(ex);
+      }
+    throw new RuntimeException(e);
     }
   }
 
