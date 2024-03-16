@@ -11,6 +11,7 @@ public interface ContactDAO {
   /**
    * Get a contact from a ResultSet.
    *
+   * @param rs the ResultSet
    * @return the contact
    */
   ContactDTO getContactFromRs(ResultSet rs);
