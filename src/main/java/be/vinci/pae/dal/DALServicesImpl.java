@@ -10,7 +10,8 @@ import org.apache.commons.dbcp2.BasicDataSource;
  * Class implementing the DALServices and DALBackServices interfaces.
  */
 public class DALServicesImpl implements DALBackServices, DALServices {
-  private ThreadLocal <Connection> threadLocal;
+
+  private ThreadLocal<Connection> threadLocal;
   private final BasicDataSource basicDataSource;
 
   @Override
@@ -69,11 +70,11 @@ public class DALServicesImpl implements DALBackServices, DALServices {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
-      try {
-          basicDataSource.close();
-      } catch (SQLException e) {
-          throw new RuntimeException(e);
-      }
+    try {
+      basicDataSource.close();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
@@ -85,10 +86,10 @@ public class DALServicesImpl implements DALBackServices, DALServices {
       throw new RuntimeException(e);
     }
     try {
-            basicDataSource.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+      basicDataSource.close();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 
 }
