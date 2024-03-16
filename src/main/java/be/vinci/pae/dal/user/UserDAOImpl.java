@@ -90,12 +90,7 @@ public class UserDAOImpl implements UserDAO {
     return null;
   }
 
-  /**
-   * Register a user.
-   *
-   * @param user the user to register
-   * @return the registered user
-   */
+  @Override
   public UserDTO addUser(UserDTO user) {
     try (PreparedStatement addUser = dalBackServices.getPS(
         "INSERT INTO pae.users (lastname, firstname, email, password, phoneNumber, registerDate,"
