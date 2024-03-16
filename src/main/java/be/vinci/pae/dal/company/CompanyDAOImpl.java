@@ -24,6 +24,7 @@ public class CompanyDAOImpl implements CompanyDAO {
   @Inject
   private DALServices dalServices;
 
+  @Override
   public CompanyDTO getCompanyFromRs(ResultSet rs) {
     CompanyDTO company = factory.getCompany();
     // Get the fields of the UserImpl class

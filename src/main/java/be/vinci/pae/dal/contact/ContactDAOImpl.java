@@ -28,6 +28,7 @@ public class ContactDAOImpl implements ContactDAO {
   @Inject
   private UserDAO userDAO;
 
+  @Override
   public ContactDTO getContactFromRs(ResultSet rs) {
     ContactDTO contact = factory.getContact();
     // Get the fields of the UserImpl class
