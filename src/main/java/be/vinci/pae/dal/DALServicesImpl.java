@@ -7,23 +7,19 @@ import java.sql.SQLException;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
- * Implementation of DALServices.
+ * Class implementing the DALServices and DALBackServices interfaces.
  */
 public class DALServicesImpl implements DALBackServices, DALServices {
-  private ThreadLocal <Connection> ds = new ThreadLocal<Connection>();
-  private BasicDataSource bds = new BasicDataSource();
+  private ThreadLocal <Connection> threadLocal;
+  private final BasicDataSource basicDataSource;
 
-  /**
-   * Get the connection to the database.
-   *
-   * @return the connection to the database
-   */
+  @Override
   public Connection getConnection() {
-    Connection conn = ds.get();
+    Connection conn = threadLocal.get();
     if (conn == null) {
       try {
-        conn = bds.getConnection();
-        ds.set(conn);
+        conn = basicDataSource.getConnection();
+        threadLocal.set(conn);
       } catch (SQLException e) {
         throw new RuntimeException(e);
       }
@@ -39,16 +35,14 @@ public class DALServicesImpl implements DALBackServices, DALServices {
     String username = Config.getProperty("DB_USER");
     String password = Config.getProperty("DB_PASSWORD");
 
-    bds.setUrl(url);
-    bds.setUsername(username);
-    bds.setPassword(password);
+    basicDataSource = new BasicDataSource();
+
+    basicDataSource.setUrl(url);
+    basicDataSource.setUsername(username);
+    basicDataSource.setPassword(password);
   }
 
-  /**
-   * Get the prepared statement with the request.
-   *
-   * @return the prepared statement with the request.
-   */
+  @Override
   public PreparedStatement getPS(String request) {
     try {
       return getConnection().prepareStatement(request);
@@ -59,6 +53,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
 
   @Override
   public void start() {
+    threadLocal = new ThreadLocal<>();
     try {
       getConnection().setAutoCommit(false);
     } catch (SQLException e) {
@@ -74,6 +69,11 @@ public class DALServicesImpl implements DALBackServices, DALServices {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
+      try {
+          basicDataSource.close();
+      } catch (SQLException e) {
+          throw new RuntimeException(e);
+      }
   }
 
   @Override
@@ -84,5 +84,11 @@ public class DALServicesImpl implements DALBackServices, DALServices {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
+    try {
+            basicDataSource.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
   }
+
 }

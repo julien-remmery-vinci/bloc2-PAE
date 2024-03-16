@@ -21,4 +21,5 @@ public interface DALBackServices {
    * @return the connection to the database
    */
   Connection getConnection();
+
 }

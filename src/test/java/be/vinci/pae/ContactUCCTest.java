@@ -16,6 +16,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+/**
+ * The type Contact ucc test.
+ */
 public class ContactUCCTest {
 
   Contact contact;
