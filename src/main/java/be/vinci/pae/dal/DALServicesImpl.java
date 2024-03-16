@@ -32,12 +32,11 @@ public class DALServicesImpl implements DALBackServices, DALServices {
    * Constructor of DALServicesImpl.
    */
   public DALServicesImpl() {
+    basicDataSource = new BasicDataSource();
+
     String url = Config.getProperty("DB_URL");
     String username = Config.getProperty("DB_USER");
     String password = Config.getProperty("DB_PASSWORD");
-
-    basicDataSource = new BasicDataSource();
-
     basicDataSource.setUrl(url);
     basicDataSource.setUsername(username);
     basicDataSource.setPassword(password);

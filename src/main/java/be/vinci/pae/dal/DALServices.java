@@ -1,25 +1,22 @@
 package be.vinci.pae.dal;
 
+/**
+ * Interface of DALServicesImpl.
+ */
 public interface DALServices {
 
   /**
-   * Get the connection to the database.
-   *
-   * @return the connection to the database
+   * Start the transaction.
    */
   void start();
 
   /**
-   * Get the connection to the database.
-   *
-   * @return the connection to the database
+   * Commit the transaction.
    */
   void commit();
 
   /**
-   * Get the connection to the database.
-   *
-   * @return the connection to the database
+   * Rollback the transaction.
    */
   void rollback();
 }
