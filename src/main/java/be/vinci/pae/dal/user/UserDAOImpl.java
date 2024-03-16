@@ -24,6 +24,7 @@ public class UserDAOImpl implements UserDAO {
   @Inject
   private DALBackServices dalBackServices;
 
+  @Override
   public UserDTO getUserFromRs(ResultSet rs) {
     UserDTO user = factory.getUser();
     // Get the fields of the UserImpl class

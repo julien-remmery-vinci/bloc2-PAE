@@ -5,5 +5,5 @@ package be.vinci.pae.business.contact;
  */
 public interface ContactUCC {
 
-  ContactDTO refuseContact(int id, String refusalReason);
+  ContactDTO refuseContact(int id, String refusalReason, int idUser);
 }
