@@ -12,6 +12,7 @@ public interface CompanyDAO {
   /**
    * Get a company from a ResultSet.
    *
+   * @param rs the ResultSet
    * @return the company
    */
   CompanyDTO getCompanyFromRs(ResultSet rs);
