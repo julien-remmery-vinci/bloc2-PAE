@@ -1,5 +1,7 @@
 package be.vinci.pae.business.user;
 
+import java.util.List;
+
 /**
  * Interface of UserUCCImpl.
  */
@@ -31,12 +33,9 @@ public interface UserUCC {
   UserDTO getUser(int id);
 
   /**
-   * Change the password of a user.
+   * Get all users.
    *
-   * @param idUser      the id of the user
-   * @param oldPassword the old password of the user
-   * @param newPassword the new password of the user
-   * @return true if the password was changed, false otherwise
+   * @return the list of all users
    */
-  boolean changePassword(int idUser, String oldPassword, String newPassword);
+  List<UserDTO> getAllUsers();
 }

@@ -1,11 +1,21 @@
 package be.vinci.pae.dal.user;
 
 import be.vinci.pae.business.user.UserDTO;
+import java.sql.ResultSet;
+import java.util.List;
 
 /**
  * Interface of UserDAOImpl.
  */
 public interface UserDAO {
+
+  /**
+   * Get a user from a ResultSet.
+   *
+   * @param rs the ResultSet
+   * @return the user
+   */
+  UserDTO getUserFromRs(ResultSet rs);
 
   /**
    * Get one user from email.
@@ -32,12 +42,10 @@ public interface UserDAO {
   UserDTO addUser(UserDTO user);
 
   /**
-   * Change the password of a user.
+   * Get all users.
    *
-   * @param idUser      the id of the user
-   * @param newPassword the new password of the user
-   * @return the user with the new password
+   * @return the list of all users
    */
-  UserDTO changePassword(int idUser, String newPassword);
+  List<UserDTO> getAllUsers();
 
 }

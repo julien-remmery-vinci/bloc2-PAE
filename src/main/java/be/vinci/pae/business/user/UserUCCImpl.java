@@ -4,6 +4,7 @@ import be.vinci.pae.dal.user.UserDAO;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * Implementation of UserUCC.
@@ -78,23 +79,11 @@ public class UserUCCImpl implements UserUCC {
   }
 
   /**
-   * Change the password of a user.
+   * Get all users.
    *
-   * @param idUser      the id of the user
-   * @param oldPassword the old password of the user
-   * @param newPassword the new password of the user
-   * @return true if the password was changed, false otherwise
+   * @return the list of all users
    */
-  public boolean changePassword(int idUser, String oldPassword, String newPassword) {
-    UserDTO user = userDAO.getOneById(idUser);
-    if (user == null) {
-      return false;
-    }
-    if (user.getPassword().equals(oldPassword)) {
-      user.setPassword(newPassword);
-      userDAO.changePassword(idUser, newPassword);
-      return true;
-    }
-    return false;
+  public List<UserDTO> getAllUsers() {
+    return userDAO.getAllUsers();
   }
 }
