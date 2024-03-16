@@ -9,7 +9,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 /**
  * Implementation of DALServices.
  */
-public class DALBackServicesImpl implements DALBackServices {
+public class DALServicesImpl implements DALBackServices, DALServices {
   private ThreadLocal <Connection> ds = new ThreadLocal<Connection>();
   private BasicDataSource bds = new BasicDataSource();
 
@@ -34,7 +34,7 @@ public class DALBackServicesImpl implements DALBackServices {
   /**
    * Constructor of DALServicesImpl.
    */
-  public DALBackServicesImpl() {
+  public DALServicesImpl() {
     String url = Config.getProperty("DB_URL");
     String username = Config.getProperty("DB_USER");
     String password = Config.getProperty("DB_PASSWORD");
@@ -52,6 +52,35 @@ public class DALBackServicesImpl implements DALBackServices {
   public PreparedStatement getPS(String request) {
     try {
       return getConnection().prepareStatement(request);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void start() {
+    try {
+      getConnection().setAutoCommit(false);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void commit() {
+    try {
+      getConnection().commit();
+      getConnection().setAutoCommit(true);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void rollback() {
+    try {
+      getConnection().rollback();
+      getConnection().setAutoCommit(true);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
