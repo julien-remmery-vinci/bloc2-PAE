@@ -1,5 +1,7 @@
 package be.vinci.pae.business.user;
 
+import java.util.List;
+
 /**
  * Interface of UserUCCImpl.
  */
@@ -30,4 +32,10 @@ public interface UserUCC {
    */
   UserDTO getUser(int id);
 
+  /**
+   * Get all users.
+   *
+   * @return the list of all users
+   */
+  List<UserDTO> getAllUsers();
 }

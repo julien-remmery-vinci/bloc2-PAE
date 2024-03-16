@@ -1,11 +1,20 @@
 package be.vinci.pae.dal.contact;
 
 import be.vinci.pae.business.contact.ContactDTO;
+import java.sql.ResultSet;
 
 /**
  * Interface of ContactDAOImpl.
  */
 public interface ContactDAO {
+
+  /**
+   * Get a contact from a ResultSet.
+   *
+   * @param rs the ResultSet
+   * @return the contact
+   */
+  ContactDTO getContactFromRs(ResultSet rs);
 
   /**
    * Get a contact by its id.
@@ -20,5 +29,5 @@ public interface ContactDAO {
    *
    * @param contact the contact to refuse
    */
-  void refuseContact(ContactDTO contact);
+  void updateContact(ContactDTO contact);
 }
