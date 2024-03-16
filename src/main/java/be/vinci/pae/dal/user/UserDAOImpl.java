@@ -20,18 +20,11 @@ import java.util.List;
 public class UserDAOImpl implements UserDAO {
 
   @Inject
-  private static Factory factory;
+  private Factory factory;
   @Inject
   private DALServices dalServices;
 
-  /**
-   * Get a user by its id.
-   *
-   * @param rs the result set
-   * @return the user, null if no user was found
-   * @throws SQLException if an error occurs
-   */
-  public static UserDTO getUserFromRs(ResultSet rs) throws SQLException {
+  public UserDTO getUserFromRs(ResultSet rs) {
     UserDTO user = factory.getUser();
     // Get the fields of the UserImpl class
     for (Field f : UserImpl.class.getDeclaredFields()) {
@@ -48,15 +41,12 @@ public class UserDAOImpl implements UserDAO {
         } else {
           m.invoke(user, rs.getObject("user." + f.getName()));
         }
-      } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException
-               | ClassNotFoundException e) {
+      } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException |
+               ClassNotFoundException | SQLException e) {
         throw new RuntimeException(e);
       }
     }
-    if (user.getIdUser() == 0) {
-      return null;
-    }
-    return user;
+    return user.getIdUser() == 0 ? null : user;
   }
 
   @Override
@@ -161,9 +151,7 @@ public class UserDAOImpl implements UserDAO {
   private List<UserDTO> getResults(ResultSet rs) throws SQLException {
     List<UserDTO> users = new ArrayList<>();
     while (rs.next()) {
-      UserDTO user = factory.getUser();
-      getUserFromRs(rs, user);
-      users.add(user);
+      users.add(getUserFromRs(rs));
     }
     return users;
   }
