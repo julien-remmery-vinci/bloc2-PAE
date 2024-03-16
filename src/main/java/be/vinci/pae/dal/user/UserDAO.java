@@ -12,6 +12,7 @@ public interface UserDAO {
   /**
    * Get a user from a ResultSet.
    *
+   * @param rs the ResultSet
    * @return the user
    */
   UserDTO getUserFromRs(ResultSet rs);
