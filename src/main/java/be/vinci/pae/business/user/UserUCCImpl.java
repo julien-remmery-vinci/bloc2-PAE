@@ -86,4 +86,16 @@ public class UserUCCImpl implements UserUCC {
   public List<UserDTO> getAllUsers() {
     return userDAO.getAllUsers();
   }
+
+  public UserDTO updateUser(UserDTO user, String oldPassword, String newPassword) {
+    UserDTO userFound = userDAO.getOneById(user.getIdUser());
+    if (userFound == null) {
+      return null;
+    }
+    if (userFound.getPassword().equals(oldPassword)) {
+      userFound.setPassword(newPassword);
+      return userDAO.updateUser(userFound);
+    }
+    return null;
+  }
 }

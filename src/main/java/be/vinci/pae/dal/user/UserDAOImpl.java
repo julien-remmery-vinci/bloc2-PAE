@@ -156,4 +156,32 @@ public class UserDAOImpl implements UserDAO {
     return users;
   }
 
+  /**
+   * Update a user in the database.
+   *
+   * @param user the user to update
+   * @return the user updated
+   */
+  public UserDTO updateUser(UserDTO user) {
+    try (PreparedStatement updateUser = dalServices.getPS(
+        "UPDATE pae.users SET lastname = ?, firstname = ?, email = ?, password = ?, phoneNumber = ?,"
+            + " registerDate = ?, role = ? WHERE idUser = ? RETURNING idUser")) {
+      updateUser.setString(1, user.getLastname());
+      updateUser.setString(2, user.getFirstname());
+      updateUser.setString(3, user.getEmail());
+      updateUser.setString(4, user.getPassword());
+      updateUser.setString(5, user.getPhoneNumber());
+      updateUser.setDate(6, user.getRegisterDate());
+      updateUser.setString(7, user.getRole().toString());
+      updateUser.setInt(8, user.getIdUser());
+      try (ResultSet rs = updateUser.executeQuery()) {
+        if (rs.next()) {
+          return user;
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return null;
+  }
 }
