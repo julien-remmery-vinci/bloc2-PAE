@@ -24,6 +24,25 @@ public class CompanyDAOImpl implements CompanyDAO {
   @Inject
   private DALServices dalServices;
 
+  public CompanyDTO getCompanyFromRs(ResultSet rs) {
+    CompanyDTO company = factory.getCompany();
+    // Get the fields of the UserImpl class
+    for (Field f : CompanyImpl.class.getDeclaredFields()) {
+      try {
+        // Get the setter method of the field
+        Method m = CompanyDTO.class.getDeclaredMethod(
+            "set" + f.getName().substring(0, 1).toUpperCase()
+                + f.getName().substring(1), f.getType());
+        // Set the value of the field
+        m.invoke(company, rs.getObject("company." + f.getName()));
+      } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException |
+               SQLException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    return company;
+  }
+
   @Override
   public List<CompanyDTO> getAll() {
     List<CompanyDTO> companies = new ArrayList<>();
@@ -38,30 +57,5 @@ public class CompanyDAOImpl implements CompanyDAO {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
-  }
-
-  /**
-   * Get a company from a ResultSet.
-   *
-   * @param rs the ResultSet
-   * @return the company
-   * @throws SQLException if a SQL exception occurs
-   */
-  private CompanyDTO getCompanyFromRs(ResultSet rs) throws SQLException {
-    CompanyDTO companyDTO = factory.getCompany();
-    // Get the fields of the UserImpl class
-    for (Field f : CompanyImpl.class.getDeclaredFields()) {
-      try {
-        // Get the setter method of the field
-        Method m = CompanyDTO.class.getDeclaredMethod(
-            "set" + f.getName().substring(0, 1).toUpperCase()
-                + f.getName().substring(1), f.getType());
-        // Set the value of the field
-        m.invoke(companyDTO, rs.getObject(f.getName()));
-      } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-        throw new RuntimeException(e);
-      }
-    }
-    return companyDTO;
   }
 }
