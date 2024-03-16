@@ -3,7 +3,7 @@ package be.vinci.pae.dal.user;
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserImpl;
-import be.vinci.pae.dal.DALServices;
+import be.vinci.pae.dal.DALBackServices;
 import jakarta.inject.Inject;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -22,7 +22,7 @@ public class UserDAOImpl implements UserDAO {
   @Inject
   private Factory factory;
   @Inject
-  private DALServices dalServices;
+  private DALBackServices dalBackServices;
 
   public UserDTO getUserFromRs(ResultSet rs) {
     UserDTO user = factory.getUser();
@@ -51,7 +51,7 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public UserDTO getOneByEmail(String email) {
-    try (PreparedStatement getUser = dalServices.getPS(
+    try (PreparedStatement getUser = dalBackServices.getPS(
         "SELECT idUser, lastname, firstname, email, password, phoneNumber, registerDate, role "
             + "FROM pae.users WHERE email = ?")) {
       getUser.setString(1, email);
@@ -75,7 +75,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public UserDTO getOneById(int id) {
     try {
-      PreparedStatement getUser = dalServices.getPS(
+      PreparedStatement getUser = dalBackServices.getPS(
           "SELECT idUser, lastname, firstname, email, password, phoneNumber, registerDate, role "
               + "FROM pae.users WHERE idUser = ?");
       getUser.setInt(1, id);
@@ -90,14 +90,9 @@ public class UserDAOImpl implements UserDAO {
     return null;
   }
 
-  /**
-   * Register a user.
-   *
-   * @param user the user to register
-   * @return the registered user
-   */
+  @Override
   public UserDTO addUser(UserDTO user) {
-    try (PreparedStatement addUser = dalServices.getPS(
+    try (PreparedStatement addUser = dalBackServices.getPS(
         "INSERT INTO pae.users (lastname, firstname, email, password, phoneNumber, registerDate,"
             + " role) " + "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING idUser")) {
       addUser.setString(1, user.getLastname());
@@ -128,7 +123,7 @@ public class UserDAOImpl implements UserDAO {
    * @throws RuntimeException if a SQLException is caught
    */
   public List<UserDTO> getAllUsers() {
-    try (PreparedStatement getUsers = dalServices.getPS(
+    try (PreparedStatement getUsers = dalBackServices.getPS(
         "SELECT idUser, lastname, firstname, email, password, phoneNumber, registerDate, role "
             + "FROM pae.users")) {
       try (ResultSet rs = getUsers.executeQuery()) {

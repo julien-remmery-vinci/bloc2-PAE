@@ -3,7 +3,7 @@ package be.vinci.pae.dal.company;
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.company.CompanyImpl;
-import be.vinci.pae.dal.DALServices;
+import be.vinci.pae.dal.DALBackServices;
 import jakarta.inject.Inject;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -22,7 +22,7 @@ public class CompanyDAOImpl implements CompanyDAO {
   @Inject
   private Factory factory;
   @Inject
-  private DALServices dalServices;
+  private DALBackServices dalServices;
 
   public CompanyDTO getCompanyFromRs(ResultSet rs) {
     CompanyDTO company = factory.getCompany();

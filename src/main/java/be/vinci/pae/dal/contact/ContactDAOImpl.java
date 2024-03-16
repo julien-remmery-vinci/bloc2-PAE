@@ -3,7 +3,7 @@ package be.vinci.pae.dal.contact;
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.contact.ContactImpl;
-import be.vinci.pae.dal.DALServices;
+import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.user.UserDAO;
 import jakarta.inject.Inject;
@@ -22,7 +22,7 @@ public class ContactDAOImpl implements ContactDAO {
   @Inject
   private Factory factory;
   @Inject
-  private DALServices dalServices;
+  private DALBackServices dalServices;
   @Inject
   private CompanyDAO companyDAO;
   @Inject
