@@ -18,21 +18,23 @@ import org.mockito.Mockito;
 
 public class ContactUCCTest {
 
+  private final int ID_CONTACT = 1;
+  private final int ID_USER = 1;
+  private final String REFUSAL_REASON = "refusalReason";
   Contact contact;
   private ContactUCC contactUCC;
   private ContactDAO contactDAO;
-  private Factory factory;
-  private ServiceLocator locator;
 
   @BeforeEach
   void setUp() {
-    locator = ServiceLocatorUtilities.bind(new ApplicationBinderTest());
+    ServiceLocator locator = ServiceLocatorUtilities.bind(new ApplicationBinderTest());
     contactUCC = locator.getService(ContactUCC.class);
     contactDAO = locator.getService(ContactDAO.class);
-    factory = locator.getService(Factory.class);
+    Factory factory = locator.getService(Factory.class);
 
     contact = (Contact) factory.getContact();
-    contact.setIdContact(1);
+    contact.setIdContact(ID_CONTACT);
+    contact.setIdStudent(ID_USER);
     contact.setState(Contact.STATE_TAKEN);
     Mockito.when(contactDAO.getOneById(1)).thenReturn(contact);
   }
@@ -41,23 +43,23 @@ public class ContactUCCTest {
   @DisplayName("Test refuseContact with contact in wrong state")
   void testRefuseContactWrongState() {
     contact.setState(Contact.STATE_TAKENDOWN);
-    assertThrows(WebApplicationException.class, () -> contactUCC.refuseContact(1, "refusalReason"));
+    assertThrows(WebApplicationException.class,
+        () -> contactUCC.refuseContact(ID_CONTACT, REFUSAL_REASON, ID_USER));
   }
 
   @Test
   @DisplayName("Test refuseContact with contact not found")
   void testRefuseContactNotFound() {
     Mockito.when(contactDAO.getOneById(1)).thenReturn(null);
-    assertNull(contactUCC.refuseContact(1, "refusalReason"));
+    assertNull(contactUCC.refuseContact(ID_CONTACT, REFUSAL_REASON, ID_USER));
   }
 
   @Test
   @DisplayName("Test refuseContact with existing contact in right state")
   void testGetOneById() {
-    String state = "refusalReason";
     assertEquals(contact.getIdContact(),
-        contactUCC.refuseContact(1, state).getIdContact());
+        contactUCC.refuseContact(ID_CONTACT, REFUSAL_REASON, ID_USER).getIdContact());
     assertEquals(Contact.STATE_TAKENDOWN, contact.getState());
-    assertEquals(state, contact.getRefusalReason());
+    assertEquals(REFUSAL_REASON, contact.getRefusalReason());
   }
 }
