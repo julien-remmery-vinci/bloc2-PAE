@@ -2,7 +2,7 @@ package be.vinci.pae.dal.user;
 
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.user.UserDTO;
-import be.vinci.pae.dal.DALServices;
+import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.Utils;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -19,11 +19,11 @@ public class UserDAOImpl implements UserDAO {
   @Inject
   private Factory factory;
   @Inject
-  private DALServices dalServices;
+  private DALBackServices dalBackServices;
 
   @Override
   public UserDTO getOneByEmail(String email) {
-    try (PreparedStatement getUser = dalServices.getPS(
+    try (PreparedStatement getUser = dalBackServices.getPS(
         "SELECT idUser as \"user.idUser\", lastname as \"user.lastname\","
             + "firstname as \"user.firstname\", email as \"user.email\","
             + "password as \"user.password\", phoneNumber as \"user.phoneNumber\","
@@ -50,7 +50,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public UserDTO getOneById(int id) {
     try {
-      PreparedStatement getUser = dalServices.getPS(
+      PreparedStatement getUser = dalBackServices.getPS(
           "SELECT idUser as \"user.idUser\", lastname as \"user.lastname\","
               + "firstname as \"user.firstname\", email as \"user.email\","
               + "password as \"user.password\", phoneNumber as \"user.phoneNumber\","
@@ -68,14 +68,9 @@ public class UserDAOImpl implements UserDAO {
     return null;
   }
 
-  /**
-   * Register a user.
-   *
-   * @param user the user to register
-   * @return the registered user
-   */
+  @Override
   public UserDTO addUser(UserDTO user) {
-    try (PreparedStatement addUser = dalServices.getPS(
+    try (PreparedStatement addUser = dalBackServices.getPS(
         "INSERT INTO pae.users (lastname, firstname, email, password, phoneNumber, registerDate,"
             + " role) " + "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING idUser")) {
       addUser.setString(1, user.getLastname());
@@ -106,7 +101,7 @@ public class UserDAOImpl implements UserDAO {
    * @throws RuntimeException if a SQLException is caught
    */
   public List<UserDTO> getAllUsers() {
-    try (PreparedStatement getUsers = dalServices.getPS(
+    try (PreparedStatement getUsers = dalBackServices.getPS(
         "SELECT idUser as \"user.idUser\", lastname as \"user.lastname\","
             + "firstname as \"user.firstname\", email as \"user.email\","
             + "password as \"user.password\", phoneNumber as \"user.phoneNumber\","

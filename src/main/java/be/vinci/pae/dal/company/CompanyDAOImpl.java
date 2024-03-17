@@ -2,7 +2,7 @@ package be.vinci.pae.dal.company;
 
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.company.CompanyDTO;
-import be.vinci.pae.dal.DALServices;
+import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.Utils;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -19,7 +19,7 @@ public class CompanyDAOImpl implements CompanyDAO {
   @Inject
   private Factory factory;
   @Inject
-  private DALServices dalServices;
+  private DALBackServices dalServices;
 
   @Override
   public List<CompanyDTO> getAll() {

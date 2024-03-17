@@ -2,7 +2,7 @@ package be.vinci.pae.dal.contact;
 
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.contact.ContactDTO;
-import be.vinci.pae.dal.DALServices;
+import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.Utils;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -17,7 +17,7 @@ public class ContactDAOImpl implements ContactDAO {
   @Inject
   private Factory factory;
   @Inject
-  private DALServices dalServices;
+  private DALBackServices dalServices;
 
   @Override
   public ContactDTO getOneById(int id) {
