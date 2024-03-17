@@ -11,22 +11,8 @@ import org.apache.commons.dbcp2.BasicDataSource;
  */
 public class DALServicesImpl implements DALBackServices, DALServices {
 
-  private ThreadLocal<Connection> threadLocal;
   private final BasicDataSource basicDataSource;
-
-  @Override
-  public Connection getConnection() {
-    Connection conn = threadLocal.get();
-    if (conn == null) {
-      try {
-        conn = basicDataSource.getConnection();
-        threadLocal.set(conn);
-      } catch (SQLException e) {
-        throw new RuntimeException(e);
-      }
-    }
-    return conn;
-  }
+  private ThreadLocal<Connection> threadLocal;
 
   /**
    * Constructor of DALServicesImpl.
@@ -41,6 +27,20 @@ public class DALServicesImpl implements DALBackServices, DALServices {
     basicDataSource.setUrl(url);
     basicDataSource.setUsername(username);
     basicDataSource.setPassword(password);
+  }
+
+  @Override
+  public Connection getConnection() {
+    Connection conn = threadLocal.get();
+    if (conn == null) {
+      try {
+        conn = basicDataSource.getConnection();
+        threadLocal.set(conn);
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    return conn;
   }
 
   @Override
