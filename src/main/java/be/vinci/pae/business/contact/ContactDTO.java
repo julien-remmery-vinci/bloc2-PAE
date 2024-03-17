@@ -69,14 +69,14 @@ public interface ContactDTO {
    *
    * @return the student of the contact
    */
-  UserDTO getStudent();
+  UserDTO getUser();
 
   /**
    * Set the student of the contact.
    *
-   * @param student the student of the contact
+   * @param user the student of the contact
    */
-  void setStudent(UserDTO student);
+  void setUser(UserDTO user);
 
   /**
    * Get the state of the contact.

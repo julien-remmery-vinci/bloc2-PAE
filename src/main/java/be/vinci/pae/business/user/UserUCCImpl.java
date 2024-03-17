@@ -1,5 +1,6 @@
 package be.vinci.pae.business.user;
 
+import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.user.UserDAO;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
@@ -16,6 +17,11 @@ public class UserUCCImpl implements UserUCC {
    */
   @Inject
   private UserDAO userDAO;
+  /**
+   * Injected DALServices.
+   */
+  @Inject
+  private DALServices dalServices;
 
   /**
    * Login a user.
@@ -57,14 +63,17 @@ public class UserUCCImpl implements UserUCC {
         && !user.getRole().toString().equals("P")) {
       throw new WebApplicationException("Invalid role", Response.Status.BAD_REQUEST);
     }
+    dalServices.start();
     UserDTO userFound = userDAO.getOneByEmail(user.getEmail());
     if (userFound != null) {
+      dalServices.rollback();
       return null;
     }
     java.sql.Date registerDate = new java.sql.Date(System.currentTimeMillis());
     user.setRegisterDate(registerDate);
 
     user = userDAO.addUser(user);
+    dalServices.commit();
     return user;
   }
 
