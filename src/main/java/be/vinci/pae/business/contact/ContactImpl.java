@@ -10,9 +10,11 @@ public class ContactImpl implements Contact {
 
   private int idContact;
   private int idCompany;
+  // Field for the company's data
   private CompanyDTO company;
   private int idStudent;
-  private UserDTO student;
+  // Field for the student's data
+  private UserDTO user;
   private String state;
   private String meetPlace;
   private String refusalReason;
@@ -58,12 +60,12 @@ public class ContactImpl implements Contact {
     this.idStudent = idStudent;
   }
 
-  public UserDTO getStudent() {
-    return student;
+  public UserDTO getUser() {
+    return user;
   }
 
-  public void setStudent(UserDTO student) {
-    this.student = student;
+  public void setUser(UserDTO user) {
+    this.user = user;
   }
 
   @Override

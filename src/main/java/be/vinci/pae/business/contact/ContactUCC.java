@@ -13,7 +13,7 @@ public interface ContactUCC {
    *
    * @return the contact
    */
-  List<ContactDTO> getContact(UserDTO user);
+  List<ContactDTO> getContacts(UserDTO user);
 
-  ContactDTO refuseContact(int id, String refusalReason);
+  ContactDTO refuseContact(int id, String refusalReason, int idUser);
 }

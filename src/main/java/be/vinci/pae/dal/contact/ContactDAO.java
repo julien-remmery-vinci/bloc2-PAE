@@ -1,7 +1,6 @@
 package be.vinci.pae.dal.contact;
 
 import be.vinci.pae.business.contact.ContactDTO;
-import java.sql.ResultSet;
 import java.util.List;
 
 /**
@@ -10,12 +9,19 @@ import java.util.List;
 public interface ContactDAO {
 
   /**
-   * Get a contact from a ResultSet.
+   * Get all contacts.
    *
-   * @param rs the ResultSet
-   * @return the contact
+   * @return the list of contacts
    */
-  ContactDTO getContactFromRs(ResultSet rs);
+  List<ContactDTO> getAllContacts();
+
+  /**
+   * Get all contacts by student id.
+   *
+   * @param id the id of the student
+   * @return the list of contacts
+   */
+  List<ContactDTO> getContactsByStudentId(int id);
 
   /**
    * Get a contact by its id.
@@ -31,19 +37,4 @@ public interface ContactDAO {
    * @param contact the contact to refuse
    */
   void updateContact(ContactDTO contact);
-
-  /**
-   * Get the contacts of a student.
-   *
-   * @param idStudent the id of the student
-   * @return the contacts
-   */
-  List<ContactDTO> getContactsByStudentId(int idStudent);
-
-  /**
-   * Get all the contacts.
-   *
-   * @return the contacts
-   */
-  List<ContactDTO> getAllContacts();
 }

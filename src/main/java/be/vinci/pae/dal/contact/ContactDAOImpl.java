@@ -2,14 +2,9 @@ package be.vinci.pae.dal.contact;
 
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.contact.ContactDTO;
-import be.vinci.pae.business.contact.ContactImpl;
-import be.vinci.pae.dal.DALServices;
-import be.vinci.pae.dal.company.CompanyDAO;
-import be.vinci.pae.dal.user.UserDAO;
+import be.vinci.pae.dal.DALBackServices;
+import be.vinci.pae.dal.utils.Utils;
 import jakarta.inject.Inject;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,32 +19,7 @@ public class ContactDAOImpl implements ContactDAO {
   @Inject
   private Factory factory;
   @Inject
-  private DALServices dalServices;
-  @Inject
-  private CompanyDAO companyDAO;
-  @Inject
-  private UserDAO userDAO;
-
-  public ContactDTO getContactFromRs(ResultSet rs) {
-    ContactDTO contact = factory.getContact();
-    // Get the fields of the UserImpl class
-    for (Field f : ContactImpl.class.getDeclaredFields()) {
-      try {
-        if (!f.getType().isInterface()) {
-          // Get the setter method of the field
-          Method m = ContactDTO.class.getDeclaredMethod(
-              "set" + f.getName().substring(0, 1).toUpperCase()
-                  + f.getName().substring(1), f.getType());
-          // Set the value of the field
-          m.invoke(contact, rs.getObject("contact." + f.getName()));
-        }
-      } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException |
-               SQLException e) {
-        throw new RuntimeException(e);
-      }
-    }
-    return contact;
-  }
+  private DALBackServices dalServices;
 
   @Override
   public ContactDTO getOneById(int id) {
@@ -74,10 +44,8 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setInt(1, id);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
-          ContactDTO contact = getContactFromRs(rs);
-          contact.setCompany(companyDAO.getCompanyFromRs(rs));
-          contact.setStudent(userDAO.getUserFromRs(rs));
-          return contact;
+          String prefix = "contact";
+          return (ContactDTO) Utils.getDataFromRs(rs, prefix, factory);
         }
       }
     } catch (SQLException e) {
@@ -87,7 +55,7 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
   /**
-   * Refuse a contact.
+   * Update a contact.
    *
    * @param contact the contact to refuse
    */
@@ -121,13 +89,18 @@ public class ContactDAOImpl implements ContactDAO {
   public List<ContactDTO> getContactsByStudentId(int idStudent) {
     List<ContactDTO> contacts = new ArrayList<>();
     try (PreparedStatement ps = dalServices.getPS(
-        "SELECT idContact, idCompany, state, meetPlace,"
-            + " refusalReason, academicYear "
-            + "FROM pae.contacts WHERE idStudent = ?;")) {
+        "SELECT idContact as \"contact.idContact\",idCompany as \"contact.idCompany\","
+            + "idStudent as \"contact.idStudent\","
+            + "state as \"contact.state\",meetPlace as \"contact.meetPlace\","
+            + "refusalReason as \"contact.refusalReason\",academicYear "
+            + "as \"contact.academicYear\""
+            + "FROM pae.contacts WHERE idStudent = ?;"
+    )) {
       ps.setInt(1, idStudent);
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
-          contacts.add(getContactFromRs(rs));
+          String prefix = "company";
+          contacts.add((ContactDTO) Utils.getDataFromRs(rs, prefix, factory));
         }
         return contacts;
       }
@@ -144,13 +117,18 @@ public class ContactDAOImpl implements ContactDAO {
   @Override
   public List<ContactDTO> getAllContacts() {
     List<ContactDTO> contacts = new ArrayList<>();
-    try (PreparedStatement ps = dalServices.getPS(
-        "SELECT idContact, idCompany, idStudent, state,"
-            + " meetPlace, refusalReason, academicYear"
-            + "FROM pae.contacts")) {
+    try {
+      PreparedStatement ps = dalServices.getPS(
+          "SELECT idContact as \"contact.idContact\",idCompany as \"contact.idCompany\","
+              + "idStudent as \"contact.idStudent\","
+              + "state as \"contact.state\",meetPlace as \"contact.meetPlace\","
+              + "refusalReason as \"contact.refusalReason\",academicYear "
+              + "as \"contact.academicYear\""
+              + "FROM pae.contacts;");
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
-          contacts.add(getContactFromRs(rs));
+          String prefix = "company";
+          contacts.add((ContactDTO) Utils.getDataFromRs(rs, prefix, factory));
         }
         return contacts;
       }

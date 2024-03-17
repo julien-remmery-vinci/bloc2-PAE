@@ -23,7 +23,7 @@ public class ContactUCCImpl implements ContactUCC {
    * @return the contact
    */
   @Override
-  public List<ContactDTO> getContact(UserDTO user) {
+  public List<ContactDTO> getContacts(UserDTO user) {
     if (user == null) {
       return null; //error message
     }
@@ -39,17 +39,21 @@ public class ContactUCCImpl implements ContactUCC {
   /**
    * Refuse a contact.
    *
-   * @param idContact the id of the contact
+   * @param idContact     the id of the contact
+   * @param refusalReason the refusal reason
+   * @param idUser        the id of the user
    * @return the contact
    */
   @Override
-  public ContactDTO refuseContact(int idContact, String refusalReason) {
+  public ContactDTO refuseContact(int idContact, String refusalReason, int idUser) {
     Contact contact = (Contact) contactDAO.getOneById(idContact);
     if (contact == null) {
       return null;
     }
-    // TODO check if the student matches the user that requested the action
-
+    if (contact.getIdStudent() != idUser) {
+      throw new WebApplicationException("You don't have a contact with this id",
+          Status.NOT_FOUND);
+    }
     if (!contact.getState().equals(Contact.STATE_TAKEN)) {
       throw new WebApplicationException("The contact must be in the state 'taken' to be refused",
           Status.PRECONDITION_FAILED);

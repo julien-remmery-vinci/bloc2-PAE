@@ -6,6 +6,7 @@ import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.business.contact.ContactUCCImpl;
 import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.business.user.UserUCCImpl;
+import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.contact.ContactDAO;
 import be.vinci.pae.dal.user.UserDAO;
 import jakarta.inject.Singleton;
@@ -27,5 +28,6 @@ public class ApplicationBinderTest extends AbstractBinder {
     bind(FactoryImpl.class).to(Factory.class).in(Singleton.class);
     bind(ContactUCCImpl.class).to(ContactUCC.class).in(Singleton.class);
     bind(Mockito.mock(ContactDAO.class)).to(ContactDAO.class);
+    bind(Mockito.mock(DALServices.class)).to(DALServices.class);
   }
 }
