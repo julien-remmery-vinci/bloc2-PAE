@@ -166,4 +166,5 @@ public class AuthRessource {
     // Return the user
     return authenticatedUser;
   }
+
 }

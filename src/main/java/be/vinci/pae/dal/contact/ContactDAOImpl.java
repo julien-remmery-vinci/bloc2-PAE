@@ -8,6 +8,8 @@ import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of ContactDAO.
@@ -72,6 +74,64 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setString(6, contact.getAcademicYear());
       ps.setInt(7, contact.getIdContact());
       ps.executeUpdate();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  /**
+   * Get the contacts of a student.
+   *
+   * @param idStudent the id of the student
+   * @return the contacts
+   */
+  @Override
+  public List<ContactDTO> getContactsByStudentId(int idStudent) {
+    List<ContactDTO> contacts = new ArrayList<>();
+    try (PreparedStatement ps = dalServices.getPS(
+        "SELECT idContact as \"contact.idContact\",idCompany as \"contact.idCompany\","
+            + "idStudent as \"contact.idStudent\","
+            + "state as \"contact.state\",meetPlace as \"contact.meetPlace\","
+            + "refusalReason as \"contact.refusalReason\",academicYear "
+            + "as \"contact.academicYear\""
+            + "FROM pae.contacts WHERE idStudent = ?;"
+    )) {
+      ps.setInt(1, idStudent);
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          String prefix = "company";
+          contacts.add((ContactDTO) Utils.getDataFromRs(rs, prefix, factory));
+        }
+        return contacts;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  /**
+   * Get all the contacts.
+   *
+   * @return the contacts
+   */
+  @Override
+  public List<ContactDTO> getAllContacts() {
+    List<ContactDTO> contacts = new ArrayList<>();
+    try {
+      PreparedStatement ps = dalServices.getPS(
+          "SELECT idContact as \"contact.idContact\",idCompany as \"contact.idCompany\","
+              + "idStudent as \"contact.idStudent\","
+              + "state as \"contact.state\",meetPlace as \"contact.meetPlace\","
+              + "refusalReason as \"contact.refusalReason\",academicYear "
+              + "as \"contact.academicYear\""
+              + "FROM pae.contacts;");
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          String prefix = "company";
+          contacts.add((ContactDTO) Utils.getDataFromRs(rs, prefix, factory));
+        }
+        return contacts;
+      }
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
