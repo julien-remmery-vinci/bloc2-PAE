@@ -28,7 +28,8 @@ public class CompanyDAOImpl implements CompanyDAO {
         "SELECT idCompany as \"company.idCompany\",tradeName as \"company.tradeName\","
             + "designation as \"company.designation\",address as \"company.address\","
             + "phoneNumber as \"company.phoneNumber\",email as \"company.email\","
-            + "blacklisted as \"company.blacklisted\",blacklistMotivation as \"company.blacklistMotivation\""
+            + "blacklisted as \"company.blacklisted\","
+            + "blacklistMotivation as \"company.blacklistMotivation\""
             + " FROM pae.companies")) {
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
