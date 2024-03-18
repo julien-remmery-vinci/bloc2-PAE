@@ -17,6 +17,8 @@ import be.vinci.pae.dal.contact.ContactDAO;
 import be.vinci.pae.dal.contact.ContactDAOImpl;
 import be.vinci.pae.dal.user.UserDAO;
 import be.vinci.pae.dal.user.UserDAOImpl;
+import be.vinci.pae.dal.utils.DAOServices;
+import be.vinci.pae.dal.utils.DAOServicesImpl;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.ext.Provider;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -38,5 +40,6 @@ public class ApplicationBinder extends AbstractBinder {
     bind(CompanyUCCImpl.class).to(CompanyUCC.class).in(Singleton.class);
     bind(CompanyDAOImpl.class).to(CompanyDAO.class).in(Singleton.class);
     bind(DALServicesImpl.class).to(DALServices.class).in(Singleton.class);
+    bind(DAOServicesImpl.class).to(DAOServices.class).in(Singleton.class);
   }
 }
