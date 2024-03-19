@@ -51,5 +51,11 @@ VALUES ('Vinci', 'Bruxelles', false);
 INSERT INTO pae.companies (tradeName, address, blacklisted)
 VALUES ('Idealis Consulting', 'Mont saint guibert', false);
 
+INSERT INTO pae.companies (tradeName, designation, address, blacklisted)
+VALUES ('Sagacify', 'SRL', 'Bruxelles', false);
+
+INSERT INTO pae.companies (tradeName, designation, address, blacklisted)
+VALUES ('Sagacify', 'SPRL', 'Bruxelles', false);
+
 INSERT INTO pae.contacts (idCompany, idStudent, state, academicYear) VALUES (1, 2, 'initié', '2023-2024');
 INSERT INTO pae.contacts (idCompany, idStudent, state, academicYear) VALUES (2, 2, 'pris', '2023-2024');
