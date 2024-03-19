@@ -1,13 +1,20 @@
 package be.vinci.pae.business.contact;
 
+import be.vinci.pae.business.company.CompanyDTO;
+import be.vinci.pae.business.user.UserDTO;
+
 /**
  * Implementation of Contact which inherits of ContactDTO.
  */
 public class ContactImpl implements Contact {
 
   private int idContact;
-  private int company;
-  private int student;
+  private int idCompany;
+  // Field for the company's data
+  private CompanyDTO company;
+  private int idStudent;
+  // Field for the student's data
+  private UserDTO user;
   private String state;
   private String meetPlace;
   private String refusalReason;
@@ -24,23 +31,41 @@ public class ContactImpl implements Contact {
   }
 
   @Override
-  public int getCompany() {
+  public int getIdCompany() {
+    return idCompany;
+  }
+
+  @Override
+  public void setIdCompany(int idCompany) {
+    this.idCompany = idCompany;
+  }
+
+  @Override
+  public CompanyDTO getCompany() {
     return company;
   }
 
   @Override
-  public void setCompany(int company) {
+  public void setCompany(CompanyDTO company) {
     this.company = company;
   }
 
   @Override
-  public int getStudent() {
-    return student;
+  public int getIdStudent() {
+    return idStudent;
   }
 
   @Override
-  public void setStudent(int student) {
-    this.student = student;
+  public void setIdStudent(int idStudent) {
+    this.idStudent = idStudent;
+  }
+
+  public UserDTO getUser() {
+    return user;
+  }
+
+  public void setUser(UserDTO user) {
+    this.user = user;
   }
 
   @Override
