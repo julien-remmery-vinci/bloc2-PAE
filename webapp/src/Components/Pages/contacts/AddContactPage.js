@@ -31,12 +31,13 @@ async function buildPage(){
     companies.style.width = '25%';
     companies.style.marginLeft = '15%';
 
-    companyList.forEach((e) => {
+    const companyNames = [...new Set(companyList.map(e => e.tradeName))]; // Suppression des doublons
+    companyNames.forEach(name => {
         const option = document.createElement('option');
-        option.value = e.id;
-        option.text = e.tradeName;
+        option.value = name;
+        option.text = name;
         companies.appendChild(option);
-    });
+});
 
     main.appendChild(companies);
 
@@ -44,22 +45,34 @@ async function buildPage(){
     designation.textContent = 'Appellation';
     designation.style.marginLeft = '15%';
     main.appendChild(designation);
+
     const designations = document.createElement('select');
     designations.className = 'form-control';
     designations.style.width = '25%';
     designations.style.marginLeft = '15%';
-    const option3 = document.createElement('option');
-    option3.value = 'option3';
-    option3.text = 'Option 3';
-    designations.appendChild(option3);
-    const option4 = document.createElement('option');
-    option4.value = 'option4';
-    option4.text = 'Option 4';
-    designations.appendChild(option4);
-    main.appendChild(designations);
-    
-}
 
+    main.appendChild(designations);
+
+    companies.addEventListener('change', (e) => {
+        while (designations.firstChild) {
+            designations.removeChild(designations.firstChild);
+        }
+
+        const selectedCompany = companyList.find((c) => c.tradeName === e.target.value);
+        console.log(selectedCompany);
+        
+        if (selectedCompany && selectedCompany.designation!==null) {
+            const designationList = companyList.filter((c) => c.tradeName === e.target.value);
+            console.log(designationList);
+            designationList.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.text = name.designation;
+                designations.appendChild(option);
+            });
+        }
+    });
+    
 // fetch function to get all entreprises
 async function getCompanies() {
     const response = await fetch('http://localhost:3000/company', {
@@ -73,6 +86,7 @@ async function getCompanies() {
         return response.json();
     }
     return undefined;
+}
 }
 
 export default AddContactPage;
