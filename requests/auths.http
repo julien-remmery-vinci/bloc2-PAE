@@ -49,3 +49,16 @@ Content-Type: application/json
   "password": "haj"
 }
 
+### Try to register user
+POST {{baseUrl}}/register
+Content-Type: application/json
+
+{
+  "firstname": "haj",
+  "lastname": "hajou",
+  "email": "haj.hoaaodepou@vinci.be",
+  "phoneNumber": "123456789",
+  "password": "haj",
+  "role": "B"
+}
+
