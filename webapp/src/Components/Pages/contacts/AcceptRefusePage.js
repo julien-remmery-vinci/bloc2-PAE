@@ -1,5 +1,5 @@
 import {clearPage} from "../../../utils/render";
-import {getAuthenticatedUser} from "../../../utils/auths";
+import {getAuthenticatedUser, getUserToken} from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
 const AcceptRefusePage = () => {
@@ -9,6 +9,7 @@ const AcceptRefusePage = () => {
         window.location.reload();
     } else {
         clearPage();
+        document.title = "Contact accept - refuse";
         buildPage();
     }
 }
@@ -27,6 +28,11 @@ function buildPage() {
     const rightDiv = document.createElement('div');
     rightDiv.style.width = '50%';
     rightDiv.appendChild(getForm());
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'alert alert-danger';
+    errorDiv.hidden = true;
+    errorDiv.textContent = 'Erreur lors de la sauvegarde';
+    rightDiv.appendChild(errorDiv);
     mainDiv.appendChild(leftDiv);
     mainDiv.appendChild(rightDiv);
     main.appendChild(mainDiv);
@@ -84,14 +90,15 @@ function getForm() {
     refusalReason.hidden = true;
     refusalReason.textContent = 'Raison du refus';
     const refusalReasonValue = document.createElement('textarea');
-    refusalReasonValue.required = !refusalReasonValue.hidden;
     refusalReasonValue.placeholder = 'Entrer la raison du refus';
     refusalReasonValue.hidden = true;
+    refusalReasonValue.required = !refusalReasonValue.hidden;
     refusalReasonValue.className = 'form-control';
     refusalReasonValue.rows = 5;
     contactStateValue.addEventListener('change', (event) => {
         refusalReason.hidden = event.target.value !== 'false';
         refusalReasonValue.hidden = event.target.value !== 'false';
+        refusalReasonValue.required = !refusalReasonValue.hidden;
     });
     const submit = document.createElement('input');
     submit.type = 'submit';
@@ -108,9 +115,31 @@ function getForm() {
     return form;
 }
 
-function onSubmit(event) {
-    // TODO: Implement onSubmit function
+async function onSubmit(event) {
     event.preventDefault();
+    const id = window.location.href.split("?")[1].split("=")[1];
+    const contactState = document.querySelector('select').value;
+    const refusalReason = document.querySelector('textarea').value;
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': getUserToken(),
+        },
+        body: JSON.stringify({
+            refusalReason,
+        }),
+    };
+    if (contactState === 'true') {
+        // TODO add accept contact
+    } else {
+        fetch(`http://localhost:3000/contact/${id}/refuse`, options)
+        .then(request => {
+            if(request.status === 401) {
+                document.querySelector('.alert-danger').hidden = false;
+            }
+        });
+    }
 }
 
 export default AcceptRefusePage;
