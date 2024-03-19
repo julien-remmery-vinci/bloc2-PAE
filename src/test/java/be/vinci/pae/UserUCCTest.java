@@ -25,7 +25,7 @@ public class UserUCCTest {
   ServiceLocator locator;
   User user;
   User student;
-  User invalidUser;
+  User existingUser;
   private UserUCC userUCC;
   private UserDAO userDAO;
   private Factory factory;
@@ -45,16 +45,11 @@ public class UserUCCTest {
     student = (User) factory.getUser();
     student.setPassword(student.hashPassword("test"));
     student.setEmail("test.test@student.vinci.be");
-    Mockito.when(userDAO.getOneByEmail("test.test@student.vinci.be")).thenReturn(student);
-    Mockito.when(userDAO.getOneById(2)).thenReturn(student);
-    Mockito.when(userDAO.addUser(student)).thenReturn(student);
+    Mockito.when(userDAO.getOneByEmail("test.test@student.vinci.be")).thenReturn(null);
 
-    invalidUser = (User) factory.getUser();
-    invalidUser.setPassword(invalidUser.hashPassword("test"));
-    invalidUser.setEmail("test.test@test.be");
-    Mockito.when(userDAO.getOneByEmail("test.test@test.be")).thenReturn(invalidUser);
-    Mockito.when(userDAO.getOneById(3)).thenReturn(invalidUser);
-    Mockito.when(userDAO.addUser(invalidUser)).thenReturn(invalidUser);
+    existingUser = (User) factory.getUser();
+    existingUser.setEmail("test.test@student.vinci.be");
+    Mockito.when(userDAO.getOneByEmail("test.test@student.vinci.be")).thenReturn(existingUser);
   }
 
   @Test
@@ -93,9 +88,9 @@ public class UserUCCTest {
   }
 
   @Test
-  @DisplayName("Test for the register method of UserUCC with an invalid email")
+  @DisplayName("Test for the register method of UserUCC with an existing email")
   void registerTestInvalidEmail() {
-    assertNull(userUCC.register(invalidUser));
+    assertNull(userUCC.register(existingUser));
   }
 
 
