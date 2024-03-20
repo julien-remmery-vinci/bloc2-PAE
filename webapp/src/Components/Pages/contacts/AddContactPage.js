@@ -33,7 +33,7 @@ async function buildPage(){
 
     const defaultOption = document.createElement('option');
     defaultOption.text = 'Choisissez votre entreprise';
-    defaultOption.value = '';
+    defaultOption.value = 'default';
     companies.appendChild(defaultOption);
 
     const companyNames = [...new Set(companyList.map(e => e.tradeName))]; // Suppression des doublons
@@ -52,6 +52,7 @@ async function buildPage(){
     main.appendChild(designation);
 
     const designations = document.createElement('select');
+    designations.id = 'designation';
     designations.className = 'form-control';
     designations.style.width = '25%';
     designations.style.marginLeft = '15%';
@@ -59,16 +60,20 @@ async function buildPage(){
     main.appendChild(designations);
 
     companies.addEventListener('change', (e) => {
+        const alert = document.querySelector('#alert');
+        if (alert.hidden === false) {
+            alert.hidden = true;
+        }
         while (designations.firstChild) {
             designations.removeChild(designations.firstChild);
         }
 
         const selectedCompany = companyList.find((c) => c.tradeName === e.target.value);
         
-        if (e.target.value === '') {
+        if (e.target.value === 'default') {
             const defaultOptionDesignation = document.createElement('option');
             defaultOptionDesignation.text = "Choisissez d'abord votre entreprise";
-            defaultOptionDesignation.value = '';
+            defaultOptionDesignation.value = 'default';
             designations.appendChild(defaultOptionDesignation);
         }
         else
@@ -76,7 +81,7 @@ async function buildPage(){
             const designationList = companyList.filter((c) => c.tradeName === e.target.value);
             designationList.forEach(name => {
                 const option = document.createElement('option');
-                option.value = name;
+                option.value = name.designation;
                 option.text = name.designation;
                 designations.appendChild(option);
             });
@@ -88,6 +93,27 @@ async function buildPage(){
         }
 
     });
+
+    const alert = document.createElement('p');
+    alert.id = 'alert';
+    alert.className = 'alert alert-danger';
+    alert.style.marginLeft = '15%';
+    alert.style.width = '40%';
+    alert.hidden = true;
+    main.appendChild(alert);
+
+    const submit = document.createElement('input');
+    submit.value = 'Enregistrer';
+    submit.type = 'submit';
+    submit.className = 'btn btn-primary';
+    submit.style.marginTop = '5%';
+    submit.style.marginLeft = '15%';
+    submit.style.width = '25%';
+    main.appendChild(submit);
+
+    submit.addEventListener('click', onSubmit);
+
+}
 
 // fetch function to get all entreprises
 async function getCompanies() {
@@ -103,7 +129,50 @@ async function getCompanies() {
     }
     return undefined;
 }
+
+// function to submit the form
+async function onSubmit(e) {
+    e.preventDefault();
+    const company = document.querySelector('select').value;
+    const designation = document.querySelectorAll('select')[1].value;
+    const alert = document.querySelector('#alert');
+    if (company === 'default' || designation === 'default') {
+        alert.hidden = false;
+        alert.textContent = 'Veuillez sélectionner une entreprise et une appellation';
+        return;
+    }
+
+    // trying to get the company id
+    const companyList = await getCompanies();
+    let companyFound = 0;
+    if (designation === 'Aucune appellation') {
+        companyFound = companyList.find((c) => c.tradeName === company && c.designation === null);
+    } else {
+    companyFound = companyList.find((c) => c.tradeName === company && c.designation === designation);
+    }
+
+    const options = {
+        method: 'POST',
+        body: JSON.stringify({
+            idCompany: companyFound.id,
+            academicYear: '2021-2022', // TODO: get the current academic year
+        }),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': getAuthenticatedUser().token,
+        },
+    };
+
+    const response = await fetch('api/contact/add', options);
+    if (response.status === 201) {
+        Navigate('/contact');
+        window.location.reload();
+    } else {
+        alert.hidden = false;
+        alert.textContent = 'Erreur lors de l\'ajout du contact';
+    }
 }
+
 
 export default AddContactPage;
 
