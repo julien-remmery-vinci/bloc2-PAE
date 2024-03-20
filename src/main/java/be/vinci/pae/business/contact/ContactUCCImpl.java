@@ -40,4 +40,24 @@ public class ContactUCCImpl implements ContactUCC {
     contactDAO.updateContact(contact);
     return contact;
   }
+
+  @Override
+  public ContactDTO meetContact(int id, String meetPlace, int idUser) {
+    Contact contact = (Contact) contactDAO.getOneById(id);
+    if (contact == null) {
+      return null;
+    }
+    if (contact.getIdStudent() != idUser) {
+      throw new WebApplicationException("You don't have a contact with this id",
+          Status.NOT_FOUND);
+    }
+    if (!contact.getState().equals(Contact.STATE_INITIATED)) {
+      throw new WebApplicationException("The contact must be in the state 'initiated' to be met",
+          Status.PRECONDITION_FAILED);
+    }
+    contact.setState(Contact.STATE_TAKEN);
+    contact.setMeetPlace(meetPlace);
+    contactDAO.updateContact(contact);
+    return contact;
+  }
 }
