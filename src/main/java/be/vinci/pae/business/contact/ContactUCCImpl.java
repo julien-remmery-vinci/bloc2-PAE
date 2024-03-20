@@ -1,6 +1,9 @@
 package be.vinci.pae.business.contact;
 
+import be.vinci.pae.dal.DALServices;
+import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
+import be.vinci.pae.dal.user.UserDAO;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response.Status;
@@ -12,6 +15,15 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Inject
   private ContactDAO contactDAO;
+
+  @Inject
+  private DALServices dalServices;
+
+  @Inject
+  private CompanyDAO companyDAO;
+
+  @Inject
+  private UserDAO userDAO;
 
   /**
    * Refuse a contact.
@@ -38,6 +50,20 @@ public class ContactUCCImpl implements ContactUCC {
     contact.setState(Contact.STATE_TAKENDOWN);
     contact.setRefusalReason(refusalReason);
     contactDAO.updateContact(contact);
+    return contact;
+  }
+
+  @Override
+  public ContactDTO addContact(ContactDTO contact) {
+    if (contact.getIdCompany() > companyDAO.getAll().size()) {
+      throw new WebApplicationException("The company does not exist", Status.NOT_FOUND);
+    }
+    // TODO : check if the student hasn't already a contact accepted
+    dalServices.start();
+    contact.setState("initié");
+    contact = contactDAO.addContact(contact);
+    dalServices.commit();
+
     return contact;
   }
 }
