@@ -1,6 +1,5 @@
 package be.vinci.pae;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -58,13 +57,21 @@ public class UserUCCTest {
   }
 
   @Test
-  @DisplayName("Test for the getUser method of UserUCC")
+  @DisplayName("Test for the getUser method of UserUCC with a correct id")
   void getUserTest() {
     User testUser = (User) userUCC.getUser(1);
-    assertAll(
-        () -> assertNotNull(testUser),
-        () -> assertNull(userUCC.getUser(0)),
-        () -> assertNull(userUCC.getUser(-1))
-    );
+    assertNotNull(testUser);
+  }
+
+  @Test
+  @DisplayName("Test for the getUser method of UserUCC with a wrong id")
+  void getUserTestWrongId() {
+    assertNull(userUCC.getUser(0));
+  }
+
+  @Test
+  @DisplayName("Test for the getUser method of UserUCC with a negative id")
+  void getUserTestNegativeId() {
+    assertNull(userUCC.getUser(-1));
   }
 }
