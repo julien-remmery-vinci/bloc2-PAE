@@ -31,6 +31,11 @@ async function buildPage(){
     companies.style.width = '25%';
     companies.style.marginLeft = '15%';
 
+    const defaultOption = document.createElement('option');
+    defaultOption.text = 'Choisissez votre entreprise';
+    defaultOption.value = '';
+    companies.appendChild(defaultOption);
+
     const companyNames = [...new Set(companyList.map(e => e.tradeName))]; // Suppression des doublons
     companyNames.forEach(name => {
         const option = document.createElement('option');
@@ -59,11 +64,16 @@ async function buildPage(){
         }
 
         const selectedCompany = companyList.find((c) => c.tradeName === e.target.value);
-        console.log(selectedCompany);
         
+        if (e.target.value === '') {
+            const defaultOptionDesignation = document.createElement('option');
+            defaultOptionDesignation.text = "Choisissez d'abord votre entreprise";
+            defaultOptionDesignation.value = '';
+            designations.appendChild(defaultOptionDesignation);
+        }
+        else
         if (selectedCompany && selectedCompany.designation!==null) {
             const designationList = companyList.filter((c) => c.tradeName === e.target.value);
-            console.log(designationList);
             designationList.forEach(name => {
                 const option = document.createElement('option');
                 option.value = name;
@@ -71,8 +81,14 @@ async function buildPage(){
                 designations.appendChild(option);
             });
         }
+        else if (selectedCompany.designation===null) {
+            const noDesignation = document.createElement('option');
+            noDesignation.textContent = 'Aucune appellation';
+            designations.appendChild(noDesignation);
+        }
+
     });
-    
+
 // fetch function to get all entreprises
 async function getCompanies() {
     const response = await fetch('http://localhost:3000/company', {
