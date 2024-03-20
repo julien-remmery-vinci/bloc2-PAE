@@ -38,8 +38,9 @@ public class ContactRessource {
    * @return the list of contacts
    */
   @GET
-  @Path("/contacts")
+  @Path("/all")
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
   public List<ContactDTO> getContacts(@Context ContainerRequest request) {
     UserDTO user = (UserDTO) request.getProperty("user");
     if (user == null) {

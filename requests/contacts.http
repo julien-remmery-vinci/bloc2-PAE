@@ -22,3 +22,8 @@ Authorization: {{token}}
 {
   "refusalReason": "L'entreprise n'a plus besoin d'étudiants."
 }
+
+### Get list of contacts
+GET {{contactUrl}}/all
+Content-Type: application/json
+Authorization: {{token}}
