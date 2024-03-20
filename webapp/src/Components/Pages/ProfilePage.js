@@ -10,8 +10,9 @@ function renderProfilPage() {
     const main = document.querySelector('main');
     const form = document.createElement('form');
     const authenticatedUser = getAuthenticatedUser();
-    form.className = 'mx-auto p-5 w-50 position-relative start-10';
+    form.className = 'mx-auto p-5 w-50 position-relative float-end';
     const containerDiv = document.createElement('div');
+    const containerChangePassword = document.createElement('div');
 
     const titleLastName = document.createElement('h6');
     titleLastName.textContent = 'Lastname';
@@ -58,15 +59,24 @@ function renderProfilPage() {
     changePasswordButton.className = 'position-absolute bottom-0 start-50 translate-middle-x btn btn-primary';
 
     containerDiv.appendChild(form);
+    form.appendChild(changePasswordButton);
     main.appendChild(containerDiv);
-    main.appendChild(changePasswordButton);
+    main.appendChild(containerChangePassword);
+
+    const cancelChangePassword = document.createElement('button');
+    cancelChangePassword.textContent = 'annuler';
+    cancelChangePassword.className = 'position-absolute bottom-0 start-0 translate-middle-x btn btn-primary';
+
+    const saveChangePassword = document.createElement('button');
+    saveChangePassword.textContent = 'sauver';
+    saveChangePassword.className = 'position-absolute bottom-0 start-50 translate-middle-x btn btn-primary';
 
     changePasswordButton.addEventListener('click', () => {
 
 
         const changePasswordForm = document.createElement('form');
         changePasswordForm.id = 'changePasswordForm';
-        changePasswordForm.className = 'mx-auto p-5 w-50 position-relative start-10';
+        changePasswordForm.className = 'mx-auto p-5 w-50 position-relative float-end';
 
         const titleOldPassword = document.createElement('h6');
         titleOldPassword.textContent = 'ancien mot de passe';
@@ -97,25 +107,21 @@ function renderProfilPage() {
         confirmationPassword.className = 'form-control-sm';
         changePasswordForm.appendChild(titleConfirmationPassword);
         changePasswordForm.appendChild(confirmationPassword);
+        containerChangePassword.appendChild(changePasswordForm);
 
-        const cancelChangePassword = document.createElement('button');
-        cancelChangePassword.textContent = 'annuler';
-        cancelChangePassword.className = 'position-absolute bottom-0 start-0 translate-middle-x btn btn-primary';
 
         cancelChangePassword.addEventListener('click', () => {
-            main.removeChild(changePasswordForm);
-            main.appendChild(changePasswordButton);
+            containerChangePassword.removeChild(changePasswordForm);
+            form.appendChild(changePasswordButton);
         });
 
-        const saveChangePassword = document.createElement('button');
-        saveChangePassword.textContent = 'sauver';
-        saveChangePassword.className = 'position-absolute bottom-0 start-50 translate-middle-x btn btn-primary';
+
         saveChangePassword.addEventListener('click', onChangePassword);
 
         changePasswordForm.appendChild(cancelChangePassword);
         changePasswordForm.appendChild(saveChangePassword);
-        main.removeChild(changePasswordButton);
-        main.appendChild(changePasswordForm);
+        form.removeChild(changePasswordButton);
+        containerChangePassword.appendChild(changePasswordForm);
     });
 }
 
