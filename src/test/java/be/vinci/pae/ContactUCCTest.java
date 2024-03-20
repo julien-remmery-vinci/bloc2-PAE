@@ -65,4 +65,11 @@ public class ContactUCCTest {
     assertEquals(Contact.STATE_TAKENDOWN, contact.getState());
     assertEquals(REFUSAL_REASON, contact.getRefusalReason());
   }
+
+  @Test
+  @DisplayName("Test addContact with company not found")
+  void testAddContactCompanyNotFound() {
+    contact.setIdCompany(0);
+    assertThrows(WebApplicationException.class, () -> contactUCC.addContact(contact));
+  }
 }
