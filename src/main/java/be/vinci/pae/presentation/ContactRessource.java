@@ -59,4 +59,22 @@ public class ContactRessource {
     return contact;
   }
 
+  /**
+   * Add a contact.
+   *
+   * @return the contact
+   */
+  @POST
+  @Path("/add")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public ContactDTO addContact(ContactDTO contact) {
+    if (contact.getIdStudent() < 0 || contact.getIdCompany() < 0) {
+      throw new WebApplicationException("Invalid id", Status.BAD_REQUEST);
+    }
+    contact = contactUCC.addContact(contact);
+    return contact;
+  }
+
+
 }
