@@ -2,10 +2,12 @@ package be.vinci.pae.business.contact;
 
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.user.UserDTO;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
  * Interface of ContactImpl.
  */
+@JsonDeserialize(as = ContactImpl.class)
 public interface ContactDTO {
 
   /**

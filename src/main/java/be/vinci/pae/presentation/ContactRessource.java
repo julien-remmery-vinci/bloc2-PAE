@@ -68,12 +68,13 @@ public class ContactRessource {
   @Path("/add")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ContactDTO addContact(ContactDTO contact) {
-    if (contact.getIdStudent() < 0 || contact.getIdCompany() < 0) {
+  @Authorize
+  public ContactDTO addContact(@Context ContainerRequest request, ContactDTO contact) {
+    if (contact.getIdCompany() < 0) {
       throw new WebApplicationException("Invalid id", Status.BAD_REQUEST);
     }
-    contact = contactUCC.addContact(contact);
-    return contact;
+    contact.setIdStudent(((UserDTO) request.getProperty("user")).getIdUser());
+    return contactUCC.addContact(contact);
   }
 
 

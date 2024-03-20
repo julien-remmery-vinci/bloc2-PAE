@@ -81,7 +81,7 @@ public class ContactDAOImpl implements ContactDAO {
   public ContactDTO addContact(ContactDTO contact) {
     try (PreparedStatement ps = dalServices.getPS(
         "INSERT INTO pae.contacts (idCompany, idStudent, state, "
-            + "academicYear) VALUES (?, ?, ?, ?, ?) RETURNING idContact;")) {
+            + "academicYear) VALUES (?, ?, ?, ?) RETURNING idContact;")) {
       ps.setInt(1, contact.getIdCompany());
       ps.setInt(2, contact.getIdStudent());
       ps.setString(3, contact.getState());
