@@ -89,13 +89,23 @@ public class ContactDAOImpl implements ContactDAO {
   public List<ContactDTO> getContactsByStudentId(int idStudent) {
     List<ContactDTO> contacts = new ArrayList<>();
     try (PreparedStatement ps = dalServices.getPS(
-        "SELECT idContact as \"contact.idContact\",idCompany as \"contact.idCompany\","
-            + "idStudent as \"contact.idStudent\","
-            + "state as \"contact.state\",meetPlace as \"contact.meetPlace\","
-            + "refusalReason as \"contact.refusalReason\",academicYear "
-            + "as \"contact.academicYear\""
-            + "FROM pae.contacts WHERE idStudent = ?;"
-    )) {
+        "SELECT con.idContact as \"contact.idContact\",con.idCompany as \"contact.idCompany\","
+            + "con.idStudent as \"contact.idStudent\",\n"
+            + "       con.state as \"contact.state\",con.meetPlace as \"contact.meetPlace\","
+            + "con.refusalReason as \"contact.refusalReason\",con.academicYear "
+            + "as \"contact.academicYear\",\n"
+            + "       u.iduser as \"user.idUser\",u.lastname as \"user.lastname\",u.firstname "
+            + "as \"user.firstname\",u.email as \"user.email\",\n"
+            + "       u.password as \"user.password\",u.phoneNumber as \"user.phoneNumber\","
+            + "u.registerDate as \"user.registerDate\",u.role as \"user.role\",\n"
+            + "       com.idcompany as \"company.idCompany\", com.tradeName "
+            + "as \"company.tradeName\",com.designation as \"company.designation\",\n"
+            + "       com.address as \"company.address\", com.phoneNumber "
+            + "as \"company.phoneNumber\", com.email as \"company.email\",\n"
+            + "       com.blacklisted as \"company.blacklisted\", com.blacklistMotivation "
+            + "as \"company.blacklistMotivation\"\n"
+            + "FROM pae.contacts con, pae.users u, pae.companies com WHERE con.idCompany = "
+            + "com.idCompany AND con.idStudent = u.idUser AND con.idStudent = ?;")) {
       ps.setInt(1, idStudent);
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
