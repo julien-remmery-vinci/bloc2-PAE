@@ -9,7 +9,7 @@ const ContactPage = () => {
     window.location.reload();
   } else {
     clearPage();
-    document.title = "Mes contacts";
+    document.title = "npmcontacts";
     buildPage();
   }
 }
@@ -17,10 +17,13 @@ const ContactPage = () => {
 async function buildPage() {
   const main = document.querySelector('main');
   const title = document.createElement('h3');
-  title.textContent = 'contacts';
+  const containerDiv = document.createElement('div');
+  title.textContent = 'Contacts';
   title.style.textAlign = 'center';
   const table = document.createElement('table');
-  table.classList.add('table');
+  table.classList.add('table', 'mx-auto');
+  table.style.width = '80%';
+  table.style.tableLayout = 'auto';
   const tableHead = document.createElement('thead');
   tableHead.classList.add('thead-dark');
   const tableHeadRow = document.createElement('tr');
@@ -44,10 +47,13 @@ async function buildPage() {
 
     // Colonne entreprise
     const companyCell = document.createElement('td');
-    companyCell.textContent = contact.company.tradeName;
+    const companyLink = document.createElement('a');
+    companyLink.textContent = contact.company.tradeName;
     if (contact.company.designation !== null) {
-      companyCell.textContent += `,  ${contact.company.designation}`;
+      companyLink.textContent += `,  ${contact.company.designation}`;
     }
+    companyLink.href = '#';
+    companyCell.appendChild(companyLink);
 
     // Colonne état
     const stateCell = document.createElement('td');
@@ -56,11 +62,8 @@ async function buildPage() {
     // Colonne Ne plus suivre
     const notFollowCell = document.createElement('td');
     const notFollowButton = document.createElement('button');
+    notFollowButton.classList.add('btn', 'btn-primary');
     notFollowButton.textContent = 'Ne plus suivre';
-    notFollowButton.addEventListener('click', () => {
-      // Logique pour arrêter de suivre ce contact
-      console.log('Ne plus suivre : ', contact);
-    });
     notFollowCell.appendChild(notFollowButton);
 
     // Ajouter les cellules à la ligne
@@ -73,7 +76,8 @@ async function buildPage() {
   });
   table.appendChild(tableBody);
   main.appendChild(title);
-  main.appendChild(table);
+  containerDiv.appendChild(table);
+  main.appendChild(containerDiv);
 }
 
 async function getContacts() {
