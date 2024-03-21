@@ -12,6 +12,7 @@ public interface ContactUCC {
    *
    * @param id     the id of the contact
    * @param idUser the id of the user
+   * @param refusalReason the reason of the refusal
    * @return the contact if it exists and the conditions are met, null otherwise
    * @throws WebApplicationException if the id of the student does not match the id of the user
    */
