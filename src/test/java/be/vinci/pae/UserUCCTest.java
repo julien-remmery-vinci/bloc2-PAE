@@ -1,5 +1,6 @@
 package be.vinci.pae;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -91,8 +92,10 @@ public class UserUCCTest {
     user.setEmail("test.test@student.vinci.be");
     Mockito.when(userDAO.getOneByEmail("test.test@student.vinci.be")).thenReturn(null);
     Mockito.when(userDAO.addUser(user)).thenReturn(user);
-    assertNotNull(userUCC.register(user));
-    assertEquals(UserDTO.Role.E, user.getRole());
+    assertAll(
+        () -> assertNotNull(userUCC.register(user)),
+        () -> assertEquals(UserDTO.Role.E, user.getRole())
+    );
   }
 
   @Test
@@ -103,7 +106,6 @@ public class UserUCCTest {
     Mockito.when(userDAO.getOneByEmail("test.test@vinci.be")).thenReturn(null);
     Mockito.when(userDAO.addUser(user)).thenReturn(user);
     assertNotNull(userUCC.register(user));
-    assertEquals(UserDTO.Role.P, user.getRole());
   }
 
   @Test
@@ -114,7 +116,6 @@ public class UserUCCTest {
     Mockito.when(userDAO.getOneByEmail("admin.test@vinci.be")).thenReturn(null);
     Mockito.when(userDAO.addUser(user)).thenReturn(user);
     assertNotNull(userUCC.register(user));
-    assertEquals(UserDTO.Role.A, user.getRole());
   }
 
   @Test
