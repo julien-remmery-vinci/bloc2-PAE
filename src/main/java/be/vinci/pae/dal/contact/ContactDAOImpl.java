@@ -99,7 +99,7 @@ public class ContactDAOImpl implements ContactDAO {
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
           String prefix = "company";
-          contacts.add((ContactDTO) Utils.getDataFromRs(rs, prefix, factory));
+          contacts.add((ContactDTO) daoServices.getDataFromRs(rs, prefix));
         }
         return contacts;
       }
@@ -127,7 +127,7 @@ public class ContactDAOImpl implements ContactDAO {
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
           String prefix = "company";
-          contacts.add((ContactDTO) Utils.getDataFromRs(rs, prefix, factory));
+          contacts.add((ContactDTO) daoServices.getDataFromRs(rs, prefix));
         }
         return contacts;
       }
