@@ -40,4 +40,34 @@ public class ContactUCCImpl implements ContactUCC {
     contactDAO.updateContact(contact);
     return contact;
   }
+
+  /**
+   * This method is used to meet a contact. It first retrieves the contact by its id.
+   *
+   * @param id        the id of the contact
+   * @param meetPlace the place to meet the contact
+   * @param idUser    the id of the user
+   * @return the contact if it exists and the conditions are met, null otherwise
+   * @throws WebApplicationException if the id of the student does not match the id of the user or
+   *                                 if the state of the contact is not 'initiated'
+   */
+  @Override
+  public ContactDTO meetContact(int id, String meetPlace, int idUser) {
+    Contact contact = (Contact) contactDAO.getOneById(id);
+    if (contact == null) {
+      return null;
+    }
+    if (contact.getIdStudent() != idUser) {
+      throw new WebApplicationException("You don't have a contact with this id",
+          Status.NOT_FOUND);
+    }
+    if (!contact.getState().equals(Contact.STATE_INITIATED)) {
+      throw new WebApplicationException("The contact must be in the state 'initiated' to be met",
+          Status.PRECONDITION_FAILED);
+    }
+    contact.setState(Contact.STATE_TAKEN);
+    contact.setMeetPlace(meetPlace);
+    contactDAO.updateContact(contact);
+    return contact;
+  }
 }
