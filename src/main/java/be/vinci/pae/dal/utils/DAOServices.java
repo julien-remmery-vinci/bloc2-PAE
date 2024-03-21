@@ -2,6 +2,9 @@ package be.vinci.pae.dal.utils;
 
 import java.sql.ResultSet;
 
+/**
+ * Interface of DAOServicesImpl.
+ */
 public interface DAOServices {
 
   /**

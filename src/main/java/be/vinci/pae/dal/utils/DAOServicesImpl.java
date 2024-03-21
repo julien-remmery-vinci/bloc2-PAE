@@ -16,6 +16,7 @@ public class DAOServicesImpl implements DAOServices {
   @Inject
   private Factory factory;
 
+  @Override
   public Object getDataFromRs(ResultSet rs, String prefix) {
     try {
       // Build the class prefix (first letter in uppercase and the rest of the string)

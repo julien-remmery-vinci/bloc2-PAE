@@ -20,9 +20,6 @@ public class CompanyDAOImpl implements CompanyDAO {
   @Inject
   private DAOServices daoServices;
 
-    @Inject
-
-
   @Override
   public List<CompanyDTO> getAll() {
     List<CompanyDTO> companies = new ArrayList<>();
