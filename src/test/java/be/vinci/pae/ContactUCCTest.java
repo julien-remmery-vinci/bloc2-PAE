@@ -71,6 +71,9 @@ public class ContactUCCTest {
   void testAddContactCompanyNotFound() {
     contact.setIdCompany(0);
     assertThrows(WebApplicationException.class, () -> contactUCC.addContact(contact));
+  }
+
+  @Test
   @DisplayName("Test meetContact with contact in wrong state")
   void testMeetContactWrongState() {
     contact.setState(Contact.STATE_TAKEN);

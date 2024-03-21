@@ -1,5 +1,3 @@
-@authsUrl=http://localhost:3000/auths
-@contactUrl=http://localhost:3000/contact
 
 ### Try to login user
 POST {{authsUrl}}/login
