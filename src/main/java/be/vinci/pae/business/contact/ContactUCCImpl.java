@@ -1,6 +1,9 @@
 package be.vinci.pae.business.contact;
 
+import be.vinci.pae.dal.DALServices;
+import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
+import be.vinci.pae.dal.user.UserDAO;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response.Status;
@@ -12,6 +15,15 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Inject
   private ContactDAO contactDAO;
+
+  @Inject
+  private DALServices dalServices;
+
+  @Inject
+  private CompanyDAO companyDAO;
+
+  @Inject
+  private UserDAO userDAO;
 
   /**
    * Refuse a contact.
@@ -41,16 +53,19 @@ public class ContactUCCImpl implements ContactUCC {
     return contact;
   }
 
-  /**
-   * This method is used to meet a contact. It first retrieves the contact by its id.
-   *
-   * @param id        the id of the contact
-   * @param meetPlace the place to meet the contact
-   * @param idUser    the id of the user
-   * @return the contact if it exists and the conditions are met, null otherwise
-   * @throws WebApplicationException if the id of the student does not match the id of the user or
-   *                                 if the state of the contact is not 'initiated'
-   */
+  @Override
+  public ContactDTO addContact(ContactDTO contact) {
+    if (companyDAO.getCompanyById(contact.getIdCompany()) == null) {
+      throw new WebApplicationException("The company does not exist", Status.NOT_FOUND);
+    }
+    // TODO : check if the student hasn't already a contact accepted
+    dalServices.start();
+    contact.setState("initié");
+    contact = contactDAO.addContact(contact);
+    dalServices.commit();
+    return contact;
+  }
+
   @Override
   public ContactDTO meetContact(int id, String meetPlace, int idUser) {
     Contact contact = (Contact) contactDAO.getOneById(id);

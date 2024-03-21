@@ -75,4 +75,25 @@ public class ContactDAOImpl implements ContactDAO {
       throw new RuntimeException(e);
     }
   }
+
+  @Override
+  public ContactDTO addContact(ContactDTO contact) {
+    try (PreparedStatement ps = dalServices.getPS(
+        "INSERT INTO pae.contacts (idCompany, idStudent, state, "
+            + "academicYear) VALUES (?, ?, ?, ?) RETURNING idContact;")) {
+      ps.setInt(1, contact.getIdCompany());
+      ps.setInt(2, contact.getIdStudent());
+      ps.setString(3, contact.getState());
+      ps.setString(4, contact.getAcademicYear());
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          contact.setIdContact(rs.getInt(1));
+          return contact;
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return null;
+  }
 }
