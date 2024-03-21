@@ -55,7 +55,7 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ContactDTO addContact(ContactDTO contact) {
-    if (contact.getIdCompany() > companyDAO.getAll().size()) {
+    if (companyDAO.getCompanyById(contact.getIdCompany()) == null) {
       throw new WebApplicationException("The company does not exist", Status.NOT_FOUND);
     }
     // TODO : check if the student hasn't already a contact accepted

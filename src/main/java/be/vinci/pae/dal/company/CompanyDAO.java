@@ -15,4 +15,5 @@ public interface CompanyDAO {
    */
   List<CompanyDTO> getAll();
 
+  CompanyDTO getCompanyById(int id);
 }
