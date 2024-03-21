@@ -1,5 +1,10 @@
 package be.vinci.pae;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.user.User;
 import be.vinci.pae.business.user.UserDTO;
@@ -14,17 +19,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  * Test class for the UserUCC methods.
  */
 public class UserUCCTest {
+
   static ServiceLocator locator;
-  UserDTO user;
   private static UserUCC userUCC;
   private static UserDAO userDAO;
   private static Factory factory;
+  UserDTO user;
 
   @BeforeAll
   static void beforeAll() {
@@ -33,11 +37,12 @@ public class UserUCCTest {
     factory = locator.getService(Factory.class);
     userDAO = locator.getService(UserDAO.class);
   }
+
   @BeforeEach
   void setUp() {
     user = (User) factory.getUser();
     // Password is "admin"
-    user.setPassword("$2a$10$qxZA3HtOZkH.6ZyjMwld7ukjcKA3K9wnFDa/NVQlCAMXl95.06PDO");;
+    user.setPassword("$2a$10$qxZA3HtOZkH.6ZyjMwld7ukjcKA3K9wnFDa/NVQlCAMXl95.06PDO");
     Mockito.when(userDAO.getOneByEmail("admin@vinci.be")).thenReturn(user);
     Mockito.when(userDAO.getOneById(1)).thenReturn(user);
   }
@@ -60,15 +65,24 @@ public class UserUCCTest {
     assertNull(userUCC.login("admin@vinci.be", "wrongPassword"));
   }
 
+
   @Test
-  @DisplayName("Test for the getUser method of UserUCC")
+  @DisplayName("Test for the getUser method of UserUCC with a correct id")
   void getUserTest() {
-    User testUser = (User) userUCC.getUser(1);
-    assertAll(
-        () -> assertNotNull(testUser),
-        () -> assertNull(userUCC.getUser(0)),
-        () -> assertNull(userUCC.getUser(-1))
-    );
+    UserDTO testUser = userUCC.getUser(1);
+    assertNotNull(testUser);
+  }
+
+  @Test
+  @DisplayName("Test for the getUser method of UserUCC with a wrong id")
+  void getUserTestWrongId() {
+    assertNull(userUCC.getUser(0));
+  }
+
+  @Test
+  @DisplayName("Test for the getUser method of UserUCC with a negative id")
+  void getUserTestNegativeId() {
+    assertNull(userUCC.getUser(-1));
   }
 
   @Test
