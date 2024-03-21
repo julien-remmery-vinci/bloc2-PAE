@@ -1,23 +1,22 @@
-import { getAuthenticatedUser } from "../../../utils/auths";
-import { clearPage } from "../../../utils/render";
-import Navigate from "../../Router/Navigate";
-
+import { getAuthenticatedUser } from '../../../utils/auths';
+import { clearPage, renderPageTitle } from '../../../utils/render';
+import Navigate from '../../Router/Navigate';
 
 const MeetContactPage = () => {
-    const authenticatedUser = getAuthenticatedUser();
-    if (!authenticatedUser) {
-        Navigate('/login');
-        window.location.reload();
-    } else {
-        clearPage();
-        document.title = "Rencontrer un contact";
-        renderMeetContactPage();
-    }
+  const authenticatedUser = getAuthenticatedUser();
+  if (!authenticatedUser) {
+    Navigate('/login');
+    window.location.reload();
+  } else {
+    clearPage();
+    renderPageTitle('Rencontre avec un contact');
+    renderMeetContactPage();
+  }
 };
 
 function renderMeetContactPage() {
-    const main = document.querySelector('main');
-    main.innerHTML = `
+  const main = document.querySelector('main');
+  main.innerHTML = `
       <form class="container mt-5">
         <div class="mb-3">
           <label for="entreprise" class="form-label">Entreprise</label>
@@ -34,6 +33,6 @@ function renderMeetContactPage() {
         <button type="submit" class="btn btn-primary">Soumettre</button>
       </form>
     `;
-  }
+}
 
 export default MeetContactPage;

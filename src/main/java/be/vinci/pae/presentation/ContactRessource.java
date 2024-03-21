@@ -59,4 +59,26 @@ public class ContactRessource {
     return contact;
   }
 
+  @POST
+  @Path("/{id}/meet")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public ContactDTO meetContact(@Context ContainerRequest request, @PathParam("id") int idContact,
+      JsonNode json) {
+    if (idContact < 0) {
+      throw new WebApplicationException("Invalid id", Status.BAD_REQUEST);
+    }
+    String meetPlace = json.get("meetPlace").asText();
+    if (!json.hasNonNull("meetPlace") || meetPlace.isBlank()) {
+      throw new WebApplicationException("Meet place is required", Status.BAD_REQUEST);
+    }
+    ContactDTO contact = contactUCC.meetContact(idContact, meetPlace,
+        ((UserDTO) request.getProperty("user")).getIdUser());
+    if (contact == null) {
+      throw new WebApplicationException("Contact not found", Status.NOT_FOUND);
+    }
+    return contact;
+  }
+
 }
