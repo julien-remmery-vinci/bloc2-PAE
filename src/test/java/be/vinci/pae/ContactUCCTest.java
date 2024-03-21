@@ -71,5 +71,27 @@ public class ContactUCCTest {
   void testAddContactCompanyNotFound() {
     contact.setIdCompany(0);
     assertThrows(WebApplicationException.class, () -> contactUCC.addContact(contact));
+  @DisplayName("Test meetContact with contact in wrong state")
+  void testMeetContactWrongState() {
+    contact.setState(Contact.STATE_TAKEN);
+    assertThrows(WebApplicationException.class,
+        () -> contactUCC.meetContact(ID_CONTACT, "meetPlace", ID_USER));
+  }
+
+  @Test
+  @DisplayName("Test meetContact with contact not found")
+  void testMeetContactNotFound() {
+    Mockito.when(contactDAO.getOneById(1)).thenReturn(null);
+    assertNull(contactUCC.meetContact(ID_CONTACT, "meetPlace", ID_USER));
+  }
+
+  @Test
+  @DisplayName("Test meetContact with existing contact in right state")
+  void testMeetContact() {
+    contact.setState(Contact.STATE_INITIATED);
+    assertEquals(contact.getIdContact(),
+        contactUCC.meetContact(ID_CONTACT, "meetPlace", ID_USER).getIdContact());
+    assertEquals(Contact.STATE_TAKEN, contact.getState());
+    assertEquals("meetPlace", contact.getMeetPlace());
   }
 }

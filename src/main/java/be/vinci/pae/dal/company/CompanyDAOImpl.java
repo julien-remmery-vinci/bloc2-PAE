@@ -1,9 +1,8 @@
 package be.vinci.pae.dal.company;
 
-import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.dal.DALBackServices;
-import be.vinci.pae.dal.utils.Utils;
+import be.vinci.pae.dal.utils.DAOServices;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,9 +16,9 @@ import java.util.List;
 public class CompanyDAOImpl implements CompanyDAO {
 
   @Inject
-  private Factory factory;
-  @Inject
   private DALBackServices dalServices;
+  @Inject
+  private DAOServices daoServices;
 
   @Override
   public List<CompanyDTO> getAll() {
@@ -34,7 +33,7 @@ public class CompanyDAOImpl implements CompanyDAO {
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
           String prefix = "company";
-          companies.add((CompanyDTO) Utils.getDataFromRs(rs, prefix, factory));
+          companies.add((CompanyDTO) daoServices.getDataFromRs(rs, prefix));
         }
         return companies;
       }

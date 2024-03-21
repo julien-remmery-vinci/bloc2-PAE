@@ -1,5 +1,6 @@
 package be.vinci.pae.business.user;
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.sql.Date;
 
@@ -128,8 +129,8 @@ public interface UserDTO {
     /**
      * Enum of possible user roles.
      */
-    E("E"), P("P"), A("A");
-
+    E("E"), P("P"), A("A"),
+    @JsonEnumDefaultValue UNKNOWN("UNKNOWN");
     private String role;
 
     Role(String role) {
