@@ -1,6 +1,7 @@
 package be.vinci.pae.dal.utils;
 
 import be.vinci.pae.business.Factory;
+import jakarta.inject.Inject;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -10,17 +11,12 @@ import java.sql.SQLException;
 /**
  * Class with utility methods.
  */
-public class Utils {
+public class DAOServicesImpl implements DAOServices {
 
-  /**
-   * Get data from a ResultSet.
-   *
-   * @param rs      the ResultSet to get the data from
-   * @param prefix  the prefix of the class in lowercase
-   * @param factory the factory to get the implementation of the classes
-   * @return the object with the data from the ResultSet
-   */
-  public static Object getDataFromRs(ResultSet rs, String prefix, Factory factory) {
+  @Inject
+  private Factory factory;
+
+  public Object getDataFromRs(ResultSet rs, String prefix) {
     try {
       // Build the class prefix (first letter in uppercase and the rest of the string)
       String classPrefix = prefix.substring(0, 1).toUpperCase() + prefix.substring(1);
@@ -47,7 +43,7 @@ public class Utils {
         } else {
           // If field is an interface,
           // get the data from the ResultSet and set the field of the object
-          m.invoke(object, getDataFromRs(rs, f.getName(), factory));
+          m.invoke(object, getDataFromRs(rs, f.getName()));
         }
       }
       return object;
@@ -56,5 +52,4 @@ public class Utils {
       throw new RuntimeException(e);
     }
   }
-
 }
