@@ -14,11 +14,11 @@ public interface CompanyUCC {
    */
   List<CompanyDTO> getAll();
 
-    /**
-     * Get a company by its id.
-     *
-     * @param id the id of the company
-     * @return the company
-     */
-    CompanyDTO getCompanyById(int id);
+  /**
+   * Get a company by its id.
+   *
+   * @param id the id of the company
+   * @return the company
+   */
+  CompanyDTO getCompanyById(int id);
 }

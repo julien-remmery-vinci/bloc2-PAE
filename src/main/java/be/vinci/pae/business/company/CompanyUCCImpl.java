@@ -16,7 +16,7 @@ public class CompanyUCCImpl implements CompanyUCC {
     return companyDAO.getAll();
   }
 
-    public CompanyDTO getCompanyById(int id) {
-        return companyDAO.getCompanyById(id);
-    }
+  public CompanyDTO getCompanyById(int id) {
+    return companyDAO.getCompanyById(id);
+  }
 }

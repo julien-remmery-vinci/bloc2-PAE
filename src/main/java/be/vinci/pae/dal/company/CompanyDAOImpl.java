@@ -20,6 +20,9 @@ public class CompanyDAOImpl implements CompanyDAO {
   @Inject
   private DAOServices daoServices;
 
+    @Inject
+
+
   @Override
   public List<CompanyDTO> getAll() {
     List<CompanyDTO> companies = new ArrayList<>();
@@ -55,7 +58,7 @@ public class CompanyDAOImpl implements CompanyDAO {
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           String prefix = "company";
-          return (CompanyDTO) Utils.getDataFromRs(rs, prefix, factory);
+          return (CompanyDTO) daoServices.getDataFromRs(rs, prefix);
         }
       }
     } catch (SQLException e) {

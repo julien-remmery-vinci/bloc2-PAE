@@ -63,17 +63,9 @@ public class ContactUCCImpl implements ContactUCC {
     contact.setState("initié");
     contact = contactDAO.addContact(contact);
     dalServices.commit();
+    return contact;
+  }
 
-  /**
-   * This method is used to meet a contact. It first retrieves the contact by its id.
-   *
-   * @param id        the id of the contact
-   * @param meetPlace the place to meet the contact
-   * @param idUser    the id of the user
-   * @return the contact if it exists and the conditions are met, null otherwise
-   * @throws WebApplicationException if the id of the student does not match the id of the user or
-   *                                 if the state of the contact is not 'initiated'
-   */
   @Override
   public ContactDTO meetContact(int id, String meetPlace, int idUser) {
     Contact contact = (Contact) contactDAO.getOneById(id);
