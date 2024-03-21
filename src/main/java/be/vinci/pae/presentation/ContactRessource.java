@@ -88,4 +88,29 @@ public class ContactRessource {
     }
     return contact;
   }
+
+  /**
+   * Unfollow a contact.
+   *
+   * @param request   the request's context
+   * @param idContact the id of the contact
+   * @return the contact
+   */
+  @POST
+  @Path("/{id}/unfollow")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public ContactDTO unfollowContact(@Context ContainerRequest request,
+      @PathParam("id") int idContact) {
+    if (idContact < 0) {
+      throw new WebApplicationException("Invalid id", Status.BAD_REQUEST);
+    }
+    ContactDTO contact = contactUCC.unfollowContact(idContact,
+        ((UserDTO) request.getProperty("user")).getIdUser());
+    if (contact == null) {
+      throw new WebApplicationException("Contact not found", Status.NOT_FOUND);
+    }
+    return contact;
+  }
 }
