@@ -16,18 +16,24 @@ const MeetContactPage = () => {
 };
 
 function renderMeetContactPage() {
-   const main = document.querySelector('main');
-   main.innerHTML = `
-    <div class="search-container d-flex justify-content-between">
-   <div class="filter-container">
-     <h3>Filtres</h3>
-     <label>
-       <input type="checkbox" name="filter" value="etudiant">
-       Que les étudiants
-     </label>
-   </div>
-
-   <div class="search-bar">`
-};
+    const main = document.querySelector('main');
+    main.innerHTML = `
+      <form class="container mt-5">
+        <div class="mb-3">
+          <label for="entreprise" class="form-label">Entreprise</label>
+          <input type="text" class="form-control" id="entreprise" name="entreprise" value="Nom de l'entreprise" readonly>
+        </div>
+        <div class="mb-3">
+          <label for="appellation" class="form-label">Appellation</label>
+          <input type="text" class="form-control" id="appellation" name="appellation" value="Appellation par défaut" readonly>
+        </div>
+        <div class="mb-3">
+          <label for="lieu" class="form-label">Lieu de rencontre</label>
+          <input type="text" class="form-control" id="lieu" name="lieu" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Soumettre</button>
+      </form>
+    `;
+  }
 
 export default MeetContactPage;
