@@ -1,9 +1,8 @@
 package be.vinci.pae.dal.contact;
 
-import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.dal.DALBackServices;
-import be.vinci.pae.dal.utils.Utils;
+import be.vinci.pae.dal.utils.DAOServices;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,9 +16,9 @@ import java.util.List;
 public class ContactDAOImpl implements ContactDAO {
 
   @Inject
-  private Factory factory;
-  @Inject
   private DALBackServices dalServices;
+  @Inject
+  private DAOServices daoServices;
 
   @Override
   public ContactDTO getOneById(int id) {
@@ -45,7 +44,7 @@ public class ContactDAOImpl implements ContactDAO {
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           String prefix = "contact";
-          return (ContactDTO) Utils.getDataFromRs(rs, prefix, factory);
+          return (ContactDTO) daoServices.getDataFromRs(rs, prefix);
         }
       }
     } catch (SQLException e) {

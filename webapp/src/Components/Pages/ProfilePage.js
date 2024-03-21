@@ -1,176 +1,109 @@
 import {clearPage} from "../../utils/render";
 import {getAuthenticatedUser} from "../../utils/auths";
+import Navigate from "../Router/Navigate";
 
 const ProfilePage = async () => {
+  const authenticatedUser = getAuthenticatedUser();
+  if (!authenticatedUser) {
+    Navigate('/login');
+    window.location.reload();
+  } else {
     clearPage();
+    document.title = "Profil";
     renderProfilPage();
+  }
 }
 
 function renderProfilPage() {
-    const main = document.querySelector('main');
-    const form = document.createElement('form');
-    const authenticatedUser = getAuthenticatedUser();
-    form.className = 'mx-auto p-5 w-50 position-relative float-end';
-    const containerDiv = document.createElement('div');
-    const containerChangePassword = document.createElement('div');
+  // Votre code existant
+  const main = document.querySelector('main');
+  const DocumentTitle = document.createElement('h3');
+  DocumentTitle.textContent = 'Profil';
+  DocumentTitle.style.textAlign = 'center';
+  main.appendChild(DocumentTitle);
+  main.className = 'd-flex flex-column justify-content-center align-items-center vh-100';
+  const form = document.createElement('form');
+  const authenticatedUser = getAuthenticatedUser();
+  form.className = 'p-5 w-50 bg-light rounded shadow';
+  form.className = 'mx-auto p-5 w-50 position-relative float-end bg-light rounded shadow';
+  const fields = ['lastname', 'firstname', 'email', 'phoneNumber'];
+  const labels = ['Lastname', 'Firstname', 'Email', 'Numéro de téléphone'];
 
-    const titleLastName = document.createElement('h6');
-    titleLastName.textContent = 'Lastname';
-    const lastname = document.createElement('input');
-    lastname.readOnly=true;
-    lastname.id='lastname';
-    lastname.value = `${authenticatedUser.lastname}`;
-    lastname.className = 'form-control-sm';
-    form.appendChild(titleLastName);
-    form.appendChild(lastname);
+  fields.forEach((field, index) => {
+    const title = document.createElement('h6');
+    title.textContent = labels[index];
+    title.className = 'fw-bold mb-1';
 
-    const titleFirstName = document.createElement('h6');
-    titleFirstName.textContent = 'Firstname ';
-    const firstname = document.createElement('input');
-    firstname.readOnly=true;
-    firstname.id='firstname';
-    firstname.value = `${authenticatedUser.firstname}`;
-    firstname.className = 'form-control-sm';
-    form.appendChild(titleFirstName);
-    form.appendChild(firstname);
+    const input = document.createElement('input');
+    input.readOnly = true;
+    input.id = field;
+    input.value = `${authenticatedUser[field]}`;
+    input.className = 'form-control mb-3';
 
-    const titleEmail = document.createElement('h6');
-    titleEmail.textContent = 'Email ';
-    const email = document.createElement('input');
-    email.readOnly=true;
-    email.id='email';
-    email.value = `${authenticatedUser.email}`;
-    email.className = 'form-control-sm';
-    form.appendChild(titleEmail);
-    form.appendChild(email);
+    form.appendChild(title);
+    form.appendChild(input);
+  });
 
-    const titlePhoneNum = document.createElement('h6');
-    titlePhoneNum.textContent = 'Numéro de téléphone ';
-    const phoneNumber = document.createElement('input');
-    phoneNumber.readOnly=true;
-    phoneNumber.id='phoneNumber';
-    phoneNumber.value = `${authenticatedUser.phoneNumber}`;
-    phoneNumber.className = 'form-control-sm';
-    form.appendChild(titlePhoneNum);
-    form.appendChild(phoneNumber);
+  const changePasswordButton = document.createElement('button');
+  changePasswordButton.textContent = 'Modifier mot de passe';
+  changePasswordButton.className = 'position-absolute bottom-0 start-50 translate-middle-x btn btn-primary';
+  form.appendChild(changePasswordButton);
+  main.appendChild(form);
 
-    const changePasswordButton = document.createElement('button');
-    changePasswordButton.textContent = 'Modifier mot de passe';
-    changePasswordButton.className = 'position-absolute bottom-0 start-50 translate-middle-x btn btn-primary';
+// Ajout de l'écouteur d'événements
+  changePasswordButton.addEventListener('click', event => {
+    event.preventDefault();  // Empêche l'action par défaut du bouton
 
-    containerDiv.appendChild(form);
-    form.appendChild(changePasswordButton);
-    main.appendChild(containerDiv);
-    main.appendChild(containerChangePassword);
+    // Cache le bouton "Modifier mot de passe"
+    changePasswordButton.style.display = 'none';
 
-    const cancelChangePassword = document.createElement('button');
-    cancelChangePassword.textContent = 'annuler';
-    cancelChangePassword.className = 'position-absolute bottom-0 start-0 translate-middle-x btn btn-primary';
-
-    const saveChangePassword = document.createElement('button');
-    saveChangePassword.textContent = 'sauver';
-    saveChangePassword.className = 'position-absolute bottom-0 start-50 translate-middle-x btn btn-primary';
-
-    changePasswordButton.addEventListener('click', () => {
+    // Création du formulaire de modification de mot de passe
+    const passwordForm = document.createElement('form');
+    passwordForm.className = 'p-5 w-50 bg-light rounded shadow';
+    passwordForm.className = 'mx-auto p-5 w-50 position-relative float-end bg-light rounded shadow';
 
 
-        const changePasswordForm = document.createElement('form');
-        changePasswordForm.id = 'changePasswordForm';
-        changePasswordForm.className = 'mx-auto p-5 w-50 position-relative float-end';
+    // Ajout des champs du formulaire
+    const oldPasswordField = document.createElement('input');
+    oldPasswordField.type = 'password';
+    oldPasswordField.placeholder = 'Ancien mot de passe';
+    oldPasswordField.className = 'form-control mb-3';
+    passwordForm.appendChild(oldPasswordField);
 
-        const titleOldPassword = document.createElement('h6');
-        titleOldPassword.textContent = 'ancien mot de passe';
-        const oldPassword = document.createElement('input');
-        oldPassword.required=true;
-        oldPassword.type = 'password';
-        oldPassword.id = 'oldPassword';
-        oldPassword.className = 'form-control-sm';
-        changePasswordForm.appendChild(titleOldPassword);
-        changePasswordForm.appendChild(oldPassword);
+    // Ajout des champs du formulaire
+    const passwordField = document.createElement('input');
+    passwordField.type = 'password';
+    passwordField.placeholder = 'Nouveau mot de passe';
+    passwordField.className = 'form-control mb-3';
+    passwordForm.appendChild(passwordField);
 
-        const titleNewPassword = document.createElement('h6');
-        titleNewPassword.textContent = 'nouveau mot de passe ';
-        const newPassword = document.createElement('input');
-        newPassword.required=true;
-        newPassword.type = 'password';
-        newPassword.id = 'newPassword';
-        newPassword.className = 'form-control-sm';
-        changePasswordForm.appendChild(titleNewPassword);
-        changePasswordForm.appendChild(newPassword);
+    const confirmPasswordField = document.createElement('input');
+    confirmPasswordField.type = 'password';
+    confirmPasswordField.placeholder = 'Confirmer le nouveau mot de passe';
+    confirmPasswordField.className = 'form-control mb-3';
+    passwordForm.appendChild(confirmPasswordField);
 
-        const titleConfirmationPassword = document.createElement('h6');
-        titleConfirmationPassword.textContent = 'confirmer nouveau mot de passe';
-        const confirmationPassword = document.createElement('input');
-        confirmationPassword.required=true;
-        confirmationPassword.type = 'password';
-        confirmationPassword.id = 'confirmationPassword';
-        confirmationPassword.className = 'form-control-sm';
-        changePasswordForm.appendChild(titleConfirmationPassword);
-        changePasswordForm.appendChild(confirmationPassword);
-        containerChangePassword.appendChild(changePasswordForm);
+    // Ajout du bouton de soumission du formulaire
+    const submitButton = document.createElement('button');
+    submitButton.type = 'submit';
+    submitButton.textContent = 'Sauver';
+    submitButton.className = 'btn btn-primary';
+    passwordForm.appendChild(submitButton);
 
-
-        cancelChangePassword.addEventListener('click', () => {
-            containerChangePassword.removeChild(changePasswordForm);
-            form.appendChild(changePasswordButton);
-        });
-
-
-        saveChangePassword.addEventListener('click', onChangePassword);
-
-        changePasswordForm.appendChild(cancelChangePassword);
-        changePasswordForm.appendChild(saveChangePassword);
-        form.removeChild(changePasswordButton);
-        containerChangePassword.appendChild(changePasswordForm);
+    // Ajout du bouton d'annulation
+    const cancelButton = document.createElement('button');
+    cancelButton.type = 'button';
+    cancelButton.textContent = 'Annuler';
+    cancelButton.className = 'btn btn-secondary ms-2';
+    cancelButton.addEventListener('click', () => {
+      passwordForm.remove();  // Supprime le formulaire de modification de mot de passe
+      changePasswordButton.style.display = 'block';  // Affiche à nouveau le bouton "Modifier mot de passe"
     });
-}
+    passwordForm.appendChild(cancelButton);
 
-async function onChangePassword(e){
-    e.preventDefault();
-    const authenticatedUser = getAuthenticatedUser();
-    const oldPassword = document.querySelector('#oldPassword').value;
-    const newPassword = document.querySelector('#newPassword').value;
-    const confirmationPassword = document.querySelector('#confirmationPassword').value;
-    const erreur = document.createElement('p');
-
-    const options = {
-        method: 'PUT',
-        body: JSON.stringify({
-            oldPassword,
-            newPassword,
-            confirmationPassword
-        }),
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': authenticatedUser.token
-        },
-    };
-
-    const form1 = document.querySelector('#changePasswordForm');
-    const lastError = form1.querySelector('.text-danger');
-
-    if(newPassword === confirmationPassword) {
-        // call the api to change the password
-        const response = await fetch(`http://localhost:3000/auths/passwordChange`, options);
-        if (response.status === 401) {
-            // clear the last error message
-            if (lastError) {
-                form1.removeChild(lastError);
-            }
-            erreur.textContent = 'Le mot de passe actuel est incorrect';
-            erreur.className = 'text-danger';
-            const form = document.querySelector('#changePasswordForm');
-            form.appendChild(erreur);
-        }
-    } else {
-        if (lastError) {
-            form1.removeChild(lastError);
-        }
-        erreur.textContent = 'Les mots de passe ne correspondent pas à la confirmation';
-        erreur.className = 'text-danger';
-        const form = document.querySelector('#changePasswordForm');
-        form.appendChild(erreur);
-    }
+    // Ajout du formulaire à la page
+    main.appendChild(passwordForm);
+  });
 }
 
 export default ProfilePage;

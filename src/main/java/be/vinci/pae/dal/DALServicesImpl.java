@@ -66,7 +66,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
     try {
       getConnection().commit();
       getConnection().setAutoCommit(true);
-      basicDataSource.close();
+      // basicDataSource.close();
     } catch (SQLException e) {
       try {
         basicDataSource.close();

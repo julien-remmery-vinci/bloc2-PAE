@@ -1,5 +1,6 @@
 import { clearPage, renderPageTitle } from '../../utils/render';
 import Navigate from '../Router/Navigate';
+import {setAuthenticatedUser} from "../../utils/auths";
 
 const RegisterPage = () => {
   clearPage();
@@ -119,6 +120,10 @@ async function onRegister(e) {
   const email = document.querySelector('#email').value;
   const phoneNumber = document.querySelector('#phoneNumber').value;
   const password = document.querySelector('#password').value;
+  let role;
+  if(document.querySelector('input[name="role"]:checked')) {
+    role = document.querySelector('input[name="role"]:checked').value;
+  }
 
   const options = {
     method: 'POST',
@@ -128,17 +133,19 @@ async function onRegister(e) {
       email,
       phoneNumber,
       password,
+      role
     }),
     headers: {
       'Content-Type': 'application/json',
     },
   };
 
-  const response = await fetch('/api/auths/register', options);
+  const response = await fetch('http://localhost:3000/auths/register', options);
 
   if (!response.ok) throw new Error(`fetch error : ${response.status} : ${response.statusText}`);
 
   const authenticatedUser = await response.json();
+  setAuthenticatedUser(authenticatedUser);
 
   console.log('Newly registered & authenticated user : ', authenticatedUser);
 

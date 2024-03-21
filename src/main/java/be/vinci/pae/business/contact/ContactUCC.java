@@ -16,4 +16,6 @@ public interface ContactUCC {
   List<ContactDTO> getContacts(UserDTO user);
 
   ContactDTO refuseContact(int id, String refusalReason, int idUser);
+
+  ContactDTO meetContact(int id, String meetPlace, int idUser);
 }
