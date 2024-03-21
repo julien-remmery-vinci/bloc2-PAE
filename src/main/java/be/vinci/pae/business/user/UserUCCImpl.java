@@ -69,6 +69,7 @@ public class UserUCCImpl implements UserUCC {
       dalServices.rollback();
       return null;
     }
+    user.setPassword(((User) user).hashPassword(user.getPassword()));
     java.sql.Date registerDate = new java.sql.Date(System.currentTimeMillis());
     user.setRegisterDate(registerDate);
 
