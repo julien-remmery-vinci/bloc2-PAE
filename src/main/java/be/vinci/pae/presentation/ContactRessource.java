@@ -59,6 +59,14 @@ public class ContactRessource {
     return contact;
   }
 
+  /**
+   * Meet a contact.
+   *
+   * @param request   the request's context
+   * @param idContact the id of the contact
+   * @param json      json containing the meet place
+   * @return the contact
+   */
   @POST
   @Path("/{id}/meet")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -80,5 +88,4 @@ public class ContactRessource {
     }
     return contact;
   }
-
 }
