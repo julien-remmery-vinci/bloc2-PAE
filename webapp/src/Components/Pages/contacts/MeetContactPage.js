@@ -1,4 +1,4 @@
-import { getAuthenticatedUser } from '../../../utils/auths';
+import { getAuthenticatedUser, getUserToken } from '../../../utils/auths';
 import { clearPage, renderPageTitle } from '../../../utils/render';
 import Navigate from '../../Router/Navigate';
 
@@ -33,6 +33,34 @@ function renderMeetContactPage() {
         <button type="submit" class="btn btn-primary">Soumettre</button>
       </form>
     `;
+    const form = document.querySelector('form');
+    form.addEventListener('submit', submitFunc);
+}
+
+async function submitFunc (event) {
+  event.preventDefault();
+  const form = event.target;
+  const formData = new FormData(form);
+  const lieu = formData.get('lieu');
+  const contactId = window.location.pathname.split('/').pop();
+  try {
+    const response = await fetch(`http://localhost:3000/contact/${contactId}/meet`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getUserToken()}`,
+      },
+      body: JSON.stringify({ lieu }),
+    });
+    if (response.ok) {
+      Navigate('/contacts');
+    } else {
+      const error = await response.json();
+      console.error(error);
+    }
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export default MeetContactPage;

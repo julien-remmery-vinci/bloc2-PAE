@@ -8,4 +8,6 @@ public interface ContactUCC {
   ContactDTO refuseContact(int id, String refusalReason, int idUser);
 
   ContactDTO meetContact(int id, String meetPlace, int idUser);
+
+  ContactDTO unfollowContact(int id, int idUser);
 }
