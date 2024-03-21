@@ -43,7 +43,6 @@ public class UserUCCTest {
     user = (User) factory.getUser();
     // Password is "admin"
     user.setPassword("$2a$10$qxZA3HtOZkH.6ZyjMwld7ukjcKA3K9wnFDa/NVQlCAMXl95.06PDO");
-    ;
     Mockito.when(userDAO.getOneByEmail("admin@vinci.be")).thenReturn(user);
     Mockito.when(userDAO.getOneById(1)).thenReturn(user);
   }
@@ -70,7 +69,7 @@ public class UserUCCTest {
   @Test
   @DisplayName("Test for the getUser method of UserUCC with a correct id")
   void getUserTest() {
-    User testUser = (User) userUCC.getUser(1);
+    UserDTO testUser = userUCC.getUser(1);
     assertNotNull(testUser);
   }
 
