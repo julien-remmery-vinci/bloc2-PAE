@@ -1,5 +1,5 @@
 import {clearPage} from "../../../utils/render";
-import {getAuthenticatedUser} from "../../../utils/auths";
+import {getAuthenticatedUser, getUserToken} from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
 const AddContactPage = () => {
@@ -154,19 +154,19 @@ async function onSubmit(e) {
     const options = {
         method: 'POST',
         body: JSON.stringify({
-            idCompany: companyFound.id,
+            idCompany: companyFound.idCompany,
             academicYear: '2021-2022', // TODO: get the current academic year
         }),
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': getAuthenticatedUser().token,
+            'Authorization': getUserToken(),
         },
     };
 
-    const response = await fetch('api/contact/add', options);
-    if (response.status === 201) {
-        Navigate('/contact');
-        window.location.reload();
+    const response = await fetch('http://localhost:3000/contact/add', options);
+    if (response.status === 200) {
+        Navigate('/');
+        
     } else {
         alert.hidden = false;
         alert.textContent = 'Erreur lors de l\'ajout du contact';
