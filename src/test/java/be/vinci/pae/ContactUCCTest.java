@@ -92,7 +92,7 @@ public class ContactUCCTest {
   @Test
   @DisplayName("Test meetContact with existing contact in right state")
   void testMeetContact() {
-    contact.setState(State.ADMITTED);
+    contact.setState(State.STARTED);
     assertEquals(contact.getIdContact(),
         contactUCC.meetContact(ID_CONTACT, "meetPlace", ID_USER).getIdContact());
     assertEquals(State.ADMITTED, contact.getState());
