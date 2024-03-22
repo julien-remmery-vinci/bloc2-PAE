@@ -1,11 +1,27 @@
 package be.vinci.pae.dal.contact;
 
 import be.vinci.pae.business.contact.ContactDTO;
+import java.util.List;
 
 /**
  * Interface of ContactDAOImpl.
  */
 public interface ContactDAO {
+
+  /**
+   * Get all contacts.
+   *
+   * @return the list of contacts
+   */
+  List<ContactDTO> getAllContacts();
+
+  /**
+   * Get all contacts by student id.
+   *
+   * @param id the id of the student
+   * @return the list of contacts
+   */
+  List<ContactDTO> getContactsByStudentId(int id);
 
   /**
    * Get a contact by its id.

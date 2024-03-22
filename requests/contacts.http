@@ -32,3 +32,8 @@ Authorization: {{token}}
   "idCompany": 1,
   "academicYear": "2021-2022"
 }
+
+### Get list of contacts
+GET {{contactUrl}}
+Content-Type: application/json
+Authorization: {{token}}

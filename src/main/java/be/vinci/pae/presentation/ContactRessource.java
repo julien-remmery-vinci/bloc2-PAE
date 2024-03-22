@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -18,6 +19,7 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
+import java.util.List;
 import org.glassfish.jersey.server.ContainerRequest;
 
 /**
@@ -30,6 +32,23 @@ public class ContactRessource {
 
   @Inject
   private ContactUCC contactUCC;
+
+  /**
+   * Get all contacts.
+   *
+   * @param request the request's context
+   * @return the list of contacts
+   */
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public List<ContactDTO> getContacts(@Context ContainerRequest request) {
+    UserDTO user = (UserDTO) request.getProperty("user");
+    if (user == null) {
+      throw new WebApplicationException("User not found", Status.NOT_FOUND);
+    }
+    return contactUCC.getContacts(user);
+  }
 
   /**
    * Refuse a contact.
@@ -119,6 +138,8 @@ public class ContactRessource {
   /**
    * Add a contact.
    *
+   * @param request the request's context
+   * @param contact the contact to add
    * @return the contact
    */
   @POST

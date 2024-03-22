@@ -1,6 +1,8 @@
 package be.vinci.pae.business.contact;
 
 import be.vinci.pae.business.contact.ContactDTO.State;
+import be.vinci.pae.business.user.UserDTO;
+import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
@@ -8,6 +10,7 @@ import be.vinci.pae.dal.user.UserDAO;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response.Status;
+import java.util.List;
 
 /**
  * Implementation of ContactUCC.
@@ -25,6 +28,27 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Inject
   private UserDAO userDAO;
+
+
+  /**
+   * Get the contact.
+   *
+   * @return the contact
+   */
+  @Override
+  public List<ContactDTO> getContacts(UserDTO user) {
+    if (user == null) {
+      return null; //error message
+    }
+    if (user.getRole().equals(Role.STUDENT)) {
+      return contactDAO.getContactsByStudentId(user.getIdUser());
+    }
+    if (user.getRole().equals(Role.ADMIN) || user.getRole().equals(Role.PROFESSOR)) {
+      return contactDAO.getAllContacts();
+    }
+    return null; //error message
+  }
+
 
   /**
    * Refuse a contact.
