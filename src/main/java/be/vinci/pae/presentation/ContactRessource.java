@@ -62,6 +62,61 @@ public class ContactRessource {
   }
 
   /**
+   * Meet a contact.
+   *
+   * @param request   the request's context
+   * @param idContact the id of the contact
+   * @param json      json containing the meet place
+   * @return the contact
+   */
+  @POST
+  @Path("/{id}/meet")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public ContactDTO meetContact(@Context ContainerRequest request, @PathParam("id") int idContact,
+      JsonNode json) {
+    if (idContact < 0) {
+      throw new WebApplicationException("Invalid id", Status.BAD_REQUEST);
+    }
+    String meetPlace = json.get("meetPlace").asText();
+    if (!json.hasNonNull("meetPlace") || meetPlace.isBlank()) {
+      throw new WebApplicationException("Meet place is required", Status.BAD_REQUEST);
+    }
+    ContactDTO contact = contactUCC.meetContact(idContact, meetPlace,
+        ((UserDTO) request.getProperty("user")).getIdUser());
+    if (contact == null) {
+      throw new WebApplicationException("Contact not found", Status.NOT_FOUND);
+    }
+    return contact;
+  }
+
+  /**
+   * Unfollow a contact.
+   *
+   * @param request   the request's context
+   * @param idContact the id of the contact
+   * @return the contact
+   */
+  @POST
+  @Path("/{id}/unfollow")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public ContactDTO unfollowContact(@Context ContainerRequest request,
+      @PathParam("id") int idContact) {
+    if (idContact < 0) {
+      throw new WebApplicationException("Invalid id", Status.BAD_REQUEST);
+    }
+    ContactDTO contact = contactUCC.unfollowContact(idContact,
+        ((UserDTO) request.getProperty("user")).getIdUser());
+    if (contact == null) {
+      throw new WebApplicationException("Contact not found", Status.NOT_FOUND);
+    }
+    return contact;
+  }
+
+  /**
    * Add a contact.
    *
    * @return the contact
@@ -78,6 +133,5 @@ public class ContactRessource {
     contact.setIdStudent(((UserDTO) request.getProperty("user")).getIdUser());
     return contactUCC.addContact(contact);
   }
-
 
 }

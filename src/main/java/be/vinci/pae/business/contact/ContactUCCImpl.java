@@ -89,4 +89,26 @@ public class ContactUCCImpl implements ContactUCC {
     dalServices.close();
     return contact;
   }
+
+
+  @Override
+  public ContactDTO unfollowContact(int id, int idUser) {
+    Contact contact = (Contact) contactDAO.getOneById(id);
+    if (contact == null) {
+      return null;
+    }
+    if (contact.getIdStudent() != idUser) {
+      throw new WebApplicationException("You don't have a contact with this id",
+          Status.NOT_FOUND);
+    }
+    if (!contact.getState().equals(State.STARTED) || !contact.getState()
+        .equals(State.ADMITTED)) {
+      throw new WebApplicationException(
+          "The contact must be either in the state 'initiated' or 'taken' to be unfollowed",
+          Status.PRECONDITION_FAILED);
+    }
+    contact.setState(State.UNSUPERVISED);
+    contactDAO.updateContact(contact);
+    return contact;
+  }
 }

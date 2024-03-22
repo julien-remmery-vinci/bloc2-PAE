@@ -38,4 +38,6 @@ public interface ContactUCC {
    *                                 if the state of the contact is not 'initiated'
    */
   ContactDTO meetContact(int id, String meetPlace, int idUser);
+
+  ContactDTO unfollowContact(int id, int idUser);
 }
