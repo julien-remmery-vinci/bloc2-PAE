@@ -2,6 +2,7 @@ package be.vinci.pae.business.contact;
 
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.user.UserDTO;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
@@ -165,7 +166,24 @@ public interface ContactDTO {
      */
     UNSUPERVISED("non suivi");
 
+    private final String state;
+
     State(String state) {
+      this.state = state;
+    }
+
+    public static State fromString(String text) {
+      for (State b : State.values()) {
+        if (b.state.equalsIgnoreCase(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+    @JsonValue
+    public String getState() {
+      return state;
     }
   }
 }
