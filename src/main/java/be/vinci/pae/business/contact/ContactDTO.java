@@ -2,6 +2,7 @@ package be.vinci.pae.business.contact;
 
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.user.UserDTO;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
@@ -85,14 +86,14 @@ public interface ContactDTO {
    *
    * @return the state of the contact
    */
-  String getState();
+  State getState();
 
   /**
    * Set the state of the contact.
    *
    * @param state the state of the contact
    */
-  void setState(String state);
+  void setState(State state);
 
   /**
    * Get the meet place of the contact.
@@ -135,4 +136,65 @@ public interface ContactDTO {
    * @param academicYear the academic year of the contact
    */
   void setAcademicYear(String academicYear);
+
+  /**
+   * Enum for the state of the contact.
+   */
+  enum State {
+    /**
+     * Started state.
+     */
+    STARTED("initié"),
+    /**
+     * Admitted state.
+     */
+    ADMITTED("pris"),
+    /**
+     * Turned down state.
+     */
+    TURNED_DOWN("refusé"),
+    /**
+     * Accepted state.
+     */
+    ACCEPTED("accepté"),
+    /**
+     * On hold state.
+     */
+    ON_HOLD("suspendu"),
+    /**
+     * Unsupervised state.
+     */
+    UNSUPERVISED("non suivi");
+
+    private final String state;
+
+    State(String state) {
+      this.state = state;
+    }
+
+    /**
+     * Get the state from a string.
+     *
+     * @param text the string
+     * @return the state
+     */
+    public static State fromString(String text) {
+      for (State b : State.values()) {
+        if (b.state.equalsIgnoreCase(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+    /**
+     * Get the state as string.
+     *
+     * @return the state as string
+     */
+    @JsonValue
+    public String getState() {
+      return state;
+    }
+  }
 }

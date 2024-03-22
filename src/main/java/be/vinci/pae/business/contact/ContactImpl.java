@@ -17,7 +17,7 @@ public class ContactImpl implements Contact {
   // Field for the student's data
   @JsonProperty("student")
   private UserDTO user;
-  private String state;
+  private State state;
   private String meetPlace;
   private String refusalReason;
   private String academicYear;
@@ -71,12 +71,12 @@ public class ContactImpl implements Contact {
   }
 
   @Override
-  public String getState() {
+  public State getState() {
     return state;
   }
 
   @Override
-  public void setState(String state) {
+  public void setState(State state) {
     this.state = state;
   }
 

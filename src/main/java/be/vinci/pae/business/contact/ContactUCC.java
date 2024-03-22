@@ -48,4 +48,7 @@ public interface ContactUCC {
    * @return the contact
    */
   List<ContactDTO> getContacts(UserDTO user);
+
+  ContactDTO unfollowContact(int id, int idUser);
+
 }

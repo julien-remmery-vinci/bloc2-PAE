@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.user.User;
 import be.vinci.pae.business.user.UserDTO;
+import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.dal.user.UserDAO;
 import jakarta.ws.rs.WebApplicationException;
@@ -94,7 +95,7 @@ public class UserUCCTest {
     Mockito.when(userDAO.addUser(user)).thenReturn(user);
     assertAll(
         () -> assertNotNull(userUCC.register(user)),
-        () -> assertEquals(UserDTO.Role.E, user.getRole())
+        () -> assertEquals(Role.STUDENT, user.getRole())
     );
   }
 
@@ -102,7 +103,7 @@ public class UserUCCTest {
   @DisplayName("Test for the register method of UserUCC with a teacher email")
   void registerTestTeacher() {
     user.setEmail("test.test@vinci.be");
-    user.setRole(UserDTO.Role.P);
+    user.setRole(Role.PROFESSOR);
     Mockito.when(userDAO.getOneByEmail("test.test@vinci.be")).thenReturn(null);
     Mockito.when(userDAO.addUser(user)).thenReturn(user);
     assertNotNull(userUCC.register(user));
@@ -112,7 +113,7 @@ public class UserUCCTest {
   @DisplayName("Test for the register method of UserUCC with an admin email")
   void registerTestAdmin() {
     user.setEmail("admin.test@vinci.be");
-    user.setRole(UserDTO.Role.A);
+    user.setRole(Role.ADMIN);
     Mockito.when(userDAO.getOneByEmail("admin.test@vinci.be")).thenReturn(null);
     Mockito.when(userDAO.addUser(user)).thenReturn(user);
     assertNotNull(userUCC.register(user));
@@ -122,7 +123,7 @@ public class UserUCCTest {
   @DisplayName("Test for the register method of UserUCC with an existing email")
   void registerTestInvalidEmail() {
     user.setEmail("invalid.test@student.vinci.be");
-    user.setRole(UserDTO.Role.A);
+    user.setRole(Role.ADMIN);
     Mockito.when(userDAO.getOneByEmail("invalid.test@student.vinci.be")).thenReturn(user);
     Mockito.when(userDAO.addUser(user)).thenReturn(user);
     assertNull(userUCC.register(user));
@@ -132,7 +133,7 @@ public class UserUCCTest {
   @DisplayName("Test for the register method of UserUCC with an invalid role")
   void registerTestInvalidRole() {
     user.setEmail("test.invalid@vinci.be");
-    user.setRole(UserDTO.Role.E);
+    user.setRole(Role.STUDENT);
     Mockito.when(userDAO.getOneByEmail("test.invalid@vinci.be")).thenReturn(null);
     Mockito.when(userDAO.addUser(user)).thenReturn(user);
     assertThrows(WebApplicationException.class, () -> userUCC.register(user));
