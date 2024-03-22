@@ -22,3 +22,13 @@ Authorization: {{token}}
 {
   "refusalReason": "L'entreprise n'a plus besoin d'étudiants."
 }
+
+### Add a contact
+POST {{contactUrl}}/add
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "idCompany": 1,
+  "academicYear": "2021-2022"
+}

@@ -52,8 +52,8 @@
 			<groupId>org.glassfish.jersey.inject</groupId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-dbcp2</artifactId>
+			<groupId>org.apache.commons</groupId>
 			<version>2.12.0</version>
 		</dependency>
 		<dependency>
@@ -90,6 +90,16 @@
 			<groupId>org.mockito</groupId>
 			<scope>test</scope>
 			<version>5.4.0</version>
+		</dependency>
+		<dependency>
+			<artifactId>log4j-core</artifactId>
+			<groupId>org.apache.logging.log4j</groupId>
+			<version>2.20.0</version>
+		</dependency>
+		<dependency>
+			<artifactId>log4j-api</artifactId>
+			<groupId>org.apache.logging.log4j</groupId>
+			<version>2.20.0</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>

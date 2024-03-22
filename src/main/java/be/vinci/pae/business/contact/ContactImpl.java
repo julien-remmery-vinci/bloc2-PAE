@@ -2,6 +2,7 @@ package be.vinci.pae.business.contact;
 
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.user.UserDTO;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Implementation of Contact which inherits of ContactDTO.
@@ -10,10 +11,13 @@ public class ContactImpl implements Contact {
 
   private int idContact;
   private int idCompany;
+  // Field for the company's data
   private CompanyDTO company;
   private int idStudent;
-  private UserDTO student;
-  private String state;
+  // Field for the student's data
+  @JsonProperty("student")
+  private UserDTO user;
+  private State state;
   private String meetPlace;
   private String refusalReason;
   private String academicYear;
@@ -58,21 +62,21 @@ public class ContactImpl implements Contact {
     this.idStudent = idStudent;
   }
 
-  public UserDTO getStudent() {
-    return student;
+  public UserDTO getUser() {
+    return user;
   }
 
-  public void setStudent(UserDTO student) {
-    this.student = student;
+  public void setUser(UserDTO user) {
+    this.user = user;
   }
 
   @Override
-  public String getState() {
+  public State getState() {
     return state;
   }
 
   @Override
-  public void setState(String state) {
+  public void setState(State state) {
     this.state = state;
   }
 

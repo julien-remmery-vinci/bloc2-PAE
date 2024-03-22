@@ -7,6 +7,7 @@ package be.vinci.pae.presentation;
 
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
+import be.vinci.pae.presentation.filters.Log;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.GET;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 @Singleton
 @Path("/users")
+@Log
 public class UserRessource {
 
   /**

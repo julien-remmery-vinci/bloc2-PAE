@@ -1,7 +1,6 @@
 package be.vinci.pae.dal.company;
 
 import be.vinci.pae.business.company.CompanyDTO;
-import java.sql.ResultSet;
 import java.util.List;
 
 /**
@@ -10,18 +9,17 @@ import java.util.List;
 public interface CompanyDAO {
 
   /**
-   * Get a company from a ResultSet.
-   *
-   * @param rs the ResultSet
-   * @return the company
-   */
-  CompanyDTO getCompanyFromRs(ResultSet rs);
-
-  /**
    * Get all companies.
    *
    * @return all companies
    */
   List<CompanyDTO> getAll();
 
+/**
+   * Get a company by its id.
+   *
+   * @param id the id of the company
+   * @return the company, null if no company was found
+   */
+  CompanyDTO getCompanyById(int id);
 }

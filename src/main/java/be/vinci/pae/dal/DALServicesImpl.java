@@ -82,23 +82,23 @@ public class DALServicesImpl implements DALBackServices, DALServices {
 
   @Override
   public void commit() {
-      try {
-        getConnection().commit();
-        close();
-      } catch (SQLException e) {
-        close();
-        throw new RuntimeException(e);
-      }
+    try {
+      getConnection().commit();
+      close();
+    } catch (SQLException e) {
+      close();
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
   public void rollback() {
-      try {
-          getConnection().rollback();
-          close();
-      } catch (SQLException e) {
-          close();
-          throw new RuntimeException(e);
-      }
+    try {
+      getConnection().rollback();
+      close();
+    } catch (SQLException e) {
+      close();
+      throw new RuntimeException(e);
+    }
   }
 }
