@@ -5,6 +5,7 @@ import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.presentation.filters.Authorize;
+import be.vinci.pae.presentation.filters.Log;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -24,6 +25,7 @@ import org.glassfish.jersey.server.ContainerRequest;
  */
 @Singleton
 @Path("/contact")
+@Log
 public class ContactRessource {
 
   @Inject
