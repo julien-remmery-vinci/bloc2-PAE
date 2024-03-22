@@ -45,11 +45,11 @@ public class ContactUCCImpl implements ContactUCC {
       throw new WebApplicationException("You don't have a contact with this id",
           Status.NOT_FOUND);
     }
-    if (!contact.getState().equals(State.ADMITTED)) {
-      throw new WebApplicationException("The contact must be in the state 'taken' to be refused",
+    if (!contact.updateState(State.TURNED_DOWN)) {
+      throw new WebApplicationException(
+          "Le contact doit être dans l'état 'pris' pour être refusé",
           Status.PRECONDITION_FAILED);
     }
-    contact.setState(State.TURNED_DOWN);
     contact.setRefusalReason(refusalReason);
     contactDAO.updateContact(contact);
     dalServices.close();
