@@ -9,7 +9,7 @@ const ContactPage = () => {
     window.location.reload();
   } else {
     clearPage();
-    document.title = "npmcontacts";
+    document.title = "contacts";
     buildPage();
   }
 }
