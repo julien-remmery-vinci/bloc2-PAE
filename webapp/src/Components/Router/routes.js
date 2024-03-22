@@ -4,6 +4,7 @@ import RegisterPage from "../Pages/RegisterPage";
 import AcceptRefusePage from "../Pages/contacts/AcceptRefusePage";
 import AddContactPage from "../Pages/contacts/AddContactPage";
 import SearchPage from "../Pages/SearchPage";
+import MeetContactPage from "../Pages/contacts/MeetContactPage";
 import ContactPage from "../Pages/contacts/ContactPage";
 
 // Define routes
@@ -14,6 +15,7 @@ const routes = {
     '/register':RegisterPage,
     '/contact/add': AddContactPage,
     '/search': SearchPage,
+    '/contact/meet': MeetContactPage,
     '/contact': ContactPage
 };
 

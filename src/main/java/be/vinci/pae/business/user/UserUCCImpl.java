@@ -1,5 +1,6 @@
 package be.vinci.pae.business.user;
 
+import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.user.UserDAO;
 import jakarta.inject.Inject;
@@ -57,10 +58,9 @@ public class UserUCCImpl implements UserUCC {
    */
   public UserDTO register(UserDTO user) {
     if (user.getEmail().matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@student\\.vinci\\.be$")) {
-      user.setRole(UserDTO.Role.valueOf("E"));
+      user.setRole(Role.E);
     } else if (user.getEmail().matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@vinci\\.be$")
-        && user.getRole() != null && !user.getRole().toString().equals("A")
-        && !user.getRole().toString().equals("P")) {
+        && (user.getRole().equals(Role.UNKNOWN) || user.getRole().equals(Role.E))) {
       throw new WebApplicationException("Invalid role", Response.Status.BAD_REQUEST);
     }
     dalServices.start();

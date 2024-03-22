@@ -1,9 +1,8 @@
 package be.vinci.pae.dal.contact;
 
-import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.dal.DALBackServices;
-import be.vinci.pae.dal.utils.Utils;
+import be.vinci.pae.dal.utils.DAOServices;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,9 +16,9 @@ import java.util.List;
 public class ContactDAOImpl implements ContactDAO {
 
   @Inject
-  private Factory factory;
-  @Inject
   private DALBackServices dalServices;
+  @Inject
+  private DAOServices daoServices;
 
   @Override
   public ContactDTO getOneById(int id) {
@@ -45,7 +44,7 @@ public class ContactDAOImpl implements ContactDAO {
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           String prefix = "contact";
-          return (ContactDTO) Utils.getDataFromRs(rs, prefix, factory);
+          return (ContactDTO) daoServices.getDataFromRs(rs, prefix);
         }
       }
     } catch (SQLException e) {
@@ -79,6 +78,28 @@ public class ContactDAOImpl implements ContactDAO {
     }
   }
 
+  @Override
+  public ContactDTO addContact(ContactDTO contact) {
+    try (PreparedStatement ps = dalServices.getPS(
+        "INSERT INTO pae.contacts (idCompany, idStudent, state, "
+            + "academicYear) VALUES (?, ?, ?, ?) RETURNING idContact;")) {
+      ps.setInt(1, contact.getIdCompany());
+      ps.setInt(2, contact.getIdStudent());
+      ps.setString(3, contact.getState());
+      ps.setString(4, contact.getAcademicYear());
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          contact.setIdContact(rs.getInt(1));
+          return contact;
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return null;
+  }
+
+
   /**
    * Get the contacts of a student.
    *
@@ -110,7 +131,7 @@ public class ContactDAOImpl implements ContactDAO {
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
           String prefix = "contact";
-          contacts.add((ContactDTO) Utils.getDataFromRs(rs, prefix, factory));
+          contacts.add((ContactDTO) daoServices.getDataFromRs(rs, prefix));
         }
         return contacts;
       }
@@ -138,7 +159,7 @@ public class ContactDAOImpl implements ContactDAO {
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
           String prefix = "contact";
-          contacts.add((ContactDTO) Utils.getDataFromRs(rs, prefix, factory));
+          contacts.add((ContactDTO) daoServices.getDataFromRs(rs, prefix));
         }
         return contacts;
       }
