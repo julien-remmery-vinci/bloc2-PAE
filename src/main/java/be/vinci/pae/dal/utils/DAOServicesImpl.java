@@ -36,8 +36,12 @@ public class DAOServicesImpl implements DAOServices {
                 + f.getName().substring(1), f.getType());
         // If field is an enum, use Enum.valueOf to get the enum value
         if (f.getType().isEnum()) {
-          m.invoke(object, Enum.valueOf((Class<Enum>) Class.forName(f.getType().getName()),
-              rs.getString(prefix + "." + f.getName())));
+          Class<?> enumClass = Class.forName(
+              "be.vinci.pae.business." + prefix + "." + classPrefix + "DTO" + "$" + f.getName()
+                  .substring(0, 1).toUpperCase()
+                  + f.getName().substring(1));
+          Method valueFromString = enumClass.getDeclaredMethod("fromString", String.class);
+          m.invoke(object, valueFromString.invoke(null, rs.getString(prefix + "." + f.getName())));
         } else if (!f.getType().isInterface()) {
           // If field is not an interface, set the field of the object
           m.invoke(object, rs.getObject(prefix + "." + f.getName()));
