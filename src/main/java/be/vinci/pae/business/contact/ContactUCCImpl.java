@@ -45,7 +45,7 @@ public class ContactUCCImpl implements ContactUCC {
     if (user.getRole().equals(Role.A) || user.getRole().equals(Role.P)) {
       return contactDAO.getAllContacts();
     }
-    return null;//error message
+    return null; //error message
   }
 
 

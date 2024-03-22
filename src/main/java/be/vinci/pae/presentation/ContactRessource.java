@@ -82,6 +82,8 @@ public class ContactRessource {
   /**
    * Add a contact.
    *
+   * @param request the request's context
+   * @param contact the contact to add
    * @return the contact
    */
   @POST
