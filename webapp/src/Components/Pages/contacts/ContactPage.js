@@ -81,7 +81,7 @@ async function buildPage() {
 }
 
 async function getContacts() {
-  const response = await fetch('http://localhost:3000/contact/all', {
+  const response = await fetch('http://localhost:3000/contact', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

@@ -40,7 +40,6 @@ public class ContactRessource {
    * @return the list of contacts
    */
   @GET
-  @Path("/all")
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
   public List<ContactDTO> getContacts(@Context ContainerRequest request) {

@@ -34,6 +34,6 @@ Authorization: {{token}}
 }
 
 ### Get list of contacts
-GET {{contactUrl}}/all
+GET {{contactUrl}}
 Content-Type: application/json
 Authorization: {{token}}
