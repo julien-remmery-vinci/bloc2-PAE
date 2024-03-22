@@ -51,6 +51,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
       throw new RuntimeException(e);
     }
   }
+
   @Override
   public void start() {
     try {
@@ -65,7 +66,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
     try (Connection conn = getConnection()) {
       threadLocal.remove();
     } catch (SQLException e) {
-        throw new RuntimeException(e);
+      throw new RuntimeException(e);
     }
   }
 
@@ -76,7 +77,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
       conn.commit();
       conn.setAutoCommit(true);
     } catch (SQLException e) {
-        throw new RuntimeException(e);
+      throw new RuntimeException(e);
     }
   }
 
