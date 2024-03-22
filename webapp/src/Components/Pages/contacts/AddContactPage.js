@@ -1,5 +1,5 @@
 import {clearPage} from "../../../utils/render";
-import {getAuthenticatedUser} from "../../../utils/auths";
+import {getAuthenticatedUser, getUserToken} from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
 const AddContactPage = () => {
@@ -13,56 +13,166 @@ const AddContactPage = () => {
     }
 }
 
-function buildPage(){
+async function buildPage(){
+    const companyList = await getCompanies();
     const main = document.querySelector('main');
     const title = document.createElement('h3');
     title.textContent = 'Ajouter un nouveau contact';
     title.style.textAlign = 'center';
     title.style.marginBottom = '5%';
     main.appendChild(title);
-    const entreprise = document.createElement('label');
-    entreprise.textContent = 'Entreprise';
-    entreprise.style.marginLeft = '15%';
-    main.appendChild(entreprise);
-    const entreprises = document.createElement('select');
+    const company = document.createElement('label');
+    company.textContent = 'Entreprise';
+    company.style.marginLeft = '15%';
+    main.appendChild(company);
+    const companies = document.createElement('select');
     
-    entreprises.className = 'form-control';
-    entreprises.style.width = '25%';
-    entreprises.style.marginLeft = '15%';
+    companies.className = 'form-control';
+    companies.style.width = '25%';
+    companies.style.marginLeft = '15%';
 
-    const option1 = document.createElement('option');
-    option1.value = 'option1';
-    option1.text = 'Option 1';
-    entreprises.appendChild(option1);
+    const defaultOption = document.createElement('option');
+    defaultOption.text = 'Choisissez votre entreprise';
+    defaultOption.value = 'default';
+    companies.appendChild(defaultOption);
 
-    const option2 = document.createElement('option');
-    option2.value = 'option2';
-    option2.text = 'Option 2';
-    entreprises.appendChild(option2);
+    const companyNames = [...new Set(companyList.map(e => e.tradeName))]; // Suppression des doublons
+    companyNames.forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        option.text = name;
+        companies.appendChild(option);
+});
 
-    main.appendChild(entreprises);
+    main.appendChild(companies);
 
-    const appellation = document.createElement('label');
-    appellation.textContent = 'Appellation';
-    appellation.style.marginLeft = '15%';
-    main.appendChild(appellation);
-    const appelations = document.createElement('select');
-    appelations.className = 'form-control';
-    appelations.style.width = '25%';
-    appelations.style.marginLeft = '15%';
-    const option3 = document.createElement('option');
-    option3.value = 'option3';
-    option3.text = 'Option 3';
-    appelations.appendChild(option3);
-    const option4 = document.createElement('option');
-    option4.value = 'option4';
-    option4.text = 'Option 4';
-    appelations.appendChild(option4);
-    main.appendChild(appelations);
-    
+    const designation = document.createElement('label');
+    designation.textContent = 'Appellation';
+    designation.style.marginLeft = '15%';
+    main.appendChild(designation);
 
+    const designations = document.createElement('select');
+    designations.id = 'designation';
+    designations.className = 'form-control';
+    designations.style.width = '25%';
+    designations.style.marginLeft = '15%';
+
+    main.appendChild(designations);
+
+    companies.addEventListener('change', (e) => {
+        const alert = document.querySelector('#alert');
+        if (alert.hidden === false) {
+            alert.hidden = true;
+        }
+        while (designations.firstChild) {
+            designations.removeChild(designations.firstChild);
+        }
+
+        const selectedCompany = companyList.find((c) => c.tradeName === e.target.value);
+        
+        if (e.target.value === 'default') {
+            const defaultOptionDesignation = document.createElement('option');
+            defaultOptionDesignation.text = "Choisissez d'abord votre entreprise";
+            defaultOptionDesignation.value = 'default';
+            designations.appendChild(defaultOptionDesignation);
+        }
+        else
+        if (selectedCompany && selectedCompany.designation!==null) {
+            const designationList = companyList.filter((c) => c.tradeName === e.target.value);
+            designationList.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name.designation;
+                option.text = name.designation;
+                designations.appendChild(option);
+            });
+        }
+        else if (selectedCompany.designation===null) {
+            const noDesignation = document.createElement('option');
+            noDesignation.textContent = 'Aucune appellation';
+            designations.appendChild(noDesignation);
+        }
+
+    });
+
+    const alert = document.createElement('p');
+    alert.id = 'alert';
+    alert.className = 'alert alert-danger';
+    alert.style.marginLeft = '15%';
+    alert.style.width = '40%';
+    alert.hidden = true;
+    main.appendChild(alert);
+
+    const submit = document.createElement('input');
+    submit.value = 'Enregistrer';
+    submit.type = 'submit';
+    submit.className = 'btn btn-primary';
+    submit.style.marginTop = '5%';
+    submit.style.marginLeft = '15%';
+    submit.style.width = '25%';
+    main.appendChild(submit);
+
+    submit.addEventListener('click', onSubmit);
 
 }
+
+// fetch function to get all entreprises
+async function getCompanies() {
+    const response = await fetch('http://localhost:3000/company', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': getAuthenticatedUser().token,
+        },
+    });
+    if (response.status === 200) {
+        return response.json();
+    }
+    return undefined;
+}
+
+// function to submit the form
+async function onSubmit(e) {
+    e.preventDefault();
+    const company = document.querySelector('select').value;
+    const designation = document.querySelectorAll('select')[1].value;
+    const alert = document.querySelector('#alert');
+    if (company === 'default' || designation === 'default') {
+        alert.hidden = false;
+        alert.textContent = 'Veuillez sélectionner une entreprise et une appellation';
+        return;
+    }
+
+    // trying to get the company id
+    const companyList = await getCompanies();
+    let companyFound = 0;
+    if (designation === 'Aucune appellation') {
+        companyFound = companyList.find((c) => c.tradeName === company && c.designation === null);
+    } else {
+    companyFound = companyList.find((c) => c.tradeName === company && c.designation === designation);
+    }
+
+    const options = {
+        method: 'POST',
+        body: JSON.stringify({
+            idCompany: companyFound.idCompany,
+            academicYear: '2021-2022', // TODO: get the current academic year
+        }),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': getUserToken(),
+        },
+    };
+
+    const response = await fetch('http://localhost:3000/contact/add', options);
+    if (response.status === 200) {
+        Navigate('/');
+        
+    } else {
+        alert.hidden = false;
+        alert.textContent = 'Erreur lors de l\'ajout du contact';
+    }
+}
+
 
 export default AddContactPage;
 

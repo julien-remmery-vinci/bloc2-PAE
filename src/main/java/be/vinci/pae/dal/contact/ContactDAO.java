@@ -37,4 +37,13 @@ public interface ContactDAO {
    * @param contact the contact to refuse
    */
   void updateContact(ContactDTO contact);
+
+  /**
+   * Add a contact to the database.
+   *
+   * @param contact the contact to add
+   * @return the contact added
+   */
+  ContactDTO addContact(ContactDTO contact);
+
 }

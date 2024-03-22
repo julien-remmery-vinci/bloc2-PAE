@@ -67,7 +67,7 @@ public class ContactDAOImpl implements ContactDAO {
             + "WHERE idContact = ?;")) {
       ps.setInt(1, contact.getIdCompany());
       ps.setInt(2, contact.getIdStudent());
-      ps.setString(3, contact.getState());
+      ps.setString(3, contact.getState().toString());
       ps.setString(4, contact.getMeetPlace());
       ps.setString(5, contact.getRefusalReason());
       ps.setString(6, contact.getAcademicYear());
@@ -78,6 +78,7 @@ public class ContactDAOImpl implements ContactDAO {
     }
   }
 
+<<<<<<< HEAD
   /**
    * Get the contacts of a student.
    *
@@ -102,10 +103,27 @@ public class ContactDAOImpl implements ContactDAO {
           contacts.add((ContactDTO) daoServices.getDataFromRs(rs, prefix));
         }
         return contacts;
+=======
+  @Override
+  public ContactDTO addContact(ContactDTO contact) {
+    try (PreparedStatement ps = dalServices.getPS(
+        "INSERT INTO pae.contacts (idCompany, idStudent, state, "
+            + "academicYear) VALUES (?, ?, ?, ?) RETURNING idContact;")) {
+      ps.setInt(1, contact.getIdCompany());
+      ps.setInt(2, contact.getIdStudent());
+      ps.setString(3, contact.getState().getState());
+      ps.setString(4, contact.getAcademicYear());
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          contact.setIdContact(rs.getInt(1));
+          return contact;
+        }
+>>>>>>> a8fbbafe9f1fc62fdae6db8461afc5723426beaa
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
+<<<<<<< HEAD
   }
 
   /**
@@ -136,3 +154,8 @@ public class ContactDAOImpl implements ContactDAO {
     }
   }
 }
+=======
+    return null;
+  }
+}
+>>>>>>> a8fbbafe9f1fc62fdae6db8461afc5723426beaa

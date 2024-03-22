@@ -48,12 +48,13 @@ public class UserDAOImpl implements UserDAO {
    */
   @Override
   public UserDTO getOneById(int id) {
-    try (PreparedStatement getUser = dalBackServices.getPS(
-        "SELECT idUser as \"user.idUser\", lastname as \"user.lastname\","
-            + "firstname as \"user.firstname\", email as \"user.email\","
-            + "password as \"user.password\", phoneNumber as \"user.phoneNumber\","
-            + "registerDate as \"user.registerDate\", role as \"user.role\""
-            + "FROM pae.users WHERE idUser = ?")) {
+    try {
+      PreparedStatement getUser = dalBackServices.getPS(
+          "SELECT idUser as \"user.idUser\", lastname as \"user.lastname\","
+              + "firstname as \"user.firstname\", email as \"user.email\","
+              + "password as \"user.password\", phoneNumber as \"user.phoneNumber\","
+              + "registerDate as \"user.registerDate\", role as \"user.role\""
+              + "FROM pae.users WHERE idUser = ?");
       getUser.setInt(1, id);
       try (ResultSet rs = getUser.executeQuery()) {
         if (rs.next()) {
@@ -164,4 +165,5 @@ public class UserDAOImpl implements UserDAO {
     ps.setDate(6, user.getRegisterDate());
     ps.setString(7, user.getRole().toString());
   }
+
 }
