@@ -5,6 +5,7 @@ import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.presentation.filters.Authorize;
+import be.vinci.pae.presentation.filters.Log;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -24,6 +25,7 @@ import org.glassfish.jersey.server.ContainerRequest;
  */
 @Singleton
 @Path("/contact")
+@Log
 public class ContactRessource {
 
   @Inject
@@ -113,4 +115,23 @@ public class ContactRessource {
     }
     return contact;
   }
+
+  /**
+   * Add a contact.
+   *
+   * @return the contact
+   */
+  @POST
+  @Path("/add")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public ContactDTO addContact(@Context ContainerRequest request, ContactDTO contact) {
+    if (contact.getIdCompany() < 0) {
+      throw new WebApplicationException("Invalid id", Status.BAD_REQUEST);
+    }
+    contact.setIdStudent(((UserDTO) request.getProperty("user")).getIdUser());
+    return contactUCC.addContact(contact);
+  }
+
 }

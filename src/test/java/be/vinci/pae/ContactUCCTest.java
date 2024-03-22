@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.contact.Contact;
+import be.vinci.pae.business.contact.ContactDTO.State;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.dal.contact.ContactDAO;
 import jakarta.ws.rs.WebApplicationException;
@@ -38,14 +39,14 @@ public class ContactUCCTest {
     contact = (Contact) factory.getContact();
     contact.setIdContact(ID_CONTACT);
     contact.setIdStudent(ID_USER);
-    contact.setState(Contact.STATE_TAKEN);
+    contact.setState(State.ADMITTED);
     Mockito.when(contactDAO.getOneById(1)).thenReturn(contact);
   }
 
   @Test
   @DisplayName("Test refuseContact with contact in wrong state")
   void testRefuseContactWrongState() {
-    contact.setState(Contact.STATE_TAKENDOWN);
+    contact.setState(State.TURNED_DOWN);
     assertThrows(WebApplicationException.class,
         () -> contactUCC.refuseContact(ID_CONTACT, REFUSAL_REASON, ID_USER));
   }
@@ -62,14 +63,21 @@ public class ContactUCCTest {
   void testGetOneById() {
     assertEquals(contact.getIdContact(),
         contactUCC.refuseContact(ID_CONTACT, REFUSAL_REASON, ID_USER).getIdContact());
-    assertEquals(Contact.STATE_TAKENDOWN, contact.getState());
+    assertEquals(State.TURNED_DOWN, contact.getState());
     assertEquals(REFUSAL_REASON, contact.getRefusalReason());
+  }
+
+  @Test
+  @DisplayName("Test addContact with company not found")
+  void testAddContactCompanyNotFound() {
+    contact.setIdCompany(0);
+    assertThrows(WebApplicationException.class, () -> contactUCC.addContact(contact));
   }
 
   @Test
   @DisplayName("Test meetContact with contact in wrong state")
   void testMeetContactWrongState() {
-    contact.setState(Contact.STATE_TAKEN);
+    contact.setState(State.ADMITTED);
     assertThrows(WebApplicationException.class,
         () -> contactUCC.meetContact(ID_CONTACT, "meetPlace", ID_USER));
   }
@@ -84,10 +92,10 @@ public class ContactUCCTest {
   @Test
   @DisplayName("Test meetContact with existing contact in right state")
   void testMeetContact() {
-    contact.setState(Contact.STATE_INITIATED);
+    contact.setState(State.STARTED);
     assertEquals(contact.getIdContact(),
         contactUCC.meetContact(ID_CONTACT, "meetPlace", ID_USER).getIdContact());
-    assertEquals(Contact.STATE_TAKEN, contact.getState());
+    assertEquals(State.ADMITTED, contact.getState());
     assertEquals("meetPlace", contact.getMeetPlace());
   }
 }

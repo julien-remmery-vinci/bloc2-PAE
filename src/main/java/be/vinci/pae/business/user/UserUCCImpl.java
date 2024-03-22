@@ -1,5 +1,6 @@
 package be.vinci.pae.business.user;
 
+import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.user.UserDAO;
 import jakarta.inject.Inject;
@@ -33,7 +34,7 @@ public class UserUCCImpl implements UserUCC {
   @Override
   public UserDTO login(String email, String password) {
     UserDTO userFound = userDAO.getOneByEmail(email);
-
+    dalServices.close();
     // No user found for the provided email
     if (userFound == null) {
       return null;
@@ -57,10 +58,9 @@ public class UserUCCImpl implements UserUCC {
    */
   public UserDTO register(UserDTO user) {
     if (user.getEmail().matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@student\\.vinci\\.be$")) {
-      user.setRole(UserDTO.Role.valueOf("E"));
+      user.setRole(Role.STUDENT);
     } else if (user.getEmail().matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@vinci\\.be$")
-        && user.getRole() != null && !user.getRole().toString().equals("A")
-        && !user.getRole().toString().equals("P")) {
+        && user.getRole() == Role.STUDENT) {
       throw new WebApplicationException("Invalid role", Response.Status.BAD_REQUEST);
     }
     dalServices.start();
@@ -69,6 +69,7 @@ public class UserUCCImpl implements UserUCC {
       dalServices.rollback();
       return null;
     }
+    user.setPassword(((User) user).hashPassword(user.getPassword()));
     java.sql.Date registerDate = new java.sql.Date(System.currentTimeMillis());
     user.setRegisterDate(registerDate);
 
@@ -84,7 +85,9 @@ public class UserUCCImpl implements UserUCC {
    * @return the user, null if no user was found
    */
   public UserDTO getUser(int id) {
-    return userDAO.getOneById(id);
+    UserDTO user = userDAO.getOneById(id);
+    dalServices.close();
+    return user;
   }
 
   /**
@@ -93,6 +96,8 @@ public class UserUCCImpl implements UserUCC {
    * @return the list of all users
    */
   public List<UserDTO> getAllUsers() {
-    return userDAO.getAllUsers();
+    List<UserDTO> list = userDAO.getAllUsers();
+    dalServices.close();
+    return list;
   }
 }

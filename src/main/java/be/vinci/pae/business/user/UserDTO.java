@@ -1,5 +1,6 @@
 package be.vinci.pae.business.user;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.sql.Date;
 
@@ -126,14 +127,46 @@ public interface UserDTO {
    */
   enum Role {
     /**
-     * Enum of possible user roles.
+     * Student role.
      */
-    E("E"), P("P"), A("A");
-
-    private String role;
+    STUDENT("étudiant"),
+    /**
+     * Professor role.
+     */
+    PROFESSOR("professeur"),
+    /**
+     * Admin role.
+     */
+    ADMIN("administratif");
+    private final String role;
 
     Role(String role) {
       this.role = role;
+    }
+
+    /**
+     * Get the role from a string.
+     *
+     * @param role the role as a string
+     * @return the role
+     */
+    public static Role fromString(String role) {
+      for (Role r : Role.values()) {
+        if (r.role.equalsIgnoreCase(role)) {
+          return r;
+        }
+      }
+      return null;
+    }
+
+    /**
+     * Get the role as a string.
+     *
+     * @return the role as a string
+     */
+    @JsonValue
+    public String getRole() {
+      return role;
     }
   }
 }

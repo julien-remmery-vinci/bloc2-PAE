@@ -1,9 +1,8 @@
 package be.vinci.pae.dal.user;
 
-import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.dal.DALBackServices;
-import be.vinci.pae.dal.utils.Utils;
+import be.vinci.pae.dal.utils.DAOServices;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,9 +16,9 @@ import java.util.List;
 public class UserDAOImpl implements UserDAO {
 
   @Inject
-  private Factory factory;
-  @Inject
   private DALBackServices dalBackServices;
+  @Inject
+  private DAOServices daoServices;
 
   @Override
   public UserDTO getOneByEmail(String email) {
@@ -32,7 +31,7 @@ public class UserDAOImpl implements UserDAO {
       getUser.setString(1, email);
       try (ResultSet rs = getUser.executeQuery()) {
         if (rs.next()) {
-          return (UserDTO) Utils.getDataFromRs(rs, "user", factory);
+          return (UserDTO) daoServices.getDataFromRs(rs, "user");
         }
       }
     } catch (SQLException e) {
@@ -59,7 +58,7 @@ public class UserDAOImpl implements UserDAO {
       getUser.setInt(1, id);
       try (ResultSet rs = getUser.executeQuery()) {
         if (rs.next()) {
-          return (UserDTO) Utils.getDataFromRs(rs, "user", factory);
+          return (UserDTO) daoServices.getDataFromRs(rs, "user");
         }
       }
     } catch (SQLException e) {
@@ -79,7 +78,7 @@ public class UserDAOImpl implements UserDAO {
       addUser.setString(4, user.getPassword());
       addUser.setString(5, user.getPhoneNumber());
       addUser.setDate(6, user.getRegisterDate());
-      addUser.setString(7, user.getRole().toString());
+      addUser.setString(7, user.getRole().getRole());
       try (ResultSet rs = addUser.executeQuery()) {
         if (rs.next()) {
           user.setIdUser(rs.getInt(1));
@@ -127,7 +126,7 @@ public class UserDAOImpl implements UserDAO {
   private List<UserDTO> getResults(ResultSet rs) throws SQLException {
     List<UserDTO> users = new ArrayList<>();
     while (rs.next()) {
-      users.add((UserDTO) Utils.getDataFromRs(rs, "user", factory));
+      users.add((UserDTO) daoServices.getDataFromRs(rs, "user"));
     }
     return users;
   }

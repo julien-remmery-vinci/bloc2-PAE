@@ -11,8 +11,8 @@ import org.apache.commons.dbcp2.BasicDataSource;
  */
 public class DALServicesImpl implements DALBackServices, DALServices {
 
-  private final BasicDataSource basicDataSource;
   private ThreadLocal<Connection> threadLocal;
+  private final BasicDataSource basicDataSource;
 
   /**
    * Constructor of DALServicesImpl.
@@ -62,33 +62,32 @@ public class DALServicesImpl implements DALBackServices, DALServices {
   }
 
   @Override
-  public void commit() {
-    try {
-      getConnection().commit();
-      getConnection().setAutoCommit(true);
-      basicDataSource.close();
+  public void close() {
+    try (Connection conn = getConnection()) {
+      threadLocal.remove();
     } catch (SQLException e) {
-      try {
-        basicDataSource.close();
-      } catch (SQLException ex) {
-        throw new RuntimeException(ex);
-      }
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void commit() {
+    try (Connection conn = getConnection()) {
+      threadLocal.remove();
+      conn.commit();
+      conn.setAutoCommit(true);
+    } catch (SQLException e) {
       throw new RuntimeException(e);
     }
   }
 
   @Override
   public void rollback() {
-    try {
-      getConnection().rollback();
-      getConnection().setAutoCommit(true);
-      basicDataSource.close();
+    try (Connection conn = getConnection()) {
+      threadLocal.remove();
+      conn.rollback();
+      conn.setAutoCommit(true);
     } catch (SQLException e) {
-      try {
-        basicDataSource.close();
-      } catch (SQLException ex) {
-        throw new RuntimeException(ex);
-      }
       throw new RuntimeException(e);
     }
   }

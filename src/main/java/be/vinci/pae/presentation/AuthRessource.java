@@ -3,6 +3,7 @@ package be.vinci.pae.presentation;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.presentation.filters.Authorize;
+import be.vinci.pae.presentation.filters.Log;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -29,6 +30,7 @@ import org.glassfish.jersey.server.ContainerRequest;
  */
 @Singleton
 @Path("/auths")
+@Log
 public class AuthRessource {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
@@ -100,11 +102,11 @@ public class AuthRessource {
       throw new WebApplicationException("parameters required", Response.Status.BAD_REQUEST);
     }
     if (!user.getEmail()
-            .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
+        .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
       throw new WebApplicationException("email is not valid", Response.Status.BAD_REQUEST);
     }
     if (user.getRole() != null && !user.getRole().toString().equals("A")
-            && !user.getRole().toString().equals("P")) {
+        && !user.getRole().toString().equals("P")) {
       throw new WebApplicationException("role is not valid", Response.Status.BAD_REQUEST);
     }
     if (user.getFirstname().isEmpty() || user.getLastname().isEmpty() || user.getPhoneNumber()
