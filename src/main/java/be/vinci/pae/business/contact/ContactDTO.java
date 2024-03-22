@@ -135,4 +135,19 @@ public interface ContactDTO {
    * @param academicYear the academic year of the contact
    */
   void setAcademicYear(String academicYear);
+
+  enum State {
+    STARTED("initié"),
+    ADMITTED("pris"),
+    TURNED_DOWN("refusé"),
+    ACCEPTED("accepté"),
+    ON_HOLD("suspendu"),
+    UNSUPERVISED("non suivi");
+
+    private String state;
+
+    State(String state) {
+      this.state = state;
+    }
+  }
 }
