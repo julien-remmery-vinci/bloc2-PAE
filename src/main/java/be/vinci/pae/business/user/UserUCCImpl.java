@@ -100,24 +100,4 @@ public class UserUCCImpl implements UserUCC {
     dalServices.close();
     return list;
   }
-
-  /**
-   * Update a user.
-   *
-   * @param user        the user to update
-   * @param oldPassword the old password
-   * @param newPassword the new password
-   * @return the updated user
-   */
-  public UserDTO updateUser(UserDTO user, String oldPassword, String newPassword) {
-    UserDTO userFound = userDAO.getOneById(user.getIdUser());
-    if (userFound == null) {
-      return null;
-    }
-    if (userFound.getPassword().equals(oldPassword)) {
-      userFound.setPassword(newPassword);
-      return userDAO.updateUser(userFound);
-    }
-    return null;
-  }
 }
