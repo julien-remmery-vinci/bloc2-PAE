@@ -52,7 +52,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
     }
   }
   @Override
-  public void open() {
+  public void start() {
     try {
       getConnection().setAutoCommit(false);
     } catch (SQLException e) {
@@ -62,43 +62,32 @@ public class DALServicesImpl implements DALBackServices, DALServices {
 
   @Override
   public void close() {
-    try {
-      getConnection().setAutoCommit(true);
-      getConnection().close();
+    try (Connection conn = getConnection()) {
     } catch (SQLException e) {
-      try {
-        getConnection().close();
-      } catch (SQLException ex) {
-        throw new RuntimeException(ex);
-      }
-      throw new RuntimeException(e);
+        throw new RuntimeException(e);
     }
   }
 
   @Override
-  public void start() {
-    open();
-  }
-
-  @Override
   public void commit() {
-    try {
-      getConnection().commit();
-      close();
+    try (Connection conn = getConnection()) {
+      threadLocal.remove();
+      conn.commit();
+      conn.setAutoCommit(true);
     } catch (SQLException e) {
-      close();
-      throw new RuntimeException(e);
+        throw new RuntimeException(e);
     }
   }
 
   @Override
   public void rollback() {
-    try {
-      getConnection().rollback();
-      close();
+    try (Connection conn = getConnection()) {
+      threadLocal.remove();
+      conn.rollback();
+      conn.setAutoCommit(true);
     } catch (SQLException e) {
-      close();
       throw new RuntimeException(e);
     }
   }
+
 }

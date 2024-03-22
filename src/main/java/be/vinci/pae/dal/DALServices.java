@@ -5,12 +5,6 @@ package be.vinci.pae.dal;
  */
 public interface DALServices {
   /**
-   * Open a connection.
-   *
-   * @return the connection
-   */
-  void open();
-  /*¨*
    * Close the connection.
    */
   void close();
