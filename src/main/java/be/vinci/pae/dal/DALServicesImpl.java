@@ -14,20 +14,6 @@ public class DALServicesImpl implements DALBackServices, DALServices {
   private ThreadLocal<Connection> threadLocal;
   private final BasicDataSource basicDataSource;
 
-  @Override
-  public Connection getConnection() {
-    Connection conn = threadLocal.get();
-    if (conn == null) {
-      try {
-        conn = basicDataSource.getConnection();
-        threadLocal.set(conn);
-      } catch (SQLException e) {
-        throw new RuntimeException(e);
-      }
-    }
-    return conn;
-  }
-
   /**
    * Constructor of DALServicesImpl.
    */
@@ -44,6 +30,20 @@ public class DALServicesImpl implements DALBackServices, DALServices {
   }
 
   @Override
+  public Connection getConnection() {
+    Connection conn = threadLocal.get();
+    if (conn == null) {
+      try {
+        conn = basicDataSource.getConnection();
+        threadLocal.set(conn);
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    return conn;
+  }
+
+  @Override
   public PreparedStatement getPS(String request) {
     try {
       return getConnection().prepareStatement(request);
@@ -51,9 +51,8 @@ public class DALServicesImpl implements DALBackServices, DALServices {
       throw new RuntimeException(e);
     }
   }
-
   @Override
-  public void start() {
+  public void open() {
     try {
       getConnection().setAutoCommit(false);
     } catch (SQLException e) {
@@ -62,35 +61,44 @@ public class DALServicesImpl implements DALBackServices, DALServices {
   }
 
   @Override
-  public void commit() {
+  public void close() {
     try {
-      getConnection().commit();
       getConnection().setAutoCommit(true);
-      basicDataSource.close();
+      getConnection().close();
     } catch (SQLException e) {
-        try {
-          basicDataSource.close();
-        } catch (SQLException ex) {
-          throw new RuntimeException(ex);
-        }
-        throw new RuntimeException(e);
+      try {
+        getConnection().close();
+      } catch (SQLException ex) {
+        throw new RuntimeException(ex);
+      }
+      throw new RuntimeException(e);
     }
   }
 
   @Override
-  public void rollback() {
-    try {
-      getConnection().rollback();
-      getConnection().setAutoCommit(true);
-      basicDataSource.close();
-    } catch (SQLException e) {
-      try {
-        basicDataSource.close();
-      } catch (SQLException ex) {
-        throw new RuntimeException(ex);
-      }
-    throw new RuntimeException(e);
-    }
+  public void start() {
+    open();
   }
 
+  @Override
+  public void commit() {
+      try {
+        getConnection().commit();
+        close();
+      } catch (SQLException e) {
+        close();
+        throw new RuntimeException(e);
+      }
+  }
+
+  @Override
+  public void rollback() {
+      try {
+          getConnection().rollback();
+          close();
+      } catch (SQLException e) {
+          close();
+          throw new RuntimeException(e);
+      }
+  }
 }
