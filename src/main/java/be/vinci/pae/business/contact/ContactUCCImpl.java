@@ -1,5 +1,6 @@
 package be.vinci.pae.business.contact;
 
+import be.vinci.pae.business.contact.ContactDTO.State;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
@@ -43,11 +44,11 @@ public class ContactUCCImpl implements ContactUCC {
       throw new WebApplicationException("You don't have a contact with this id",
           Status.NOT_FOUND);
     }
-    if (!contact.getState().equals(Contact.STATE_TAKEN)) {
+    if (!contact.getState().equals(State.ADMITTED)) {
       throw new WebApplicationException("The contact must be in the state 'taken' to be refused",
           Status.PRECONDITION_FAILED);
     }
-    contact.setState(Contact.STATE_TAKENDOWN);
+    contact.setState(State.TURNED_DOWN);
     contact.setRefusalReason(refusalReason);
     contactDAO.updateContact(contact);
     return contact;
@@ -60,7 +61,7 @@ public class ContactUCCImpl implements ContactUCC {
     }
     // TODO : check if the student hasn't already a contact accepted
     dalServices.start();
-    contact.setState("initié");
+    contact.setState(State.STARTED);
     contact = contactDAO.addContact(contact);
     dalServices.commit();
     return contact;
@@ -76,11 +77,11 @@ public class ContactUCCImpl implements ContactUCC {
       throw new WebApplicationException("You don't have a contact with this id",
           Status.NOT_FOUND);
     }
-    if (!contact.getState().equals(Contact.STATE_INITIATED)) {
+    if (!contact.getState().equals(State.STARTED)) {
       throw new WebApplicationException("The contact must be in the state 'initiated' to be met",
           Status.PRECONDITION_FAILED);
     }
-    contact.setState(Contact.STATE_TAKEN);
+    contact.setState(State.ADMITTED);
     contact.setMeetPlace(meetPlace);
     contactDAO.updateContact(contact);
     return contact;

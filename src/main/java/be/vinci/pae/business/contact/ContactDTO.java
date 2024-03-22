@@ -85,14 +85,14 @@ public interface ContactDTO {
    *
    * @return the state of the contact
    */
-  String getState();
+  State getState();
 
   /**
    * Set the state of the contact.
    *
    * @param state the state of the contact
    */
-  void setState(String state);
+  void setState(State state);
 
   /**
    * Get the meet place of the contact.
