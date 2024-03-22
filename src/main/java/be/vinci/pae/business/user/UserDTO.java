@@ -144,6 +144,12 @@ public interface UserDTO {
       this.role = role;
     }
 
+    /**
+     * Get the role from a string.
+     *
+     * @param role the role as a string
+     * @return the role
+     */
     public static Role fromString(String role) {
       for (Role r : Role.values()) {
         if (r.role.equalsIgnoreCase(role)) {
@@ -153,6 +159,11 @@ public interface UserDTO {
       return null;
     }
 
+    /**
+     * Get the role as a string.
+     *
+     * @return the role as a string
+     */
     @JsonValue
     public String getRole() {
       return role;

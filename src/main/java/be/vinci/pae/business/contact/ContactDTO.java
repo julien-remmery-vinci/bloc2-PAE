@@ -172,6 +172,12 @@ public interface ContactDTO {
       this.state = state;
     }
 
+    /**
+     * Get the state from a string.
+     *
+     * @param text the string
+     * @return the state
+     */
     public static State fromString(String text) {
       for (State b : State.values()) {
         if (b.state.equalsIgnoreCase(text)) {
@@ -181,6 +187,11 @@ public interface ContactDTO {
       return null;
     }
 
+    /**
+     * Get the state as string.
+     *
+     * @return the state as string
+     */
     @JsonValue
     public String getState() {
       return state;
