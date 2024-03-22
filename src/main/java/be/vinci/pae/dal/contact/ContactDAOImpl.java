@@ -83,7 +83,7 @@ public class ContactDAOImpl implements ContactDAO {
             + "academicYear) VALUES (?, ?, ?, ?) RETURNING idContact;")) {
       ps.setInt(1, contact.getIdCompany());
       ps.setInt(2, contact.getIdStudent());
-      ps.setString(3, contact.getState().toString());
+      ps.setString(3, contact.getState().getState());
       ps.setString(4, contact.getAcademicYear());
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {

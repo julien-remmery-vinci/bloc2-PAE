@@ -78,7 +78,7 @@ public class UserDAOImpl implements UserDAO {
       addUser.setString(4, user.getPassword());
       addUser.setString(5, user.getPhoneNumber());
       addUser.setDate(6, user.getRegisterDate());
-      addUser.setString(7, user.getRole().toString());
+      addUser.setString(7, user.getRole().getRole());
       try (ResultSet rs = addUser.executeQuery()) {
         if (rs.next()) {
           user.setIdUser(rs.getInt(1));
