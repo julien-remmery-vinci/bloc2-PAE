@@ -4,6 +4,10 @@ package be.vinci.pae.dal;
  * Interface of DALServicesImpl.
  */
 public interface DALServices {
+  /**
+   * Close the connection.
+   */
+  void close();
 
   /**
    * Start the transaction.

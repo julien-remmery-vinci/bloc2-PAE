@@ -37,6 +37,7 @@ public class ContactUCCImpl implements ContactUCC {
   @Override
   public ContactDTO refuseContact(int idContact, String refusalReason, int idUser) {
     Contact contact = (Contact) contactDAO.getOneById(idContact);
+
     if (contact == null) {
       return null;
     }
@@ -51,6 +52,7 @@ public class ContactUCCImpl implements ContactUCC {
     contact.setState(State.TURNED_DOWN);
     contact.setRefusalReason(refusalReason);
     contactDAO.updateContact(contact);
+    dalServices.close();
     return contact;
   }
 
@@ -84,6 +86,7 @@ public class ContactUCCImpl implements ContactUCC {
     contact.setState(State.ADMITTED);
     contact.setMeetPlace(meetPlace);
     contactDAO.updateContact(contact);
+    dalServices.close();
     return contact;
   }
 }

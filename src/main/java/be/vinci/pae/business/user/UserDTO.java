@@ -137,7 +137,7 @@ public interface UserDTO {
     /**
      * Admin role.
      */
-    ADMIN("admin");
+    ADMIN("administratif");
     private final String role;
 
     Role(String role) {

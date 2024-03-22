@@ -34,7 +34,7 @@ public class UserUCCImpl implements UserUCC {
   @Override
   public UserDTO login(String email, String password) {
     UserDTO userFound = userDAO.getOneByEmail(email);
-
+    dalServices.close();
     // No user found for the provided email
     if (userFound == null) {
       return null;
@@ -85,7 +85,9 @@ public class UserUCCImpl implements UserUCC {
    * @return the user, null if no user was found
    */
   public UserDTO getUser(int id) {
-    return userDAO.getOneById(id);
+    UserDTO user = userDAO.getOneById(id);
+    dalServices.close();
+    return user;
   }
 
   /**
@@ -94,6 +96,8 @@ public class UserUCCImpl implements UserUCC {
    * @return the list of all users
    */
   public List<UserDTO> getAllUsers() {
-    return userDAO.getAllUsers();
+    List<UserDTO> list = userDAO.getAllUsers();
+    dalServices.close();
+    return list;
   }
 }
