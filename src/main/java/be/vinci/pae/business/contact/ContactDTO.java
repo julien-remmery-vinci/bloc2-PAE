@@ -136,18 +136,36 @@ public interface ContactDTO {
    */
   void setAcademicYear(String academicYear);
 
+  /**
+   * Enum for the state of the contact.
+   */
   enum State {
+    /**
+     * Started state.
+     */
     STARTED("initié"),
+    /**
+     * Admitted state.
+     */
     ADMITTED("pris"),
+    /**
+     * Turned down state.
+     */
     TURNED_DOWN("refusé"),
+    /**
+     * Accepted state.
+     */
     ACCEPTED("accepté"),
+    /**
+     * On hold state.
+     */
     ON_HOLD("suspendu"),
+    /**
+     * Unsupervised state.
+     */
     UNSUPERVISED("non suivi");
 
-    private String state;
-
     State(String state) {
-      this.state = state;
     }
   }
 }
