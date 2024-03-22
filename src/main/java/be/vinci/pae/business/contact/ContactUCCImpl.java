@@ -101,13 +101,13 @@ public class ContactUCCImpl implements ContactUCC {
       throw new WebApplicationException("You don't have a contact with this id",
           Status.NOT_FOUND);
     }
-    if (!contact.getState().equals(Contact.STATE_INITIATED) || !contact.getState()
-        .equals(Contact.STATE_TAKEN)) {
+    if (!contact.getState().equals(State.STARTED) || !contact.getState()
+        .equals(State.ADMITTED)) {
       throw new WebApplicationException(
           "The contact must be either in the state 'initiated' or 'taken' to be unfollowed",
           Status.PRECONDITION_FAILED);
     }
-    contact.setState(Contact.STATE_UNFOLLOWED);
+    contact.setState(State.UNSUPERVISED);
     contactDAO.updateContact(contact);
     return contact;
   }
