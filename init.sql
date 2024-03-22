@@ -38,12 +38,12 @@ CREATE TABLE pae.contacts
 
 INSERT INTO pae.users (lastname, firstname, email, password, phoneNumber, registerDate, role)
 VALUES ('admin', 'admin', 'admin.admin@vinci.be', '$2a$10$aqGDWyP8K9xeO1a8uPzcWuzf1hfiPU8IlAR8GyhgVIYhnuKNSxP7S',
-        '0123456789', '2024-02-22', 'A');
+        '0123456789', '2024-02-22', 'administratif');
 
 -- mot de passe : test
 INSERT INTO pae.users (lastname, firstname, email, password, phonenumber, registerdate, role)
 VALUES ('remmery', 'julien', 'julien.remmery@student.vinci.be', '$2a$10$Y3/IINNLQjpg33uhU2xhce9L5BUxyQ/ABXh35ftx4pan00lBgL8qm',
-        '0123456789', '2024-01-01', 'E');
+        '0123456789', '2024-01-01', 'étudiant');
 
 INSERT INTO pae.companies (tradeName, address, blacklisted)
 VALUES ('Vinci', 'Bruxelles', false);
