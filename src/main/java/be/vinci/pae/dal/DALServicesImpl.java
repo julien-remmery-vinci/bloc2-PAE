@@ -63,6 +63,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
   @Override
   public void close() {
     try (Connection conn = getConnection()) {
+      threadLocal.remove();
     } catch (SQLException e) {
         throw new RuntimeException(e);
     }
