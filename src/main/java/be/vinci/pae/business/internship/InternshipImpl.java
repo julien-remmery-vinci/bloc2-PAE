@@ -3,6 +3,9 @@ package be.vinci.pae.business.internship;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.sql.Date;
 
+/**
+ * Implementation of InternshipDTO.
+ */
 public class InternshipImpl implements Internship {
 
   private int idInternship;

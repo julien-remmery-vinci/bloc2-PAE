@@ -12,6 +12,12 @@ public class InternshipDAOImpl implements InternshipDAO {
   @Inject
   private DAOServices daoServices;
 
+  /**
+   * Get an internship by its id.
+   *
+   * @param id the id
+   * @return the internship
+   */
   @Override
   public InternshipDTO getInternshipById(int id) {
     return null;

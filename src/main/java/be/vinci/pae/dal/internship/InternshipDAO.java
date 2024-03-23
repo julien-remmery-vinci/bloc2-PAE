@@ -10,7 +10,7 @@ public interface InternshipDAO {
   /**
    * Get an internship by its id.
    *
-   * @param id
+   * @param id the id
    * @return the internship
    */
   InternshipDTO getInternshipById(int id);
