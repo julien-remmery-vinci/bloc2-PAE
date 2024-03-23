@@ -10,7 +10,8 @@ CREATE TABLE pae.users
     password     TEXT NOT NULL,
     phoneNumber  TEXT NOT NULL,
     registerDate date NOT NULL,
-    role         TEXT NOT NULL
+    role         TEXT NOT NULL,
+    version      INTEGER NOT NULL
 );
 
 CREATE TABLE pae.companies
@@ -22,7 +23,8 @@ CREATE TABLE pae.companies
     phoneNumber         TEXT    NULL,
     email               TEXT    NULL,
     blacklisted         BOOLEAN NOT NULL,
-    blacklistMotivation TEXT    NULL
+    blacklistMotivation TEXT    NULL,
+    version            INTEGER NOT NULL
 );
 
 CREATE TABLE pae.contacts
@@ -33,7 +35,8 @@ CREATE TABLE pae.contacts
     state         TEXT                                         NOT NULL,
     meetPlace     TEXT                                         NULL,
     refusalReason TEXT                                         NULL,
-    academicYear  TEXT                                         NOT NULL
+    academicYear  TEXT                                         NOT NULL,
+    version       INTEGER                                      NOT NULL
 );
 
 CREATE TABLE pae.internshipSupervisor
@@ -43,7 +46,8 @@ CREATE TABLE pae.internshipSupervisor
     firstname              TEXT                                         NOT NULL,
     phoneNumber            TEXT                                         NOT NULL,
     email                  TEXT                                         NULL,
-    idCompany              INTEGER REFERENCES pae.companies (idCompany) NOT NULL
+    idCompany              INTEGER REFERENCES pae.companies (idCompany) NOT NULL,
+    version               INTEGER                                      NOT NULL
 );
 
 CREATE TABLE pae.internships
@@ -55,6 +59,7 @@ CREATE TABLE pae.internships
     idContact            INTEGER REFERENCES pae.contacts (idContact) NOT NULL,
     internshipSupervisor INTEGER REFERENCES pae.users (idUser)       NOT NULL,
     idCompany            INTEGER REFERENCES pae.contacts (idCompany) NOT NULL,
+    version             INTEGER                                     NOT NULL
 );
 
 INSERT INTO pae.users (lastname, firstname, email, password, phoneNumber, registerDate, role)
