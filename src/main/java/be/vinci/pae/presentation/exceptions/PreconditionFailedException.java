@@ -4,7 +4,7 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 /**
- * Class for the NotFoundException.
+ * Class for the PreconditionFailedException.
  */
 public class PreconditionFailedException extends WebApplicationException {
 
