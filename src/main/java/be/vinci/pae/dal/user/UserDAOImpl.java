@@ -71,7 +71,7 @@ public class UserDAOImpl implements UserDAO {
   public UserDTO addUser(UserDTO user) {
     try (PreparedStatement addUser = dalBackServices.getPS(
         "INSERT INTO pae.users (lastname, firstname, email, password, phoneNumber, registerDate,"
-            + " role) " + "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING idUser")) {
+            + " role, version) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING idUser")) {
       addUser.setString(1, user.getLastname());
       addUser.setString(2, user.getFirstname());
       addUser.setString(3, user.getEmail());
@@ -79,6 +79,7 @@ public class UserDAOImpl implements UserDAO {
       addUser.setString(5, user.getPhoneNumber());
       addUser.setDate(6, user.getRegisterDate());
       addUser.setString(7, user.getRole().getRole());
+      addUser.setInt(8, user.getVersion());
       try (ResultSet rs = addUser.executeQuery()) {
         if (rs.next()) {
           user.setIdUser(rs.getInt(1));
