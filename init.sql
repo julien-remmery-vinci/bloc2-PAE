@@ -39,7 +39,7 @@ CREATE TABLE pae.contacts
     version       INTEGER                                      NOT NULL
 );
 
-CREATE TABLE pae.internshipSupervisor
+CREATE TABLE pae.internshipSupervisors
 (
     idInternshipSupervisor SERIAL PRIMARY KEY,
     lastname               TEXT                                         NOT NULL,
