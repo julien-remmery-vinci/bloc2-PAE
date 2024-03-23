@@ -36,6 +36,27 @@ CREATE TABLE pae.contacts
     academicYear  TEXT                                         NOT NULL
 );
 
+CREATE TABLE pae.internshipSupervisor
+(
+    idInternshipSupervisor SERIAL PRIMARY KEY,
+    lastname               TEXT                                         NOT NULL,
+    firstname              TEXT                                         NOT NULL,
+    phoneNumber            TEXT                                         NOT NULL,
+    email                  TEXT                                         NULL,
+    idCompany              INTEGER REFERENCES pae.companies (idCompany) NOT NULL
+);
+
+CREATE TABLE pae.internships
+(
+    idInternship         SERIAL PRIMARY KEY,
+    idStudent            INTEGER REFERENCES pae.contacts (idStudent) NOT NULL,
+    internshipProject    TEXT                                        NULL,
+    signatureDate        DATE                                        NOT NULL,
+    idContact            INTEGER REFERENCES pae.contacts (idContact) NOT NULL,
+    internshipSupervisor INTEGER REFERENCES pae.users (idUser)       NOT NULL,
+    idCompany            INTEGER REFERENCES pae.contacts (idCompany) NOT NULL,
+);
+
 INSERT INTO pae.users (lastname, firstname, email, password, phoneNumber, registerDate, role)
 VALUES ('admin', 'admin', 'admin.admin@vinci.be', '$2a$10$aqGDWyP8K9xeO1a8uPzcWuzf1hfiPU8IlAR8GyhgVIYhnuKNSxP7S',
         '0123456789', '2024-02-22', 'administratif');
