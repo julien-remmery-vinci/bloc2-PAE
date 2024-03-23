@@ -72,6 +72,7 @@ public class UserUCCImpl implements UserUCC {
     user.setPassword(((User) user).hashPassword(user.getPassword()));
     java.sql.Date registerDate = new java.sql.Date(System.currentTimeMillis());
     user.setRegisterDate(registerDate);
+    user.setVersion(1);
 
     user = userDAO.addUser(user);
     dalServices.commit();
