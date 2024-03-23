@@ -71,8 +71,15 @@ public class UserDAOImpl implements UserDAO {
   public UserDTO addUser(UserDTO user) {
     try (PreparedStatement addUser = dalBackServices.getPS(
         "INSERT INTO pae.users (lastname, firstname, email, password, phoneNumber, registerDate,"
-            + " role) " + "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING idUser")) {
-      setPs(addUser, user);
+            + " role, version) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING idUser")) {
+      addUser.setString(1, user.getLastname());
+      addUser.setString(2, user.getFirstname());
+      addUser.setString(3, user.getEmail());
+      addUser.setString(4, user.getPassword());
+      addUser.setString(5, user.getPhoneNumber());
+      addUser.setDate(6, user.getRegisterDate());
+      addUser.setString(7, user.getRole().getRole());
+      addUser.setInt(8, user.getVersion());
       try (ResultSet rs = addUser.executeQuery()) {
         if (rs.next()) {
           user.setIdUser(rs.getInt(1));
@@ -123,47 +130,6 @@ public class UserDAOImpl implements UserDAO {
       users.add((UserDTO) daoServices.getDataFromRs(rs, "user"));
     }
     return users;
-  }
-
-  /**
-   * Update a user in the database.
-   *
-   * @param user the user to update
-   * @return the user updated
-   */
-  public UserDTO updateUser(UserDTO user) {
-    try (PreparedStatement updateUser = dalBackServices.getPS(
-        "UPDATE pae.users SET lastname = ?, firstname = ?,"
-            + " email = ?, password = ?, phoneNumber = ?,"
-            + " registerDate = ?, role = ? WHERE idUser = ? RETURNING idUser")) {
-      setPs(updateUser, user);
-      updateUser.setInt(8, user.getIdUser());
-      try (ResultSet rs = updateUser.executeQuery()) {
-        if (rs.next()) {
-          return user;
-        }
-      }
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
-    return null;
-  }
-
-  /**
-   * Set the PreparedStatement.
-   *
-   * @param ps   the PreparedStatement
-   * @param user the user
-   * @throws SQLException if an error occurs while setting the PreparedStatement
-   */
-  private void setPs(PreparedStatement ps, UserDTO user) throws SQLException {
-    ps.setString(1, user.getLastname());
-    ps.setString(2, user.getFirstname());
-    ps.setString(3, user.getEmail());
-    ps.setString(4, user.getPassword());
-    ps.setString(5, user.getPhoneNumber());
-    ps.setDate(6, user.getRegisterDate());
-    ps.setString(7, user.getRole().toString());
   }
 
 }
