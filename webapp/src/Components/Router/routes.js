@@ -5,7 +5,7 @@ import AcceptRefusePage from "../Pages/contacts/AcceptRefusePage";
 import AddContactPage from "../Pages/contacts/AddContactPage";
 import SearchPage from "../Pages/SearchPage";
 import MeetContactPage from "../Pages/contacts/MeetContactPage";
-import ProfilePage from "../Pages/ProfilePage";
+import ContactPage from "../Pages/contacts/ContactPage";
 
 // Define routes
 const routes = {
@@ -16,7 +16,7 @@ const routes = {
     '/contact/add': AddContactPage,
     '/search': SearchPage,
     '/contact/meet': MeetContactPage,
-    '/profile': ProfilePage
+    '/contact': ContactPage
 };
 
 export default routes;

@@ -1,5 +1,6 @@
 package be.vinci.pae;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -60,11 +61,12 @@ public class ContactUCCTest {
 
   @Test
   @DisplayName("Test refuseContact with existing contact in right state")
-  void testGetOneById() {
-    assertEquals(contact.getIdContact(),
-        contactUCC.refuseContact(ID_CONTACT, REFUSAL_REASON, ID_USER).getIdContact());
-    assertEquals(State.TURNED_DOWN, contact.getState());
-    assertEquals(REFUSAL_REASON, contact.getRefusalReason());
+  void refuseContactTest() {
+    contactUCC.refuseContact(ID_CONTACT, REFUSAL_REASON, ID_USER);
+    assertAll(
+        () -> assertEquals(State.TURNED_DOWN, contact.getState()),
+        () -> assertEquals(REFUSAL_REASON, contact.getRefusalReason())
+    );
   }
 
   @Test

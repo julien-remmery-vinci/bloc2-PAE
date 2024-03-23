@@ -1,13 +1,10 @@
 package be.vinci.pae.business.contact;
 
-<<<<<<< HEAD
+import be.vinci.pae.business.contact.ContactDTO.State;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserDTO.Role;
-=======
-import be.vinci.pae.business.contact.ContactDTO.State;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
->>>>>>> a8fbbafe9f1fc62fdae6db8461afc5723426beaa
 import be.vinci.pae.dal.contact.ContactDAO;
 import be.vinci.pae.dal.user.UserDAO;
 import jakarta.inject.Inject;
@@ -23,7 +20,15 @@ public class ContactUCCImpl implements ContactUCC {
   @Inject
   private ContactDAO contactDAO;
 
-<<<<<<< HEAD
+  @Inject
+  private DALServices dalServices;
+
+  @Inject
+  private CompanyDAO companyDAO;
+
+  @Inject
+  private UserDAO userDAO;
+
 
   /**
    * Get the contact.
@@ -35,24 +40,15 @@ public class ContactUCCImpl implements ContactUCC {
     if (user == null) {
       return null; //error message
     }
-    if (user.getRole().equals(Role.E)) {
+    if (user.getRole().equals(Role.STUDENT)) {
       return contactDAO.getContactsByStudentId(user.getIdUser());
     }
-    if (user.getRole().equals(Role.A) || user.getRole().equals(Role.P)) {
+    if (user.getRole().equals(Role.ADMIN) || user.getRole().equals(Role.PROFESSOR)) {
       return contactDAO.getAllContacts();
     }
     return null; //error message
   }
-=======
-  @Inject
-  private DALServices dalServices;
 
-  @Inject
-  private CompanyDAO companyDAO;
-
-  @Inject
-  private UserDAO userDAO;
->>>>>>> a8fbbafe9f1fc62fdae6db8461afc5723426beaa
 
   /**
    * Refuse a contact.
@@ -73,11 +69,11 @@ public class ContactUCCImpl implements ContactUCC {
       throw new WebApplicationException("You don't have a contact with this id",
           Status.NOT_FOUND);
     }
-    if (!contact.getState().equals(State.ADMITTED)) {
-      throw new WebApplicationException("The contact must be in the state 'taken' to be refused",
+    if (!contact.updateState(State.TURNED_DOWN)) {
+      throw new WebApplicationException(
+          "Le contact doit être dans l'état 'pris' pour être refusé",
           Status.PRECONDITION_FAILED);
     }
-    contact.setState(State.TURNED_DOWN);
     contact.setRefusalReason(refusalReason);
     contactDAO.updateContact(contact);
     dalServices.close();

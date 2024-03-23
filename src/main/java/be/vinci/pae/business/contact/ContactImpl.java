@@ -109,4 +109,13 @@ public class ContactImpl implements Contact {
   public void setAcademicYear(String academicYear) {
     this.academicYear = academicYear;
   }
+
+  @Override
+  public boolean updateState(State state) {
+    if (state.equals(State.TURNED_DOWN) && this.state.equals(State.ADMITTED)) {
+      this.state = state;
+      return true;
+    }
+    return false;
+  }
 }
