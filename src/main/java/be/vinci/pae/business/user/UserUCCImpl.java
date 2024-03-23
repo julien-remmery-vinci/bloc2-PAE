@@ -114,7 +114,6 @@ public class UserUCCImpl implements UserUCC {
       return null;
     }
     user.setPassword(((User) user).hashPassword(newPassword));
-    user.setVersion(user.getVersion() + 1);
     user = userDAO.updateUser(user);
     dalServices.commit();
     return user;
