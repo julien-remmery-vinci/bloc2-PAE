@@ -7,6 +7,7 @@ import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
 import be.vinci.pae.dal.user.UserDAO;
+import be.vinci.pae.presentation.exceptions.PreconditionFailedException;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response.Status;
@@ -60,7 +61,7 @@ public class ContactUCCImpl implements ContactUCC {
    */
   @Override
   public ContactDTO refuseContact(int idContact, String refusalReason, int idUser) {
-    Contact contact = (Contact) contactDAO.getOneById(idContact);
+    ContactDTO contact = contactDAO.getOneById(idContact);
 
     if (contact == null) {
       return null;
@@ -69,10 +70,9 @@ public class ContactUCCImpl implements ContactUCC {
       throw new WebApplicationException("You don't have a contact with this id",
           Status.NOT_FOUND);
     }
-    if (!contact.updateState(State.TURNED_DOWN)) {
-      throw new WebApplicationException(
-          "Le contact doit être dans l'état 'pris' pour être refusé",
-          Status.PRECONDITION_FAILED);
+    if (!((Contact) contact).updateState(State.TURNED_DOWN)) {
+      throw new PreconditionFailedException(
+          "Le contact doit être dans l'état 'pris' pour être refusé");
     }
     contact.setRefusalReason(refusalReason);
     contactDAO.updateContact(contact);
@@ -104,8 +104,8 @@ public class ContactUCCImpl implements ContactUCC {
           Status.NOT_FOUND);
     }
     if (!contact.getState().equals(State.STARTED)) {
-      throw new WebApplicationException("The contact must be in the state 'initiated' to be met",
-          Status.PRECONDITION_FAILED);
+      throw new PreconditionFailedException(
+          "The contact must be in the state 'initiated' to be met");
     }
     contact.setState(State.ADMITTED);
     contact.setMeetPlace(meetPlace);
@@ -127,9 +127,8 @@ public class ContactUCCImpl implements ContactUCC {
     }
     if (!contact.getState().equals(State.STARTED) || !contact.getState()
         .equals(State.ADMITTED)) {
-      throw new WebApplicationException(
-          "The contact must be either in the state 'initiated' or 'taken' to be unfollowed",
-          Status.PRECONDITION_FAILED);
+      throw new PreconditionFailedException(
+          "The contact must be either in the state 'initiated' or 'taken' to be unfollowed");
     }
     contact.setState(State.UNSUPERVISED);
     contactDAO.updateContact(contact);
