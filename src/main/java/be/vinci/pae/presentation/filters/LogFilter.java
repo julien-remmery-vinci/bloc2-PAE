@@ -9,7 +9,7 @@ import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/*
+/**
  * This class is a filter that logs the response of the server.
  */
 @Singleton

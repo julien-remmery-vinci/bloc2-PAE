@@ -127,8 +127,10 @@ public class UserImpl implements User {
     if (email.matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@student\\.vinci\\.be$")) {
       this.role = Role.STUDENT;
       return true;
-    } else return !email.matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@vinci\\.be$")
-            || this.role != Role.STUDENT;
+    } else {
+      return !email.matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@vinci\\.be$")
+              || this.role != Role.STUDENT;
+    }
   }
 
 }

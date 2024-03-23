@@ -1,6 +1,5 @@
 package be.vinci.pae.business.user;
 
-import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.user.UserDAO;
 import be.vinci.pae.presentation.exceptions.BadRequestException;
