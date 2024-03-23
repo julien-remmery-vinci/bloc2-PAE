@@ -4,6 +4,7 @@ package be.vinci.pae.presentation;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.business.user.UserDTO;
+import be.vinci.pae.presentation.exceptions.BadRequestException;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.filters.Authorize;
 import be.vinci.pae.presentation.filters.Log;
@@ -67,11 +68,11 @@ public class ContactRessource {
   public ContactDTO refuseContact(@Context ContainerRequest request, @PathParam("id") int idContact,
       JsonNode json) {
     if (idContact < 0) {
-      throw new WebApplicationException("Invalid id", Status.BAD_REQUEST);
+      throw new BadRequestException("Invalid id");
     }
     String refusalReason = json.get("refusalReason").asText();
     if (!json.hasNonNull("refusalReason") || refusalReason.isBlank()) {
-      throw new WebApplicationException("Refusal reason is required", Status.BAD_REQUEST);
+      throw new BadRequestException("Refusal reason is required");
     }
     ContactDTO contact = contactUCC.refuseContact(idContact, refusalReason,
         ((UserDTO) request.getProperty("user")).getIdUser());
@@ -97,11 +98,11 @@ public class ContactRessource {
   public ContactDTO meetContact(@Context ContainerRequest request, @PathParam("id") int idContact,
       JsonNode json) {
     if (idContact < 0) {
-      throw new WebApplicationException("Invalid id", Status.BAD_REQUEST);
+      throw new BadRequestException("Invalid id");
     }
     String meetPlace = json.get("meetPlace").asText();
     if (!json.hasNonNull("meetPlace") || meetPlace.isBlank()) {
-      throw new WebApplicationException("Meet place is required", Status.BAD_REQUEST);
+      throw new BadRequestException("Meet place is required");
     }
     ContactDTO contact = contactUCC.meetContact(idContact, meetPlace,
         ((UserDTO) request.getProperty("user")).getIdUser());
@@ -126,7 +127,7 @@ public class ContactRessource {
   public ContactDTO unfollowContact(@Context ContainerRequest request,
       @PathParam("id") int idContact) {
     if (idContact < 0) {
-      throw new WebApplicationException("Invalid id", Status.BAD_REQUEST);
+      throw new BadRequestException("Invalid id");
     }
     ContactDTO contact = contactUCC.unfollowContact(idContact,
         ((UserDTO) request.getProperty("user")).getIdUser());
@@ -150,7 +151,7 @@ public class ContactRessource {
   @Authorize
   public ContactDTO addContact(@Context ContainerRequest request, ContactDTO contact) {
     if (contact.getIdCompany() < 0) {
-      throw new WebApplicationException("Invalid id", Status.BAD_REQUEST);
+      throw new BadRequestException("Invalid id");
     }
     contact.setIdStudent(((UserDTO) request.getProperty("user")).getIdUser());
     return contactUCC.addContact(contact);
