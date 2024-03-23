@@ -27,7 +27,7 @@ public class UserDAOImpl implements UserDAO {
             + "firstname as \"user.firstname\", email as \"user.email\","
             + "password as \"user.password\", phoneNumber as \"user.phoneNumber\","
             + "registerDate as \"user.registerDate\", role as \"user.role\""
-            + "version as \"user.version\""
+            + ", version as \"user.version\""
             + "FROM pae.users WHERE email = ?")) {
       getUser.setString(1, email);
       try (ResultSet rs = getUser.executeQuery()) {
@@ -55,7 +55,7 @@ public class UserDAOImpl implements UserDAO {
               + "firstname as \"user.firstname\", email as \"user.email\","
               + "password as \"user.password\", phoneNumber as \"user.phoneNumber\","
               + "registerDate as \"user.registerDate\", role as \"user.role\""
-              + "version as \"user.version\""
+              + ", version as \"user.version\""
               + "FROM pae.users WHERE idUser = ?");
       getUser.setInt(1, id);
       try (ResultSet rs = getUser.executeQuery()) {
@@ -101,8 +101,8 @@ public class UserDAOImpl implements UserDAO {
         "SELECT idUser as \"user.idUser\", lastname as \"user.lastname\","
             + "firstname as \"user.firstname\", email as \"user.email\","
             + "password as \"user.password\", phoneNumber as \"user.phoneNumber\","
-            + "registerDate as \"user.registerDate\", role as \"user.role\",+"
-            + " version as \"user.version\""
+            + "registerDate as \"user.registerDate\", role as \"user.role\""
+            + ", version as \"user.version\""
             + "FROM pae.users")) {
       try (ResultSet rs = getUsers.executeQuery()) {
         return getResults(rs);
