@@ -2,6 +2,7 @@ package be.vinci.pae.presentation;
 
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
+import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.filters.Authorize;
 import be.vinci.pae.presentation.filters.Log;
 import be.vinci.pae.utils.Config;
@@ -163,7 +164,7 @@ public class AuthRessource {
   public UserDTO getUser(@Context ContainerRequest request) {
     UserDTO authenticatedUser = (UserDTO) request.getProperty("user");
     if (authenticatedUser.getIdUser() <= 0) {
-      throw new WebApplicationException("User not found", Status.NOT_FOUND);
+      throw new NotFoundException("User not found");
     }
     // Return the user
     return authenticatedUser;

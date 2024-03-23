@@ -4,6 +4,7 @@ package be.vinci.pae.presentation;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.business.user.UserDTO;
+import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.filters.Authorize;
 import be.vinci.pae.presentation.filters.Log;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -45,7 +46,7 @@ public class ContactRessource {
   public List<ContactDTO> getContacts(@Context ContainerRequest request) {
     UserDTO user = (UserDTO) request.getProperty("user");
     if (user == null) {
-      throw new WebApplicationException("User not found", Status.NOT_FOUND);
+      throw new NotFoundException("User not found");
     }
     return contactUCC.getContacts(user);
   }
@@ -75,7 +76,7 @@ public class ContactRessource {
     ContactDTO contact = contactUCC.refuseContact(idContact, refusalReason,
         ((UserDTO) request.getProperty("user")).getIdUser());
     if (contact == null) {
-      throw new WebApplicationException("Contact not found", Status.NOT_FOUND);
+      throw new NotFoundException("Contact not found");
     }
     return contact;
   }
@@ -105,7 +106,7 @@ public class ContactRessource {
     ContactDTO contact = contactUCC.meetContact(idContact, meetPlace,
         ((UserDTO) request.getProperty("user")).getIdUser());
     if (contact == null) {
-      throw new WebApplicationException("Contact not found", Status.NOT_FOUND);
+      throw new NotFoundException("Contact not found");
     }
     return contact;
   }
@@ -130,7 +131,7 @@ public class ContactRessource {
     ContactDTO contact = contactUCC.unfollowContact(idContact,
         ((UserDTO) request.getProperty("user")).getIdUser());
     if (contact == null) {
-      throw new WebApplicationException("Contact not found", Status.NOT_FOUND);
+      throw new NotFoundException("Contact not found");
     }
     return contact;
   }

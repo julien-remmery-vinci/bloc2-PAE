@@ -7,6 +7,7 @@ import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
 import be.vinci.pae.dal.user.UserDAO;
+import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.exceptions.PreconditionFailedException;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
@@ -67,8 +68,7 @@ public class ContactUCCImpl implements ContactUCC {
       return null;
     }
     if (contact.getIdStudent() != idUser) {
-      throw new WebApplicationException("You don't have a contact with this id",
-          Status.NOT_FOUND);
+      throw new NotFoundException("You don't have a contact with this id");
     }
     if (!((Contact) contact).updateState(State.TURNED_DOWN)) {
       throw new PreconditionFailedException(
@@ -83,7 +83,7 @@ public class ContactUCCImpl implements ContactUCC {
   @Override
   public ContactDTO addContact(ContactDTO contact) {
     if (companyDAO.getCompanyById(contact.getIdCompany()) == null) {
-      throw new WebApplicationException("The company does not exist", Status.NOT_FOUND);
+      throw new NotFoundException("The company does not exist");
     }
     // TODO : check if the student hasn't already a contact accepted
     dalServices.start();
@@ -100,8 +100,7 @@ public class ContactUCCImpl implements ContactUCC {
       return null;
     }
     if (contact.getIdStudent() != idUser) {
-      throw new WebApplicationException("You don't have a contact with this id",
-          Status.NOT_FOUND);
+      throw new NotFoundException("You don't have a contact with this id");
     }
     if (!contact.getState().equals(State.STARTED)) {
       throw new PreconditionFailedException(
@@ -122,8 +121,7 @@ public class ContactUCCImpl implements ContactUCC {
       return null;
     }
     if (contact.getIdStudent() != idUser) {
-      throw new WebApplicationException("You don't have a contact with this id",
-          Status.NOT_FOUND);
+      throw new NotFoundException("You don't have a contact with this id");
     }
     if (!contact.getState().equals(State.STARTED) || !contact.getState()
         .equals(State.ADMITTED)) {
