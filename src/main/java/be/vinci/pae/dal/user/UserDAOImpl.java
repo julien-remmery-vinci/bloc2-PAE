@@ -101,7 +101,8 @@ public class UserDAOImpl implements UserDAO {
         "SELECT idUser as \"user.idUser\", lastname as \"user.lastname\","
             + "firstname as \"user.firstname\", email as \"user.email\","
             + "password as \"user.password\", phoneNumber as \"user.phoneNumber\","
-            + "registerDate as \"user.registerDate\", role as \"user.role\", version as \"user.version\""
+            + "registerDate as \"user.registerDate\", role as \"user.role\",+"
+            + " version as \"user.version\""
             + "FROM pae.users")) {
       try (ResultSet rs = getUsers.executeQuery()) {
         return getResults(rs);
@@ -138,7 +139,8 @@ public class UserDAOImpl implements UserDAO {
     try (PreparedStatement updateUser = dalBackServices.getPS(
         "UPDATE pae.users SET lastname = ?, firstname = ?,"
             + " email = ?, password = ?, phoneNumber = ?,"
-            + " registerDate = ?, role = ?, version ? WHERE idUser = ? AND version =? RETURNING idUser")) {
+            + " registerDate = ?, role = ?, version ? WHERE idUser = ?"
+            + " AND version = ? RETURNING idUser")) {
       setPs(updateUser, user);
       updateUser.setInt(8, user.getVersion() + 1);
       updateUser.setInt(9, user.getIdUser());
