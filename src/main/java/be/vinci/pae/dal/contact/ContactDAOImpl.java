@@ -63,47 +63,23 @@ public class ContactDAOImpl implements ContactDAO {
     try (PreparedStatement ps = dalServices.getPS(
         "UPDATE pae.contacts "
             + "SET idCompany = ?, idStudent = ?, state = ?, "
-            + "meetPlace = ?, refusalReason = ?, academicYear = ?"
-            + "WHERE idContact = ?;")) {
+            + "meetPlace = ?, refusalReason = ?, academicYear = ?, version = ?"
+            + "WHERE idContact = ? AND version = ?;")) {
       ps.setInt(1, contact.getIdCompany());
       ps.setInt(2, contact.getIdStudent());
-      ps.setString(3, contact.getState().toString());
+      ps.setString(3, contact.getState().getState());
       ps.setString(4, contact.getMeetPlace());
       ps.setString(5, contact.getRefusalReason());
       ps.setString(6, contact.getAcademicYear());
-      ps.setInt(7, contact.getIdContact());
+      ps.setInt(7, contact.getVersion() + 1);
+      ps.setInt(8, contact.getIdContact());
+      ps.setInt(9, contact.getVersion());
       ps.executeUpdate();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
   }
 
-<<<<<<< HEAD
-  /**
-   * Get the contacts of a student.
-   *
-   * @param idStudent the id of the student
-   * @return the contacts
-   */
-  @Override
-  public List<ContactDTO> getContactsByStudentId(int idStudent) {
-    List<ContactDTO> contacts = new ArrayList<>();
-    try (PreparedStatement ps = dalServices.getPS(
-        "SELECT idContact as \"contact.idContact\",idCompany as \"contact.idCompany\","
-            + "idStudent as \"contact.idStudent\","
-            + "state as \"contact.state\",meetPlace as \"contact.meetPlace\","
-            + "refusalReason as \"contact.refusalReason\",academicYear "
-            + "as \"contact.academicYear\""
-            + "FROM pae.contacts WHERE idStudent = ?;"
-    )) {
-      ps.setInt(1, idStudent);
-      try (ResultSet rs = ps.executeQuery()) {
-        while (rs.next()) {
-          String prefix = "company";
-          contacts.add((ContactDTO) daoServices.getDataFromRs(rs, prefix));
-        }
-        return contacts;
-=======
   @Override
   public ContactDTO addContact(ContactDTO contact) {
     try (PreparedStatement ps = dalServices.getPS(
@@ -118,12 +94,52 @@ public class ContactDAOImpl implements ContactDAO {
           contact.setIdContact(rs.getInt(1));
           return contact;
         }
->>>>>>> a8fbbafe9f1fc62fdae6db8461afc5723426beaa
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
-<<<<<<< HEAD
+    return null;
+  }
+
+
+  /**
+   * Get the contacts of a student.
+   *
+   * @param idStudent the id of the student
+   * @return the contacts
+   */
+  @Override
+  public List<ContactDTO> getContactsByStudentId(int idStudent) {
+    List<ContactDTO> contacts = new ArrayList<>();
+    try (PreparedStatement ps = dalServices.getPS(
+        "SELECT con.idContact as \"contact.idContact\",con.idCompany as \"contact.idCompany\","
+            + "con.idStudent as \"contact.idStudent\",\n"
+            + "       con.state as \"contact.state\",con.meetPlace as \"contact.meetPlace\","
+            + "con.refusalReason as \"contact.refusalReason\",con.academicYear "
+            + "as \"contact.academicYear\",\n"
+            + "       u.iduser as \"user.idUser\",u.lastname as \"user.lastname\",u.firstname "
+            + "as \"user.firstname\",u.email as \"user.email\",\n"
+            + "       u.password as \"user.password\",u.phoneNumber as \"user.phoneNumber\","
+            + "u.registerDate as \"user.registerDate\",u.role as \"user.role\",\n"
+            + "       com.idcompany as \"company.idCompany\", com.tradeName "
+            + "as \"company.tradeName\",com.designation as \"company.designation\",\n"
+            + "       com.address as \"company.address\", com.phoneNumber "
+            + "as \"company.phoneNumber\", com.email as \"company.email\",\n"
+            + "       com.blacklisted as \"company.blacklisted\", com.blacklistMotivation "
+            + "as \"company.blacklistMotivation\"\n"
+            + "FROM pae.contacts con, pae.users u, pae.companies com WHERE con.idCompany = "
+            + "com.idCompany AND con.idStudent = u.idUser AND con.idStudent = ?;")) {
+      ps.setInt(1, idStudent);
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          String prefix = "contact";
+          contacts.add((ContactDTO) daoServices.getDataFromRs(rs, prefix));
+        }
+        return contacts;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   /**
@@ -144,7 +160,7 @@ public class ContactDAOImpl implements ContactDAO {
               + "FROM pae.contacts;");
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
-          String prefix = "company";
+          String prefix = "contact";
           contacts.add((ContactDTO) daoServices.getDataFromRs(rs, prefix));
         }
         return contacts;
@@ -154,8 +170,3 @@ public class ContactDAOImpl implements ContactDAO {
     }
   }
 }
-=======
-    return null;
-  }
-}
->>>>>>> a8fbbafe9f1fc62fdae6db8461afc5723426beaa

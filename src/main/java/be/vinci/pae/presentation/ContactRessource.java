@@ -40,8 +40,8 @@ public class ContactRessource {
    * @return the list of contacts
    */
   @GET
-  @Path("/contacts")
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
   public List<ContactDTO> getContacts(@Context ContainerRequest request) {
     UserDTO user = (UserDTO) request.getProperty("user");
     if (user == null) {
@@ -138,6 +138,8 @@ public class ContactRessource {
   /**
    * Add a contact.
    *
+   * @param request the request's context
+   * @param contact the contact to add
    * @return the contact
    */
   @POST

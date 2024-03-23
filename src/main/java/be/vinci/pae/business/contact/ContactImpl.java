@@ -22,6 +22,8 @@ public class ContactImpl implements Contact {
   private String refusalReason;
   private String academicYear;
 
+  private int version;
+
   @Override
   public int getIdContact() {
     return idContact;
@@ -108,5 +110,24 @@ public class ContactImpl implements Contact {
   @Override
   public void setAcademicYear(String academicYear) {
     this.academicYear = academicYear;
+  }
+
+  @Override
+  public int getVersion() {
+    return version;
+  }
+
+  @Override
+  public void setVersion(int version) {
+    this.version = version;
+  }
+
+  @Override
+  public boolean updateState(State state) {
+    if (state.equals(State.TURNED_DOWN) && this.state.equals(State.ADMITTED)) {
+      this.state = state;
+      return true;
+    }
+    return false;
   }
 }

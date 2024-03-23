@@ -72,6 +72,7 @@ public class UserUCCImpl implements UserUCC {
     user.setPassword(((User) user).hashPassword(user.getPassword()));
     java.sql.Date registerDate = new java.sql.Date(System.currentTimeMillis());
     user.setRegisterDate(registerDate);
+    user.setVersion(1);
 
     user = userDAO.addUser(user);
     dalServices.commit();
@@ -101,23 +102,21 @@ public class UserUCCImpl implements UserUCC {
     return list;
   }
 
-  /**
-   * Update a user.
-   *
-   * @param user        the user to update
-   * @param oldPassword the old password
-   * @param newPassword the new password
-   * @return the updated user
-   */
+  @Override
   public UserDTO updateUser(UserDTO user, String oldPassword, String newPassword) {
-    UserDTO userFound = userDAO.getOneById(user.getIdUser());
-    if (userFound == null) {
+    dalServices.start();
+    if (user == null) {
+      dalServices.rollback();
       return null;
     }
-    if (userFound.getPassword().equals(oldPassword)) {
-      userFound.setPassword(newPassword);
-      return userDAO.updateUser(userFound);
+    if (user.getPassword().equals(oldPassword)) {
+      dalServices.rollback();
+      return null;
     }
-    return null;
+    user.setPassword(((User) user).hashPassword(newPassword));
+    user.setVersion(user.getVersion() + 1);
+    user = userDAO.updateUser(user);
+    dalServices.commit();
+    return user;
   }
 }
