@@ -20,6 +20,7 @@ public class UserImpl implements User {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yy hh:mm:ss")
   private Date registerDate;
   private Role role;
+  private int version;
 
   @Override
   public int getIdUser() {
@@ -59,6 +60,16 @@ public class UserImpl implements User {
   @Override
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  @Override
+  public int getVersion() {
+    return version;
+  }
+
+  @Override
+  public void setVersion(int version) {
+    this.version = version;
   }
 
   @Override
