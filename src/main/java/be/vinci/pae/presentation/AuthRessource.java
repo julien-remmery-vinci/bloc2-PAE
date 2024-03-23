@@ -2,8 +2,8 @@ package be.vinci.pae.presentation;
 
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
-import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.exceptions.BadRequestException;
+import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.filters.Authorize;
 import be.vinci.pae.presentation.filters.Log;
 import be.vinci.pae.utils.Config;
@@ -22,7 +22,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import java.util.Date;
 import org.glassfish.jersey.server.ContainerRequest;

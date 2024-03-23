@@ -5,8 +5,6 @@ import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.user.UserDAO;
 import be.vinci.pae.presentation.exceptions.BadRequestException;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response;
 import java.util.List;
 
 /**
