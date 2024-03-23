@@ -34,12 +34,11 @@ public class ApplicationBinder extends AbstractBinder {
     bind(UserUCCImpl.class).to(UserUCC.class).in(Singleton.class);
     bind(UserDAOImpl.class).to(UserDAO.class).in(Singleton.class);
     bind(FactoryImpl.class).to(Factory.class).in(Singleton.class);
-    bind(DALServicesImpl.class).to(DALBackServices.class).in(Singleton.class);
     bind(ContactUCCImpl.class).to(ContactUCC.class).in(Singleton.class);
     bind(ContactDAOImpl.class).to(ContactDAO.class).in(Singleton.class);
     bind(CompanyUCCImpl.class).to(CompanyUCC.class).in(Singleton.class);
     bind(CompanyDAOImpl.class).to(CompanyDAO.class).in(Singleton.class);
-    bind(DALServicesImpl.class).to(DALServices.class).in(Singleton.class);
+    bind(DALServicesImpl.class).to(DALServices.class).to(DALBackServices.class).in(Singleton.class);
     bind(DAOServicesImpl.class).to(DAOServices.class).in(Singleton.class);
   }
 }
