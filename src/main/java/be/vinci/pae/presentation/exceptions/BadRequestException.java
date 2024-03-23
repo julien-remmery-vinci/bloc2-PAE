@@ -5,7 +5,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Class for the NotFoundException.
+ * Class for the BadRequestException.
  */
 public class BadRequestException extends WebApplicationException {
 
