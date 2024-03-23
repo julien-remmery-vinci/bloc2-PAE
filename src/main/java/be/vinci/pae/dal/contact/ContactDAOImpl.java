@@ -63,15 +63,17 @@ public class ContactDAOImpl implements ContactDAO {
     try (PreparedStatement ps = dalServices.getPS(
         "UPDATE pae.contacts "
             + "SET idCompany = ?, idStudent = ?, state = ?, "
-            + "meetPlace = ?, refusalReason = ?, academicYear = ?"
-            + "WHERE idContact = ?;")) {
+            + "meetPlace = ?, refusalReason = ?, academicYear = ?, version = ?"
+            + "WHERE idContact = ? AND version = ?;")) {
       ps.setInt(1, contact.getIdCompany());
       ps.setInt(2, contact.getIdStudent());
-      ps.setString(3, contact.getState().toString());
+      ps.setString(3, contact.getState().getState());
       ps.setString(4, contact.getMeetPlace());
       ps.setString(5, contact.getRefusalReason());
       ps.setString(6, contact.getAcademicYear());
-      ps.setInt(7, contact.getIdContact());
+      ps.setInt(7, contact.getVersion() + 1);
+      ps.setInt(8, contact.getIdContact());
+      ps.setInt(9, contact.getVersion());
       ps.executeUpdate();
     } catch (SQLException e) {
       throw new RuntimeException(e);
