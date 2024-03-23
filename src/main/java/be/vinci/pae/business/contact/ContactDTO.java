@@ -142,14 +142,14 @@ public interface ContactDTO {
    *
    * @return the version of the contact
    */
-  public int getVersion();
+  int getVersion();
 
   /**
    * set the version of the contact.
    *
    * @param version the version of the contact
    */
-  public void setVersion(int version);
+  void setVersion(int version);
 
   /**
    * Enum for the state of the contact.
