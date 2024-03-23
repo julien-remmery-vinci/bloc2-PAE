@@ -67,7 +67,7 @@ public class ContactDAOImpl implements ContactDAO {
             + "WHERE idContact = ?;")) {
       ps.setInt(1, contact.getIdCompany());
       ps.setInt(2, contact.getIdStudent());
-      ps.setString(3, contact.getState().toString());
+      ps.setString(3, contact.getState().getState());
       ps.setString(4, contact.getMeetPlace());
       ps.setString(5, contact.getRefusalReason());
       ps.setString(6, contact.getAcademicYear());
