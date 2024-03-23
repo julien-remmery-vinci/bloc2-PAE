@@ -10,6 +10,9 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
+/**
+ * Internship route.
+ */
 @Singleton
 @Path("/internship")
 @Log
@@ -18,6 +21,12 @@ public class InternshipRessource {
   @Inject
   private InternshipUCC internshipUCC;
 
+  /**
+   * Get an internship by its id.
+   *
+   * @param id the id
+   * @return the internship
+   */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public InternshipDTO getInternshipById(int id) {
