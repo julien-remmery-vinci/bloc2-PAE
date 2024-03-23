@@ -5,15 +5,15 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Class for the PreconditionFailedException.
+ * Class for the BadRequestException.
  */
-public class PreconditionFailedException extends WebApplicationException {
+public class BadRequestException extends WebApplicationException {
 
   /**
    * Constructor without a message.
    */
-  public PreconditionFailedException() {
-    super(Response.status(Status.PRECONDITION_FAILED)
+  public BadRequestException() {
+    super(Response.status(Status.BAD_REQUEST)
         .build());
   }
 
@@ -22,8 +22,8 @@ public class PreconditionFailedException extends WebApplicationException {
    *
    * @param message the message
    */
-  public PreconditionFailedException(String message) {
-    super(Response.status(Status.PRECONDITION_FAILED)
+  public BadRequestException(String message) {
+    super(Response.status(Status.BAD_REQUEST)
         .entity(message)
         .type("text/plain")
         .build());
@@ -34,8 +34,8 @@ public class PreconditionFailedException extends WebApplicationException {
    *
    * @param cause the cause
    */
-  public PreconditionFailedException(Throwable cause) {
-    super(Response.status(Status.PRECONDITION_FAILED)
+  public BadRequestException(Throwable cause) {
+    super(Response.status(Status.BAD_REQUEST)
         .entity(cause.getMessage())
         .type("text/plain")
         .build());
