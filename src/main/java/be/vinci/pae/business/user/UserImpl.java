@@ -122,4 +122,13 @@ public class UserImpl implements User {
     this.role = role;
   }
 
+  @Override
+  public boolean defineRole(String email) {
+    if (email.matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@student\\.vinci\\.be$")) {
+      this.role = Role.STUDENT;
+      return true;
+    } else return !email.matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@vinci\\.be$")
+            || this.role != Role.STUDENT;
+  }
+
 }

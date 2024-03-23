@@ -56,10 +56,7 @@ public class UserUCCImpl implements UserUCC {
    * @return the registered user
    */
   public UserDTO register(UserDTO user) {
-    if (user.getEmail().matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@student\\.vinci\\.be$")) {
-      user.setRole(Role.STUDENT);
-    } else if (user.getEmail().matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@vinci\\.be$")
-        && user.getRole() == Role.STUDENT) {
+    if (!((User) user).defineRole(user.getEmail())) {
       throw new BadRequestException("Invalid role");
     }
     dalServices.start();
