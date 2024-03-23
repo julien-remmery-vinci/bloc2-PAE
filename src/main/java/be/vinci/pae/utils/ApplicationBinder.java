@@ -2,8 +2,8 @@ package be.vinci.pae.utils;
 
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.FactoryImpl;
-import be.vinci.pae.business.academic_year.AcademicYear;
-import be.vinci.pae.business.academic_year.AcademicYearImpl;
+import be.vinci.pae.business.academicyear.AcademicYear;
+import be.vinci.pae.business.academicyear.AcademicYearImpl;
 import be.vinci.pae.business.company.CompanyUCC;
 import be.vinci.pae.business.company.CompanyUCCImpl;
 import be.vinci.pae.business.contact.ContactUCC;
