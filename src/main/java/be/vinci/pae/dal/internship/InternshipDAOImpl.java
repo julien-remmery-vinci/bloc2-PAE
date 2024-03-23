@@ -5,6 +5,9 @@ import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
 import jakarta.inject.Inject;
 
+/**
+ * Implementation of InternshipDAO.
+ */
 public class InternshipDAOImpl implements InternshipDAO {
 
   @Inject
