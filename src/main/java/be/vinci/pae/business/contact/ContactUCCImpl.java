@@ -26,14 +26,6 @@ public class ContactUCCImpl implements ContactUCC {
   @Inject
   private UserDAO userDAO;
 
-  /**
-   * Refuse a contact.
-   *
-   * @param idContact     the id of the contact
-   * @param refusalReason the refusal reason
-   * @param idUser        the id of the user
-   * @return the contact
-   */
   @Override
   public ContactDTO refuseContact(int idContact, String refusalReason, int idUser) {
     Contact contact = (Contact) contactDAO.getOneById(idContact);
