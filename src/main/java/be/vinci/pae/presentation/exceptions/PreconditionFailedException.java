@@ -3,7 +3,9 @@ package be.vinci.pae.presentation.exceptions;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
+/**
+ * Class for the NotFoundException.
+ */
 public class PreconditionFailedException extends WebApplicationException {
 
   /**

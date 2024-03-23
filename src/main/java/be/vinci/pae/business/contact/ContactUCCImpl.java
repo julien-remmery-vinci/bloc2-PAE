@@ -10,8 +10,6 @@ import be.vinci.pae.dal.user.UserDAO;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.exceptions.PreconditionFailedException;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
 
 /**
