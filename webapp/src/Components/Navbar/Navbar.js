@@ -32,10 +32,14 @@ async function renderNavbar() {
   } else {
     navbar.innerHTML = loggedNavbar;
     const logOutButton = document.querySelector('#button2');
+    const profileButton = document.querySelector('#button1');
     logOutButton.addEventListener('click', () => {
       clearAuthenticatedUser();
       Navigate('/login');
       window.location.reload();
+    });
+    profileButton.addEventListener('click', () => {
+      Navigate('/profile');
     });
   }
 }

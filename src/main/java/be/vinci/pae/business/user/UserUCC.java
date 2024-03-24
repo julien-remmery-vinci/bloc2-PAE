@@ -39,4 +39,11 @@ public interface UserUCC {
    */
   List<UserDTO> getAllUsers();
 
+  /**
+   * Update the user.
+   *
+   * @param user the user to update
+   * @return the updated user
+   */
+  UserDTO updateUser(UserDTO user, String oldPassword, String newPassword);
 }

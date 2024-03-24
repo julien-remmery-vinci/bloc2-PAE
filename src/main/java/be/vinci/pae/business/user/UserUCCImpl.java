@@ -100,4 +100,21 @@ public class UserUCCImpl implements UserUCC {
     dalServices.close();
     return list;
   }
+
+  @Override
+  public UserDTO updateUser(UserDTO user, String oldPassword, String newPassword) {
+    dalServices.start();
+    if (user == null) {
+      dalServices.rollback();
+      return null;
+    }
+    if (user.getPassword().equals(oldPassword)) {
+      dalServices.rollback();
+      return null;
+    }
+    user.setPassword(((User) user).hashPassword(newPassword));
+    user = userDAO.updateUser(user);
+    dalServices.commit();
+    return user;
+  }
 }
