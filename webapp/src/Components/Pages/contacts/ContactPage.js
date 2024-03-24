@@ -28,6 +28,7 @@ async function buildPage() {
   tableHead.classList.add('thead-dark');
   const tableHeadRow = document.createElement('tr');
   const headings = ['Entreprise', 'État', ''];
+  const contacts = await getContacts();
 
   // Ajouter les entêtes de colonne
   headings.forEach(headingText => {
@@ -40,7 +41,6 @@ async function buildPage() {
   table.appendChild(tableHead);
 
   const tableBody = document.createElement('tbody');
-  const contacts = await getContacts();
 
   contacts.forEach(contact => {
     const row = document.createElement('tr');
@@ -78,8 +78,22 @@ async function buildPage() {
   main.appendChild(title);
   containerDiv.appendChild(table);
   main.appendChild(containerDiv);
+
+
+  if(contacts.length === 0) {
+    noContacts();
+  }
 }
 
+function noContacts() {
+  const main = document.querySelector('main');
+  const title = document.createElement('h3');
+  title.textContent = 'Aucun contact';
+  title.style.textAlign = 'center';
+  title.style.fontSize = '3rem';
+  title.style.marginTop = '100px';
+  main.appendChild(title);
+}
 async function getContacts() {
   const response = await fetch('http://localhost:3000/contact', {
     method: 'GET',
