@@ -1,6 +1,4 @@
-import Navigate from "../Components/Router/Navigate";
-
-const STORE_NAME = 'user_token';
+const STORE_NAME = 'token';
 const REMEMBER_ME = 'remembered';
 
 let currentUser;
@@ -11,24 +9,8 @@ const getAuthenticatedUser = () => {
   return undefined;
 };
 
-const getUserToken = () => {
-  const remembered = getRememberMe();
-  const serializedToken = remembered
-    ? localStorage.getItem(STORE_NAME)
-    : sessionStorage.getItem(STORE_NAME);
-
-  if (!serializedToken) return undefined;
-
-  return JSON.parse(serializedToken);
-}
-
 const setAuthenticatedUser = (authenticatedUser) => {
-  const serializedToken = JSON.stringify(authenticatedUser.token);
-  const remembered = getRememberMe();
-  if (remembered) localStorage.setItem(STORE_NAME, serializedToken);
-  else sessionStorage.setItem(STORE_NAME, serializedToken);
-
-  currentUser = authenticatedUser.user;
+  currentUser = authenticatedUser;
 };
 
 const isAuthenticated = () => currentUser !== undefined;
@@ -37,22 +19,6 @@ const clearAuthenticatedUser = () => {
   localStorage.clear();
   sessionStorage.clear();
   currentUser = undefined;
-};
-
-const verifyToken = async (token) => {
-    const response= await fetch('http://localhost:3000/auths/user', {
-      method:'GET',
-      headers: {
-        'Authorization': token,
-      },
-    });
-    if(response.status === 401) {
-      Navigate('/login');
-      clearAuthenticatedUser();
-      return false;
-    }
-    currentUser = await response.json();
-    return true;
 };
 
 function getRememberMe() {
@@ -66,6 +32,36 @@ function setRememberMe(remembered) {
   localStorage.setItem(REMEMBER_ME, rememberedSerialized);
 }
 
+function setToken(token) {
+  const remembered = getRememberMe();
+  if (remembered) localStorage.setItem(STORE_NAME, token);
+  else sessionStorage.setItem(STORE_NAME, token);
+}
+
+function getToken() {
+  const remembered = getRememberMe();
+  if (remembered) return localStorage.getItem(STORE_NAME);
+  return sessionStorage.getItem(STORE_NAME);
+}
+
+const verifyToken = async () => {
+  const token = getToken();
+  if(!isAuthenticated() && !token) return false;
+  const response = await fetch('http://localhost:3000/auths/user', {
+    method:'GET',
+    headers: {
+      'Authorization': token,
+    },
+  });
+  if(response.status === 401) {
+    clearAuthenticatedUser();
+    return false;
+  }
+  const user = await response.json();
+  setAuthenticatedUser(user);
+  return true;
+};
+
 export {
   getAuthenticatedUser,
   setAuthenticatedUser,
@@ -74,5 +70,6 @@ export {
   getRememberMe,
   setRememberMe,
   verifyToken,
-  getUserToken,
+  getToken,
+  setToken,
 };
