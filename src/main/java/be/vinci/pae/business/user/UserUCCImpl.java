@@ -1,17 +1,21 @@
 package be.vinci.pae.business.user;
 
-import be.vinci.pae.business.user.UserDTO.Role;
+import be.vinci.pae.business.academicyear.AcademicYear;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.user.UserDAO;
+import be.vinci.pae.presentation.exceptions.BadRequestException;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response;
 import java.util.List;
 
 /**
  * Implementation of UserUCC.
  */
 public class UserUCCImpl implements UserUCC {
+  /**
+   * Injected AcademicYear.
+   */
+  @Inject
+  private AcademicYear academicYear;
 
   /**
    * Injected UserDAO.
@@ -57,11 +61,8 @@ public class UserUCCImpl implements UserUCC {
    * @return the registered user
    */
   public UserDTO register(UserDTO user) {
-    if (user.getEmail().matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@student\\.vinci\\.be$")) {
-      user.setRole(Role.STUDENT);
-    } else if (user.getEmail().matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@vinci\\.be$")
-        && user.getRole() == Role.STUDENT) {
-      throw new WebApplicationException("Invalid role", Response.Status.BAD_REQUEST);
+    if (!((User) user).defineRole(user.getEmail())) {
+      throw new BadRequestException("Invalid role");
     }
     dalServices.start();
     UserDTO userFound = userDAO.getOneByEmail(user.getEmail());
@@ -69,9 +70,13 @@ public class UserUCCImpl implements UserUCC {
       dalServices.rollback();
       return null;
     }
+    if (user.getRole().equals(UserDTO.Role.STUDENT)) {
+      user.setAcademicYear(academicYear.getAcademicYear());
+    }
     user.setPassword(((User) user).hashPassword(user.getPassword()));
     java.sql.Date registerDate = new java.sql.Date(System.currentTimeMillis());
     user.setRegisterDate(registerDate);
+    user.setVersion(1);
 
     user = userDAO.addUser(user);
     dalServices.commit();
@@ -101,23 +106,20 @@ public class UserUCCImpl implements UserUCC {
     return list;
   }
 
-  /**
-   * Update a user.
-   *
-   * @param user        the user to update
-   * @param oldPassword the old password
-   * @param newPassword the new password
-   * @return the updated user
-   */
+  @Override
   public UserDTO updateUser(UserDTO user, String oldPassword, String newPassword) {
-    UserDTO userFound = userDAO.getOneById(user.getIdUser());
-    if (userFound == null) {
+    dalServices.start();
+    if (user == null) {
+      dalServices.rollback();
       return null;
     }
-    if (userFound.getPassword().equals(oldPassword)) {
-      userFound.setPassword(newPassword);
-      return userDAO.updateUser(userFound);
+    if (user.getPassword().equals(oldPassword)) {
+      dalServices.rollback();
+      return null;
     }
-    return null;
+    user.setPassword(((User) user).hashPassword(newPassword));
+    user = userDAO.updateUser(user);
+    dalServices.commit();
+    return user;
   }
 }

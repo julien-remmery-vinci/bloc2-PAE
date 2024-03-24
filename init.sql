@@ -11,6 +11,7 @@ CREATE TABLE pae.users
     phoneNumber  TEXT    NOT NULL,
     registerDate date    NOT NULL,
     role         TEXT    NOT NULL,
+    academicYear TEXT    NULL,
     version      INTEGER NOT NULL
 );
 
@@ -33,19 +34,19 @@ CREATE TABLE pae.contacts
     idCompany     INTEGER REFERENCES pae.companies (idCompany) NOT NULL,
     idStudent     INTEGER REFERENCES pae.users (iduser)        NOT NULL,
     state         TEXT                                         NOT NULL,
-    meetPlace     TEXT NULL,
-    refusalReason TEXT NULL,
+    meetPlace     TEXT                                         NULL,
+    refusalReason TEXT                                         NULL,
     academicYear  TEXT                                         NOT NULL,
     version       INTEGER                                      NOT NULL
 );
 
-CREATE TABLE pae.internshipSupervisor
+CREATE TABLE pae.internshipSupervisors
 (
     idInternshipSupervisor SERIAL PRIMARY KEY,
     lastname               TEXT                                         NOT NULL,
     firstname              TEXT                                         NOT NULL,
     phoneNumber            TEXT                                         NOT NULL,
-    email                  TEXT NULL,
+    email                  TEXT                                         NULL,
     idCompany              INTEGER REFERENCES pae.companies (idCompany) NOT NULL,
     version                INTEGER                                      NOT NULL
 );
@@ -54,26 +55,26 @@ CREATE TABLE pae.internships
 (
     idInternship         SERIAL PRIMARY KEY,
     idStudent            INTEGER REFERENCES pae.users (iduser)                                NOT NULL,
-    internshipProject    TEXT NULL,
+    internshipProject    TEXT                                                                 NULL,
     signatureDate        DATE                                                                 NOT NULL,
     idContact            INTEGER REFERENCES pae.contacts (idContact)                          NOT NULL,
-    internshipSupervisor INTEGER REFERENCES pae.internshipSupervisor (idInternshipSupervisor) NOT NULL,
+    internshipSupervisor INTEGER REFERENCES pae.internshipSupervisors (idInternshipSupervisor) NOT NULL,
     idCompany            INTEGER REFERENCES pae.companies (idCompany)                         NOT NULL,
     version              INTEGER                                                              NOT NULL
 );
 
-INSERT INTO pae.users (lastname, firstname, email, password, phoneNumber, registerDate, role,
+INSERT INTO pae.users (lastname, firstname, email, password, phoneNumber, registerDate, role, academicYear,
                        version)
 VALUES ('admin', 'admin', 'admin.admin@vinci.be',
         '$2a$10$aqGDWyP8K9xeO1a8uPzcWuzf1hfiPU8IlAR8GyhgVIYhnuKNSxP7S',
-        '0123456789', '2024-02-22', 'administratif', 1);
+        '0123456789', '2024-02-22', 'administratif', '2023-2024', 1);
 
 -- mot de passe : test
-INSERT INTO pae.users (lastname, firstname, email, password, phonenumber, registerdate, role,
+INSERT INTO pae.users (lastname, firstname, email, password, phonenumber, registerdate, role, academicYear,
                        version)
 VALUES ('remmery', 'julien', 'julien.remmery@student.vinci.be',
         '$2a$10$Y3/IINNLQjpg33uhU2xhce9L5BUxyQ/ABXh35ftx4pan00lBgL8qm',
-        '0123456789', '2024-01-01', 'étudiant', 1);
+        '0123456789', '2024-01-01', 'étudiant', '2023-2024', 1);
 
 INSERT INTO pae.companies (tradeName, address, blacklisted, version)
 VALUES ('Vinci', 'Bruxelles', false, 1);

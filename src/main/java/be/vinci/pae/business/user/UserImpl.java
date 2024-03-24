@@ -1,6 +1,7 @@
 package be.vinci.pae.business.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.sql.Date;
 import org.mindrot.jbcrypt.BCrypt;
@@ -8,6 +9,7 @@ import org.mindrot.jbcrypt.BCrypt;
 /**
  * Implementation of User which inherits of UserDTO.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserImpl implements User {
 
   private int idUser;
@@ -20,6 +22,7 @@ public class UserImpl implements User {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yy hh:mm:ss")
   private Date registerDate;
   private Role role;
+  private String academicYear;
   private int version;
 
   @Override
@@ -113,6 +116,16 @@ public class UserImpl implements User {
   }
 
   @Override
+  public String getAcademicYear() {
+    return academicYear;
+  }
+
+  @Override
+  public void setAcademicYear(String academicYear) {
+    this.academicYear = academicYear;
+  }
+
+  @Override
   public Role getRole() {
     return role;
   }
@@ -120,6 +133,17 @@ public class UserImpl implements User {
   @Override
   public void setRole(Role role) {
     this.role = role;
+  }
+
+  @Override
+  public boolean defineRole(String email) {
+    if (email.matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@student\\.vinci\\.be$")) {
+      this.role = Role.STUDENT;
+      return true;
+    } else {
+      return !email.matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@vinci\\.be$")
+              || this.role != Role.STUDENT;
+    }
   }
 
 }

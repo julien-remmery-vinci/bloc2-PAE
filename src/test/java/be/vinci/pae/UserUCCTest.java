@@ -25,7 +25,6 @@ import org.mockito.Mockito;
  * Test class for the UserUCC methods.
  */
 public class UserUCCTest {
-
   static ServiceLocator locator;
   private static UserUCC userUCC;
   private static UserDAO userDAO;

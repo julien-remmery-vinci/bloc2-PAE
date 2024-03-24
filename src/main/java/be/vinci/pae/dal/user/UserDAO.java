@@ -43,7 +43,7 @@ public interface UserDAO {
    * Update a user in the database.
    *
    * @param user the user to update
-   * @return the user updated
+   * @return the updated user
    */
   UserDTO updateUser(UserDTO user);
 }

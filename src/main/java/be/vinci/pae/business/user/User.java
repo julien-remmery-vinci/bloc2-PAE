@@ -20,4 +20,13 @@ public interface User extends UserDTO {
    * @return hashed password
    */
   String hashPassword(String password);
+
+  /**
+   * Define the role of the user.
+   *
+   * @param email the email of the user
+   * @return true if the role is defined, false otherwise
+   */
+  boolean defineRole(String email);
+
 }
