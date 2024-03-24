@@ -27,6 +27,7 @@ public class UserDAOImpl implements UserDAO {
             + "firstname as \"user.firstname\", email as \"user.email\","
             + "password as \"user.password\", phoneNumber as \"user.phoneNumber\","
             + "registerDate as \"user.registerDate\", role as \"user.role\""
+            + ", academicYear as \"user.academicYear\""
             + ", version as \"user.version\""
             + "FROM pae.users WHERE email = ?")) {
       getUser.setString(1, email);
@@ -55,6 +56,7 @@ public class UserDAOImpl implements UserDAO {
               + "firstname as \"user.firstname\", email as \"user.email\","
               + "password as \"user.password\", phoneNumber as \"user.phoneNumber\","
               + "registerDate as \"user.registerDate\", role as \"user.role\""
+              + ", academicYear as \"user.academicYear\""
               + ", version as \"user.version\""
               + "FROM pae.users WHERE idUser = ?");
       getUser.setInt(1, id);
@@ -73,9 +75,9 @@ public class UserDAOImpl implements UserDAO {
   public UserDTO addUser(UserDTO user) {
     try (PreparedStatement addUser = dalBackServices.getPS(
         "INSERT INTO pae.users (lastname, firstname, email, password, phoneNumber, registerDate,"
-            + " role, version) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING idUser")) {
+            + " role, academicYear, version) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING idUser")) {
       setPs(addUser, user);
-      addUser.setInt(8, user.getVersion());
+      addUser.setInt(9, user.getVersion());
       try (ResultSet rs = addUser.executeQuery()) {
         if (rs.next()) {
           user.setIdUser(rs.getInt(1));
@@ -102,6 +104,7 @@ public class UserDAOImpl implements UserDAO {
             + "firstname as \"user.firstname\", email as \"user.email\","
             + "password as \"user.password\", phoneNumber as \"user.phoneNumber\","
             + "registerDate as \"user.registerDate\", role as \"user.role\""
+            + ", academicYear as \"user.academicYear\""
             + ", version as \"user.version\""
             + "FROM pae.users")) {
       try (ResultSet rs = getUsers.executeQuery()) {
@@ -139,12 +142,12 @@ public class UserDAOImpl implements UserDAO {
     try (PreparedStatement updateUser = dalBackServices.getPS(
         "UPDATE pae.users SET lastname = ?, firstname = ?,"
             + " email = ?, password = ?, phoneNumber = ?,"
-            + " registerDate = ?, role = ?, version ? WHERE idUser = ?"
+            + " registerDate = ?, role = ?, academicYear = ?, version ? WHERE idUser = ?"
             + " AND version = ? RETURNING idUser")) {
       setPs(updateUser, user);
-      updateUser.setInt(8, user.getVersion() + 1);
-      updateUser.setInt(9, user.getIdUser());
-      updateUser.setInt(10, user.getVersion());
+      updateUser.setInt(9, user.getVersion() + 1);
+      updateUser.setInt(10, user.getIdUser());
+      updateUser.setInt(11, user.getVersion());
       try (ResultSet rs = updateUser.executeQuery()) {
         if (rs.next()) {
           return user;
@@ -171,6 +174,7 @@ public class UserDAOImpl implements UserDAO {
     ps.setString(5, user.getPhoneNumber());
     ps.setDate(6, user.getRegisterDate());
     ps.setString(7, user.getRole().toString());
+    ps.setString(8, user.getAcademicYear());
   }
 
 }

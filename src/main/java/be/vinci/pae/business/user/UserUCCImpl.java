@@ -1,5 +1,6 @@
 package be.vinci.pae.business.user;
 
+import be.vinci.pae.business.academicyear.AcademicYear;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.user.UserDAO;
 import be.vinci.pae.presentation.exceptions.BadRequestException;
@@ -10,6 +11,11 @@ import java.util.List;
  * Implementation of UserUCC.
  */
 public class UserUCCImpl implements UserUCC {
+  /**
+   * Injected AcademicYear.
+   */
+  @Inject
+  private AcademicYear academicYear;
 
   /**
    * Injected UserDAO.
@@ -63,6 +69,9 @@ public class UserUCCImpl implements UserUCC {
     if (userFound != null) {
       dalServices.rollback();
       return null;
+    }
+    if(user.getRole().equals(UserDTO.Role.STUDENT)) {
+      user.setAcademicYear(academicYear.getAcademicYear());
     }
     user.setPassword(((User) user).hashPassword(user.getPassword()));
     java.sql.Date registerDate = new java.sql.Date(System.currentTimeMillis());
