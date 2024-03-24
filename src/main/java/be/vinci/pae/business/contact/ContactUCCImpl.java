@@ -86,14 +86,10 @@ public class ContactUCCImpl implements ContactUCC {
     if (companyDAO.getCompanyById(contact.getIdCompany()) == null) {
       throw new NotFoundException("The company does not exist");
     }
-    System.out.println(contactDAO.getContactAccepted(contact.getIdStudent()));
     if (contactDAO.getContactAccepted(contact.getIdStudent()) != null) {
       throw new PreconditionFailedException("You already have a contact accepted");
     }
     contact.setAcademicYear(academicYear.getAcademicYear());
-    System.out.println(contact.getAcademicYear());
-    System.out.println(contactDAO.getCompanyContact(contact.getIdStudent(), contact.getIdCompany(),
-        contact.getAcademicYear()));
     if (contactDAO.getCompanyContact(contact.getIdStudent(), contact.getIdCompany(),
         contact.getAcademicYear()) != null) {
       throw new PreconditionFailedException(
