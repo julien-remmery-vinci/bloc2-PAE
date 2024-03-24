@@ -16,4 +16,5 @@ Content-Type: application/json
 
 ### Try to get all internships
 GET {{contactUrl}}
-Authorization : {{token}}
+Content-Type: application/json
+Authorization: {{token}}

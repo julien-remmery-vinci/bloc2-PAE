@@ -58,15 +58,15 @@ public class InternshipDAOImpl implements InternshipDAO {
             + "       i.signatureDate as \"internship.signatureDate\",i.idContact as \"internship.idContact\",\n"
             + "i.internshipSupervisor as \"internship.internshipSupervisor\",\n"
             + "i.idCompany as \"internship.idCompany\",\n"
-            + "is.version as \"internshipsupervisor.version\"\n"
+            + "i.version as \"internship.version\"\n"
             + "FROM pae.contacts con, pae.users u, pae.companies com, pae.internships i"
             + ",pae.internshipsupervisors is WHERE con.idCompany = "
             + "com.idCompany AND con.idStudent = u.idUser AND "
             + "is.idInternshipSupervisor = i.internshipSupervisor AND"
             + " com.idCompany = is.idCompany"
-            + " AND com.idCompany = i.idCompany AND i.idInternship = ?"
-            + "AND u.idUser = i.idStudent AND con.idContact = i.idContact"
-            + " AND idStudent = ?;")) {
+            + " AND com.idCompany = i.idCompany"
+            + " AND u.idUser = i.idStudent AND con.idContact = i.idContact"
+            + " AND u.idUser = ?;")) {
       ps.setInt(1, id);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
