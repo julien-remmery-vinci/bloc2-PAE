@@ -29,11 +29,15 @@ Content-Type: application/json
 Authorization: {{token}}
 
 {
-  "idCompany": 1,
-  "academicYear": "2021-2022"
+  "idCompany": 1
 }
 
 ### Get list of contacts
 GET {{contactUrl}}
 Content-Type: application/json
 Authorization: {{token}}
+
+### unfollow a contact
+POST {{contactUrl}}/1/unfollow
+Content-Type: application/json
+Authorization : {{token}}

@@ -19,12 +19,12 @@ CREATE TABLE pae.companies
 (
     idCompany           SERIAL PRIMARY KEY,
     tradeName           TEXT    NOT NULL,
-    designation         TEXT    NULL,
+    designation         TEXT NULL,
     address             TEXT    NOT NULL,
-    phoneNumber         TEXT    NULL,
-    email               TEXT    NULL,
+    phoneNumber         TEXT NULL,
+    email               TEXT NULL,
     blacklisted         BOOLEAN NOT NULL,
-    blacklistMotivation TEXT    NULL,
+    blacklistMotivation TEXT NULL,
     version             INTEGER NOT NULL
 );
 

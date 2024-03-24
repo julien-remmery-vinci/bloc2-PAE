@@ -46,4 +46,22 @@ public interface ContactDAO {
    */
   ContactDTO addContact(ContactDTO contact);
 
+  /**
+   * Get the contact accepted by the user
+   *
+   * @param idUser the id of the user
+   * @return the contact accepted or null if no contact was found
+   */
+  ContactDTO getContactAccepted(int idUser);
+
+  /**
+   * Get the contact of a user for a certain company.
+   *
+   * @param idUser       the id of the user
+   * @param idCompany    the id of the company
+   * @param academicYear the academic year
+   * @return the contact of the user for the company or null if no contact was found
+   */
+  ContactDTO getCompanyContact(int idUser, int idCompany, String academicYear);
+
 }
