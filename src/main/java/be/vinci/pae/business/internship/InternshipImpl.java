@@ -1,5 +1,9 @@
 package be.vinci.pae.business.internship;
 
+import be.vinci.pae.business.company.CompanyDTO;
+import be.vinci.pae.business.contact.ContactDTO;
+import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorDTO;
+import be.vinci.pae.business.user.UserDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.sql.Date;
 
@@ -12,6 +16,8 @@ public class InternshipImpl implements Internship {
 
   private int idStudent;
 
+  private UserDTO user;
+
   private String internshipProject;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yy hh:mm:ss")
@@ -19,9 +25,15 @@ public class InternshipImpl implements Internship {
 
   private int idContact;
 
+  private ContactDTO contact;
+
   private int internshipSupervisor;
 
+  private InternshipSupervisorDTO supervisor;
+
   private int idCompany;
+
+  private CompanyDTO company;
 
   private int version;
 
@@ -44,6 +56,16 @@ public class InternshipImpl implements Internship {
   @Override
   public void setIdStudent(int idStudent) {
     this.idStudent = idStudent;
+  }
+
+  @Override
+  public UserDTO getUser() {
+    return user;
+  }
+
+  @Override
+  public void setUser(UserDTO user) {
+    this.user = user;
   }
 
   @Override
@@ -77,14 +99,25 @@ public class InternshipImpl implements Internship {
   }
 
   @Override
-  public int getInternshipSupervisor() {
+  public ContactDTO getContact() {
+    return contact;
+  }
+
+  @Override
+  public void setContact(ContactDTO contact) {
+    this.contact = contact;
+  }
+
+  @Override
+  public int getIdInternshipSupervisor() {
     return internshipSupervisor;
   }
 
   @Override
-  public void setInternshipSupervisor(int internshipSupervisor) {
+  public void setIdInternshipSupervisor(int internshipSupervisor) {
     this.internshipSupervisor = internshipSupervisor;
   }
+
 
   @Override
   public int getIdCompany() {
@@ -94,6 +127,16 @@ public class InternshipImpl implements Internship {
   @Override
   public void setIdCompany(int idCompany) {
     this.idCompany = idCompany;
+  }
+
+  @Override
+  public CompanyDTO getCompany() {
+    return company;
+  }
+
+  @Override
+  public void setCompany(CompanyDTO company) {
+    this.company = company;
   }
 
   @Override

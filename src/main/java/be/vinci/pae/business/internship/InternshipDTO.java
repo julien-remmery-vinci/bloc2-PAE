@@ -1,5 +1,8 @@
 package be.vinci.pae.business.internship;
 
+import be.vinci.pae.business.company.CompanyDTO;
+import be.vinci.pae.business.contact.ContactDTO;
+import be.vinci.pae.business.user.UserDTO;
 import java.sql.Date;
 
 /**
@@ -35,6 +38,20 @@ public interface InternshipDTO {
    * @param idStudent the idStudent to set
    */
   void setIdStudent(int idStudent);
+
+  /**
+   * getter for student.
+   *
+   * @return the student
+   */
+  UserDTO getUser();
+
+  /**
+   * setter for student.
+   *
+   * @param user the student to set
+   */
+  void setUser(UserDTO user);
 
   /**
    * getter for internshipProject.
@@ -79,18 +96,32 @@ public interface InternshipDTO {
   void setIdContact(int idContact);
 
   /**
+   * getter for contact.
+   *
+   * @return the contact
+   */
+  ContactDTO getContact();
+
+  /**
+   * setter for contact.
+   *
+   * @param contact the contact to set
+   */
+  void setContact(ContactDTO contact);
+
+  /**
    * getter for internshipSupervisor.
    *
    * @return the internshipSupervisor
    */
-  int getInternshipSupervisor();
+  int getIdInternshipSupervisor();
 
   /**
    * setter for internshipSupervisor.
    *
    * @param internshipSupervisor the internshipSupervisor to set
    */
-  void setInternshipSupervisor(int internshipSupervisor);
+  void setIdInternshipSupervisor(int internshipSupervisor);
 
   /**
    * getter for idCompany.
@@ -107,6 +138,20 @@ public interface InternshipDTO {
   void setIdCompany(int idCompany);
 
   /**
+   * getter for company.
+   *
+   * @return the company
+   */
+  CompanyDTO getCompany();
+
+  /**
+   * setter for company.
+   *
+   * @param company the company to set
+   */
+  void setCompany(CompanyDTO company);
+
+  /**
    * getter for version.
    *
    * @return the version
@@ -119,4 +164,5 @@ public interface InternshipDTO {
    * @param version the version to set
    */
   void setVersion(int version);
+
 }

@@ -47,6 +47,7 @@ public class InternshipDAOImpl implements InternshipDAO {
             + "    u.phoneNumber AS \"user.phoneNumber\",\n"
             + "    u.registerDate AS \"user.registerDate\",\n"
             + "    u.role AS \"user.role\",\n"
+            + "     u.academicYear AS \"user.academicYear\",\n"
             + "    u.version AS \"user.version\",\n"
             + "    com.idCompany AS \"company.idCompany\",\n"
             + "    com.tradeName AS \"company.tradeName\",\n"
