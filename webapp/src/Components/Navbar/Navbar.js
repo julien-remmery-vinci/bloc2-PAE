@@ -9,77 +9,108 @@ const Navbar = () => {
 async function renderNavbar() {
   const defaultNavbar = `
     <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
-      <a class="navbar-brand" href="#">VinciOBS</a>
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#" data-uri="/login">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#" data-uri="/register">Register</a>
-        </li>           
-      </ul>
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">VinciOBS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/login">Se connecter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/register">S'enregistrer</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
-  `;
+`;
 
   const studentNavbar = `
     <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
-      <a class="navbar-brand" href="#">VinciOBS</a>
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#" data-uri="/">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#" data-uri="/profile">Profil</a>
-        </li>      
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#" data-uri="/contact">Contacts</a>
-        </li>    
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#" data-uri="/logout">Déconnexion</a>
-        </li>       
-      </ul>
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" data-uri="/">VinciOBS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/profile">Profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="">Stage</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/contact">Contacts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/logout">Déconnexion</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
   `;
 
   const teacherNavbar = `
     <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
-      <a class="navbar-brand" href="#">VinciOBS</a>
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#" data-uri="/">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#" data-uri="/profile">Profil</a>
-        </li>      
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#" data-uri="/contact">Recherches</a>
-        </li>    
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#" data-uri="/logout">Responsables</a>
-        </li>     
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#" data-uri="/logout">Statistiques</a>
-        </li>     
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#" data-uri="/logout">Déconnexion</a>
-        </li>    
-      </ul>
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" data-uri="/">VinciOBS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/profile">Profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="">Recherches</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="">Responsables</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="">Statistiques</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/logout">Déconnexion</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
-  `;
+`;
 
   const adminNavbar = `
     <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
-      <a class="navbar-brand" href="#">VinciOBS</a>
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#" data-uri="/">Home</a>
-        </li>  
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#" data-uri="/logout">Déconnexion</a>
-        </li>    
-      </ul>
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" data-uri="/">VinciOBS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/profile">Profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="">Recherches</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/logout">Déconnexion</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
-  `;
+`;
 
   const navbar = document.querySelector('#navbarWrapper');
   if(!isAuthenticated()) navbar.innerHTML = defaultNavbar;
