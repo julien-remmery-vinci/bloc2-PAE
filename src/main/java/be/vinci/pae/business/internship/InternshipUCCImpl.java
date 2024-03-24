@@ -26,6 +26,5 @@ public class InternshipUCCImpl implements InternshipUCC {
   @Override
   public List<InternshipDTO> getInternshipById(UserDTO user) {
     return internshipDAO.getInternshipById(user.getIdUser());
-
   }
 }

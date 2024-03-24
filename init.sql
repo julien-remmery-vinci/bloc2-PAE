@@ -58,7 +58,7 @@ CREATE TABLE pae.internships
     internshipProject    TEXT                                                                 NULL,
     signatureDate        DATE                                                                 NOT NULL,
     idContact            INTEGER REFERENCES pae.contacts (idContact)                          NOT NULL,
-    internshipSupervisor INTEGER REFERENCES pae.internshipSupervisors (idInternshipSupervisor) NOT NULL,
+    idInternshipSupervisor INTEGER REFERENCES pae.internshipSupervisors (idInternshipSupervisor) NOT NULL,
     idCompany            INTEGER REFERENCES pae.companies (idCompany)                         NOT NULL,
     version              INTEGER                                                              NOT NULL
 );

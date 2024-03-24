@@ -2,6 +2,7 @@ package be.vinci.pae.business.internship;
 
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.contact.ContactDTO;
+import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorDTO;
 import be.vinci.pae.business.user.UserDTO;
 import java.sql.Date;
 
@@ -122,6 +123,20 @@ public interface InternshipDTO {
    * @param internshipSupervisor the internshipSupervisor to set
    */
   void setIdInternshipSupervisor(int internshipSupervisor);
+
+  /**
+   * getter for internshipSupervisorDTO.
+   *
+   * @return the internshipSupervisorDTO
+   */
+  InternshipSupervisorDTO getInternshipSupervisor();
+
+  /**
+   * setter for internshipSupervisorDTO.
+   *
+   * @param supervisor the internshipSupervisorDTO to set
+   */
+  void setInternshipSupervisor(InternshipSupervisorDTO supervisor);
 
   /**
    * getter for idCompany.

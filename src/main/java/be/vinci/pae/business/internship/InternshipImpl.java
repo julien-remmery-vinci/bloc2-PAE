@@ -27,9 +27,9 @@ public class InternshipImpl implements Internship {
 
   private ContactDTO contact;
 
-  private int internshipSupervisor;
+  private int idInternshipSupervisor;
 
-  private InternshipSupervisorDTO supervisor;
+  private InternshipSupervisorDTO internshipSupervisor;
 
   private int idCompany;
 
@@ -110,14 +110,23 @@ public class InternshipImpl implements Internship {
 
   @Override
   public int getIdInternshipSupervisor() {
-    return internshipSupervisor;
+    return idInternshipSupervisor;
   }
 
   @Override
   public void setIdInternshipSupervisor(int internshipSupervisor) {
-    this.internshipSupervisor = internshipSupervisor;
+    this.idInternshipSupervisor = internshipSupervisor;
   }
 
+  @Override
+  public InternshipSupervisorDTO getInternshipSupervisor() {
+    return internshipSupervisor;
+  }
+
+  @Override
+  public void setInternshipSupervisor(InternshipSupervisorDTO supervisor) {
+    this.internshipSupervisor = supervisor;
+  }
 
   @Override
   public int getIdCompany() {

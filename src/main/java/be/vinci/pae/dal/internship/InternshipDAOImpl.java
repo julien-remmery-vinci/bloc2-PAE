@@ -47,7 +47,7 @@ public class InternshipDAOImpl implements InternshipDAO {
             + "    u.phoneNumber AS \"user.phoneNumber\",\n"
             + "    u.registerDate AS \"user.registerDate\",\n"
             + "    u.role AS \"user.role\",\n"
-            + "     u.academicYear AS \"user.academicYear\",\n"
+            + "    u.academicYear AS \"user.academicYear\",\n"
             + "    u.version AS \"user.version\",\n"
             + "    com.idCompany AS \"company.idCompany\",\n"
             + "    com.tradeName AS \"company.tradeName\",\n"
@@ -70,18 +70,18 @@ public class InternshipDAOImpl implements InternshipDAO {
             + "    i.internshipProject AS \"internship.internshipProject\",\n"
             + "    i.signatureDate AS \"internship.signatureDate\",\n"
             + "    i.idContact AS \"internship.idContact\",\n"
-            + "    i.internshipSupervisor AS \"internship.internshipSupervisor\",\n"
+            + "    i.idInternshipSupervisor AS \"internship.idInternshipSupervisor\",\n"
             + "    i.idCompany AS \"internship.idCompany\",\n"
             + "    i.version AS \"internship.version\"\n"
-            + "FROM \n"
+            + "FROM\n"
             + "    pae.contacts con\n"
             + "    INNER JOIN pae.users u ON con.idStudent = u.idUser\n"
             + "    INNER JOIN pae.companies com ON con.idCompany = com.idCompany\n"
             + "    INNER JOIN pae.internships i ON con.idContact = i.idContact AND com.idCompany = i.idCompany\n"
-            + "    INNER JOIN pae.internshipSupervisors isn ON i.internshipSupervisor = isn.idInternshipSupervisor AND com.idCompany = isn.idCompany\n"
-            + "WHERE \n"
-            + "    u.idUser = i.idStudent AND \n"
-            + "    con.idStudent = ?;\n")) {
+            + "    INNER JOIN pae.internshipsupervisors isn ON i.idInternshipSupervisor = isn.idInternshipSupervisor AND com.idCompany = isn.idCompany\n"
+            + "WHERE\n"
+            + "    u.idUser = i.idStudent AND\n"
+            + "    con.idStudent = ?")) {
       ps.setInt(1, id);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
