@@ -29,8 +29,7 @@ Content-Type: application/json
 Authorization: {{token}}
 
 {
-  "idCompany": 1,
-  "academicYear": "2021-2022"
+  "idCompany": 1
 }
 
 ### Get list of contacts
