@@ -96,7 +96,7 @@ function noContacts() {
   main.appendChild(title);
 }
 async function getContacts() {
-  const response = await fetch('http://localhost:3000/contact', {
+  const response = await fetch('http://localhost:3000/contacts', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

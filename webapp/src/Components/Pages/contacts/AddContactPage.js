@@ -119,7 +119,7 @@ async function buildPage(){
 
 // fetch function to get all entreprises
 async function getCompanies() {
-    const response = await fetch('http://localhost:3000/company', {
+    const response = await fetch('http://localhost:3000/companies', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -164,7 +164,7 @@ async function onSubmit(e) {
         },
     };
 
-    const response = await fetch('http://localhost:3000/contact/add', options);
+    const response = await fetch('http://localhost:3000/contacts/add', options);
     if (response.status === 200) {
         Navigate('/');
         

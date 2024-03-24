@@ -134,7 +134,7 @@ async function onSubmit(event) {
     if (contactState === 'true') {
         // TODO add accept contact
     } else {
-        fetch(`http://localhost:3000/contact/${id}/refuse`, options)
+        fetch(`http://localhost:3000/contacts/${id}/refuse`, options)
         .then(request => {
             if(request.status === 401) {
                 document.querySelector('.alert-danger').hidden = false;

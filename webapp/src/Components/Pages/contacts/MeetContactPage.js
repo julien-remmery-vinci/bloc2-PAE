@@ -46,7 +46,7 @@ async function submitFunc (event) {
   const lieu = formData.get('lieu');
   const contactId = window.location.pathname.split('/').pop();
   try {
-    const response = await fetch(`http://localhost:3000/contact/${contactId}/meet`, {
+    const response = await fetch(`http://localhost:3000/contacts/${contactId}/meet`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
