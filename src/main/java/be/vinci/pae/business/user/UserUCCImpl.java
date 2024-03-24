@@ -1,11 +1,9 @@
 package be.vinci.pae.business.user;
 
-import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.user.UserDAO;
+import be.vinci.pae.presentation.exceptions.BadRequestException;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response;
 import java.util.List;
 
 /**
@@ -57,11 +55,8 @@ public class UserUCCImpl implements UserUCC {
    * @return the registered user
    */
   public UserDTO register(UserDTO user) {
-    if (user.getEmail().matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@student\\.vinci\\.be$")) {
-      user.setRole(Role.STUDENT);
-    } else if (user.getEmail().matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@vinci\\.be$")
-        && user.getRole() == Role.STUDENT) {
-      throw new WebApplicationException("Invalid role", Response.Status.BAD_REQUEST);
+    if (!((User) user).defineRole(user.getEmail())) {
+      throw new BadRequestException("Invalid role");
     }
     dalServices.start();
     UserDTO userFound = userDAO.getOneByEmail(user.getEmail());
@@ -114,7 +109,6 @@ public class UserUCCImpl implements UserUCC {
       return null;
     }
     user.setPassword(((User) user).hashPassword(newPassword));
-    user.setVersion(user.getVersion() + 1);
     user = userDAO.updateUser(user);
     dalServices.commit();
     return user;
