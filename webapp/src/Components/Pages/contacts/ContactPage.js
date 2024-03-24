@@ -1,15 +1,16 @@
 import {clearPage} from "../../../utils/render";
-import {getAuthenticatedUser, getUserToken} from "../../../utils/auths";
+import {
+  getToken,
+  isAuthenticated
+} from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
 const ContactPage = () => {
-  const authenticatedUser = getAuthenticatedUser();
-  if (!authenticatedUser) {
+  if (!isAuthenticated()) {
     Navigate('/login');
-    window.location.reload();
   } else {
     clearPage();
-    document.title = "contacts";
+    document.title = "Contacts";
     buildPage();
   }
 }
@@ -99,7 +100,7 @@ async function getContacts() {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': getUserToken()
+      'Authorization': getToken()
     }
   });
   return response.json();

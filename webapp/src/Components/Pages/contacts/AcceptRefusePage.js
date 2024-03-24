@@ -1,15 +1,16 @@
 import {clearPage} from "../../../utils/render";
-import {getAuthenticatedUser, getUserToken} from "../../../utils/auths";
+import {
+    getToken,
+    isAuthenticated
+} from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
 const AcceptRefusePage = () => {
-    const authenticatedUser = getAuthenticatedUser();
-    if (!authenticatedUser) {
+    if (!isAuthenticated()) {
         Navigate('/login');
-        window.location.reload();
     } else {
         clearPage();
-        document.title = "Contact accept - refuse";
+        document.title = "Accepter ou refuser un contact";
         buildPage();
     }
 }
@@ -124,7 +125,7 @@ async function onSubmit(event) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': getUserToken(),
+            'Authorization': getToken(),
         },
         body: JSON.stringify({
             refusalReason,

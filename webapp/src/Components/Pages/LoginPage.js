@@ -1,13 +1,18 @@
-import { getRememberMe, setAuthenticatedUser, setRememberMe } from '../../utils/auths';
+import { getRememberMe, isAuthenticated, setAuthenticatedUser, setRememberMe, setToken } from '../../utils/auths';
 import { clearPage, renderPageTitle } from '../../utils/render';
 import Navbar from '../Navbar/Navbar';
 import Navigate from '../Router/Navigate';
 
 // Define LoginPage component
 const LoginPage = () => {
-  clearPage();
-  renderPageTitle('Connexion');
-  renderLoginForm();
+  if (isAuthenticated()) {
+    Navigate('/');
+  } else {
+    clearPage();
+    renderPageTitle('Connexion');
+    document.title = "Connexion";
+    renderLoginForm();
+  }
 };
 
 // Function to render the login form
@@ -136,7 +141,8 @@ async function onLogin(e) {
 
   console.log('Authenticated user : ', authenticatedUser);
 
-  setAuthenticatedUser(authenticatedUser);
+  setToken(authenticatedUser.token);
+  setAuthenticatedUser(authenticatedUser.user);
 
   // Navigate to the home page if the user is authenticated, otherwise navigate to the login page
   if (authenticatedUser) {
