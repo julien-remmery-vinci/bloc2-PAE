@@ -86,12 +86,14 @@ public interface UserDTO {
    * @return the password of the user
    */
   String getPassword();
+
   /**
    * Get the academic year of the user.
    *
    * @return the academic year of the user
    */
   String getAcademicYear();
+
   /**
    * Set the academic year of the user.
    *

@@ -70,7 +70,7 @@ public class UserUCCImpl implements UserUCC {
       dalServices.rollback();
       return null;
     }
-    if(user.getRole().equals(UserDTO.Role.STUDENT)) {
+    if (user.getRole().equals(UserDTO.Role.STUDENT)) {
       user.setAcademicYear(academicYear.getAcademicYear());
     }
     user.setPassword(((User) user).hashPassword(user.getPassword()));
