@@ -5,6 +5,8 @@ import {
 } from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
+const queryParams = new URLSearchParams(window.location.search);
+
 const AcceptRefusePage = () => {
     if (!isAuthenticated()) {
         Navigate('/login');
@@ -45,21 +47,21 @@ function getContactInfos() {
     entrepriseName.textContent = 'Entreprise';
     const entrepriseNameValue = document.createElement('input');
     entrepriseNameValue.type = 'text';
-    entrepriseNameValue.value = 'entreprise.nom';
+    entrepriseNameValue.value = queryParams.get('tradename');
     entrepriseNameValue.readOnly = true;
     entrepriseNameValue.className = 'bg-info form-control';
     const entrepriseDesignation = document.createElement('label');
     entrepriseDesignation.textContent = 'Appellation';
     const entrepriseDesignationValue = document.createElement('input');
     entrepriseDesignationValue.type = 'text';
-    entrepriseDesignationValue.value = 'entreprise.appellation';
+    entrepriseDesignationValue.value = queryParams.get('designation');
     entrepriseDesignationValue.readOnly = true;
     entrepriseDesignationValue.className = 'bg-info form-control';
     const contactMeetPlace = document.createElement('label');
     contactMeetPlace.textContent = 'Lieu de rencontre';
     const entrepriseMeetPlaceValue = document.createElement('input');
     entrepriseMeetPlaceValue.type = 'text';
-    entrepriseMeetPlaceValue.value = 'contact.lieu_rencontre';
+    entrepriseMeetPlaceValue.value = queryParams.get('meetplace');
     entrepriseMeetPlaceValue.readOnly = true;
     entrepriseMeetPlaceValue.className = 'bg-info form-control';
     const contactInfosDiv = document.createElement('div');
@@ -118,7 +120,6 @@ function getForm() {
 
 async function onSubmit(event) {
     event.preventDefault();
-    const id = window.location.href.split("?")[1].split("=")[1];
     const contactState = document.querySelector('select').value;
     const refusalReason = document.querySelector('textarea').value;
     const options = {
@@ -134,7 +135,7 @@ async function onSubmit(event) {
     if (contactState === 'true') {
         // TODO add accept contact
     } else {
-        fetch(`http://localhost:3000/contacts/${id}/refuse`, options)
+        fetch(`http://localhost:3000/contacts/${queryParams.get('id')}/refuse`, options)
         .then(request => {
             if(request.status === 401) {
                 document.querySelector('.alert-danger').hidden = false;
