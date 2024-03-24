@@ -154,8 +154,7 @@ async function onSubmit(e) {
     const options = {
         method: 'POST',
         body: JSON.stringify({
-            idCompany: companyFound.idCompany,
-            academicYear: '2021-2022', // TODO: get the current academic year
+            idCompany: companyFound.idCompany
         }),
         headers: {
             'Content-Type': 'application/json',

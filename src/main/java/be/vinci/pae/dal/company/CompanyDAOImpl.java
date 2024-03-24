@@ -28,7 +28,8 @@ public class CompanyDAOImpl implements CompanyDAO {
             + "designation as \"company.designation\",address as \"company.address\","
             + "phoneNumber as \"company.phoneNumber\",email as \"company.email\","
             + "blacklisted as \"company.blacklisted\","
-            + "blacklistMotivation as \"company.blacklistMotivation\""
+            + "blacklistMotivation as \"company.blacklistMotivation\","
+            + "version as \"company.version\""
             + " FROM pae.companies")) {
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
@@ -49,7 +50,8 @@ public class CompanyDAOImpl implements CompanyDAO {
             + "designation as \"company.designation\",address as \"company.address\","
             + "phoneNumber as \"company.phoneNumber\",email as \"company.email\","
             + "blacklisted as \"company.blacklisted\","
-            + "blacklistMotivation as \"company.blacklistMotivation\""
+            + "blacklistMotivation as \"company.blacklistMotivation\","
+            + "version as \"company.version\""
             + " FROM pae.companies WHERE idCompany = ?")) {
       ps.setInt(1, id);
       try (ResultSet rs = ps.executeQuery()) {
