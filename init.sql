@@ -90,5 +90,7 @@ VALUES ('Sagacify', 'SPRL', 'Bruxelles', false, 1);
 
 INSERT INTO pae.contacts (idCompany, idStudent, state, academicYear, version)
 VALUES (1, 2, 'initié', '2023-2024', 1);
+INSERT INTO pae.contacts (idCompany, idStudent, state, meetPlace, academicYear, version)
+VALUES (2, 2, 'pris', 'dans l''entreprise', '2023-2024', 1);
 INSERT INTO pae.contacts (idCompany, idStudent, state, academicYear, version)
-VALUES (2, 2, 'pris', '2023-2024', 1);
+VALUES (1, 3, 'initié', '2023-2024', 1);
