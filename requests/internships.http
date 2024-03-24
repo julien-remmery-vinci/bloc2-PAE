@@ -1,0 +1,19 @@
+@authsUrl=http://localhost:3000/auths
+@contactUrl=http://localhost:3000/internships
+
+### Try to login user
+POST {{authsUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "julien.remmery@student.vinci.be",
+  "password": "test"
+}
+
+> {%
+  client.global.set("token", response.body.token);
+%}
+
+### Try to get all internships
+GET {{contactUrl}}
+Authorization : {{token}}

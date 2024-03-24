@@ -1,8 +1,10 @@
 package be.vinci.pae.business.internship;
 
+import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.internship.InternshipDAO;
 import jakarta.inject.Inject;
+import java.util.List;
 
 /**
  * Implementation of InternshipUCC.
@@ -18,13 +20,12 @@ public class InternshipUCCImpl implements InternshipUCC {
   /**
    * Get an internship by its id.
    *
-   * @param id the id
+   * @param user the user
    * @return the internship
    */
   @Override
-  public InternshipDTO getInternshipById(int id) {
-    InternshipDTO internship = internshipDAO.getInternshipById(id);
-    dalServices.close();
-    return internship;
+  public List<InternshipDTO> getInternshipById(UserDTO user) {
+    return internshipDAO.getInternshipById(user.getIdUser());
+
   }
 }

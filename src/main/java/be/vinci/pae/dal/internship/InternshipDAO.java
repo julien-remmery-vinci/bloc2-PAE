@@ -1,6 +1,7 @@
 package be.vinci.pae.dal.internship;
 
 import be.vinci.pae.business.internship.InternshipDTO;
+import java.util.List;
 
 /**
  * Interface of InternshipDAOImpl.
@@ -13,6 +14,6 @@ public interface InternshipDAO {
    * @param id the id
    * @return the internship
    */
-  InternshipDTO getInternshipById(int id);
+  List<InternshipDTO> getInternshipById(int id);
 
 }
