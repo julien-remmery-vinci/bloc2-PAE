@@ -43,34 +43,36 @@ function buildPage() {
 
 // Display contact informations
 function getContactInfos() {
+    const contactInfosDiv = document.createElement('div');
+    contactInfosDiv.className = 'p-5';
     const entrepriseName = document.createElement('label');
     entrepriseName.textContent = 'Entreprise';
+    contactInfosDiv.appendChild(entrepriseName);
     const entrepriseNameValue = document.createElement('input');
     entrepriseNameValue.type = 'text';
     entrepriseNameValue.value = queryParams.get('tradename');
     entrepriseNameValue.readOnly = true;
     entrepriseNameValue.className = 'bg-info form-control';
-    const entrepriseDesignation = document.createElement('label');
-    entrepriseDesignation.textContent = 'Appellation';
-    const entrepriseDesignationValue = document.createElement('input');
-    entrepriseDesignationValue.type = 'text';
-    entrepriseDesignationValue.value = queryParams.get('designation');
-    entrepriseDesignationValue.readOnly = true;
-    entrepriseDesignationValue.className = 'bg-info form-control';
+    contactInfosDiv.appendChild(entrepriseNameValue);
+    if(queryParams.get('designation') !== 'null'){
+        const entrepriseDesignation = document.createElement('label');
+        entrepriseDesignation.textContent = 'Appellation';
+        const entrepriseDesignationValue = document.createElement('input');
+        entrepriseDesignationValue.type = 'text';
+        entrepriseDesignationValue.value = queryParams.get('designation');
+        entrepriseDesignationValue.readOnly = true;
+        entrepriseDesignationValue.className = 'bg-info form-control';
+        contactInfosDiv.appendChild(entrepriseDesignation);
+        contactInfosDiv.appendChild(entrepriseDesignationValue);
+    }
     const contactMeetPlace = document.createElement('label');
     contactMeetPlace.textContent = 'Lieu de rencontre';
+    contactInfosDiv.appendChild(contactMeetPlace);
     const entrepriseMeetPlaceValue = document.createElement('input');
     entrepriseMeetPlaceValue.type = 'text';
     entrepriseMeetPlaceValue.value = queryParams.get('meetplace');
     entrepriseMeetPlaceValue.readOnly = true;
     entrepriseMeetPlaceValue.className = 'bg-info form-control';
-    const contactInfosDiv = document.createElement('div');
-    contactInfosDiv.className = 'p-5';
-    contactInfosDiv.appendChild(entrepriseName);
-    contactInfosDiv.appendChild(entrepriseNameValue);
-    contactInfosDiv.appendChild(entrepriseDesignation);
-    contactInfosDiv.appendChild(entrepriseDesignationValue);
-    contactInfosDiv.appendChild(contactMeetPlace);
     contactInfosDiv.appendChild(entrepriseMeetPlaceValue);
     return contactInfosDiv;
 }
