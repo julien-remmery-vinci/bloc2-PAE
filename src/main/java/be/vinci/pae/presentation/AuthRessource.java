@@ -3,6 +3,7 @@ package be.vinci.pae.presentation;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.presentation.exceptions.BadRequestException;
+import be.vinci.pae.presentation.exceptions.ConflictException;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.filters.Authorize;
 import be.vinci.pae.presentation.filters.Log;
@@ -118,7 +119,7 @@ public class AuthRessource {
     user = userUCC.register(user);
 
     if (user == null) {
-      throw new WebApplicationException("User already exists", Status.CONFLICT);
+      throw new ConflictException("User already exists");
     }
     String token = generateToken(user);
     if (token == null) {
