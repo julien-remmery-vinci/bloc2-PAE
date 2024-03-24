@@ -2,6 +2,8 @@ package be.vinci.pae;
 
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.FactoryImpl;
+import be.vinci.pae.business.academicyear.AcademicYear;
+import be.vinci.pae.business.academicyear.AcademicYearImpl;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.business.contact.ContactUCCImpl;
 import be.vinci.pae.business.user.UserUCC;
@@ -31,5 +33,6 @@ public class ApplicationBinderTest extends AbstractBinder {
     bind(Mockito.mock(ContactDAO.class)).to(ContactDAO.class);
     bind(Mockito.mock(DALServices.class)).to(DALServices.class);
     bind(Mockito.mock(CompanyDAO.class)).to(CompanyDAO.class);
+    bind(AcademicYearImpl.class).to(AcademicYear.class).in(Singleton.class);
   }
 }
