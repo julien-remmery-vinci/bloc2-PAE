@@ -50,15 +50,14 @@ public class UserDAOImpl implements UserDAO {
    */
   @Override
   public UserDTO getOneById(int id) {
-    try {
-      PreparedStatement getUser = dalBackServices.getPS(
-          "SELECT idUser as \"user.idUser\", lastname as \"user.lastname\","
-              + "firstname as \"user.firstname\", email as \"user.email\","
-              + "password as \"user.password\", phoneNumber as \"user.phoneNumber\","
-              + "registerDate as \"user.registerDate\", role as \"user.role\""
-              + ", academicYear as \"user.academicYear\""
-              + ", version as \"user.version\""
-              + "FROM pae.users WHERE idUser = ?");
+    try (PreparedStatement getUser = dalBackServices.getPS(
+        "SELECT idUser as \"user.idUser\", lastname as \"user.lastname\","
+            + "firstname as \"user.firstname\", email as \"user.email\","
+            + "password as \"user.password\", phoneNumber as \"user.phoneNumber\","
+            + "registerDate as \"user.registerDate\", role as \"user.role\""
+            + ", academicYear as \"user.academicYear\""
+            + ", version as \"user.version\""
+            + "FROM pae.users WHERE idUser = ?")) {
       getUser.setInt(1, id);
       try (ResultSet rs = getUser.executeQuery()) {
         if (rs.next()) {
@@ -76,7 +75,7 @@ public class UserDAOImpl implements UserDAO {
     try (PreparedStatement addUser = dalBackServices.getPS(
         "INSERT INTO pae.users (lastname, firstname, email, password, phoneNumber, registerDate,"
             + " role, academicYear, version) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " +
-                "RETURNING idUser")) {
+            "RETURNING idUser")) {
       setPs(addUser, user);
       addUser.setInt(9, user.getVersion());
       try (ResultSet rs = addUser.executeQuery()) {
