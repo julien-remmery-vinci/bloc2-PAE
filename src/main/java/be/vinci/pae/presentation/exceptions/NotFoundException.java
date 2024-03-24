@@ -1,19 +1,19 @@
-package be.vinci.pae.presentation.filters;
-
+package be.vinci.pae.presentation.exceptions;
 
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Exception thrown when a token cannot be decoded.
+ * Class for the NotFoundException.
  */
-public class TokenDecodingException extends WebApplicationException {
+public class NotFoundException extends WebApplicationException {
 
   /**
    * Constructor without a message.
    */
-  public TokenDecodingException() {
-    super(Response.status(Response.Status.UNAUTHORIZED)
+  public NotFoundException() {
+    super(Response.status(Status.NOT_FOUND)
         .build());
   }
 
@@ -22,8 +22,8 @@ public class TokenDecodingException extends WebApplicationException {
    *
    * @param message the message
    */
-  public TokenDecodingException(String message) {
-    super(Response.status(Response.Status.UNAUTHORIZED)
+  public NotFoundException(String message) {
+    super(Response.status(Status.NOT_FOUND)
         .entity(message)
         .type("text/plain")
         .build());
@@ -34,8 +34,8 @@ public class TokenDecodingException extends WebApplicationException {
    *
    * @param cause the cause
    */
-  public TokenDecodingException(Throwable cause) {
-    super(Response.status(Response.Status.UNAUTHORIZED)
+  public NotFoundException(Throwable cause) {
+    super(Response.status(Status.NOT_FOUND)
         .entity(cause.getMessage())
         .type("text/plain")
         .build());

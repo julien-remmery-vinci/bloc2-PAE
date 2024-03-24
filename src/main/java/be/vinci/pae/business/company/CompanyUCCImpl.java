@@ -14,13 +14,22 @@ public class CompanyUCCImpl implements CompanyUCC {
 
   @Inject
   private CompanyDAO companyDAO;
-
+  /**
+   * Get all companies.
+   *
+   * @return all companies
+   */
   public List<CompanyDTO> getAll() {
     List<CompanyDTO> companies = companyDAO.getAll();
     dalServices.close();
     return companies;
   }
-
+  /**
+   * Get a company by its id.
+   *
+   * @param id the id of the company
+   * @return the company, null if no company was found
+   */
   public CompanyDTO getCompanyById(int id) {
     CompanyDTO company = companyDAO.getCompanyById(id);
     dalServices.close();

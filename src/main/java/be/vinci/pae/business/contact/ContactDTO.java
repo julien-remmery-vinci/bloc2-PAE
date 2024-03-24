@@ -138,6 +138,20 @@ public interface ContactDTO {
   void setAcademicYear(String academicYear);
 
   /**
+   * get the version of the contact.
+   *
+   * @return the version of the contact
+   */
+  int getVersion();
+
+  /**
+   * set the version of the contact.
+   *
+   * @param version the version of the contact
+   */
+  void setVersion(int version);
+
+  /**
    * Enum for the state of the contact.
    */
   enum State {

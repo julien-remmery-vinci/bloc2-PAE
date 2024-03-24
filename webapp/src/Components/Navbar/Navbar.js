@@ -1,42 +1,93 @@
 import {
-  clearAuthenticatedUser,
-  getUserToken
+  getAuthenticatedUser, isAuthenticated,
 } from "../../utils/auths";
-import Navigate from "../Router/Navigate";
 
 const Navbar = () => {
   renderNavbar();
 };
 
 async function renderNavbar() {
-  const notLoggedNavbar = `
+  const defaultNavbar = `
     <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
       <a class="navbar-brand" href="#">VinciOBS</a>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#" data-uri="/login">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#" data-uri="/register">Register</a>
+        </li>           
+      </ul>
     </nav>
   `;
 
-  const loggedNavbar = `
-  <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
-    <a class="navbar-brand" href="#">VinciOBS</a>
-    <div class="ms-auto">
-      <button class="btn btn-primary rounded" type="button" id="button1">
-        Profil
-      </button>
-        <button class="btn btn-primary rounded" type="button" id="button2">Déconnexion</button>
-    </div>
-  </nav>
+  const studentNavbar = `
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
+      <a class="navbar-brand" href="#">VinciOBS</a>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#" data-uri="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#" data-uri="/profile">Profil</a>
+        </li>      
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#" data-uri="/contact">Contacts</a>
+        </li>    
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#" data-uri="/logout">Déconnexion</a>
+        </li>       
+      </ul>
+    </nav>
   `;
+
+  const teacherNavbar = `
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
+      <a class="navbar-brand" href="#">VinciOBS</a>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#" data-uri="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#" data-uri="/profile">Profil</a>
+        </li>      
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#" data-uri="/contact">Recherches</a>
+        </li>    
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#" data-uri="/logout">Responsables</a>
+        </li>     
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#" data-uri="/logout">Statistiques</a>
+        </li>     
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#" data-uri="/logout">Déconnexion</a>
+        </li>    
+      </ul>
+    </nav>
+  `;
+
+  const adminNavbar = `
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
+      <a class="navbar-brand" href="#">VinciOBS</a>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#" data-uri="/">Home</a>
+        </li>  
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#" data-uri="/logout">Déconnexion</a>
+        </li>    
+      </ul>
+    </nav>
+  `;
+
   const navbar = document.querySelector('#navbarWrapper');
-  if (getUserToken() === undefined) {
-    navbar.innerHTML = notLoggedNavbar;
-  } else {
-    navbar.innerHTML = loggedNavbar;
-    const logOutButton = document.querySelector('#button2');
-    logOutButton.addEventListener('click', () => {
-      clearAuthenticatedUser();
-      Navigate('/login');
-      window.location.reload();
-    });
+  if(!isAuthenticated()) navbar.innerHTML = defaultNavbar;
+  else {
+    const userRole = getAuthenticatedUser().role;
+    if(userRole === 'étudiant') navbar.innerHTML = studentNavbar;
+    else if(userRole === 'professeur') navbar.innerHTML = teacherNavbar;
+    else if(userRole === 'administratif') navbar.innerHTML = adminNavbar;
   }
 }
 

@@ -1,4 +1,6 @@
 import { clearPage, renderPageTitle } from "../../utils/render";
+import {isAuthenticated} from "../../utils/auths";
+import Navigate from "../Router/Navigate";
 
 const fetchUsers = async () => {
   try {
@@ -14,10 +16,15 @@ const fetchUsers = async () => {
 };
 
 const SearchPage = () => {
-  renderPageTitle("Recherche");
-  clearPage();
-  fetchUsers();
-  renderSearchPage();
+  if (!isAuthenticated()) {
+    Navigate('/login');
+  } else {
+    renderPageTitle("Recherche");
+    document.title = "Recherche";
+    clearPage();
+    fetchUsers();
+    renderSearchPage();
+  }
 };
 
 function renderSearchPage() {

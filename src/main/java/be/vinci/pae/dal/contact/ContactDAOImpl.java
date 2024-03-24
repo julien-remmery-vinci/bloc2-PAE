@@ -7,6 +7,8 @@ import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of ContactDAO.
@@ -26,16 +28,19 @@ public class ContactDAOImpl implements ContactDAO {
             + "       con.state as \"contact.state\",con.meetPlace as \"contact.meetPlace\","
             + "con.refusalReason as \"contact.refusalReason\",con.academicYear "
             + "as \"contact.academicYear\",\n"
+            + "con.version as \"contact.version\",\n"
             + "       u.iduser as \"user.idUser\",u.lastname as \"user.lastname\",u.firstname "
             + "as \"user.firstname\",u.email as \"user.email\",\n"
             + "       u.password as \"user.password\",u.phoneNumber as \"user.phoneNumber\","
             + "u.registerDate as \"user.registerDate\",u.role as \"user.role\",\n"
+            + "u.version as \"user.version\",\n"
             + "       com.idcompany as \"company.idCompany\", com.tradeName "
             + "as \"company.tradeName\",com.designation as \"company.designation\",\n"
             + "       com.address as \"company.address\", com.phoneNumber "
             + "as \"company.phoneNumber\", com.email as \"company.email\",\n"
             + "       com.blacklisted as \"company.blacklisted\", com.blacklistMotivation "
-            + "as \"company.blacklistMotivation\"\n"
+            + "as \"company.blacklistMotivation\",\n"
+            + "com.version as \"company.version\"\n"
             + "FROM pae.contacts con, pae.users u, pae.companies com WHERE con.idCompany = "
             + "com.idCompany AND con.idStudent = u.idUser AND idContact = ?;")) {
       ps.setInt(1, id);
@@ -61,15 +66,17 @@ public class ContactDAOImpl implements ContactDAO {
     try (PreparedStatement ps = dalServices.getPS(
         "UPDATE pae.contacts "
             + "SET idCompany = ?, idStudent = ?, state = ?, "
-            + "meetPlace = ?, refusalReason = ?, academicYear = ?"
-            + "WHERE idContact = ?;")) {
+            + "meetPlace = ?, refusalReason = ?, academicYear = ?, version = ?"
+            + "WHERE idContact = ? AND version = ?;")) {
       ps.setInt(1, contact.getIdCompany());
       ps.setInt(2, contact.getIdStudent());
-      ps.setString(3, contact.getState().toString());
+      ps.setString(3, contact.getState().getState());
       ps.setString(4, contact.getMeetPlace());
       ps.setString(5, contact.getRefusalReason());
       ps.setString(6, contact.getAcademicYear());
-      ps.setInt(7, contact.getIdContact());
+      ps.setInt(7, contact.getVersion() + 1);
+      ps.setInt(8, contact.getIdContact());
+      ps.setInt(9, contact.getVersion());
       ps.executeUpdate();
     } catch (SQLException e) {
       throw new RuntimeException(e);
@@ -80,11 +87,12 @@ public class ContactDAOImpl implements ContactDAO {
   public ContactDTO addContact(ContactDTO contact) {
     try (PreparedStatement ps = dalServices.getPS(
         "INSERT INTO pae.contacts (idCompany, idStudent, state, "
-            + "academicYear) VALUES (?, ?, ?, ?) RETURNING idContact;")) {
+            + "academicYear, version) VALUES (?, ?, ?, ?, ?) RETURNING idContact;")) {
       ps.setInt(1, contact.getIdCompany());
       ps.setInt(2, contact.getIdStudent());
       ps.setString(3, contact.getState().getState());
       ps.setString(4, contact.getAcademicYear());
+      ps.setInt(5, 1);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           contact.setIdContact(rs.getInt(1));
@@ -95,5 +103,169 @@ public class ContactDAOImpl implements ContactDAO {
       throw new RuntimeException(e);
     }
     return null;
+  }
+
+  @Override
+  public ContactDTO getContactAccepted(int idUser) {
+    try (PreparedStatement ps = dalServices.getPS(
+        "SELECT con.idContact as \"contact.idContact\",con.idCompany as \"contact.idCompany\","
+            + "con.idStudent as \"contact.idStudent\",\n"
+            + "       con.state as \"contact.state\",con.meetPlace as \"contact.meetPlace\","
+            + "con.refusalReason as \"contact.refusalReason\",con.academicYear "
+            + "as \"contact.academicYear\",\n"
+            + "con.version as \"contact.version\",\n"
+            + "       u.iduser as \"user.idUser\",u.lastname as \"user.lastname\",u.firstname "
+            + "as \"user.firstname\",u.email as \"user.email\",\n"
+            + "       u.password as \"user.password\",u.phoneNumber as \"user.phoneNumber\","
+            + "u.registerDate as \"user.registerDate\",u.role as \"user.role\",\n"
+            + "u.academicYear as \"user.academicYear\",\n"
+            + "u.version as \"user.version\",\n"
+            + "       com.idcompany as \"company.idCompany\", com.tradeName "
+            + "as \"company.tradeName\",com.designation as \"company.designation\",\n"
+            + "       com.address as \"company.address\", com.phoneNumber "
+            + "as \"company.phoneNumber\", com.email as \"company.email\",\n"
+            + "       com.blacklisted as \"company.blacklisted\", com.blacklistMotivation "
+            + "as \"company.blacklistMotivation\",\n"
+            + "com.version as \"company.version\"\n"
+            + "FROM pae.contacts con, pae.users u, pae.companies com WHERE con.idCompany = "
+            + "com.idCompany AND con.idStudent = u.idUser AND con.idStudent = ? AND "
+            + "con.state = 'accepté';")) {
+      ps.setInt(1, idUser);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          String prefix = "contact";
+          return (ContactDTO) daoServices.getDataFromRs(rs, prefix);
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+    return null;
+  }
+
+  @Override
+  public ContactDTO getCompanyContact(int idUser, int idCompany, String academicYear) {
+    try (PreparedStatement ps = dalServices.getPS(
+        "SELECT con.idContact as \"contact.idContact\",con.idCompany as \"contact.idCompany\","
+            + "con.idStudent as \"contact.idStudent\",\n"
+            + "       con.state as \"contact.state\",con.meetPlace as \"contact.meetPlace\","
+            + "con.refusalReason as \"contact.refusalReason\",con.academicYear "
+            + "as \"contact.academicYear\",\n"
+            + "con.version as \"contact.version\",\n"
+            + "       u.iduser as \"user.idUser\",u.lastname as \"user.lastname\",u.firstname "
+            + "as \"user.firstname\",u.email as \"user.email\",\n"
+            + "       u.password as \"user.password\",u.phoneNumber as \"user.phoneNumber\","
+            + "u.registerDate as \"user.registerDate\",u.role as \"user.role\",\n"
+            + "u.academicYear as \"user.academicYear\",\n"
+            + "u.version as \"user.version\",\n"
+            + "       com.idcompany as \"company.idCompany\", com.tradeName "
+            + "as \"company.tradeName\",com.designation as \"company.designation\",\n"
+            + "       com.address as \"company.address\", com.phoneNumber "
+            + "as \"company.phoneNumber\", com.email as \"company.email\",\n"
+            + "       com.blacklisted as \"company.blacklisted\", com.blacklistMotivation "
+            + "as \"company.blacklistMotivation\",\n"
+            + "com.version as \"company.version\"\n"
+            + "FROM pae.contacts con, pae.users u, pae.companies com WHERE con.idCompany = "
+            + "com.idCompany AND con.idStudent = u.idUser AND con.idStudent = ? AND "
+            + "con.idCompany = ? AND con.academicYear = ?;")) {
+      ps.setInt(1, idUser);
+      ps.setInt(2, idCompany);
+      ps.setString(3, academicYear);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          String prefix = "contact";
+          return (ContactDTO) daoServices.getDataFromRs(rs, prefix);
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return null;
+  }
+
+
+  /**
+   * Get the contacts of a student.
+   *
+   * @param idStudent the id of the student
+   * @return the contacts
+   */
+  @Override
+  public List<ContactDTO> getContactsByStudentId(int idStudent) {
+    List<ContactDTO> contacts = new ArrayList<>();
+    try (PreparedStatement ps = dalServices.getPS(
+        "SELECT con.idContact as \"contact.idContact\",con.idCompany as \"contact.idCompany\","
+            + "con.idStudent as \"contact.idStudent\",\n"
+            + "       con.state as \"contact.state\",con.meetPlace as \"contact.meetPlace\","
+            + "con.refusalReason as \"contact.refusalReason\",con.academicYear "
+            + "as \"contact.academicYear\",con.version as \"contact.version\",\n"
+            + "       u.iduser as \"user.idUser\",u.lastname as \"user.lastname\",u.firstname "
+            + "as \"user.firstname\",u.email as \"user.email\",\n"
+            + "       u.password as \"user.password\",u.phoneNumber as \"user.phoneNumber\","
+            + "u.registerDate as \"user.registerDate\",u.role as \"user.role\",\n"
+            + "u.academicYear as \"user.academicYear\" ,u.version as \"user.version\",\n"
+            + "       com.idcompany as \"company.idCompany\", com.tradeName "
+            + "as \"company.tradeName\",com.designation as \"company.designation\",\n"
+            + "       com.address as \"company.address\", com.phoneNumber "
+            + "as \"company.phoneNumber\", com.email as \"company.email\",\n"
+            + "       com.blacklisted as \"company.blacklisted\", com.blacklistMotivation "
+            + "as \"company.blacklistMotivation\", com.version as \"company.version\"\n"
+            + "FROM pae.contacts con, pae.users u, pae.companies com WHERE con.idCompany = "
+            + "com.idCompany AND con.idStudent = u.idUser AND con.idStudent = ?;")) {
+      ps.setInt(1, idStudent);
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          String prefix = "contact";
+          contacts.add((ContactDTO) daoServices.getDataFromRs(rs, prefix));
+        }
+        return contacts;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  /**
+   * Get all the contacts.
+   *
+   * @return the contacts
+   */
+  @Override
+  public List<ContactDTO> getAllContacts() {
+    List<ContactDTO> contacts = new ArrayList<>();
+    try {
+      PreparedStatement ps = dalServices.getPS(
+      "SELECT con.idContact as \"contact.idContact\",con.idCompany as \"contact.idCompany\","
+              + "con.idStudent as \"contact.idStudent\",\n"
+              + "       con.state as \"contact.state\",con.meetPlace as \"contact.meetPlace\","
+              + "con.refusalReason as \"contact.refusalReason\",con.academicYear "
+              + "as \"contact.academicYear\",\n"
+              + "con.version as \"contact.version\",\n"
+              + "       u.iduser as \"user.idUser\",u.lastname as \"user.lastname\",u.firstname "
+              + "as \"user.firstname\",u.email as \"user.email\",\n"
+              + "       u.password as \"user.password\",u.phoneNumber as \"user.phoneNumber\","
+              + "u.registerDate as \"user.registerDate\",u.role as \"user.role\",\n"
+              + "u.academicYear as \"user.academicYear\",\n"
+              + "u.version as \"user.version\",\n"
+              + "       com.idcompany as \"company.idCompany\", com.tradeName "
+              + "as \"company.tradeName\",com.designation as \"company.designation\",\n"
+              + "       com.address as \"company.address\", com.phoneNumber "
+              + "as \"company.phoneNumber\", com.email as \"company.email\",\n"
+              + "       com.blacklisted as \"company.blacklisted\", com.blacklistMotivation "
+              + "as \"company.blacklistMotivation\",\n"
+              + "com.version as \"company.version\"\n"
+              + "FROM pae.contacts con, pae.users u, pae.companies com WHERE con.idCompany = "
+              + "com.idCompany AND con.idStudent = u.idUser");
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          String prefix = "contact";
+          contacts.add((ContactDTO) daoServices.getDataFromRs(rs, prefix));
+        }
+        return contacts;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

@@ -1,14 +1,16 @@
 import {clearPage} from "../../../utils/render";
-import {getAuthenticatedUser, getUserToken} from "../../../utils/auths";
+import {
+    getToken,
+    isAuthenticated
+} from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
 const AddContactPage = () => {
-    const authenticatedUser = getAuthenticatedUser();
-    if (!authenticatedUser) {
+    if (!isAuthenticated()) {
         Navigate('/login');
-        window.location.reload();
     } else {
         clearPage();
+        document.title = "Ajouter un contact";
         buildPage();
     }
 }
@@ -117,11 +119,11 @@ async function buildPage(){
 
 // fetch function to get all entreprises
 async function getCompanies() {
-    const response = await fetch('http://localhost:3000/company', {
+    const response = await fetch('http://localhost:3000/companies', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': getAuthenticatedUser().token,
+            'Authorization': getToken(),
         },
     });
     if (response.status === 200) {
@@ -154,16 +156,15 @@ async function onSubmit(e) {
     const options = {
         method: 'POST',
         body: JSON.stringify({
-            idCompany: companyFound.idCompany,
-            academicYear: '2021-2022', // TODO: get the current academic year
+            idCompany: companyFound.idCompany
         }),
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': getUserToken(),
+            'Authorization': getToken(),
         },
     };
 
-    const response = await fetch('http://localhost:3000/contact/add', options);
+    const response = await fetch('http://localhost:3000/contacts/add', options);
     if (response.status === 200) {
         Navigate('/');
         

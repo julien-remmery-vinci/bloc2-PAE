@@ -67,11 +67,39 @@ public interface UserDTO {
   void setEmail(String email);
 
   /**
+   * Get the version of the user.
+   *
+   * @return the version of the user
+   */
+  int getVersion();
+
+  /**
+   * Set the version of the user.
+   *
+   * @param version the version of the user
+   */
+  void setVersion(int version);
+
+  /**
    * Get the password of the user.
    *
    * @return the password of the user
    */
   String getPassword();
+
+  /**
+   * Get the academic year of the user.
+   *
+   * @return the academic year of the user
+   */
+  String getAcademicYear();
+
+  /**
+   * Set the academic year of the user.
+   *
+   * @param academicYear the academic year of the user
+   */
+  void setAcademicYear(String academicYear);
 
   /**
    * Set the password of the user.

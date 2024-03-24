@@ -1,8 +1,6 @@
 package be.vinci.pae.utils;
 
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
+import be.vinci.pae.presentation.exceptions.FatalException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,9 +23,7 @@ public class Config {
     try (InputStream input = new FileInputStream(file)) {
       props.load(input);
     } catch (IOException e) {
-      throw new WebApplicationException(
-          Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).type("text/plain")
-              .build());
+      throw new FatalException("Error while loading config file: " + e.getMessage());
     }
   }
 

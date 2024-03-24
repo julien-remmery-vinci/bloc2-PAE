@@ -39,4 +39,11 @@ public interface UserDAO {
    */
   List<UserDTO> getAllUsers();
 
+  /**
+   * Update a user in the database.
+   *
+   * @param user the user to update
+   * @return the updated user
+   */
+  UserDTO updateUser(UserDTO user);
 }

@@ -2,6 +2,8 @@ package be.vinci.pae.presentation;
 
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
+import be.vinci.pae.presentation.exceptions.BadRequestException;
+import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.filters.Authorize;
 import be.vinci.pae.presentation.filters.Log;
 import be.vinci.pae.utils.Config;
@@ -20,7 +22,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import java.util.Date;
 import org.glassfish.jersey.server.ContainerRequest;
@@ -51,16 +52,16 @@ public class AuthRessource {
   public ObjectNode login(JsonNode json) {
     // Get and check credentials
     if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
-      throw new WebApplicationException("email or password required", Response.Status.BAD_REQUEST);
+      throw new BadRequestException("email or password required");
     }
     // verify if email is valid
     if (!json.get("email").asText()
         .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
-      throw new WebApplicationException("email is not valid", Response.Status.BAD_REQUEST);
+      throw new BadRequestException("email is not valid");
     }
     // verify if email or password are empty
     if (json.get("email").asText().isEmpty() || json.get("password").asText().isEmpty()) {
-      throw new WebApplicationException("email or password is empty", Response.Status.BAD_REQUEST);
+      throw new BadRequestException("email or password is empty");
     }
     String email = json.get("email").asText();
     String password = json.get("password").asText();
@@ -99,19 +100,15 @@ public class AuthRessource {
     if (user.getFirstname() == null || user.getLastname() == null || user.getPassword() == null
         || user.getEmail() == null
         || user.getPhoneNumber() == null) {
-      throw new WebApplicationException("parameters required", Response.Status.BAD_REQUEST);
+      throw new BadRequestException("parameters required");
     }
     if (!user.getEmail()
         .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
-      throw new WebApplicationException("email is not valid", Response.Status.BAD_REQUEST);
-    }
-    if (user.getRole() != null && !user.getRole().toString().equals("A")
-        && !user.getRole().toString().equals("P")) {
-      throw new WebApplicationException("role is not valid", Response.Status.BAD_REQUEST);
+      throw new BadRequestException("email is not valid");
     }
     if (user.getFirstname().isEmpty() || user.getLastname().isEmpty() || user.getPhoneNumber()
         .isEmpty() || user.getEmail().isEmpty() || user.getPassword().isEmpty()) {
-      throw new WebApplicationException("parameters empty", Response.Status.BAD_REQUEST);
+      throw new BadRequestException("parameters empty");
     }
 
     user = userUCC.register(user);
@@ -163,9 +160,10 @@ public class AuthRessource {
   public UserDTO getUser(@Context ContainerRequest request) {
     UserDTO authenticatedUser = (UserDTO) request.getProperty("user");
     if (authenticatedUser.getIdUser() <= 0) {
-      throw new WebApplicationException("User not found", Status.NOT_FOUND);
+      throw new NotFoundException("User not found");
     }
     // Return the user
     return authenticatedUser;
   }
+
 }

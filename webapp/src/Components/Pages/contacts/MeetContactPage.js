@@ -1,14 +1,16 @@
-import { getAuthenticatedUser, getUserToken } from '../../../utils/auths';
+import {
+  getToken,
+  isAuthenticated
+} from '../../../utils/auths';
 import { clearPage, renderPageTitle } from '../../../utils/render';
 import Navigate from '../../Router/Navigate';
 
 const MeetContactPage = () => {
-  const authenticatedUser = getAuthenticatedUser();
-  if (!authenticatedUser) {
+  if (!isAuthenticated()) {
     Navigate('/login');
-    window.location.reload();
   } else {
     clearPage();
+    document.title = "Rencontrer un contact";
     renderPageTitle('Rencontre avec un contact');
     renderMeetContactPage();
   }
@@ -44,11 +46,11 @@ async function submitFunc (event) {
   const lieu = formData.get('lieu');
   const contactId = window.location.pathname.split('/').pop();
   try {
-    const response = await fetch(`http://localhost:3000/contact/${contactId}/meet`, {
+    const response = await fetch(`http://localhost:3000/contacts/${contactId}/meet`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${getUserToken()}`,
+        Authorization: getToken(),
       },
       body: JSON.stringify({ lieu }),
     });

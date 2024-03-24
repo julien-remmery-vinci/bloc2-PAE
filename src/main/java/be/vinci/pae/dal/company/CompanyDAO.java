@@ -15,7 +15,7 @@ public interface CompanyDAO {
    */
   List<CompanyDTO> getAll();
 
-/**
+  /**
    * Get a company by its id.
    *
    * @param id the id of the company

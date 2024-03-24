@@ -15,7 +15,7 @@ import java.util.List;
  * Company route.
  */
 @Singleton
-@Path("/company")
+@Path("/companies")
 @Log
 public class CompanyRessource {
 
