@@ -23,7 +23,7 @@ public class DAOServicesImpl implements DAOServices {
       String classPrefix = prefix.substring(0, 1).toUpperCase() + prefix.substring(1);
       // Get the implementation class
       Class<?> implementationClass = Class.forName(
-          "be.vinci.pae.business." + prefix + "." + classPrefix + "Impl");
+          "be.vinci.pae.business." + prefix.toLowerCase() + "." + classPrefix + "Impl");
       // Get the method to get the implementation of the class
       Method getImpl = factory.getClass().getDeclaredMethod("get" + classPrefix);
       // Get the object from the factory using the method
