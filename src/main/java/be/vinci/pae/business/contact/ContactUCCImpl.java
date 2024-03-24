@@ -7,7 +7,6 @@ import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
-import be.vinci.pae.dal.user.UserDAO;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.exceptions.PreconditionFailedException;
 import jakarta.inject.Inject;
@@ -20,16 +19,10 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Inject
   private ContactDAO contactDAO;
-
   @Inject
   private DALServices dalServices;
-
   @Inject
   private CompanyDAO companyDAO;
-
-  @Inject
-  private UserDAO userDAO;
-
   @Inject
   private AcademicYear academicYear;
 
@@ -43,11 +36,16 @@ public class ContactUCCImpl implements ContactUCC {
     if (user == null) {
       return null; //error message
     }
+    List<ContactDTO> list;
     if (user.getRole().equals(Role.STUDENT)) {
-      return contactDAO.getContactsByStudentId(user.getIdUser());
+      list = contactDAO.getContactsByStudentId(user.getIdUser());
+      dalServices.close();
+      return list;
     }
     if (user.getRole().equals(Role.ADMIN) || user.getRole().equals(Role.PROFESSOR)) {
-      return contactDAO.getAllContacts();
+      list = contactDAO.getAllContacts();
+      dalServices.close();
+      return list;
     }
     return null; //error message
   }
@@ -97,6 +95,7 @@ public class ContactUCCImpl implements ContactUCC {
     }
     contact.setState(State.STARTED);
     contact = contactDAO.addContact(contact);
+    dalServices.close();
     return contact;
   }
 
@@ -136,6 +135,7 @@ public class ContactUCCImpl implements ContactUCC {
     }
     contact.setState(State.UNSUPERVISED);
     contactDAO.updateContact(contact);
+    dalServices.close();
     return contact;
   }
 }

@@ -51,7 +51,7 @@ function onFrontendLoad() {
       Navigate('/login');
     }
     Navbar();
-    return componentToRender();
+    componentToRender();
   });
 }
 
