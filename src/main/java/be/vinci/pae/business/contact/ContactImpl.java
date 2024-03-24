@@ -128,6 +128,15 @@ public class ContactImpl implements Contact {
       this.state = state;
       return true;
     }
+    if (state.equals(State.ADMITTED) && this.state.equals(State.STARTED)) {
+      this.state = state;
+      return true;
+    }
+    if (state.equals(State.UNSUPERVISED) && (this.state.equals(State.ADMITTED) || this.state.equals(
+        State.STARTED))) {
+      this.state = state;
+      return true;
+    }
     return false;
   }
 }
