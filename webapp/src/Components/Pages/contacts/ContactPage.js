@@ -50,10 +50,17 @@ async function buildPage() {
     const companyCell = document.createElement('td');
     const companyLink = document.createElement('a');
     companyLink.textContent = contact.company.tradeName;
+    companyLink.href = '#';
     if (contact.company.designation !== null) {
       companyLink.textContent += `,  ${contact.company.designation}`;
     }
-    companyLink.href = '#';
+    companyLink.addEventListener('click', (event) => {
+      event.preventDefault();
+      let url = window.location.href;
+      url += contact.state === 'initié' ? '/meet' : '/refusal';
+      url += `?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}&meetplace=${contact.meetPlace}`;
+      window.location.href = url;
+    });
     companyCell.appendChild(companyLink);
 
     // Colonne état
