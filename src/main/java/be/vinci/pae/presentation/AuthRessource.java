@@ -106,10 +106,6 @@ public class AuthRessource {
         .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
       throw new BadRequestException("email is not valid");
     }
-    if (user.getRole() != null && !user.getRole().toString().equals("A")
-        && !user.getRole().toString().equals("P")) {
-      throw new BadRequestException("role is not valid");
-    }
     if (user.getFirstname().isEmpty() || user.getLastname().isEmpty() || user.getPhoneNumber()
         .isEmpty() || user.getEmail().isEmpty() || user.getPassword().isEmpty()) {
       throw new BadRequestException("parameters empty");
