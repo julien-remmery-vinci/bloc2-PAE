@@ -3,7 +3,6 @@ package be.vinci.pae.presentation;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.presentation.exceptions.BadRequestException;
-import be.vinci.pae.presentation.exceptions.ForbiddenException;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.filters.Authorize;
 import be.vinci.pae.presentation.filters.Log;
@@ -72,7 +71,7 @@ public class AuthRessource {
 
     // Handle user not logged
     if (user == null) {
-      throw new ForbiddenException("wrong email or password");
+      throw new WebApplicationException("wrong email or password", Status.UNAUTHORIZED);
     }
 
     String token = generateToken(user);
