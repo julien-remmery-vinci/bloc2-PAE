@@ -83,7 +83,8 @@ public class UserRessource {
     }
 
     if (userUCC.updateUser(authenticatedUser, oldPassword, newPassword) == null) {
-      throw new WebApplicationException("oldPassword is wrong", Status.UNAUTHORIZED);
+      throw new WebApplicationException("oldPassword is wrong",
+          Status.UNAUTHORIZED);
     }
     return Response.status(204, "Password changed").build();
   }
