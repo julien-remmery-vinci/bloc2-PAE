@@ -170,7 +170,7 @@ async function onSubmit(e) {
         
     } else {
         alert.hidden = false;
-        alert.textContent = 'Erreur lors de l\'ajout du contact';
+        alert.textContent = await response.text();
     }
 }
 
