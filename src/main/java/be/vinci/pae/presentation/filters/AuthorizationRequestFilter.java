@@ -2,7 +2,9 @@ package be.vinci.pae.presentation.filters;
 
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
+import be.vinci.pae.presentation.exceptions.ForbiddenException;
 import be.vinci.pae.presentation.exceptions.TokenDecodingException;
+import be.vinci.pae.presentation.exceptions.UnauthorizedException;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -12,8 +14,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.ext.Provider;
 import java.io.IOException;
 
@@ -35,8 +35,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
   public void filter(ContainerRequestContext requestContext) throws IOException {
     String token = requestContext.getHeaderString("Authorization");
     if (token == null) {
-      requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
-          .entity("A token is needed to access this resource").build());
+      throw new UnauthorizedException("A token is needed to access this resource");
     } else {
       DecodedJWT decodedToken = null;
       try {
@@ -46,9 +45,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
       }
       UserDTO authenticatedUser = myUserUCC.getUser(decodedToken.getClaim("user").asInt());
       if (authenticatedUser == null) {
-        requestContext.abortWith(
-            Response.status(Status.FORBIDDEN).entity("You are forbidden to access this resource")
-                .build());
+        throw new ForbiddenException("You are forbidden to access this resource");
       }
 
       requestContext.setProperty("user", authenticatedUser);
