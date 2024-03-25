@@ -23,26 +23,9 @@ public class ContactDAOImpl implements ContactDAO {
   @Override
   public ContactDTO getOneById(int id) {
     try (PreparedStatement ps = dalServices.getPS(
-        "SELECT con.idContact as \"contact.idContact\",con.idCompany as \"contact.idCompany\","
-            + "con.idStudent as \"contact.idStudent\",\n"
-            + "       con.state as \"contact.state\",con.meetPlace as \"contact.meetPlace\","
-            + "con.refusalReason as \"contact.refusalReason\",con.academicYear "
-            + "as \"contact.academicYear\",\n"
-            + "con.version as \"contact.version\",\n"
-            + "       u.iduser as \"user.idUser\",u.lastname as \"user.lastname\",u.firstname "
-            + "as \"user.firstname\",u.email as \"user.email\",\n"
-            + "       u.password as \"user.password\",u.phoneNumber as \"user.phoneNumber\","
-            + "u.registerDate as \"user.registerDate\",u.role as \"user.role\",\n"
-            + "u.version as \"user.version\",\n"
-            + "       com.idcompany as \"company.idCompany\", com.tradeName "
-            + "as \"company.tradeName\",com.designation as \"company.designation\",\n"
-            + "       com.address as \"company.address\", com.phoneNumber "
-            + "as \"company.phoneNumber\", com.email as \"company.email\",\n"
-            + "       com.blacklisted as \"company.blacklisted\", com.blacklistMotivation "
-            + "as \"company.blacklistMotivation\",\n"
-            + "com.version as \"company.version\"\n"
-            + "FROM pae.contacts con, pae.users u, pae.companies com WHERE con.idCompany = "
-            + "com.idCompany AND con.idStudent = u.idUser AND idContact = ?;")) {
+        "SELECT *"
+            + "FROM pae.contacts, pae.users, pae.companies WHERE contact_idCompany = "
+            + "company_idCompany AND contact_idStudent = user_idUser AND contact_idContact = ?;")) {
       ps.setInt(1, id);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
@@ -65,9 +48,9 @@ public class ContactDAOImpl implements ContactDAO {
   public void updateContact(ContactDTO contact) {
     try (PreparedStatement ps = dalServices.getPS(
         "UPDATE pae.contacts "
-            + "SET idCompany = ?, idStudent = ?, state = ?, "
-            + "meetPlace = ?, refusalReason = ?, academicYear = ?, version = ?"
-            + "WHERE idContact = ? AND version = ?;")) {
+            + "SET contact_idCompany = ?, contact_idStudent = ?, contact_state = ?, "
+            + "contact_meetPlace = ?, contact_refusalReason = ?, contact_academicYear = ?, contact_version = ?"
+            + "WHERE contact_idContact = ? AND contact_version = ?;")) {
       ps.setInt(1, contact.getIdCompany());
       ps.setInt(2, contact.getIdStudent());
       ps.setString(3, contact.getState().getState());
@@ -86,13 +69,12 @@ public class ContactDAOImpl implements ContactDAO {
   @Override
   public ContactDTO addContact(ContactDTO contact) {
     try (PreparedStatement ps = dalServices.getPS(
-        "INSERT INTO pae.contacts (idCompany, idStudent, state, "
-            + "academicYear, version) VALUES (?, ?, ?, ?, ?) RETURNING idContact;")) {
+        "INSERT INTO pae.contacts (contact_idCompany, contact_idStudent, contact_state, "
+            + "contact_academicYear, contact_version) VALUES (?, ?, ?, ?, 1) RETURNING idContact;")) {
       ps.setInt(1, contact.getIdCompany());
       ps.setInt(2, contact.getIdStudent());
       ps.setString(3, contact.getState().getState());
       ps.setString(4, contact.getAcademicYear());
-      ps.setInt(5, 1);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           contact.setIdContact(rs.getInt(1));
@@ -108,28 +90,9 @@ public class ContactDAOImpl implements ContactDAO {
   @Override
   public ContactDTO getContactAccepted(int idUser) {
     try (PreparedStatement ps = dalServices.getPS(
-        "SELECT con.idContact as \"contact.idContact\",con.idCompany as \"contact.idCompany\","
-            + "con.idStudent as \"contact.idStudent\",\n"
-            + "       con.state as \"contact.state\",con.meetPlace as \"contact.meetPlace\","
-            + "con.refusalReason as \"contact.refusalReason\",con.academicYear "
-            + "as \"contact.academicYear\",\n"
-            + "con.version as \"contact.version\",\n"
-            + "       u.iduser as \"user.idUser\",u.lastname as \"user.lastname\",u.firstname "
-            + "as \"user.firstname\",u.email as \"user.email\",\n"
-            + "       u.password as \"user.password\",u.phoneNumber as \"user.phoneNumber\","
-            + "u.registerDate as \"user.registerDate\",u.role as \"user.role\",\n"
-            + "u.academicYear as \"user.academicYear\",\n"
-            + "u.version as \"user.version\",\n"
-            + "       com.idcompany as \"company.idCompany\", com.tradeName "
-            + "as \"company.tradeName\",com.designation as \"company.designation\",\n"
-            + "       com.address as \"company.address\", com.phoneNumber "
-            + "as \"company.phoneNumber\", com.email as \"company.email\",\n"
-            + "       com.blacklisted as \"company.blacklisted\", com.blacklistMotivation "
-            + "as \"company.blacklistMotivation\",\n"
-            + "com.version as \"company.version\"\n"
-            + "FROM pae.contacts con, pae.users u, pae.companies com WHERE con.idCompany = "
-            + "com.idCompany AND con.idStudent = u.idUser AND con.idStudent = ? AND "
-            + "con.state = 'accepté';")) {
+        "SELECT * FROM pae.contacts, pae.users, pae.companies WHERE contact_idCompany = "
+            + "company_idCompany AND contact_idStudent = user_idUser AND contact_idStudent = ? AND "
+            + "contact_state = 'accepté';")) {
       ps.setInt(1, idUser);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
@@ -147,28 +110,9 @@ public class ContactDAOImpl implements ContactDAO {
   @Override
   public ContactDTO getCompanyContact(int idUser, int idCompany, String academicYear) {
     try (PreparedStatement ps = dalServices.getPS(
-        "SELECT con.idContact as \"contact.idContact\",con.idCompany as \"contact.idCompany\","
-            + "con.idStudent as \"contact.idStudent\",\n"
-            + "       con.state as \"contact.state\",con.meetPlace as \"contact.meetPlace\","
-            + "con.refusalReason as \"contact.refusalReason\",con.academicYear "
-            + "as \"contact.academicYear\",\n"
-            + "con.version as \"contact.version\",\n"
-            + "       u.iduser as \"user.idUser\",u.lastname as \"user.lastname\",u.firstname "
-            + "as \"user.firstname\",u.email as \"user.email\",\n"
-            + "       u.password as \"user.password\",u.phoneNumber as \"user.phoneNumber\","
-            + "u.registerDate as \"user.registerDate\",u.role as \"user.role\",\n"
-            + "u.academicYear as \"user.academicYear\",\n"
-            + "u.version as \"user.version\",\n"
-            + "       com.idcompany as \"company.idCompany\", com.tradeName "
-            + "as \"company.tradeName\",com.designation as \"company.designation\",\n"
-            + "       com.address as \"company.address\", com.phoneNumber "
-            + "as \"company.phoneNumber\", com.email as \"company.email\",\n"
-            + "       com.blacklisted as \"company.blacklisted\", com.blacklistMotivation "
-            + "as \"company.blacklistMotivation\",\n"
-            + "com.version as \"company.version\"\n"
-            + "FROM pae.contacts con, pae.users u, pae.companies com WHERE con.idCompany = "
-            + "com.idCompany AND con.idStudent = u.idUser AND con.idStudent = ? AND "
-            + "con.idCompany = ? AND con.academicYear = ?;")) {
+        "SELECT * FROM pae.contacts, pae.users, pae.companies WHERE contact_idCompany = "
+            + "company_idCompany AND contact_idStudent = user_idUser AND contact_idStudent = ? AND "
+            + "contact_idCompany = ? AND contact_academicYear = ?;")) {
       ps.setInt(1, idUser);
       ps.setInt(2, idCompany);
       ps.setString(3, academicYear);
@@ -195,24 +139,8 @@ public class ContactDAOImpl implements ContactDAO {
   public List<ContactDTO> getContactsByStudentId(int idStudent) {
     List<ContactDTO> contacts = new ArrayList<>();
     try (PreparedStatement ps = dalServices.getPS(
-        "SELECT con.idContact as \"contact.idContact\",con.idCompany as \"contact.idCompany\","
-            + "con.idStudent as \"contact.idStudent\",\n"
-            + "       con.state as \"contact.state\",con.meetPlace as \"contact.meetPlace\","
-            + "con.refusalReason as \"contact.refusalReason\",con.academicYear "
-            + "as \"contact.academicYear\",con.version as \"contact.version\",\n"
-            + "       u.iduser as \"user.idUser\",u.lastname as \"user.lastname\",u.firstname "
-            + "as \"user.firstname\",u.email as \"user.email\",\n"
-            + "       u.password as \"user.password\",u.phoneNumber as \"user.phoneNumber\","
-            + "u.registerDate as \"user.registerDate\",u.role as \"user.role\",\n"
-            + "u.academicYear as \"user.academicYear\" ,u.version as \"user.version\",\n"
-            + "       com.idcompany as \"company.idCompany\", com.tradeName "
-            + "as \"company.tradeName\",com.designation as \"company.designation\",\n"
-            + "       com.address as \"company.address\", com.phoneNumber "
-            + "as \"company.phoneNumber\", com.email as \"company.email\",\n"
-            + "       com.blacklisted as \"company.blacklisted\", com.blacklistMotivation "
-            + "as \"company.blacklistMotivation\", com.version as \"company.version\"\n"
-            + "FROM pae.contacts con, pae.users u, pae.companies com WHERE con.idCompany = "
-            + "com.idCompany AND con.idStudent = u.idUser AND con.idStudent = ?;")) {
+        "SELECT * FROM pae.contacts, pae.users, pae.companies WHERE contact_idCompany = "
+            + "company_idCompany AND contact_idStudent = user_idUser AND contact_idStudent = ?;")) {
       ps.setInt(1, idStudent);
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
@@ -236,27 +164,8 @@ public class ContactDAOImpl implements ContactDAO {
     List<ContactDTO> contacts = new ArrayList<>();
     try {
       PreparedStatement ps = dalServices.getPS(
-      "SELECT con.idContact as \"contact.idContact\",con.idCompany as \"contact.idCompany\","
-              + "con.idStudent as \"contact.idStudent\",\n"
-              + "       con.state as \"contact.state\",con.meetPlace as \"contact.meetPlace\","
-              + "con.refusalReason as \"contact.refusalReason\",con.academicYear "
-              + "as \"contact.academicYear\",\n"
-              + "con.version as \"contact.version\",\n"
-              + "       u.iduser as \"user.idUser\",u.lastname as \"user.lastname\",u.firstname "
-              + "as \"user.firstname\",u.email as \"user.email\",\n"
-              + "       u.password as \"user.password\",u.phoneNumber as \"user.phoneNumber\","
-              + "u.registerDate as \"user.registerDate\",u.role as \"user.role\",\n"
-              + "u.academicYear as \"user.academicYear\",\n"
-              + "u.version as \"user.version\",\n"
-              + "       com.idcompany as \"company.idCompany\", com.tradeName "
-              + "as \"company.tradeName\",com.designation as \"company.designation\",\n"
-              + "       com.address as \"company.address\", com.phoneNumber "
-              + "as \"company.phoneNumber\", com.email as \"company.email\",\n"
-              + "       com.blacklisted as \"company.blacklisted\", com.blacklistMotivation "
-              + "as \"company.blacklistMotivation\",\n"
-              + "com.version as \"company.version\"\n"
-              + "FROM pae.contacts con, pae.users u, pae.companies com WHERE con.idCompany = "
-              + "com.idCompany AND con.idStudent = u.idUser");
+          "SELECT * FROM pae.contacts, pae.users u, pae.companies com WHERE contact_idCompany = "
+              + "company_idCompany AND contact_idStudent = user_idUser");
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
           String prefix = "contact";
