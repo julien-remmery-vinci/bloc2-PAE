@@ -1,6 +1,5 @@
 package be.vinci.pae.utils;
 
-import be.vinci.pae.presentation.exceptions.FatalException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
@@ -29,6 +28,8 @@ public class WebExceptionMapper implements ExceptionMapper<Throwable> {
           .entity(exception.getMessage())
           .build();
     }
-    return new FatalException().getResponse();
+    return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+        .entity(exception.getMessage())
+        .build();
   }
 }
