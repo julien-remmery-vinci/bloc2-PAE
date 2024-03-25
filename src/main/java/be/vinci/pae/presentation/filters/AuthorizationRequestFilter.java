@@ -2,6 +2,7 @@ package be.vinci.pae.presentation.filters;
 
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
+import be.vinci.pae.presentation.exceptions.ForbiddenException;
 import be.vinci.pae.presentation.exceptions.TokenDecodingException;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
@@ -35,8 +36,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
   public void filter(ContainerRequestContext requestContext) throws IOException {
     String token = requestContext.getHeaderString("Authorization");
     if (token == null) {
-      requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
-          .entity("A token is needed to access this resource").build());
+      throw new ForbiddenException("A token is needed to access this resource");
     } else {
       DecodedJWT decodedToken = null;
       try {
