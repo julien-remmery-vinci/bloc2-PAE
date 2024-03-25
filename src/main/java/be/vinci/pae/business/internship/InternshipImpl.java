@@ -1,6 +1,5 @@
 package be.vinci.pae.business.internship;
 
-import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorDTO;
 import be.vinci.pae.business.user.UserDTO;
@@ -32,8 +31,6 @@ public class InternshipImpl implements Internship {
   private InternshipSupervisorDTO internshipSupervisor;
 
   private int idCompany;
-
-  private CompanyDTO company;
 
   private int version;
 
@@ -136,16 +133,6 @@ public class InternshipImpl implements Internship {
   @Override
   public void setIdCompany(int idCompany) {
     this.idCompany = idCompany;
-  }
-
-  @Override
-  public CompanyDTO getCompany() {
-    return company;
-  }
-
-  @Override
-  public void setCompany(CompanyDTO company) {
-    this.company = company;
   }
 
   @Override

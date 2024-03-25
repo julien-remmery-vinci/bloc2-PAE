@@ -1,5 +1,7 @@
 package be.vinci.pae.business.internshipsupervisor;
 
+import be.vinci.pae.business.company.CompanyDTO;
+
 /**
  * Implementation of InternshipSupervisor.
  */
@@ -14,8 +16,9 @@ public class InternshipSupervisorImpl implements InternshipSupervisor {
   private String email;
 
   private String phoneNumber;
-
   private int idCompany;
+
+  private CompanyDTO company;
   private int version;
 
   @Override
@@ -77,6 +80,16 @@ public class InternshipSupervisorImpl implements InternshipSupervisor {
   @Override
   public void setIdCompany(int idCompany) {
     this.idCompany = idCompany;
+  }
+
+  @Override
+  public CompanyDTO getCompany() {
+    return company;
+  }
+
+  @Override
+  public void setCompany(CompanyDTO company) {
+    this.company = company;
   }
 
   @Override

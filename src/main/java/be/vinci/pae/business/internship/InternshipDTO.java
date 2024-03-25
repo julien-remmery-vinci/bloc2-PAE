@@ -1,6 +1,5 @@
 package be.vinci.pae.business.internship;
 
-import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorDTO;
 import be.vinci.pae.business.user.UserDTO;
@@ -151,20 +150,6 @@ public interface InternshipDTO {
    * @param idCompany the idCompany to set
    */
   void setIdCompany(int idCompany);
-
-  /**
-   * getter for company.
-   *
-   * @return the company
-   */
-  CompanyDTO getCompany();
-
-  /**
-   * setter for company.
-   *
-   * @param company the company to set
-   */
-  void setCompany(CompanyDTO company);
 
   /**
    * getter for version.

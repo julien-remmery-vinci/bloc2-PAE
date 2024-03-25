@@ -1,5 +1,7 @@
 package be.vinci.pae.business.internshipsupervisor;
 
+import be.vinci.pae.business.company.CompanyDTO;
+
 /**
  * The Interface InternshipSupervisorDTO.
  */
@@ -88,6 +90,21 @@ public interface InternshipSupervisorDTO {
    * @param idCompany the idCompany to set
    */
   void setIdCompany(int idCompany);
+
+  /**
+   * getter for company.
+   *
+   * @return the company
+   */
+  CompanyDTO getCompany();
+
+  /**
+   * setter for company.
+   *
+   * @param company the company to set
+   * @return the company
+   */
+  void setCompany(CompanyDTO company);
 
   /**
    * getter for version.
