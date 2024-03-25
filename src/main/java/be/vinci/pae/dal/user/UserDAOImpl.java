@@ -24,13 +24,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public UserDTO getOneByEmail(String email) {
     try (PreparedStatement getUser = dalBackServices.getPS(
-        "SELECT idUser as \"user.idUser\", lastname as \"user.lastname\","
-            + "firstname as \"user.firstname\", email as \"user.email\","
-            + "password as \"user.password\", phoneNumber as \"user.phoneNumber\","
-            + "registerDate as \"user.registerDate\", role as \"user.role\""
-            + ", academicYear as \"user.academicYear\""
-            + ", version as \"user.version\""
-            + "FROM pae.users WHERE email = ?")) {
+        "SELECT * FROM pae.users WHERE user_email = ?")) {
       getUser.setString(1, email);
       try (ResultSet rs = getUser.executeQuery()) {
         if (rs.next()) {
@@ -52,13 +46,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public UserDTO getOneById(int id) {
     try (PreparedStatement getUser = dalBackServices.getPS(
-        "SELECT idUser as \"user.idUser\", lastname as \"user.lastname\","
-            + "firstname as \"user.firstname\", email as \"user.email\","
-            + "password as \"user.password\", phoneNumber as \"user.phoneNumber\","
-            + "registerDate as \"user.registerDate\", role as \"user.role\""
-            + ", academicYear as \"user.academicYear\""
-            + ", version as \"user.version\""
-            + "FROM pae.users WHERE idUser = ?")) {
+        "SELECT * FROM pae.users WHERE user_idUser = ?")) {
       getUser.setInt(1, id);
       try (ResultSet rs = getUser.executeQuery()) {
         if (rs.next()) {
@@ -74,9 +62,10 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public UserDTO addUser(UserDTO user) {
     try (PreparedStatement addUser = dalBackServices.getPS(
-        "INSERT INTO pae.users (lastname, firstname, email, password, phoneNumber, registerDate,"
-            + " role, academicYear, version) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " +
-            "RETURNING idUser")) {
+        "INSERT INTO pae.users (user_lastname, user_firstname, "
+            + "user_email, user_password, user_phoneNumber, user_registerDate,"
+            + " user_role, user_academicYear, user_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) "
+            + "RETURNING user_idUser")) {
       setPs(addUser, user);
       addUser.setInt(9, user.getVersion());
       try (ResultSet rs = addUser.executeQuery()) {
@@ -94,13 +83,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public List<UserDTO> getAllUsers() {
     try (PreparedStatement getUsers = dalBackServices.getPS(
-        "SELECT idUser as \"user.idUser\", lastname as \"user.lastname\","
-            + "firstname as \"user.firstname\", email as \"user.email\","
-            + "password as \"user.password\", phoneNumber as \"user.phoneNumber\","
-            + "registerDate as \"user.registerDate\", role as \"user.role\""
-            + ", academicYear as \"user.academicYear\""
-            + ", version as \"user.version\""
-            + "FROM pae.users")) {
+        "SELECT * FROM pae.users")) {
       try (ResultSet rs = getUsers.executeQuery()) {
         return getResults(rs);
       }
@@ -129,10 +112,11 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public UserDTO updateUser(UserDTO user) {
     try (PreparedStatement updateUser = dalBackServices.getPS(
-        "UPDATE pae.users SET lastname = ?, firstname = ?,"
-            + " email = ?, password = ?, phoneNumber = ?,"
-            + " registerDate = ?, role = ?, academicYear = ?, version ? WHERE idUser = ?"
-            + " AND version = ? RETURNING idUser")) {
+        "UPDATE pae.users SET user_lastname = ?, user_firstname = ?,"
+            + " user_email = ?, user_password = ?, user_phoneNumber = ?,"
+            + " user_registerDate = ?, user_role = ?, user_academicYear = ?, "
+            + "user_version ? WHERE user_idUser = ?"
+            + " AND user_version = ? RETURNING user_idUser")) {
       setPs(updateUser, user);
       updateUser.setInt(9, user.getVersion() + 1);
       updateUser.setInt(10, user.getIdUser());

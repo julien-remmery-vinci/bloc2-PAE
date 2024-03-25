@@ -42,10 +42,10 @@ public class DAOServicesImpl implements DAOServices {
                   .substring(0, 1).toUpperCase()
                   + f.getName().substring(1));
           Method valueFromString = enumClass.getDeclaredMethod("fromString", String.class);
-          m.invoke(object, valueFromString.invoke(null, rs.getString(prefix + "." + f.getName())));
+          m.invoke(object, valueFromString.invoke(null, rs.getString(prefix + "_" + f.getName())));
         } else if (!f.getType().isInterface()) {
           // If field is not an interface, set the field of the object
-          m.invoke(object, rs.getObject(prefix + "." + f.getName()));
+          m.invoke(object, rs.getObject(prefix + "_" + f.getName()));
         } else {
           // If field is an interface,
           // get the data from the ResultSet and set the field of the object

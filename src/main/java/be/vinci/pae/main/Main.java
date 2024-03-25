@@ -2,6 +2,7 @@ package be.vinci.pae.main;
 
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
+import be.vinci.pae.utils.JsonProcessingExceptionMapper;
 import be.vinci.pae.utils.WebExceptionMapper;
 import java.io.IOException;
 import java.net.URI;
@@ -33,7 +34,8 @@ public class Main {
 
     final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae.presentation")
         .register(ApplicationBinder.class)
-        .register(WebExceptionMapper.class);
+        .register(WebExceptionMapper.class)
+        .register(JsonProcessingExceptionMapper.class);
 
     // create and start a new instance of grizzly http server
     // exposing the Jersey application at BASE_URI
