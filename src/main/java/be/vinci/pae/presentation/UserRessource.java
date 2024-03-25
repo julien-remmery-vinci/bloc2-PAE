@@ -7,6 +7,7 @@ package be.vinci.pae.presentation;
 
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
+import be.vinci.pae.presentation.exceptions.UnauthorizedException;
 import be.vinci.pae.presentation.filters.Authorize;
 import be.vinci.pae.presentation.filters.Log;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -83,8 +84,7 @@ public class UserRessource {
     }
 
     if (userUCC.updateUser(authenticatedUser, oldPassword, newPassword) == null) {
-      throw new WebApplicationException("oldPassword is wrong",
-          Status.UNAUTHORIZED);
+      throw new UnauthorizedException("oldPassword is wrong");
     }
     return Response.status(204, "Password changed").build();
   }
