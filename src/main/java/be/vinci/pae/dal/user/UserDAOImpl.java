@@ -66,7 +66,6 @@ public class UserDAOImpl implements UserDAO {
             + " user_role, user_academicYear, user_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) "
             + "RETURNING user_idUser")) {
       setPs(addUser, user);
-      addUser.setInt(9, user.getVersion());
       try (ResultSet rs = addUser.executeQuery()) {
         if (rs.next()) {
           user.setIdUser(rs.getInt(1));
@@ -132,15 +131,14 @@ public class UserDAOImpl implements UserDAO {
       updateUser.setInt(9, user.getVersion() + 1);
       updateUser.setInt(10, user.getIdUser());
       updateUser.setInt(11, user.getVersion());
-      try (ResultSet rs = updateUser.executeQuery()) {
-        if (rs.next()) {
-          return user;
-        }
+      updateUser.executeUpdate();
+      if (getOneById(user.getIdUser()).getVersion() != user.getVersion()) {
+        throw new RuntimeException("Version mismatch");
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
-    return null;
+    return user;
   }
 
   /**
