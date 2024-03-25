@@ -23,9 +23,9 @@ import org.mockito.Mockito;
  */
 public class ContactUCCTest {
 
-  private final int ID_CONTACT = 1;
-  private final int ID_USER = 1;
-  private final String REFUSAL_REASON = "refusalReason";
+  private final int idContact = 1;
+  private final int idUser = 1;
+  private final String refusalReason = "refusalReason";
   Contact contact;
   private ContactUCC contactUCC;
   private ContactDAO contactDAO;
@@ -38,8 +38,8 @@ public class ContactUCCTest {
     Factory factory = locator.getService(Factory.class);
 
     contact = (Contact) factory.getContact();
-    contact.setIdContact(ID_CONTACT);
-    contact.setIdStudent(ID_USER);
+    contact.setIdContact(idContact);
+    contact.setIdStudent(idUser);
     contact.setState(State.ADMITTED);
     Mockito.when(contactDAO.getOneById(1)).thenReturn(contact);
   }
@@ -49,23 +49,23 @@ public class ContactUCCTest {
   void testRefuseContactWrongState() {
     contact.setState(State.TURNED_DOWN);
     assertThrows(WebApplicationException.class,
-        () -> contactUCC.refuseContact(ID_CONTACT, REFUSAL_REASON, ID_USER));
+        () -> contactUCC.refuseContact(idContact, refusalReason, idUser));
   }
 
   @Test
   @DisplayName("Test refuseContact with contact not found")
   void testRefuseContactNotFound() {
     Mockito.when(contactDAO.getOneById(1)).thenReturn(null);
-    assertNull(contactUCC.refuseContact(ID_CONTACT, REFUSAL_REASON, ID_USER));
+    assertNull(contactUCC.refuseContact(idContact, refusalReason, idUser));
   }
 
   @Test
   @DisplayName("Test refuseContact with existing contact in right state")
   void refuseContactTest() {
-    contactUCC.refuseContact(ID_CONTACT, REFUSAL_REASON, ID_USER);
+    contactUCC.refuseContact(idContact, refusalReason, idUser);
     assertAll(
         () -> assertEquals(State.TURNED_DOWN, contact.getState()),
-        () -> assertEquals(REFUSAL_REASON, contact.getRefusalReason())
+        () -> assertEquals(refusalReason, contact.getRefusalReason())
     );
   }
 
@@ -81,14 +81,14 @@ public class ContactUCCTest {
   void testMeetContactWrongState() {
     contact.setState(State.ADMITTED);
     assertThrows(WebApplicationException.class,
-        () -> contactUCC.meetContact(ID_CONTACT, "meetPlace", ID_USER));
+        () -> contactUCC.meetContact(idContact, "meetPlace", idUser));
   }
 
   @Test
   @DisplayName("Test meetContact with contact not found")
   void testMeetContactNotFound() {
     Mockito.when(contactDAO.getOneById(1)).thenReturn(null);
-    assertNull(contactUCC.meetContact(ID_CONTACT, "meetPlace", ID_USER));
+    assertNull(contactUCC.meetContact(idContact, "meetPlace", idUser));
   }
 
   @Test
@@ -97,7 +97,7 @@ public class ContactUCCTest {
     contact.setState(State.STARTED);
     assertAll(
         () -> assertEquals(contact.getIdContact(),
-            contactUCC.meetContact(ID_CONTACT, "meetPlace", ID_USER).getIdContact()),
+            contactUCC.meetContact(idContact, "meetPlace", idUser).getIdContact()),
         () -> assertEquals(State.ADMITTED, contact.getState()),
         () -> assertEquals("meetPlace", contact.getMeetPlace())
     );
