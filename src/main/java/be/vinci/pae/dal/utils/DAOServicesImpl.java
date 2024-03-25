@@ -1,6 +1,7 @@
 package be.vinci.pae.dal.utils;
 
 import be.vinci.pae.business.Factory;
+import be.vinci.pae.presentation.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -54,7 +55,7 @@ public class DAOServicesImpl implements DAOServices {
       return object;
     } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException
              | IllegalAccessException | SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
   }
 }

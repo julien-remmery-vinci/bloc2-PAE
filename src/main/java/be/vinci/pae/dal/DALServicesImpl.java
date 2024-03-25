@@ -1,5 +1,6 @@
 package be.vinci.pae.dal;
 
+import be.vinci.pae.presentation.exceptions.FatalException;
 import be.vinci.pae.utils.Config;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,8 +12,8 @@ import org.apache.commons.dbcp2.BasicDataSource;
  */
 public class DALServicesImpl implements DALBackServices, DALServices {
 
-  private ThreadLocal<Connection> threadLocal;
   private final BasicDataSource basicDataSource;
+  private ThreadLocal<Connection> threadLocal;
 
   /**
    * Constructor of DALServicesImpl.
@@ -37,7 +38,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
         conn = basicDataSource.getConnection();
         threadLocal.set(conn);
       } catch (SQLException e) {
-        throw new RuntimeException(e);
+        throw new FatalException();
       }
     }
     return conn;
@@ -48,7 +49,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
     try {
       return getConnection().prepareStatement(request);
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
   }
 
@@ -57,7 +58,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
     try {
       getConnection().setAutoCommit(false);
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
   }
 
@@ -66,7 +67,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
     try (Connection conn = getConnection()) {
       threadLocal.remove();
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
   }
 
@@ -77,7 +78,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
       conn.commit();
       conn.setAutoCommit(true);
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
   }
 
@@ -88,7 +89,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
       conn.rollback();
       conn.setAutoCommit(true);
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
   }
 

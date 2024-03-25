@@ -3,6 +3,7 @@ package be.vinci.pae.dal.contact;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
+import be.vinci.pae.presentation.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -51,7 +52,7 @@ public class ContactDAOImpl implements ContactDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
     return null;
   }
@@ -79,7 +80,7 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setInt(9, contact.getVersion());
       ps.executeUpdate();
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
   }
 
@@ -100,7 +101,7 @@ public class ContactDAOImpl implements ContactDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
     return null;
   }
@@ -138,7 +139,7 @@ public class ContactDAOImpl implements ContactDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
 
     return null;
@@ -179,7 +180,7 @@ public class ContactDAOImpl implements ContactDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
     return null;
   }
@@ -222,7 +223,7 @@ public class ContactDAOImpl implements ContactDAO {
         return contacts;
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
   }
 
@@ -236,7 +237,7 @@ public class ContactDAOImpl implements ContactDAO {
     List<ContactDTO> contacts = new ArrayList<>();
     try {
       PreparedStatement ps = dalServices.getPS(
-      "SELECT con.idContact as \"contact.idContact\",con.idCompany as \"contact.idCompany\","
+          "SELECT con.idContact as \"contact.idContact\",con.idCompany as \"contact.idCompany\","
               + "con.idStudent as \"contact.idStudent\",\n"
               + "       con.state as \"contact.state\",con.meetPlace as \"contact.meetPlace\","
               + "con.refusalReason as \"contact.refusalReason\",con.academicYear "
@@ -265,7 +266,7 @@ public class ContactDAOImpl implements ContactDAO {
         return contacts;
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
   }
 }
