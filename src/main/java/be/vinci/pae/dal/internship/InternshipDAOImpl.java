@@ -77,8 +77,10 @@ public class InternshipDAOImpl implements InternshipDAO {
             + "    pae.contacts con\n"
             + "    INNER JOIN pae.users u ON con.idStudent = u.idUser\n"
             + "    INNER JOIN pae.companies com ON con.idCompany = com.idCompany\n"
-            + "    INNER JOIN pae.internships i ON con.idContact = i.idContact AND com.idCompany = i.idCompany\n"
-            + "    INNER JOIN pae.internshipsupervisors isn ON i.idInternshipSupervisor = isn.idInternshipSupervisor AND com.idCompany = isn.idCompany\n"
+            + "    INNER JOIN pae.internships i ON con.idContact = i.idContact AND"
+            + " com.idCompany = i.idCompany\n"
+            + "    INNER JOIN pae.internshipsupervisors isn ON i.idInternshipSupervisor = isn.idInternshipSupervisor "
+            + "AND com.idCompany = isn.idCompany\n"
             + "WHERE\n"
             + "    u.idUser = i.idStudent AND\n"
             + "    con.idStudent = ?")) {

@@ -236,7 +236,7 @@ public class ContactDAOImpl implements ContactDAO {
     List<ContactDTO> contacts = new ArrayList<>();
     try {
       PreparedStatement ps = dalServices.getPS(
-      "SELECT con.idContact as \"contact.idContact\",con.idCompany as \"contact.idCompany\","
+          "SELECT con.idContact as \"contact.idContact\",con.idCompany as \"contact.idCompany\","
               + "con.idStudent as \"contact.idStudent\",\n"
               + "       con.state as \"contact.state\",con.meetPlace as \"contact.meetPlace\","
               + "con.refusalReason as \"contact.refusalReason\",con.academicYear "

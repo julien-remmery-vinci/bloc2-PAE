@@ -102,7 +102,6 @@ public interface InternshipSupervisorDTO {
    * setter for company.
    *
    * @param company the company to set
-   * @return the company
    */
   void setCompany(CompanyDTO company);
 
