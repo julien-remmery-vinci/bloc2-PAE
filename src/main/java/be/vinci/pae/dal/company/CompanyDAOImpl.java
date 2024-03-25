@@ -24,13 +24,7 @@ public class CompanyDAOImpl implements CompanyDAO {
   public List<CompanyDTO> getAll() {
     List<CompanyDTO> companies = new ArrayList<>();
     try (PreparedStatement ps = dalServices.getPS(
-        "SELECT idCompany as \"company.idCompany\",tradeName as \"company.tradeName\","
-            + "designation as \"company.designation\",address as \"company.address\","
-            + "phoneNumber as \"company.phoneNumber\",email as \"company.email\","
-            + "blacklisted as \"company.blacklisted\","
-            + "blacklistMotivation as \"company.blacklistMotivation\","
-            + "version as \"company.version\""
-            + " FROM pae.companies")) {
+        "SELECT * FROM pae.companies")) {
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
           String prefix = "company";
@@ -46,13 +40,7 @@ public class CompanyDAOImpl implements CompanyDAO {
   @Override
   public CompanyDTO getCompanyById(int id) {
     try (PreparedStatement ps = dalServices.getPS(
-        "SELECT idCompany as \"company.idCompany\",tradeName as \"company.tradeName\","
-            + "designation as \"company.designation\",address as \"company.address\","
-            + "phoneNumber as \"company.phoneNumber\",email as \"company.email\","
-            + "blacklisted as \"company.blacklisted\","
-            + "blacklistMotivation as \"company.blacklistMotivation\","
-            + "version as \"company.version\""
-            + " FROM pae.companies WHERE idCompany = ?")) {
+        "SELECT * FROM pae.companies WHERE company_idCompany = ?")) {
       ps.setInt(1, id);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {

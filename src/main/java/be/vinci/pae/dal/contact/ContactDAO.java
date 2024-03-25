@@ -47,7 +47,7 @@ public interface ContactDAO {
   ContactDTO addContact(ContactDTO contact);
 
   /**
-   * Get the contact accepted by the user
+   * Get the contact accepted by the user.
    *
    * @param idUser the id of the user
    * @return the contact accepted or null if no contact was found
