@@ -7,6 +7,7 @@ import be.vinci.pae.business.contact.ContactImpl;
 import be.vinci.pae.business.internship.InternshipDTO;
 import be.vinci.pae.business.internship.InternshipImpl;
 import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorDTO;
+import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorImpl;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserImpl;
 
@@ -37,6 +38,6 @@ public class FactoryImpl implements Factory {
 
   @Override
   public InternshipSupervisorDTO getInternshipSupervisor() {
-    return null;
+    return new InternshipSupervisorImpl();
   }
 }
