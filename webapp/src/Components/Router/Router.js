@@ -1,10 +1,9 @@
 import {
-  getUserToken,
   verifyToken
 } from '../../utils/auths';
-import usePathPrefix from '../../utils/path-prefix';
 import routes from './routes';
 import Navigate from "./Navigate";
+import Navbar from "../Navbar/Navbar";
 
 // Define Router component
 const Router = () => {
@@ -26,7 +25,7 @@ function onNavBarClick() {
       if (!componentToRender) throw Error(`The ${uri} resource does not exist.`);
 
       componentToRender();
-      window.history.pushState({}, '', usePathPrefix(uri));
+      window.history.pushState({}, '', uri);
     }
   });
 }
@@ -45,11 +44,13 @@ function onFrontendLoad() {
   window.addEventListener('load', async () => {
     const uri = window.location.pathname;
     const componentToRender = routes[uri];
-    if (!componentToRender) throw Error(`The ${uri} resource does not exist.`);
+    if (!componentToRender) throw Error(`The ${uri} ressource does not exist.`);
 
-    const token = getUserToken();
-    if(!token) Navigate('/login');
-    await verifyToken(token);
+    if (!await verifyToken()){
+      Navbar();
+      Navigate('/login');
+    }
+    Navbar();
     componentToRender();
   });
 }

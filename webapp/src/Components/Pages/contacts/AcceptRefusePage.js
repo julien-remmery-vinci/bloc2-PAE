@@ -1,15 +1,18 @@
 import {clearPage} from "../../../utils/render";
-import {getAuthenticatedUser, getUserToken} from "../../../utils/auths";
+import {
+    getToken,
+    isAuthenticated
+} from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
+const queryParams = new URLSearchParams(window.location.search);
+
 const AcceptRefusePage = () => {
-    const authenticatedUser = getAuthenticatedUser();
-    if (!authenticatedUser) {
+    if (!isAuthenticated()) {
         Navigate('/login');
-        window.location.reload();
     } else {
         clearPage();
-        document.title = "Contact accept - refuse";
+        document.title = "Accepter ou refuser un contact";
         buildPage();
     }
 }
@@ -40,34 +43,36 @@ function buildPage() {
 
 // Display contact informations
 function getContactInfos() {
-    const entrepriseName = document.createElement('label');
-    entrepriseName.textContent = 'Entreprise';
-    const entrepriseNameValue = document.createElement('input');
-    entrepriseNameValue.type = 'text';
-    entrepriseNameValue.value = 'entreprise.nom';
-    entrepriseNameValue.readOnly = true;
-    entrepriseNameValue.className = 'bg-info form-control';
-    const entrepriseDesignation = document.createElement('label');
-    entrepriseDesignation.textContent = 'Appellation';
-    const entrepriseDesignationValue = document.createElement('input');
-    entrepriseDesignationValue.type = 'text';
-    entrepriseDesignationValue.value = 'entreprise.appellation';
-    entrepriseDesignationValue.readOnly = true;
-    entrepriseDesignationValue.className = 'bg-info form-control';
-    const contactMeetPlace = document.createElement('label');
-    contactMeetPlace.textContent = 'Lieu de rencontre';
-    const entrepriseMeetPlaceValue = document.createElement('input');
-    entrepriseMeetPlaceValue.type = 'text';
-    entrepriseMeetPlaceValue.value = 'contact.lieu_rencontre';
-    entrepriseMeetPlaceValue.readOnly = true;
-    entrepriseMeetPlaceValue.className = 'bg-info form-control';
     const contactInfosDiv = document.createElement('div');
     contactInfosDiv.className = 'p-5';
+    const entrepriseName = document.createElement('label');
+    entrepriseName.textContent = 'Entreprise';
     contactInfosDiv.appendChild(entrepriseName);
+    const entrepriseNameValue = document.createElement('input');
+    entrepriseNameValue.type = 'text';
+    entrepriseNameValue.value = queryParams.get('tradename');
+    entrepriseNameValue.readOnly = true;
+    entrepriseNameValue.className = 'bg-info form-control';
     contactInfosDiv.appendChild(entrepriseNameValue);
-    contactInfosDiv.appendChild(entrepriseDesignation);
-    contactInfosDiv.appendChild(entrepriseDesignationValue);
+    if(queryParams.get('designation') !== 'null'){
+        const entrepriseDesignation = document.createElement('label');
+        entrepriseDesignation.textContent = 'Appellation';
+        const entrepriseDesignationValue = document.createElement('input');
+        entrepriseDesignationValue.type = 'text';
+        entrepriseDesignationValue.value = queryParams.get('designation');
+        entrepriseDesignationValue.readOnly = true;
+        entrepriseDesignationValue.className = 'bg-info form-control';
+        contactInfosDiv.appendChild(entrepriseDesignation);
+        contactInfosDiv.appendChild(entrepriseDesignationValue);
+    }
+    const contactMeetPlace = document.createElement('label');
+    contactMeetPlace.textContent = 'Lieu de rencontre';
     contactInfosDiv.appendChild(contactMeetPlace);
+    const entrepriseMeetPlaceValue = document.createElement('input');
+    entrepriseMeetPlaceValue.type = 'text';
+    entrepriseMeetPlaceValue.value = queryParams.get('meetplace');
+    entrepriseMeetPlaceValue.readOnly = true;
+    entrepriseMeetPlaceValue.className = 'bg-info form-control';
     contactInfosDiv.appendChild(entrepriseMeetPlaceValue);
     return contactInfosDiv;
 }
@@ -117,14 +122,13 @@ function getForm() {
 
 async function onSubmit(event) {
     event.preventDefault();
-    const id = window.location.href.split("?")[1].split("=")[1];
     const contactState = document.querySelector('select').value;
     const refusalReason = document.querySelector('textarea').value;
     const options = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': getUserToken(),
+            'Authorization': getToken(),
         },
         body: JSON.stringify({
             refusalReason,
@@ -133,7 +137,7 @@ async function onSubmit(event) {
     if (contactState === 'true') {
         // TODO add accept contact
     } else {
-        fetch(`http://localhost:3000/contact/${id}/refuse`, options)
+        fetch(`http://localhost:3000/contacts/${queryParams.get('id')}/refuse`, options)
         .then(request => {
             if(request.status === 401) {
                 document.querySelector('.alert-danger').hidden = false;

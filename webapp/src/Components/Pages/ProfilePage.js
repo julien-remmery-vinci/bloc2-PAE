@@ -1,12 +1,10 @@
 import {clearPage} from "../../utils/render";
-import {getAuthenticatedUser} from "../../utils/auths";
+import {getAuthenticatedUser, isAuthenticated} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
 
 const ProfilePage = async () => {
-  const authenticatedUser = getAuthenticatedUser();
-  if (!authenticatedUser) {
+  if (!isAuthenticated()) {
     Navigate('/login');
-    window.location.reload();
   } else {
     clearPage();
     document.title = "Profil";

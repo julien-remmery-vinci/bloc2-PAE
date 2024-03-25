@@ -1,5 +1,5 @@
 @authsUrl=http://localhost:3000/auths
-@companiesUrl=http://localhost:3000/company
+@companiesUrl=http://localhost:3000/companies
 
 ### Try to login user
 POST {{authsUrl}}/login

@@ -1,12 +1,17 @@
 import { clearPage, renderPageTitle } from '../../utils/render';
 import Navigate from '../Router/Navigate';
-import {setAuthenticatedUser} from "../../utils/auths";
+import {isAuthenticated, setAuthenticatedUser, setToken} from "../../utils/auths";
 import Navbar from "../Navbar/Navbar";
 
 const RegisterPage = () => {
-  clearPage();
-  renderPageTitle("S'enregistrer");
-  renderRegisterForm();
+  if (isAuthenticated()) {
+    Navigate('/');
+  } else {
+    clearPage();
+    renderPageTitle("S'enregistrer");
+    document.title = "S'enregistrer";
+    renderRegisterForm();
+  }
 };
 
 function renderRegisterForm() {
@@ -146,7 +151,8 @@ async function onRegister(e) {
   if (!response.ok) throw new Error(`fetch error : ${response.status} : ${response.statusText}`);
 
   const authenticatedUser = await response.json();
-  setAuthenticatedUser(authenticatedUser);
+  setToken(authenticatedUser.token);
+  setAuthenticatedUser(authenticatedUser.user);
 
   console.log('Newly registered & authenticated user : ', authenticatedUser);
 

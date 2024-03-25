@@ -1,15 +1,16 @@
 import {clearPage} from "../../../utils/render";
-import {getAuthenticatedUser, getUserToken} from "../../../utils/auths";
+import {
+  getToken,
+  isAuthenticated
+} from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
 const ContactPage = () => {
-  const authenticatedUser = getAuthenticatedUser();
-  if (!authenticatedUser) {
+  if (!isAuthenticated()) {
     Navigate('/login');
-    window.location.reload();
   } else {
     clearPage();
-    document.title = "contacts";
+    document.title = "Contacts";
     buildPage();
   }
 }
@@ -49,10 +50,17 @@ async function buildPage() {
     const companyCell = document.createElement('td');
     const companyLink = document.createElement('a');
     companyLink.textContent = contact.company.tradeName;
+    companyLink.href = '#';
     if (contact.company.designation !== null) {
       companyLink.textContent += `,  ${contact.company.designation}`;
     }
-    companyLink.href = '#';
+    companyLink.addEventListener('click', (event) => {
+      event.preventDefault();
+      let url = window.location.href;
+      url += contact.state === 'initié' ? '/meet' : '/refusal';
+      url += `?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}&meetplace=${contact.meetPlace}`;
+      window.location.href = url;
+    });
     companyCell.appendChild(companyLink);
 
     // Colonne état
@@ -95,11 +103,11 @@ function noContacts() {
   main.appendChild(title);
 }
 async function getContacts() {
-  const response = await fetch('http://localhost:3000/contact', {
+  const response = await fetch('http://localhost:3000/contacts', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': getUserToken()
+      'Authorization': getToken()
     }
   });
   return response.json();

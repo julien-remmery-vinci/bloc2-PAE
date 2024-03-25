@@ -26,7 +26,7 @@ import org.glassfish.jersey.server.ContainerRequest;
  * addContact route.
  */
 @Singleton
-@Path("/contact")
+@Path("/contacts")
 @Log
 public class ContactRessource {
 

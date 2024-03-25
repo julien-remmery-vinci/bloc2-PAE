@@ -1,113 +1,124 @@
 import {
-  clearAuthenticatedUser,
-  getUserToken
+  getAuthenticatedUser, isAuthenticated,
 } from "../../utils/auths";
-import Navigate from "../Router/Navigate";
 
 const Navbar = () => {
   renderNavbar();
 };
 
 async function renderNavbar() {
-  const notLoggedNavbar = `
+  const defaultNavbar = `
     <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
-      <a class="navbar-brand" href="#">VinciOBS</a>
-      <div class="ms-auto">
-      <button class="btn btn-primary rounded" type="button" id="login">
-        Connexion
-      </button>
-        <button class="btn btn-primary rounded" type="button" id="register">Inscription</button>
-    </div>
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">VinciOBS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/login">Se connecter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/register">S'enregistrer</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+`;
+
+  const studentNavbar = `
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" data-uri="/">VinciOBS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/profile">Profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="">Stage</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/contact">Contacts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/logout">Déconnexion</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
   `;
 
-  const loggedNavbarStudent = `
-  <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
-    <a class="navbar-brand" href="#">VinciOBS</a>
-    <div class="ms-auto">
-      <button class="btn btn-primary rounded" type="button" id="button1">
-        Profil
-      </button>
-      <button class="btn btn-primary rounded" type="button" id="contacts">
-        Contacts
-      </button>
-        <button class="btn btn-primary rounded" type="button" id="button2">Déconnexion</button>
-    </div>
-  </nav>
-  `;
+  const teacherNavbar = `
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" data-uri="/">VinciOBS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/profile">Profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="">Recherches</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="">Responsables</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="">Statistiques</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/logout">Déconnexion</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+`;
 
-  const loggedNavbarTeacher = `
-  <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
-    <a class="navbar-brand" href="#">VinciOBS</a>
-    <div class="ms-auto">
-      <button class="btn btn-primary rounded" type="button" id="button1">
-        Profil
-      </button>
-      <button class="btn btn-primary rounded" type="button" id="recherches">
-        Recherches
-      </button>
-       <button class="btn btn-primary rounded" type="button" id="responsables">
-        Responsables
-       </button>
-       <button class="btn btn-primary rounded" type="button" id="stats">
-        Statistiques
-       </button>
-        <button class="btn btn-primary rounded" type="button" id="button2">Déconnexion</button>
-    </div>
-  </nav>
-  `;
+  const adminNavbar = `
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" data-uri="/">VinciOBS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/profile">Profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="">Recherches</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/logout">Déconnexion</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+`;
 
   const navbar = document.querySelector('#navbarWrapper');
-  if (getUserToken() === undefined) {
-    navbar.innerHTML = notLoggedNavbar;
-    const loginButton = document.querySelector('#login');
-    const registerButton = document.querySelector('#register');
-    loginButton.addEventListener('click', () => {
-      Navigate('/login');
-    });
-    registerButton.addEventListener('click', () => {
-      Navigate('/register');
-    });
-  } else if (getUserToken().role === 'student') {
-    navbar.innerHTML = loggedNavbarStudent;
-    const logOutButton = document.querySelector('#button2');
-    const profileButton = document.querySelector('#button1');
-    const contactsButton = document.querySelector('#contacts');
-    logOutButton.addEventListener('click', () => {
-      clearAuthenticatedUser();
-      Navigate('/login');
-      window.location.reload();
-    });
-    profileButton.addEventListener('click', () => {
-      Navigate('/profile');
-    });
-    contactsButton.addEventListener('click', () => {
-      Navigate('/contact');
-    });
-  } else if (getUserToken().role === 'teacher') {
-    navbar.innerHTML = loggedNavbarTeacher;
-    const logOutButton = document.querySelector('#button2');
-    const profileButton = document.querySelector('#button1');
-    const researchesButton = document.querySelector('#recherches');
-    const responsablesButton = document.querySelector('#responsables');
-    const statsButton = document.querySelector('#stats');
-    logOutButton.addEventListener('click', () => {
-      clearAuthenticatedUser();
-      Navigate('/login');
-      window.location.reload();
-    });
-    profileButton.addEventListener('click', () => {
-      Navigate('/profile');
-    });
-    researchesButton.addEventListener('click', () => {
-      Navigate('/research');
-    });
-    responsablesButton.addEventListener('click', () => {
-      Navigate('/');
-    });
-    statsButton.addEventListener('click', () => {
-      Navigate('/');
-    });
+  if(!isAuthenticated()) navbar.innerHTML = defaultNavbar;
+  else {
+    const userRole = getAuthenticatedUser().role;
+    if(userRole === 'étudiant') navbar.innerHTML = studentNavbar;
+    else if(userRole === 'professeur') navbar.innerHTML = teacherNavbar;
+    else if(userRole === 'administratif') navbar.innerHTML = adminNavbar;
   }
 }
 

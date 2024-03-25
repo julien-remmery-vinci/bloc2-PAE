@@ -1,5 +1,5 @@
 @authsUrl=http://localhost:3000/auths
-@contactUrl=http://localhost:3000/contact
+@contactUrl=http://localhost:3000/contacts
 
 ### Try to login user
 POST {{authsUrl}}/login
@@ -41,3 +41,5 @@ Authorization: {{token}}
 POST {{contactUrl}}/1/unfollow
 Content-Type: application/json
 Authorization : {{token}}
+
+//Faire la requete meetContact
