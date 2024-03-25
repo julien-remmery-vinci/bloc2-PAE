@@ -13,7 +13,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
-import java.util.List;
+import java.time.LocalDate;
 import org.glassfish.jersey.server.ContainerRequest;
 
 /**
@@ -36,12 +36,16 @@ public class InternshipRessource {
   @GET
   @Authorize
   @Produces(MediaType.APPLICATION_JSON)
-  public List<InternshipDTO> getInternshipById(@Context ContainerRequest request) {
+  public InternshipDTO getInternshipById(@Context ContainerRequest request) {
     UserDTO user = (UserDTO) request.getProperty("user");
     if (user == null) {
       throw new NotFoundException("User not found");
     }
-    return internshipUCC.getInternshipById(user);
+    return internshipUCC.getInternshipById(user).stream()
+        .filter(
+            internship -> internship.getSignatureDate().toLocalDate().getYear() == LocalDate.now()
+                .getYear()).findFirst()
+        .orElseThrow(() -> new NotFoundException("Internship not found for the current year"));
 
   }
 
