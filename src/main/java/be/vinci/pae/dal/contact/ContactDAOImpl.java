@@ -49,7 +49,8 @@ public class ContactDAOImpl implements ContactDAO {
     try (PreparedStatement ps = dalServices.getPS(
         "UPDATE pae.contacts "
             + "SET contact_idCompany = ?, contact_idStudent = ?, contact_state = ?, "
-            + "contact_meetPlace = ?, contact_refusalReason = ?, contact_academicYear = ?, contact_version = ?"
+            + "contact_meetPlace = ?, contact_refusalReason = ?, contact_academicYear = ?,"
+            + " contact_version = ?"
             + "WHERE contact_idContact = ? AND contact_version = ?;")) {
       ps.setInt(1, contact.getIdCompany());
       ps.setInt(2, contact.getIdStudent());
@@ -70,7 +71,8 @@ public class ContactDAOImpl implements ContactDAO {
   public ContactDTO addContact(ContactDTO contact) {
     try (PreparedStatement ps = dalServices.getPS(
         "INSERT INTO pae.contacts (contact_idCompany, contact_idStudent, contact_state, "
-            + "contact_academicYear, contact_version) VALUES (?, ?, ?, ?, 1) RETURNING idContact;")) {
+            + "contact_academicYear, contact_version) "
+            + "VALUES (?, ?, ?, ?, 1) RETURNING idContact;")) {
       ps.setInt(1, contact.getIdCompany());
       ps.setInt(2, contact.getIdStudent());
       ps.setString(3, contact.getState().getState());
@@ -91,7 +93,8 @@ public class ContactDAOImpl implements ContactDAO {
   public ContactDTO getContactAccepted(int idUser) {
     try (PreparedStatement ps = dalServices.getPS(
         "SELECT * FROM pae.contacts, pae.users, pae.companies WHERE contact_idCompany = "
-            + "company_idCompany AND contact_idStudent = user_idUser AND contact_idStudent = ? AND "
+            + "company_idCompany AND contact_idStudent = user_idUser AND "
+            + "contact_idStudent = ? AND "
             + "contact_state = 'accepté';")) {
       ps.setInt(1, idUser);
       try (ResultSet rs = ps.executeQuery()) {
@@ -111,7 +114,7 @@ public class ContactDAOImpl implements ContactDAO {
   public ContactDTO getCompanyContact(int idUser, int idCompany, String academicYear) {
     try (PreparedStatement ps = dalServices.getPS(
         "SELECT * FROM pae.contacts, pae.users, pae.companies WHERE contact_idCompany = "
-            + "company_idCompany AND contact_idStudent = user_idUser AND contact_idStudent = ? AND "
+            + "company_idCompany AND contact_idStudent = user_idUser AND contact_idStudent = ? AND"
             + "contact_idCompany = ? AND contact_academicYear = ?;")) {
       ps.setInt(1, idUser);
       ps.setInt(2, idCompany);
@@ -140,7 +143,8 @@ public class ContactDAOImpl implements ContactDAO {
     List<ContactDTO> contacts = new ArrayList<>();
     try (PreparedStatement ps = dalServices.getPS(
         "SELECT * FROM pae.contacts, pae.users, pae.companies WHERE contact_idCompany = "
-            + "company_idCompany AND contact_idStudent = user_idUser AND contact_idStudent = ?;")) {
+            + "company_idCompany AND contact_idStudent = user_idUser AND "
+            + "contact_idStudent = ?;")) {
       ps.setInt(1, idStudent);
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
@@ -164,7 +168,8 @@ public class ContactDAOImpl implements ContactDAO {
     List<ContactDTO> contacts = new ArrayList<>();
     try {
       PreparedStatement ps = dalServices.getPS(
-          "SELECT * FROM pae.contacts, pae.users u, pae.companies com WHERE contact_idCompany = "
+          "SELECT * FROM pae.contacts, pae.users u, pae.companies com WHERE "
+              + "contact_idCompany = "
               + "company_idCompany AND contact_idStudent = user_idUser");
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {

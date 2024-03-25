@@ -61,9 +61,10 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public UserDTO addUser(UserDTO user) {
     try (PreparedStatement addUser = dalBackServices.getPS(
-        "INSERT INTO pae.users (user_lastname, user_firstname, user_email, user_password, user_phoneNumber, user_registerDate,"
-            + " user_role, user_academicYear, user_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " +
-            "RETURNING user_idUser")) {
+        "INSERT INTO pae.users (user_lastname, user_firstname, "
+            + "user_email, user_password, user_phoneNumber, user_registerDate,"
+            + " user_role, user_academicYear, user_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) "
+            + "RETURNING user_idUser")) {
       setPs(addUser, user);
       addUser.setInt(9, user.getVersion());
       try (ResultSet rs = addUser.executeQuery()) {
@@ -124,7 +125,8 @@ public class UserDAOImpl implements UserDAO {
     try (PreparedStatement updateUser = dalBackServices.getPS(
         "UPDATE pae.users SET user_lastname = ?, user_firstname = ?,"
             + " user_email = ?, user_password = ?, user_phoneNumber = ?,"
-            + " user_registerDate = ?, user_role = ?, user_academicYear = ?, user_version ? WHERE user_idUser = ?"
+            + " user_registerDate = ?, user_role = ?, user_academicYear = ?, "
+            + "user_version ? WHERE user_idUser = ?"
             + " AND user_version = ? RETURNING user_idUser")) {
       setPs(updateUser, user);
       updateUser.setInt(9, user.getVersion() + 1);
