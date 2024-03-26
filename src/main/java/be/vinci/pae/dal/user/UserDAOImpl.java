@@ -157,7 +157,7 @@ public class UserDAOImpl implements UserDAO {
     ps.setString(4, user.getPassword());
     ps.setString(5, user.getPhoneNumber());
     ps.setDate(6, user.getRegisterDate());
-    ps.setString(7, user.getRole().getRole());
+    ps.setString(7, user.getRole().toString());
     ps.setString(8, user.getAcademicYear());
   }
 
