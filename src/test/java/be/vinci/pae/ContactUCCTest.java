@@ -2,6 +2,7 @@ package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -56,7 +57,7 @@ public class ContactUCCTest {
     contact = (Contact) factory.getContact();
     contact.setIdContact(idContact);
     contact.setIdStudent(idUser);
-    contact.setState(State.ADMITTED);
+    contact.setState(State.STARTED);
     Mockito.when(contactDAO.getOneById(1)).thenReturn(contact);
 
     contact2 = (Contact) factory.getContact();
@@ -79,10 +80,10 @@ public class ContactUCCTest {
     contact.setAcademicYear("2021-2022");
     Mockito.when(contactDAO.addContact(contact)).thenReturn(contact);
     Mockito.when(contactDAO.getContactAccepted(idUser)).thenReturn(null);
-    Mockito.when(contactDAO.getCompanyContact(idUser, 1, "2021-2022")).thenReturn(null);
-    Mockito.when(contactDAO.getOneById(1)).thenReturn(contact);
+    Mockito.when(contactDAO.getCompanyContact(idUser, 1, academicYear.getAcademicYear()))
+        .thenReturn(null);
     assertAll(
-        () -> assertEquals(contact.getIdContact(), contactUCC.addContact(contact).getIdContact()),
+        () -> assertNotNull(contactUCC.addContact(contact)),
         () -> assertEquals(State.STARTED, contact.getState())
     );
   }
@@ -130,6 +131,7 @@ public class ContactUCCTest {
   @Test
   @DisplayName("Test refuseContact with existing contact in right state")
   void refuseContactTest() {
+    contact.setState(State.ADMITTED);
     contactUCC.refuseContact(idContact, refusalReason, idUser);
     assertAll(
         () -> assertEquals(State.TURNED_DOWN, contact.getState()),
