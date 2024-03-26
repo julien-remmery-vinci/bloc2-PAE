@@ -9,6 +9,9 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class FatalException extends WebApplicationException {
 
+  /**
+   * The status of the exception.
+   */
   public static final Status STATUS = Status.INTERNAL_SERVER_ERROR;
 
   /**

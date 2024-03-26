@@ -9,6 +9,9 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class PreconditionFailedException extends WebApplicationException {
 
+  /**
+   * The status of the exception.
+   */
   public static final Status STATUS = Status.PRECONDITION_FAILED;
 
   /**

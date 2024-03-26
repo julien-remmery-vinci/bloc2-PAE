@@ -10,6 +10,9 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class TokenDecodingException extends WebApplicationException {
 
+  /**
+   * The status of the exception.
+   */
   public static final Status STATUS = Status.UNAUTHORIZED;
 
   /**

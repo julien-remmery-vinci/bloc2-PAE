@@ -10,6 +10,9 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class ConflictException extends WebApplicationException {
 
+  /**
+   * The status of the exception.
+   */
   public static final Status STATUS = Status.CONFLICT;
 
   /**
