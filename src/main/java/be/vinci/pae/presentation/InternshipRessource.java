@@ -13,7 +13,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
-import java.time.LocalDate;
 import org.glassfish.jersey.server.ContainerRequest;
 
 /**
@@ -41,14 +40,8 @@ public class InternshipRessource {
     if (user == null) {
       throw new NotFoundException("User not found");
     }
-    return internshipUCC.getInternshipById(user).stream()
-        .filter(
-            internship -> internship.getSignatureDate().toLocalDate().getYear() == LocalDate.now()
-                .getYear()).findFirst()
-        .orElseThrow(() -> new NotFoundException("Internship not found for the current year"));
-
+    return internshipUCC.getInternshipById(user);
   }
-
 }
 
 
