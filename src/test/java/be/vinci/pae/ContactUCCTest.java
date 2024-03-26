@@ -14,6 +14,7 @@ import be.vinci.pae.business.contact.ContactDTO.State;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.business.user.User;
 import be.vinci.pae.business.user.UserDTO;
+import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
@@ -192,6 +193,21 @@ public class ContactUCCTest {
   void testGetContactsNullUser() {
     assertThrows(NotFoundException.class, () -> contactUCC.getContacts(null));
   }
+
+  @Test
+  @DisplayName("Test get list of contacts with a student user")
+  void testGetContactsProfessorUser() {
+    user.setRole(Role.PROFESSOR);
+    assertNotNull(contactUCC.getContacts(user));
+  }
+
+  @Test
+  @DisplayName("Test get list of contacts with a student user")
+  void testGetContactsAdminUser() {
+    user.setRole(Role.ADMIN);
+    assertNotNull(contactUCC.getContacts(user));
+  }
 }
+
 
 
