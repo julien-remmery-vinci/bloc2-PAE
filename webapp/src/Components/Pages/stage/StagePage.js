@@ -21,8 +21,13 @@ async function renderStagePage() {
   const stageSection = document.createElement('section');
   const responsibleSection = document.createElement('section');
 
-  // Ajouter du contenu aux sections
-  stageSection.innerHTML = `
+  if (stage === 404) {
+    stageSection.innerHTML = `
+    <h2>Mon stage</h2>
+    <p>Vous n'avez pas encore de stage pour cette année</p>
+    `;
+  } else {
+    stageSection.innerHTML = `
     <h2>Mon stage</h2>
     <form class="p-5 w-150 bg-light rounded shadow col-md-8">
         <label for="subject" class="fw-bold mb-1">Sujet du stage:</label><br>
@@ -38,8 +43,7 @@ async function renderStagePage() {
         <button type="submit" class="btn btn-primary mt-3">Sauver</button>
     </form>
 `;
-
-  responsibleSection.innerHTML = `
+    responsibleSection.innerHTML = `
         <h2>Inscrire un responsable</h2>
         <form class="p-5 w-150 bg-light rounded shadow col-md-8">
             <label for="name" class="fw-bold mb-1">Nom:</label><br>
@@ -53,6 +57,7 @@ async function renderStagePage() {
             <button type="submit" class="btn btn-primary mt-3">Sauver</button>
         </form>
     `;
+  }
 
   // Ajouter les sections à la page principale
   main.appendChild(stageSection);
@@ -68,6 +73,9 @@ async function getStage() {
       'Authorization': getToken()
     }
   });
+  if (response.status === 404) {
+    return 404;
+  }
   return response.json();
 }
 
