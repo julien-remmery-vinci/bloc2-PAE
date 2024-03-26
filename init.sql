@@ -96,3 +96,8 @@ INSERT INTO pae.contacts (contact_idCompany, contact_idStudent, contact_state, c
 VALUES (2, 2, 'ADMITTED', 'dans l''entreprise', '2023-2024', 1);
 INSERT INTO pae.contacts (contact_idCompany, contact_idStudent, contact_state, contact_academicYear, contact_version)
 VALUES (3, 1, 'STARTED', '2023-2024', 1);
+
+INSERT INTO pae.internshipSupervisors (internshipSupervisor_lastname, internshipSupervisor_firstname, internshipSupervisor_phoneNumber, internshipSupervisor_email, internshipSupervisor_idCompany, internshipSupervisor_version)
+VALUES ('Doe', 'John', '0123456789','john.doe@sopra.be', 2, 1);
+INSERT INTO pae.internships (internship_idStudent, internship_internshipProject, internship_signatureDate, internship_idContact, internship_idInternshipSupervisor, internship_idCompany, internship_version)
+VALUES (2, 'Projet 1', '2024-01-01', 2, 1, 2, 1);
