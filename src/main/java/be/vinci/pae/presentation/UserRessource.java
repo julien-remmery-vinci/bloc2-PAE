@@ -8,6 +8,7 @@ package be.vinci.pae.presentation;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.presentation.exceptions.BadRequestException;
+import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.exceptions.UnauthorizedException;
 import be.vinci.pae.presentation.filters.Authorize;
 import be.vinci.pae.presentation.filters.Log;
@@ -60,7 +61,7 @@ public class UserRessource {
     String confirmationPassword = json.get("confirmationPassword").asText();
 
     if (authenticatedUser.getIdUser() <= 0) {
-      throw new WebApplicationException("User not found", Status.NOT_FOUND);
+      throw new NotFoundException("User not found");
     }
 
     if (oldPassword == null || newPassword == null || confirmationPassword == null) {
