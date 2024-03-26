@@ -22,6 +22,7 @@ function renderRegisterForm() {
   titleLastName.textContent = 'Nom';
   const lastname = document.createElement('input');
   lastname.type = 'text';
+  lastname.placeholder = 'ex: Dupont';
   lastname.id = 'lastname';
   lastname.required = true;
   lastname.className = 'form-control mb-3';
@@ -29,6 +30,7 @@ function renderRegisterForm() {
   titleFirstName.textContent = 'Prénom';
   const firstname = document.createElement('input');
   firstname.type = 'text';
+  firstname.placeholder = 'ex: Jean';
   firstname.id = 'firstname';
   firstname.required = true;
   firstname.className = 'form-control mb-3';
@@ -36,6 +38,7 @@ function renderRegisterForm() {
   titleEmail.textContent = 'Email';
   const email = document.createElement('input');
   email.type = 'email';
+  email.placeholder = 'ex: luc.jean@student.vinci.be';
   email.id = 'email';
   email.required = true;
   email.className = 'form-control mb-3';
@@ -44,6 +47,7 @@ function renderRegisterForm() {
   const phoneNumber = document.createElement('input');
   phoneNumber.type = 'tel';
   phoneNumber.id = 'phoneNumber';
+  phoneNumber.placeholder = 'ex: 0499673562';
   phoneNumber.required = true;
   phoneNumber.className = 'form-control mb-3';
   const titlePassword = document.createElement('h6');
