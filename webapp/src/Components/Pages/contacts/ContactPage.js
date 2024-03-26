@@ -71,15 +71,36 @@ async function buildPage() {
     const notFollowCell = document.createElement('td');
     const notFollowButton = document.createElement('button');
     notFollowButton.classList.add('btn', 'btn-primary');
-    notFollowButton.textContent = 'Ne plus suivre';
+    if (contact.state === 'non suivi') {
+      notFollowButton.textContent = 'Suivre';
+    } else {
+      notFollowButton.textContent = 'Ne plus suivre';
+    }
     notFollowCell.appendChild(notFollowButton);
 
-    // Ajouter les cellules à la ligne
+    notFollowButton.addEventListener('click', async () => {
+      console.log("enter_fetch", contact.idContact);
+      const response = await fetch(
+          `http://localhost:3000/contacts/${contact.idContact}/unfollow`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': getToken()
+            }
+          });
+      if (response.status === 200) {
+        const data = await response.json();
+        if (notFollowButton.textContent === 'Ne plus suivre' && contact.state
+            !== 'non suivi') {
+          notFollowButton.textContent = 'Suivre';
+        }
+        stateCell.textContent = data.state;
+      }
+    });
+
     row.appendChild(companyCell);
     row.appendChild(stateCell);
     row.appendChild(notFollowCell);
-
-    // Ajouter la ligne au corps du tableau
     tableBody.appendChild(row);
   });
   table.appendChild(tableBody);
@@ -87,8 +108,7 @@ async function buildPage() {
   containerDiv.appendChild(table);
   main.appendChild(containerDiv);
 
-
-  if(contacts.length === 0) {
+  if (contacts.length === 0) {
     noContacts();
   }
 }
@@ -102,6 +122,7 @@ function noContacts() {
   title.style.marginTop = '100px';
   main.appendChild(title);
 }
+
 async function getContacts() {
   const response = await fetch('http://localhost:3000/contacts', {
     method: 'GET',

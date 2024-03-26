@@ -34,7 +34,7 @@ public class ContactUCCImpl implements ContactUCC {
   @Override
   public List<ContactDTO> getContacts(UserDTO user) {
     if (user == null) {
-      return null; //error message
+      throw new NotFoundException("User not found");
     }
     List<ContactDTO> list;
     if (user.getRole().equals(Role.STUDENT)) {
@@ -47,7 +47,7 @@ public class ContactUCCImpl implements ContactUCC {
       dalServices.close();
       return list;
     }
-    return null; //error message
+    throw new PreconditionFailedException("You are not allowed to see the contacts");
   }
 
 
