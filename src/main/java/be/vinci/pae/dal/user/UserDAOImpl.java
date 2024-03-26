@@ -63,7 +63,7 @@ public class UserDAOImpl implements UserDAO {
     try (PreparedStatement addUser = dalBackServices.getPS(
         "INSERT INTO pae.users (user_lastname, user_firstname, "
             + "user_email, user_password, user_phoneNumber, user_registerDate,"
-            + " user_role, user_academicYear, user_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) "
+            + " user_role, user_academicYear, user_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1) "
             + "RETURNING user_idUser")) {
       setPs(addUser, user);
       try (ResultSet rs = addUser.executeQuery()) {
@@ -132,8 +132,10 @@ public class UserDAOImpl implements UserDAO {
       updateUser.setInt(10, user.getIdUser());
       updateUser.setInt(11, user.getVersion());
       updateUser.executeUpdate();
-      if (getOneById(user.getIdUser()).getVersion() != user.getVersion()) {
-        throw new RuntimeException("Version mismatch");
+      try (ResultSet rs = updateUser.executeQuery()) {
+        if (!rs.next() && getOneById(user.getIdUser()).getVersion() != user.getVersion()) {
+          throw new RuntimeException("Version mismatch");
+        }
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);
@@ -155,7 +157,7 @@ public class UserDAOImpl implements UserDAO {
     ps.setString(4, user.getPassword());
     ps.setString(5, user.getPhoneNumber());
     ps.setDate(6, user.getRegisterDate());
-    ps.setString(7, user.getRole().getRole());
+    ps.setString(7, user.getRole().toString());
     ps.setString(8, user.getAcademicYear());
   }
 

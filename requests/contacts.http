@@ -34,12 +34,11 @@ Authorization: {{token}}
 
 ### Get list of contacts
 GET {{contactUrl}}
-Content-Type: application/json
 Authorization: {{token}}
 
 ### unfollow a contact
 POST {{contactUrl}}/1/unfollow
 Content-Type: application/json
-Authorization : {{token}}
+Authorization: {{token}}
 
 //Faire la requete meetContact
