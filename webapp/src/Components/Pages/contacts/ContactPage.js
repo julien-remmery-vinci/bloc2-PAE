@@ -74,19 +74,35 @@ async function buildPage() {
     notFollowButton.textContent = 'Ne plus suivre';
     notFollowCell.appendChild(notFollowButton);
 
-    // Ajouter les cellules à la ligne
+    notFollowButton.addEventListener('click', async () => {
+      console.log("enter_fetch", contact.idContact);
+      const response = await fetch(`http://localhost:3000/contacts/${contact.idContact}/unfollow`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': getToken()
+        }
+      });
+      const data = await response.json();
+      console.log(data);
+
+      if (notFollowButton.textContent === 'Ne plus suivre') {
+        notFollowButton.textContent = 'Suivre';
+      } else {
+        notFollowButton.textContent = 'Ne plus suivre';
+      }
+    });
+
+
     row.appendChild(companyCell);
     row.appendChild(stateCell);
     row.appendChild(notFollowCell);
-
-    // Ajouter la ligne au corps du tableau
     tableBody.appendChild(row);
   });
   table.appendChild(tableBody);
   main.appendChild(title);
   containerDiv.appendChild(table);
   main.appendChild(containerDiv);
-
 
   if(contacts.length === 0) {
     noContacts();
