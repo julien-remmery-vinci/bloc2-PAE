@@ -12,6 +12,8 @@ import be.vinci.pae.business.company.Company;
 import be.vinci.pae.business.contact.Contact;
 import be.vinci.pae.business.contact.ContactDTO.State;
 import be.vinci.pae.business.contact.ContactUCC;
+import be.vinci.pae.business.user.User;
+import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
@@ -41,6 +43,7 @@ public class ContactUCCTest {
   Contact contact;
   Contact contact2;
   Company company;
+  User user;
 
   @BeforeAll
   static void beforeAll() {
@@ -71,6 +74,10 @@ public class ContactUCCTest {
     company.setIdCompany(1);
 
     Mockito.when(companyDAO.getCompanyById(1)).thenReturn(company);
+
+    user = (User) factory.getUser();
+    user.setIdUser(idUser);
+    user.setRole(UserDTO.Role.STUDENT);
   }
 
   @Test
@@ -172,5 +179,12 @@ public class ContactUCCTest {
         () -> assertEquals(State.ADMITTED, contact.getState()),
         () -> assertEquals("meetPlace", contact.getMeetPlace())
     );
+  }
+
+
+  @Test
+  @DisplayName("Test get list of contacts")
+  void testGetContacts() {
+    assertNotNull(contactUCC.getContacts(user));
   }
 }
