@@ -14,9 +14,11 @@ import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
 import be.vinci.pae.presentation.exceptions.PreconditionFailedException;
+import be.vinci.pae.presentation.exceptions.NotFoundException;
 import jakarta.ws.rs.WebApplicationException;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,22 +33,25 @@ public class ContactUCCTest {
   private final int idUser = 1;
   private final String refusalReason = "refusalReason";
   Contact contact;
+  static Factory factory;
   Contact contact2;
   Company company;
-  private ContactUCC contactUCC;
-  private ContactDAO contactDAO;
-  private CompanyUCC companyUCC;
-  private CompanyDAO companyDAO;
+  private static ContactUCC contactUCC;
+  private static ContactDAO contactDAO;
+  private static CompanyUCC companyUCC;
+  private static CompanyDAO companyDAO;
 
-  @BeforeEach
-  void setUp() {
+  @BeforeAll
+  static void beforeAll() {
     ServiceLocator locator = ServiceLocatorUtilities.bind(new ApplicationBinderTest());
     contactUCC = locator.getService(ContactUCC.class);
     contactDAO = locator.getService(ContactDAO.class);
     companyUCC = locator.getService(CompanyUCC.class);
     companyDAO = locator.getService(CompanyDAO.class);
-    Factory factory = locator.getService(Factory.class);
-
+    factory = locator.getService(Factory.class);
+  }
+  @BeforeEach
+  void setUp() {
     contact = (Contact) factory.getContact();
     contact.setIdContact(idContact);
     contact.setIdStudent(idUser);
@@ -105,6 +110,14 @@ public class ContactUCCTest {
   void testRefuseContactWrongState() {
     contact.setState(State.TURNED_DOWN);
     assertThrows(WebApplicationException.class,
+        () -> contactUCC.refuseContact(idContact, refusalReason, idUser));
+  }
+
+  @Test
+  @DisplayName("Test refuseContact with contact that doesn't belong to the user")
+  void testRefuseContactWrongUser() {
+    contact.setIdStudent(2);
+    assertThrows(NotFoundException.class,
         () -> contactUCC.refuseContact(idContact, refusalReason, idUser));
   }
 

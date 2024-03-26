@@ -88,6 +88,13 @@ public interface UserDTO {
   String getPassword();
 
   /**
+   * Set the password of the user.
+   *
+   * @param password the password of the user
+   */
+  void setPassword(String password);
+
+  /**
    * Get the academic year of the user.
    *
    * @return the academic year of the user
@@ -100,13 +107,6 @@ public interface UserDTO {
    * @param academicYear the academic year of the user
    */
   void setAcademicYear(String academicYear);
-
-  /**
-   * Set the password of the user.
-   *
-   * @param password the password of the user
-   */
-  void setPassword(String password);
 
   /**
    * Get the phone number of the user.
@@ -170,21 +170,6 @@ public interface UserDTO {
 
     Role(String role) {
       this.role = role;
-    }
-
-    /**
-     * Get the role from a string.
-     *
-     * @param role the role as a string
-     * @return the role
-     */
-    public static Role fromString(String role) {
-      for (Role r : Role.values()) {
-        if (r.role.equalsIgnoreCase(role)) {
-          return r;
-        }
-      }
-      return null;
     }
 
     /**

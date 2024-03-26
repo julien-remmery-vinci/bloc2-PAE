@@ -9,11 +9,13 @@ import java.util.List;
  * Implementation of CompanyUCC.
  */
 public class CompanyUCCImpl implements CompanyUCC {
+
   @Inject
   private DALServices dalServices;
 
   @Inject
   private CompanyDAO companyDAO;
+
   /**
    * Get all companies.
    *
@@ -24,6 +26,7 @@ public class CompanyUCCImpl implements CompanyUCC {
     dalServices.close();
     return companies;
   }
+
   /**
    * Get a company by its id.
    *
