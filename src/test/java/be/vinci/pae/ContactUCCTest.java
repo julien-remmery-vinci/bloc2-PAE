@@ -184,7 +184,7 @@ public class ContactUCCTest {
 
   @Test
   @DisplayName("Test get list of contacts")
-  void testGetContacts() {
+  void testGetStudentaddContacts() {
     assertNotNull(contactUCC.getContacts(user));
   }
 
@@ -195,14 +195,14 @@ public class ContactUCCTest {
   }
 
   @Test
-  @DisplayName("Test get list of contacts with a student user")
+  @DisplayName("Test get list of contacts with a professor user")
   void testGetContactsProfessorUser() {
     user.setRole(Role.PROFESSOR);
     assertNotNull(contactUCC.getContacts(user));
   }
 
   @Test
-  @DisplayName("Test get list of contacts with a student user")
+  @DisplayName("Test get list of contacts with a admin user")
   void testGetContactsAdminUser() {
     user.setRole(Role.ADMIN);
     assertNotNull(contactUCC.getContacts(user));
