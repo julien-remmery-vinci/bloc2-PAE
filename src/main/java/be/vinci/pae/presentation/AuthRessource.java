@@ -21,10 +21,8 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response.Status;
 import java.util.Date;
 import org.glassfish.jersey.server.ContainerRequest;
 
@@ -107,6 +105,9 @@ public class AuthRessource {
     if (!user.getEmail()
         .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
       throw new BadRequestException("email is not valid");
+    }
+    if (!user.getPhoneNumber().matches("^[0-9]{10}$")) {
+      throw new BadRequestException("phone number is not valid");
     }
     if (user.getFirstname().isEmpty() || user.getLastname().isEmpty() || user.getPhoneNumber()
         .isEmpty() || user.getEmail().isEmpty() || user.getPassword().isEmpty()) {

@@ -68,7 +68,7 @@ INSERT INTO pae.users (user_lastname, user_firstname, user_email, user_password,
                        user_version)
 VALUES ('admin', 'admin', 'admin.admin@vinci.be',
         '$2a$10$aqGDWyP8K9xeO1a8uPzcWuzf1hfiPU8IlAR8GyhgVIYhnuKNSxP7S',
-        '0123456789', '2024-02-22', 'administratif', '2023-2024', 1);
+        '0123456789', '2024-02-22', 'ADMIN', '2023-2024', 1);
 
 -- mot de passe : test
 INSERT INTO pae.users (user_lastname, user_firstname, user_email, user_password, user_phonenumber, user_registerdate, user_role,
@@ -76,7 +76,7 @@ INSERT INTO pae.users (user_lastname, user_firstname, user_email, user_password,
                        user_version)
 VALUES ('remmery', 'julien', 'julien.remmery@student.vinci.be',
         '$2a$10$Y3/IINNLQjpg33uhU2xhce9L5BUxyQ/ABXh35ftx4pan00lBgL8qm',
-        '0123456789', '2024-01-01', 'étudiant', '2023-2024', 1);
+        '0123456789', '2024-01-01', 'STUDENT', '2023-2024', 1);
 
 INSERT INTO pae.companies (company_tradeName, company_address, company_blacklisted, company_version)
 VALUES ('Vinci', 'Bruxelles', false, 1);
@@ -91,8 +91,8 @@ INSERT INTO pae.companies (company_tradeName, company_designation, company_addre
 VALUES ('Sagacify', 'SPRL', 'Bruxelles', false, 1);
 
 INSERT INTO pae.contacts (contact_idCompany, contact_idStudent, contact_state, contact_academicYear, contact_version)
-VALUES (1, 2, 'initié', '2023-2024', 1);
+VALUES (1, 2, 'STARTED', '2023-2024', 1);
 INSERT INTO pae.contacts (contact_idCompany, contact_idStudent, contact_state, contact_meetPlace, contact_academicYear, contact_version)
-VALUES (2, 2, 'pris', 'dans l''entreprise', '2023-2024', 1);
+VALUES (2, 2, 'ADMITTED', 'dans l''entreprise', '2023-2024', 1);
 INSERT INTO pae.contacts (contact_idCompany, contact_idStudent, contact_state, contact_academicYear, contact_version)
-VALUES (3, 1, 'initié', '2023-2024', 1);
+VALUES (3, 1, 'STARTED', '2023-2024', 1);

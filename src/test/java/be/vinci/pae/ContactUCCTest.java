@@ -8,12 +8,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.academicyear.AcademicYear;
 import be.vinci.pae.business.company.Company;
+import be.vinci.pae.business.company.CompanyUCC;
 import be.vinci.pae.business.contact.Contact;
 import be.vinci.pae.business.contact.ContactDTO.State;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
 import be.vinci.pae.presentation.exceptions.PreconditionFailedException;
+import be.vinci.pae.presentation.exceptions.NotFoundException;
 import jakarta.ws.rs.WebApplicationException;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
@@ -41,7 +43,7 @@ public class ContactUCCTest {
   Company company;
 
   @BeforeAll
-  static void setUpAll() {
+  static void beforeAll() {
     ServiceLocator locator = ServiceLocatorUtilities.bind(new ApplicationBinderTest());
     contactUCC = locator.getService(ContactUCC.class);
     contactDAO = locator.getService(ContactDAO.class);
@@ -108,6 +110,14 @@ public class ContactUCCTest {
   void testRefuseContactWrongState() {
     contact.setState(State.TURNED_DOWN);
     assertThrows(WebApplicationException.class,
+        () -> contactUCC.refuseContact(idContact, refusalReason, idUser));
+  }
+
+  @Test
+  @DisplayName("Test refuseContact with contact that doesn't belong to the user")
+  void testRefuseContactWrongUser() {
+    contact.setIdStudent(2);
+    assertThrows(NotFoundException.class,
         () -> contactUCC.refuseContact(idContact, refusalReason, idUser));
   }
 

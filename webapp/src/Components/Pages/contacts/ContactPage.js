@@ -59,7 +59,7 @@ async function buildPage() {
       let url = window.location.href;
       url += contact.state === 'initié' ? '/meet' : '/refusal';
       url += `?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}&meetplace=${contact.meetPlace}`;
-      window.location.href = url;
+      Navigate(url);
     });
     companyCell.appendChild(companyLink);
 
