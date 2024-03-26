@@ -2,6 +2,8 @@ package be.vinci.pae.business;
 
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.contact.ContactDTO;
+import be.vinci.pae.business.internship.InternshipDTO;
+import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorDTO;
 import be.vinci.pae.business.user.UserDTO;
 
 /**
@@ -29,4 +31,18 @@ public interface Factory {
    * @return a new CompanyImpl
    */
   CompanyDTO getCompany();
+
+  /**
+   * Create a new InternshipImpl.
+   *
+   * @return a new InternshipImpl
+   */
+  InternshipDTO getInternship();
+
+  /**
+   * Create a new InternshipSupervisorImpl.
+   *
+   * @return a new InternshipSupervisorImpl
+   */
+  InternshipSupervisorDTO getInternshipSupervisor();
 }
