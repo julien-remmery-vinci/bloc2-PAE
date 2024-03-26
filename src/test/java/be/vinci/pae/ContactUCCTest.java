@@ -2,18 +2,24 @@ package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import be.vinci.pae.business.Factory;
+import be.vinci.pae.business.academicyear.AcademicYear;
+import be.vinci.pae.business.company.Company;
 import be.vinci.pae.business.contact.Contact;
 import be.vinci.pae.business.contact.ContactDTO.State;
 import be.vinci.pae.business.contact.ContactUCC;
+import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
+import be.vinci.pae.presentation.exceptions.PreconditionFailedException;
 import jakarta.ws.rs.WebApplicationException;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,25 +30,79 @@ import org.mockito.Mockito;
  */
 public class ContactUCCTest {
 
+  static Factory factory;
+  private static ContactUCC contactUCC;
+  private static ContactDAO contactDAO;
+  private static CompanyDAO companyDAO;
+  private static AcademicYear academicYear;
   private final int idContact = 1;
   private final int idUser = 1;
   private final String refusalReason = "refusalReason";
   Contact contact;
-  private ContactUCC contactUCC;
-  private ContactDAO contactDAO;
+  Contact contact2;
+  Company company;
 
-  @BeforeEach
-  void setUp() {
+  @BeforeAll
+  static void beforeAll() {
     ServiceLocator locator = ServiceLocatorUtilities.bind(new ApplicationBinderTest());
     contactUCC = locator.getService(ContactUCC.class);
     contactDAO = locator.getService(ContactDAO.class);
-    Factory factory = locator.getService(Factory.class);
+    companyDAO = locator.getService(CompanyDAO.class);
+    academicYear = locator.getService(AcademicYear.class);
+    factory = locator.getService(Factory.class);
+  }
 
+  @BeforeEach
+  void setUp() {
     contact = (Contact) factory.getContact();
     contact.setIdContact(idContact);
     contact.setIdStudent(idUser);
-    contact.setState(State.ADMITTED);
+    contact.setState(State.STARTED);
     Mockito.when(contactDAO.getOneById(1)).thenReturn(contact);
+
+    contact2 = (Contact) factory.getContact();
+    contact2.setIdContact(2);
+    contact2.setIdStudent(idUser);
+    contact2.setIdCompany(1);
+    contact2.setAcademicYear("2021-2022");
+
+    company = (Company) factory.getCompany();
+    company.setDesignation("company");
+    company.setIdCompany(1);
+
+    Mockito.when(companyDAO.getCompanyById(1)).thenReturn(company);
+  }
+
+  @Test
+  @DisplayName("Test addContact with all conditions met")
+  void testAddContact() {
+    contact.setIdCompany(1);
+    contact.setAcademicYear("2021-2022");
+    Mockito.when(contactDAO.addContact(contact)).thenReturn(contact);
+    Mockito.when(contactDAO.getContactAccepted(idUser)).thenReturn(null);
+    Mockito.when(contactDAO.getCompanyContact(idUser, 1, academicYear.getAcademicYear()))
+        .thenReturn(null);
+    assertAll(
+        () -> assertNotNull(contactUCC.addContact(contact)),
+        () -> assertEquals(State.STARTED, contact.getState())
+    );
+  }
+
+  @Test
+  @DisplayName("Test addContact with company already in contact")
+  void testAddContactCompanyAlreadyInContact() {
+    contact.setIdCompany(1);
+    Mockito.when(contactDAO.getCompanyContact(contact.getIdStudent(), contact.getIdCompany(),
+        academicYear.getAcademicYear())).thenReturn(contact);
+    assertThrows(PreconditionFailedException.class, () -> contactUCC.addContact(contact));
+  }
+
+  @Test
+  @DisplayName("Test addContact when there is already a contact accepted")
+  void testAddContactAlreadyAccepted() {
+    contact.setIdCompany(1);
+    Mockito.when(contactDAO.getContactAccepted(idUser)).thenReturn(contact);
+    assertThrows(PreconditionFailedException.class, () -> contactUCC.addContact(contact));
   }
 
   @Test
@@ -71,12 +131,14 @@ public class ContactUCCTest {
   @Test
   @DisplayName("Test refuseContact with existing contact in right state")
   void refuseContactTest() {
+    contact.setState(State.ADMITTED);
     contactUCC.refuseContact(idContact, refusalReason, idUser);
     assertAll(
         () -> assertEquals(State.TURNED_DOWN, contact.getState()),
         () -> assertEquals(refusalReason, contact.getRefusalReason())
     );
   }
+
 
   @Test
   @DisplayName("Test addContact with company not found")

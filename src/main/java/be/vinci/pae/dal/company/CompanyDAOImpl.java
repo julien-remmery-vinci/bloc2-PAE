@@ -3,6 +3,7 @@ package be.vinci.pae.dal.company;
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
+import be.vinci.pae.presentation.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,7 +34,7 @@ public class CompanyDAOImpl implements CompanyDAO {
         return companies;
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
   }
 
@@ -49,7 +50,7 @@ public class CompanyDAOImpl implements CompanyDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
     return null;
   }

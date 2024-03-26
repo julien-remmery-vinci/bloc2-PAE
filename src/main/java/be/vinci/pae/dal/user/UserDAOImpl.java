@@ -3,6 +3,7 @@ package be.vinci.pae.dal.user;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
+import be.vinci.pae.presentation.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,7 +32,7 @@ public class UserDAOImpl implements UserDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
     return null;
   }
@@ -53,7 +54,7 @@ public class UserDAOImpl implements UserDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
     return null;
   }
@@ -73,19 +74,12 @@ public class UserDAOImpl implements UserDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
     return null;
   }
 
-  /**
-   * Fetches all users from the database. This method prepares a SQL statement to fetch all users
-   * from the database. It then executes the statement and processes the result set by calling the
-   * getResults method.
-   *
-   * @return a list of UserDTO objects representing all users in the database
-   * @throws RuntimeException if a SQLException is caught
-   */
+  @Override
   public List<UserDTO> getAllUsers() {
     try (PreparedStatement getUsers = dalBackServices.getPS(
         "SELECT * FROM pae.users")) {
@@ -93,7 +87,7 @@ public class UserDAOImpl implements UserDAO {
         return getResults(rs);
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
   }
 
@@ -114,12 +108,7 @@ public class UserDAOImpl implements UserDAO {
     return users;
   }
 
-  /**
-   * Update a user in the database.
-   *
-   * @param user the user to update
-   * @return the user updated
-   */
+  @Override
   public UserDTO updateUser(UserDTO user) {
     try (PreparedStatement updateUser = dalBackServices.getPS(
         "UPDATE pae.users SET user_lastname = ?, user_firstname = ?,"
@@ -138,7 +127,7 @@ public class UserDAOImpl implements UserDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
     return user;
   }
