@@ -3,6 +3,7 @@ package be.vinci.pae.dal.contact;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
+import be.vinci.pae.presentation.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,7 +35,7 @@ public class ContactDAOImpl implements ContactDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
     return null;
   }
@@ -67,7 +68,7 @@ public class ContactDAOImpl implements ContactDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
   }
 
@@ -88,7 +89,7 @@ public class ContactDAOImpl implements ContactDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
     return null;
   }
@@ -108,7 +109,7 @@ public class ContactDAOImpl implements ContactDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
 
     return null;
@@ -130,7 +131,7 @@ public class ContactDAOImpl implements ContactDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
     return null;
   }
@@ -158,7 +159,7 @@ public class ContactDAOImpl implements ContactDAO {
         return contacts;
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
   }
 
@@ -183,7 +184,7 @@ public class ContactDAOImpl implements ContactDAO {
         return contacts;
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException();
     }
   }
 }

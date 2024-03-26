@@ -1,6 +1,5 @@
 package be.vinci.pae.utils;
 
-import be.vinci.pae.presentation.exceptions.FatalException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +22,7 @@ public class Config {
     try (InputStream input = new FileInputStream(file)) {
       props.load(input);
     } catch (IOException e) {
-      throw new FatalException("Error while loading config file: " + e.getMessage());
+      throw new RuntimeException("Error while loading config file");
     }
   }
 
