@@ -181,10 +181,17 @@ public class ContactUCCTest {
     );
   }
 
-
   @Test
   @DisplayName("Test get list of contacts")
   void testGetContacts() {
     assertNotNull(contactUCC.getContacts(user));
   }
+
+  @Test
+  @DisplayName("Test get list of contacts with a null user")
+  void testGetContactsNullUser() {
+    assertThrows(NotFoundException.class, () -> contactUCC.getContacts(null));
+  }
 }
+
+
