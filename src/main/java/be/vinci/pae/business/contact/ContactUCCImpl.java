@@ -41,13 +41,11 @@ public class ContactUCCImpl implements ContactUCC {
       list = contactDAO.getContactsByStudentId(user.getIdUser());
       dalServices.close();
       return list;
-    }
-    if (user.getRole().equals(Role.ADMIN) || user.getRole().equals(Role.PROFESSOR)) {
+    } else {
       list = contactDAO.getAllContacts();
       dalServices.close();
       return list;
     }
-    throw new PreconditionFailedException("You are not allowed to see the contacts");
   }
 
 
