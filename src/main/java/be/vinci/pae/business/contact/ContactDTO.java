@@ -187,21 +187,6 @@ public interface ContactDTO {
     }
 
     /**
-     * Get the state from a string.
-     *
-     * @param text the string
-     * @return the state
-     */
-    public static State fromString(String text) {
-      for (State b : State.values()) {
-        if (b.state.equalsIgnoreCase(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-
-    /**
      * Get the state as string.
      *
      * @return the state as string
