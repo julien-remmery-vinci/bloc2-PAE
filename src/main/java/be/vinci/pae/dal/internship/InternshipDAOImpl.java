@@ -37,7 +37,7 @@ public class InternshipDAOImpl implements InternshipDAO {
             + "internshipSupervisor_idCompany = company_idCompany AND\n"
             + "internship_idStudent = user_idUser AND\n"
             + "internship_idContact = contact_idContact AND\n"
-            + "internship_internshipSupervisor = internshipSupervisor_idInternshipSupervisor\n"
+            + "internship_idInternshipSupervisor = internshipSupervisor_idInternshipSupervisor\n"
             + " AND internship_idCompany = company_idCompany AND\n"
             + "contact_idStudent = ?")) {
       ps.setInt(1, id);
