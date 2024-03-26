@@ -9,11 +9,13 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class NotFoundException extends WebApplicationException {
 
+  public static final Status STATUS = Status.NOT_FOUND;
+
   /**
    * Constructor without a message.
    */
   public NotFoundException() {
-    super(Response.status(Status.NOT_FOUND)
+    super(Response.status(STATUS)
         .build());
   }
 
@@ -23,7 +25,7 @@ public class NotFoundException extends WebApplicationException {
    * @param message the message
    */
   public NotFoundException(String message) {
-    super(Response.status(Status.NOT_FOUND)
+    super(Response.status(STATUS)
         .entity(message)
         .type("text/plain")
         .build());
@@ -35,7 +37,7 @@ public class NotFoundException extends WebApplicationException {
    * @param cause the cause
    */
   public NotFoundException(Throwable cause) {
-    super(Response.status(Status.NOT_FOUND)
+    super(Response.status(STATUS)
         .entity(cause.getMessage())
         .type("text/plain")
         .build());

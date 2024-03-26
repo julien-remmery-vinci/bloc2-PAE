@@ -10,11 +10,13 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class TokenDecodingException extends WebApplicationException {
 
+  public static final Status STATUS = Status.UNAUTHORIZED;
+
   /**
    * Constructor without a message.
    */
   public TokenDecodingException() {
-    super(Response.status(Status.UNAUTHORIZED)
+    super(Response.status(STATUS)
         .build());
   }
 
@@ -24,7 +26,7 @@ public class TokenDecodingException extends WebApplicationException {
    * @param message the message
    */
   public TokenDecodingException(String message) {
-    super(Response.status(Status.UNAUTHORIZED)
+    super(Response.status(STATUS)
         .entity(message)
         .type("text/plain")
         .build());
@@ -36,7 +38,7 @@ public class TokenDecodingException extends WebApplicationException {
    * @param cause the cause
    */
   public TokenDecodingException(Throwable cause) {
-    super(Response.status(Status.UNAUTHORIZED)
+    super(Response.status(STATUS)
         .entity(cause.getMessage())
         .type("text/plain")
         .build());

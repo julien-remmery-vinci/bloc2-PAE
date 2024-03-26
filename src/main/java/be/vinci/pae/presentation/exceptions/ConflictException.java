@@ -10,11 +10,13 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class ConflictException extends WebApplicationException {
 
+  public static final Status STATUS = Status.CONFLICT;
+
   /**
    * Constructor without a message.
    */
   public ConflictException() {
-    super(Response.status(Status.CONFLICT)
+    super(Response.status(STATUS)
         .build());
   }
 
@@ -24,7 +26,7 @@ public class ConflictException extends WebApplicationException {
    * @param message the message
    */
   public ConflictException(String message) {
-    super(Response.status(Status.CONFLICT)
+    super(Response.status(STATUS)
         .entity(message)
         .type("text/plain")
         .build());
@@ -36,7 +38,7 @@ public class ConflictException extends WebApplicationException {
    * @param cause the cause
    */
   public ConflictException(Throwable cause) {
-    super(Response.status(Status.CONFLICT)
+    super(Response.status(STATUS)
         .entity(cause.getMessage())
         .type("text/plain")
         .build());

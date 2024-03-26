@@ -9,11 +9,13 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class ForbiddenException extends WebApplicationException {
 
+  public static final Status STATUS = Status.FORBIDDEN;
+
   /**
    * Constructor without a message.
    */
   public ForbiddenException() {
-    super(Response.status(Response.Status.FORBIDDEN)
+    super(Response.status(STATUS)
         .build());
   }
 
@@ -23,7 +25,7 @@ public class ForbiddenException extends WebApplicationException {
    * @param message the message
    */
   public ForbiddenException(String message) {
-    super(Response.status(Status.FORBIDDEN)
+    super(Response.status(STATUS)
         .entity(message)
         .type("text/plain")
         .build());
@@ -35,7 +37,7 @@ public class ForbiddenException extends WebApplicationException {
    * @param cause the cause
    */
   public ForbiddenException(Throwable cause) {
-    super(Response.status(Status.FORBIDDEN)
+    super(Response.status(STATUS)
         .entity(cause.getMessage())
         .type("text/plain")
         .build());
