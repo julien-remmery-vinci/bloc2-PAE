@@ -88,12 +88,13 @@ async function buildPage() {
               'Authorization': getToken()
             }
           });
-      const data = await response.json();
-      console.log(data);
-
-      if (notFollowButton.textContent === 'Ne plus suivre' && contact.state
-          !== 'non suivi') {
-        notFollowButton.textContent = 'Suivre';
+      if (response.status === 200) {
+        const data = await response.json();
+        if (notFollowButton.textContent === 'Ne plus suivre' && contact.state
+            !== 'non suivi') {
+          notFollowButton.textContent = 'Suivre';
+        }
+        stateCell.textContent = data.state;
       }
     });
 
