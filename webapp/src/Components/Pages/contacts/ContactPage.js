@@ -71,28 +71,31 @@ async function buildPage() {
     const notFollowCell = document.createElement('td');
     const notFollowButton = document.createElement('button');
     notFollowButton.classList.add('btn', 'btn-primary');
-    notFollowButton.textContent = 'Ne plus suivre';
+    if (contact.state === 'non suivi') {
+      notFollowButton.textContent = 'Suivre';
+    } else {
+      notFollowButton.textContent = 'Ne plus suivre';
+    }
     notFollowCell.appendChild(notFollowButton);
 
     notFollowButton.addEventListener('click', async () => {
       console.log("enter_fetch", contact.idContact);
-      const response = await fetch(`http://localhost:3000/contacts/${contact.idContact}/unfollow`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': getToken()
-        }
-      });
+      const response = await fetch(
+          `http://localhost:3000/contacts/${contact.idContact}/unfollow`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': getToken()
+            }
+          });
       const data = await response.json();
       console.log(data);
 
-      if (notFollowButton.textContent === 'Ne plus suivre') {
+      if (notFollowButton.textContent === 'Ne plus suivre' && contact.state
+          !== 'non suivi') {
         notFollowButton.textContent = 'Suivre';
-      } else {
-        notFollowButton.textContent = 'Ne plus suivre';
       }
     });
-
 
     row.appendChild(companyCell);
     row.appendChild(stateCell);
@@ -104,7 +107,7 @@ async function buildPage() {
   containerDiv.appendChild(table);
   main.appendChild(containerDiv);
 
-  if(contacts.length === 0) {
+  if (contacts.length === 0) {
     noContacts();
   }
 }
@@ -118,6 +121,7 @@ function noContacts() {
   title.style.marginTop = '100px';
   main.appendChild(title);
 }
+
 async function getContacts() {
   const response = await fetch('http://localhost:3000/contacts', {
     method: 'GET',
