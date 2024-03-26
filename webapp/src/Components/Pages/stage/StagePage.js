@@ -26,12 +26,12 @@ async function renderStagePage() {
     <h2>Mon stage</h2>
     <form class="p-5 w-150 bg-light rounded shadow col-md-8">
         <label for="subject" class="fw-bold mb-1">Sujet du stage:</label><br>
-        <textarea id="subject" name="subject" class="form-control mb-3" rows="2">Suivre un processus de sortie d'une fonctionalité</textarea><br>
+        <textarea id="subject" name="subject" class="form-control mb-3" rows="2">${stage.internshipProject}</textarea><br>
         <label for="date" class="fw-bold mb-1">Date de signature:</label><br>
-        <input type="date" id="date" name="date" value="2024-03-10" class="form-control mb-3">
+        <input type="date" id="date" name="date" value="${stage.signatureDate}" class="form-control mb-3">
         <label for="supervisor" class="fw-bold mb-1">Responsable</label><br>
         <select id="supervisor" name="supervisor" class="form-control mb-3">
-            <option value="responsable1" selected>Romain</option>
+            <option value="responsable1" selected>${stage.internshipSupervisor.lastName} ${stage.internshipSupervisor.firstName}</option>
             <option value="responsable2" >Responsable 2</option>
             <option value="responsable3">Responsable 3</option>
         </select>

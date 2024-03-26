@@ -2,7 +2,6 @@ package be.vinci.pae.business.internship;
 
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorDTO;
-import be.vinci.pae.business.user.UserDTO;
 import java.sql.Date;
 
 /**
@@ -38,20 +37,6 @@ public interface InternshipDTO {
    * @param idStudent the idStudent to set
    */
   void setIdStudent(int idStudent);
-
-  /**
-   * getter for student.
-   *
-   * @return the student
-   */
-  UserDTO getUser();
-
-  /**
-   * setter for student.
-   *
-   * @param user the student to set
-   */
-  void setUser(UserDTO user);
 
   /**
    * getter for internshipProject.

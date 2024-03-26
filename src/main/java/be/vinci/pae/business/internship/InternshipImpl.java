@@ -2,7 +2,6 @@ package be.vinci.pae.business.internship;
 
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorDTO;
-import be.vinci.pae.business.user.UserDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.sql.Date;
 
@@ -15,11 +14,9 @@ public class InternshipImpl implements Internship {
 
   private int idStudent;
 
-  private UserDTO user;
-
   private String internshipProject;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yy hh:mm:ss")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   private Date signatureDate;
 
   private int idContact;
@@ -53,16 +50,6 @@ public class InternshipImpl implements Internship {
   @Override
   public void setIdStudent(int idStudent) {
     this.idStudent = idStudent;
-  }
-
-  @Override
-  public UserDTO getUser() {
-    return user;
-  }
-
-  @Override
-  public void setUser(UserDTO user) {
-    this.user = user;
   }
 
   @Override
