@@ -8,6 +8,7 @@ import MeetContactPage from "../Pages/contacts/MeetContactPage";
 import ContactPage from "../Pages/contacts/ContactPage";
 import ProfilePage from "../Pages/ProfilePage";
 import Logout from "../Logout/Logout";
+import StagePage from "../Pages/stage/StagePage";
 
 // Define routes
 const routes = {
@@ -20,7 +21,8 @@ const routes = {
     '/search': SearchPage,
     '/contact/meet': MeetContactPage,
     '/contact': ContactPage,
-    '/profile': ProfilePage
+    '/profile': ProfilePage,
+    '/stage': StagePage
 };
 
 export default routes;

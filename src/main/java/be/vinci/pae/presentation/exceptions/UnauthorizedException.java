@@ -9,8 +9,13 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class UnauthorizedException extends WebApplicationException {
 
+  /**
+   * The status of the exception.
+   */
+  public static final Status STATUS = Status.UNAUTHORIZED;
+
   public UnauthorizedException() {
-    super(Response.status(Status.UNAUTHORIZED)
+    super(Response.status(STATUS)
         .build());
   }
 
@@ -20,7 +25,7 @@ public class UnauthorizedException extends WebApplicationException {
    * @param message the message
    */
   public UnauthorizedException(String message) {
-    super(Response.status(Status.UNAUTHORIZED)
+    super(Response.status(STATUS)
         .entity(message)
         .type("text/plain")
         .build());
@@ -32,7 +37,7 @@ public class UnauthorizedException extends WebApplicationException {
    * @param cause the cause
    */
   public UnauthorizedException(Throwable cause) {
-    super(Response.status(Status.UNAUTHORIZED)
+    super(Response.status(STATUS)
         .entity(cause.getMessage())
         .type("text/plain")
         .build());

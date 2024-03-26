@@ -10,10 +10,15 @@ import jakarta.ws.rs.core.Response.Status;
 public class BadRequestException extends WebApplicationException {
 
   /**
+   * The status of the exception.
+   */
+  public static final Status STATUS = Status.BAD_REQUEST;
+
+  /**
    * Constructor without a message.
    */
   public BadRequestException() {
-    super(Response.status(Status.BAD_REQUEST)
+    super(Response.status(STATUS)
         .build());
   }
 
@@ -23,7 +28,7 @@ public class BadRequestException extends WebApplicationException {
    * @param message the message
    */
   public BadRequestException(String message) {
-    super(Response.status(Status.BAD_REQUEST)
+    super(Response.status(STATUS)
         .entity(message)
         .type("text/plain")
         .build());
@@ -35,7 +40,7 @@ public class BadRequestException extends WebApplicationException {
    * @param cause the cause
    */
   public BadRequestException(Throwable cause) {
-    super(Response.status(Status.BAD_REQUEST)
+    super(Response.status(STATUS)
         .entity(cause.getMessage())
         .type("text/plain")
         .build());

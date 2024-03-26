@@ -1,4 +1,4 @@
-package be.vinci.pae.utils;
+package be.vinci.pae.presentation.mappers;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.ws.rs.core.Response;
