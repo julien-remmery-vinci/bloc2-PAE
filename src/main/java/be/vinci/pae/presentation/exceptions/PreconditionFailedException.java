@@ -10,10 +10,15 @@ import jakarta.ws.rs.core.Response.Status;
 public class PreconditionFailedException extends WebApplicationException {
 
   /**
+   * The status of the exception.
+   */
+  public static final Status STATUS = Status.PRECONDITION_FAILED;
+
+  /**
    * Constructor without a message.
    */
   public PreconditionFailedException() {
-    super(Response.status(Status.PRECONDITION_FAILED)
+    super(Response.status(STATUS)
         .build());
   }
 
@@ -23,7 +28,7 @@ public class PreconditionFailedException extends WebApplicationException {
    * @param message the message
    */
   public PreconditionFailedException(String message) {
-    super(Response.status(Status.PRECONDITION_FAILED)
+    super(Response.status(STATUS)
         .entity(message)
         .type("text/plain")
         .build());
@@ -35,7 +40,7 @@ public class PreconditionFailedException extends WebApplicationException {
    * @param cause the cause
    */
   public PreconditionFailedException(Throwable cause) {
-    super(Response.status(Status.PRECONDITION_FAILED)
+    super(Response.status(STATUS)
         .entity(cause.getMessage())
         .type("text/plain")
         .build());

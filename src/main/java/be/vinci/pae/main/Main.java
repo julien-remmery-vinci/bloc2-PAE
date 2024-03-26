@@ -1,10 +1,10 @@
 package be.vinci.pae.main;
 
 import be.vinci.pae.presentation.filters.LogFilter;
+import be.vinci.pae.presentation.mappers.JsonProcessingExceptionMapper;
+import be.vinci.pae.presentation.mappers.WebExceptionMapper;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
-import be.vinci.pae.utils.JsonProcessingExceptionMapper;
-import be.vinci.pae.utils.WebExceptionMapper;
 import java.io.IOException;
 import java.net.URI;
 import org.glassfish.grizzly.http.server.HttpServer;
