@@ -7,6 +7,7 @@ package be.vinci.pae.presentation;
 
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
+import be.vinci.pae.presentation.exceptions.BadRequestException;
 import be.vinci.pae.presentation.exceptions.UnauthorizedException;
 import be.vinci.pae.presentation.filters.Authorize;
 import be.vinci.pae.presentation.filters.Log;
@@ -63,24 +64,19 @@ public class UserRessource {
     }
 
     if (oldPassword == null || newPassword == null || confirmationPassword == null) {
-      throw new WebApplicationException("oldPassword or newPassword or confimation required",
-          Response.Status.BAD_REQUEST);
+      throw new BadRequestException("oldPassword or newPassword or confimation required");
     }
 
     if (oldPassword.equals(newPassword)) {
-      throw new WebApplicationException("New password is the same as the old one",
-          Response.Status.BAD_REQUEST);
+      throw new BadRequestException("New password is the same as the old one");
     }
 
     if (!newPassword.equals(confirmationPassword) || newPassword.isEmpty()) {
-      throw new WebApplicationException("New password and confirmation are not the same or empty",
-          Response.Status.BAD_REQUEST);
+      throw new BadRequestException("New password and confirmation are not the same or empty");
     }
 
     if (oldPassword.isEmpty()) {
-      throw new WebApplicationException(
-          "oldPassword or newPassword or confirmationPassword is empty",
-          Response.Status.BAD_REQUEST);
+      throw new BadRequestException("oldPassword or newPassword or confirmationPassword is empty");
     }
 
     if (userUCC.updateUser(authenticatedUser, oldPassword, newPassword) == null) {
