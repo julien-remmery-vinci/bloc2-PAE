@@ -5,6 +5,7 @@ import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.user.UserDAO;
 import be.vinci.pae.presentation.exceptions.BadRequestException;
 import jakarta.inject.Inject;
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -44,13 +45,10 @@ public class UserUCCImpl implements UserUCC {
     if (userFound == null) {
       return null;
     }
-    User u = (User) userFound;
-
     // Check for matching password
-    if (u.checkPassword(password)) {
-      return u;
+    if (((User) userFound).checkPassword(password)) {
+      return userFound;
     }
-
     //Password did not match
     return null;
   }
@@ -75,7 +73,7 @@ public class UserUCCImpl implements UserUCC {
       user.setAcademicYear(academicYear.getAcademicYear());
     }
     user.setPassword(((User) user).hashPassword(user.getPassword()));
-    java.sql.Date registerDate = new java.sql.Date(System.currentTimeMillis());
+    Date registerDate = new Date(System.currentTimeMillis());
     user.setRegisterDate(registerDate);
 
     user = userDAO.addUser(user);

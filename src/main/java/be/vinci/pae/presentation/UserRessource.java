@@ -7,6 +7,8 @@ package be.vinci.pae.presentation;
 
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
+import be.vinci.pae.presentation.exceptions.BadRequestException;
+import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.exceptions.UnauthorizedException;
 import be.vinci.pae.presentation.filters.Authorize;
 import be.vinci.pae.presentation.filters.Log;
@@ -18,11 +20,9 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
 import org.glassfish.jersey.server.ContainerRequest;
 
@@ -59,28 +59,23 @@ public class UserRessource {
     String confirmationPassword = json.get("confirmationPassword").asText();
 
     if (authenticatedUser.getIdUser() <= 0) {
-      throw new WebApplicationException("User not found", Status.NOT_FOUND);
+      throw new NotFoundException("User not found");
     }
 
     if (oldPassword == null || newPassword == null || confirmationPassword == null) {
-      throw new WebApplicationException("oldPassword or newPassword or confimation required",
-          Response.Status.BAD_REQUEST);
+      throw new BadRequestException("oldPassword or newPassword or confimation required");
     }
 
     if (oldPassword.equals(newPassword)) {
-      throw new WebApplicationException("New password is the same as the old one",
-          Response.Status.BAD_REQUEST);
+      throw new BadRequestException("New password is the same as the old one");
     }
 
     if (!newPassword.equals(confirmationPassword) || newPassword.isEmpty()) {
-      throw new WebApplicationException("New password and confirmation are not the same or empty",
-          Response.Status.BAD_REQUEST);
+      throw new BadRequestException("New password and confirmation are not the same or empty");
     }
 
     if (oldPassword.isEmpty()) {
-      throw new WebApplicationException(
-          "oldPassword or newPassword or confirmationPassword is empty",
-          Response.Status.BAD_REQUEST);
+      throw new BadRequestException("oldPassword or newPassword or confirmationPassword is empty");
     }
 
     if (userUCC.updateUser(authenticatedUser, oldPassword, newPassword) == null) {
