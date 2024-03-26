@@ -62,10 +62,8 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setInt(8, contact.getIdContact());
       ps.setInt(9, contact.getVersion());
       try (ResultSet rs = ps.executeQuery()) {
-        if (!rs.next()) {
-          if (getOneById(contact.getIdContact()).getVersion() != contact.getVersion()) {
-            throw new RuntimeException("Version mismatch");
-          }
+        if (!rs.next() && getOneById(contact.getIdContact()).getVersion() != contact.getVersion()) {
+          throw new RuntimeException("Version mismatch");
         }
       }
     } catch (SQLException e) {
