@@ -7,7 +7,6 @@ import be.vinci.pae.presentation.exceptions.ConflictException;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.exceptions.UnauthorizedException;
 import be.vinci.pae.presentation.filters.Authorize;
-import be.vinci.pae.presentation.filters.Log;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -31,7 +30,6 @@ import org.glassfish.jersey.server.ContainerRequest;
  */
 @Singleton
 @Path("/auths")
-@Log
 public class AuthRessource {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
