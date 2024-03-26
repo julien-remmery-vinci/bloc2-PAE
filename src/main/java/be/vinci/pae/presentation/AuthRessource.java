@@ -106,7 +106,7 @@ public class AuthRessource {
         .matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
       throw new BadRequestException("email is not valid");
     }
-    if(!user.getPhoneNumber().matches("^[0-9]{10}$")) {
+    if (!user.getPhoneNumber().matches("^[0-9]{10}$")) {
       throw new BadRequestException("phone number is not valid");
     }
     if (user.getFirstname().isEmpty() || user.getLastname().isEmpty() || user.getPhoneNumber()
