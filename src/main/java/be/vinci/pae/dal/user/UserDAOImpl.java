@@ -132,8 +132,12 @@ public class UserDAOImpl implements UserDAO {
       updateUser.setInt(10, user.getIdUser());
       updateUser.setInt(11, user.getVersion());
       updateUser.executeUpdate();
-      if (getOneById(user.getIdUser()).getVersion() != user.getVersion()) {
-        throw new RuntimeException("Version mismatch");
+      try (ResultSet rs = updateUser.executeQuery()) {
+        if (!rs.next()) {
+          if (getOneById(user.getIdUser()).getVersion() != user.getVersion()) {
+            throw new RuntimeException("Version mismatch");
+          }
+        }
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);
