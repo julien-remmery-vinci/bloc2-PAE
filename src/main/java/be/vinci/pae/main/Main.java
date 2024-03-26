@@ -1,5 +1,6 @@
 package be.vinci.pae.main;
 
+import be.vinci.pae.presentation.filters.LogFilter;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.utils.JsonProcessingExceptionMapper;
@@ -30,12 +31,13 @@ public class Main {
    */
   public static HttpServer startServer() {
     // create a resource config that scans for JAX-RS resources and providers
-    // in be.vinci package
+    // in "be.vinci.pae.presentation" package
 
     final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae.presentation")
         .register(ApplicationBinder.class)
         .register(WebExceptionMapper.class)
-        .register(JsonProcessingExceptionMapper.class);
+        .register(JsonProcessingExceptionMapper.class)
+        .register(LogFilter.class);
 
     // create and start a new instance of grizzly http server
     // exposing the Jersey application at BASE_URI
