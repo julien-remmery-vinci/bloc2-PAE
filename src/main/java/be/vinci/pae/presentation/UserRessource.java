@@ -11,7 +11,6 @@ import be.vinci.pae.presentation.exceptions.BadRequestException;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.exceptions.UnauthorizedException;
 import be.vinci.pae.presentation.filters.Authorize;
-import be.vinci.pae.presentation.filters.Log;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -31,7 +30,6 @@ import org.glassfish.jersey.server.ContainerRequest;
  */
 @Singleton
 @Path("/users")
-@Log
 public class UserRessource {
 
   /**
