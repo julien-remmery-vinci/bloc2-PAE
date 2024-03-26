@@ -26,10 +26,12 @@ public class InternshipUCCImpl implements InternshipUCC {
    */
   @Override
   public InternshipDTO getInternshipById(UserDTO user) {
-    return internshipDAO.getInternshipById(user.getIdUser()).stream()
+    InternshipDTO result = internshipDAO.getInternshipById(user.getIdUser()).stream()
         .filter(
             internship -> internship.getSignatureDate().toLocalDate().getYear() == LocalDate.now()
                 .getYear()).findFirst()
         .orElseThrow(() -> new NotFoundException("Internship not found for the current year"));
+    dalServices.close();
+    return result;
   }
 }

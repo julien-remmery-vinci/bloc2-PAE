@@ -5,7 +5,6 @@ import be.vinci.pae.business.internship.InternshipUCC;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.filters.Authorize;
-import be.vinci.pae.presentation.filters.Log;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.GET;
@@ -20,7 +19,6 @@ import org.glassfish.jersey.server.ContainerRequest;
  */
 @Singleton
 @Path("/internships")
-@Log
 public class InternshipRessource {
 
   @Inject
