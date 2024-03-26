@@ -51,7 +51,7 @@ public class ContactDAOImpl implements ContactDAO {
             + "SET contact_idCompany = ?, contact_idStudent = ?, contact_state = ?, "
             + "contact_meetPlace = ?, contact_refusalReason = ?, contact_academicYear = ?,"
             + " contact_version = ?"
-            + "WHERE contact_idContact = ? AND contact_version = ?;")) {
+            + "WHERE contact_idContact = ? AND contact_version = ? RETURNING contact_idContact;")) {
       ps.setInt(1, contact.getIdCompany());
       ps.setInt(2, contact.getIdStudent());
       ps.setString(3, contact.getState().getState());
@@ -61,9 +61,10 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setInt(7, contact.getVersion() + 1);
       ps.setInt(8, contact.getIdContact());
       ps.setInt(9, contact.getVersion());
-      ps.executeUpdate();
-      if (getOneById(contact.getIdContact()).getVersion() != contact.getVersion()) {
-        throw new RuntimeException("Version mismatch");
+      try (ResultSet rs = ps.executeQuery()) {
+        if (!rs.next() && getOneById(contact.getIdContact()).getVersion() != contact.getVersion()) {
+          throw new RuntimeException("Version mismatch");
+        }
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);
