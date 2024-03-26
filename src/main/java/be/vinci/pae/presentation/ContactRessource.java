@@ -7,7 +7,6 @@ import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.presentation.exceptions.BadRequestException;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.filters.Authorize;
-import be.vinci.pae.presentation.filters.Log;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -27,7 +26,6 @@ import org.glassfish.jersey.server.ContainerRequest;
  */
 @Singleton
 @Path("/contacts")
-@Log
 public class ContactRessource {
 
   @Inject
