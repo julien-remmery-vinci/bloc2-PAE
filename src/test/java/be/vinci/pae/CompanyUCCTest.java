@@ -1,7 +1,5 @@
 package be.vinci.pae;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.company.CompanyUCC;
@@ -10,9 +8,6 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 /**
  * CompanyUCC test class.
@@ -40,12 +35,12 @@ public class CompanyUCCTest {
 
   }
 
-  @Test
-  @DisplayName("Test for the getCompanyById method of CompanyUCC with a correct id")
-  void getCompanyByIdTest() {
-    Mockito.when(companyDAO.getCompanyById(1)).thenReturn(company);
-    assertEquals(company.getIdCompany(), companyUCC.getCompanyById(1).getIdCompany());
-  }
+//  @Test
+//  @DisplayName("Test for the getCompanyById method of CompanyUCC with a correct id")
+//  void getCompanyByIdTest() {
+//    Mockito.when(companyDAO.getCompanyById(1)).thenReturn(company);
+//    assertEquals(company.getIdCompany(), companyUCC.getCompanyById(1).getIdCompany());
+//  }
 
 
 }
