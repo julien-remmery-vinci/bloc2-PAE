@@ -12,6 +12,9 @@ import be.vinci.pae.business.company.Company;
 import be.vinci.pae.business.contact.Contact;
 import be.vinci.pae.business.contact.ContactDTO.State;
 import be.vinci.pae.business.contact.ContactUCC;
+import be.vinci.pae.business.user.User;
+import be.vinci.pae.business.user.UserDTO;
+import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
@@ -41,6 +44,7 @@ public class ContactUCCTest {
   Contact contact;
   Contact contact2;
   Company company;
+  User user;
 
   @BeforeAll
   static void beforeAll() {
@@ -71,6 +75,10 @@ public class ContactUCCTest {
     company.setIdCompany(1);
 
     Mockito.when(companyDAO.getCompanyById(1)).thenReturn(company);
+
+    user = (User) factory.getUser();
+    user.setIdUser(idUser);
+    user.setRole(UserDTO.Role.STUDENT);
   }
 
   @Test
@@ -173,4 +181,33 @@ public class ContactUCCTest {
         () -> assertEquals("meetPlace", contact.getMeetPlace())
     );
   }
+
+  @Test
+  @DisplayName("Test get list of contacts")
+  void testGetStudentaddContacts() {
+    assertNotNull(contactUCC.getContacts(user));
+  }
+
+  @Test
+  @DisplayName("Test get list of contacts with a null user")
+  void testGetContactsNullUser() {
+    assertThrows(NotFoundException.class, () -> contactUCC.getContacts(null));
+  }
+
+  @Test
+  @DisplayName("Test get list of contacts with a professor user")
+  void testGetContactsProfessorUser() {
+    user.setRole(Role.PROFESSOR);
+    assertNotNull(contactUCC.getContacts(user));
+  }
+
+  @Test
+  @DisplayName("Test get list of contacts with a admin user")
+  void testGetContactsAdminUser() {
+    user.setRole(Role.ADMIN);
+    assertNotNull(contactUCC.getContacts(user));
+  }
 }
+
+
+
