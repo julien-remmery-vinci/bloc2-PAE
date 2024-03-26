@@ -58,7 +58,6 @@ public class ContactUCCTest {
     contact2.setIdStudent(idUser);
     contact2.setIdCompany(1);
     contact2.setAcademicYear("2021-2022");
-    Mockito.when(contactDAO.getContactAccepted(idUser)).thenReturn(contact2);
 
     company = (Company) factory.getCompany();
     company.setDesignation("company");
@@ -88,8 +87,8 @@ public class ContactUCCTest {
     contact.setIdCompany(1);
     contact.setAcademicYear("2021-2022");
     Mockito.when(contactDAO.getContactAccepted(idUser)).thenReturn(null);
-    Mockito.when(contactDAO.getCompanyContact(idUser, 1, contact2.getAcademicYear()))
-        .thenReturn(contact2);
+    Mockito.when(contactDAO.getCompanyContact(idUser, 1, "2021-2022"))
+        .thenReturn(contact);
     assertThrows(PreconditionFailedException.class, () -> contactUCC.addContact(contact));
   }
 
