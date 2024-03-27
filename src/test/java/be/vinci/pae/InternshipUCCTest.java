@@ -22,6 +22,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+/**
+ * InternshipUCC test class.
+ */
 public class InternshipUCCTest {
 
   static ServiceLocator locator;
