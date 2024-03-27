@@ -90,7 +90,6 @@ public class UserRessource {
    * @return a list of UserDTO objects representing all users
    */
   @GET
-  @Path("all")
   @Produces(MediaType.APPLICATION_JSON)
   public List<UserDTO> getAllUsers() {
     return userUCC.getAllUsers();

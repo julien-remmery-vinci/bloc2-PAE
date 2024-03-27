@@ -1,4 +1,4 @@
 @baseUrl=http://localhost:3000/users
 
 ### Get all users
-GET {{baseUrl}}/all
+GET {{baseUrl}}
