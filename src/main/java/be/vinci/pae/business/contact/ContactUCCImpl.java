@@ -39,13 +39,11 @@ public class ContactUCCImpl implements ContactUCC {
     List<ContactDTO> list;
     if (user.getRole().equals(Role.STUDENT)) {
       list = contactDAO.getContactsByStudentId(user.getIdUser());
-      dalServices.close();
-      return list;
     } else {
       list = contactDAO.getAllContacts();
-      dalServices.close();
-      return list;
     }
+    dalServices.close();
+    return list;
   }
 
 
