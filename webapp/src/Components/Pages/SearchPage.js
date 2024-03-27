@@ -63,18 +63,19 @@ function renderSearchPage() {
 function renderUsers(users) {
   const table = document.querySelector('table');
   const tbody = document.createElement('tbody');
-  users.forEach(user => {
+  users.forEach(userMap => {
+    const { user, accepted_contact: acceptedContact } = userMap;
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${user.lastname}</td>
       <td>${user.firstname}</td>
       <td>${user.role}</td>
       <td>${user.academicYear}</td>
-      <td>${user.internshipAccepted}</td>
+      <td>${acceptedContact ? 'Oui' : 'Non'}</td>
     `;
     tbody.appendChild(tr);
   });
   table.appendChild(tbody);
-}
+};
 
 export default SearchPage;

@@ -7,6 +7,7 @@ import be.vinci.pae.presentation.exceptions.BadRequestException;
 import jakarta.inject.Inject;
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of UserUCC.
@@ -98,8 +99,8 @@ public class UserUCCImpl implements UserUCC {
    *
    * @return the list of all users
    */
-  public List<UserDTO> getAllUsers() {
-    List<UserDTO> list = userDAO.getAllUsers();
+  public List<Map<String, Object>> getAllUsers() {
+    List<Map<String, Object>> list = userDAO.getAllUsers();
     dalServices.close();
     return list;
   }
