@@ -112,6 +112,17 @@ async function buildPage() {
   if (contacts.length === 0) {
     noContacts();
   }
+
+  const addContactButton = document.createElement('button');
+  addContactButton.textContent = 'Ajouter un contact';
+  addContactButton.className = 'btn btn-primary';
+  addContactButton.style.marginTop = '5%';
+  addContactButton.style.marginLeft = '35%';
+  addContactButton.style.width = '25%';
+  addContactButton.addEventListener('click', () => {
+    Navigate('/contact/add');
+  });
+  main.appendChild(addContactButton);
 }
 
 function noContacts() {

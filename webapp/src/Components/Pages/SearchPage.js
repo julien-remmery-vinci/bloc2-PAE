@@ -4,7 +4,7 @@ import Navigate from "../Router/Navigate";
 
 const fetchUsers = async () => {
   try {
-    fetch("http://localhost:3000/users/all")
+    fetch("http://localhost:3000/users")
       .then(response => response.json())
       .then(data => {
         renderUsers(data);

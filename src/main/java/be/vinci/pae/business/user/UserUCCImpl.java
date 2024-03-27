@@ -106,18 +106,12 @@ public class UserUCCImpl implements UserUCC {
 
   @Override
   public UserDTO updateUser(UserDTO user, String oldPassword, String newPassword) {
-    dalServices.start();
-    if (user == null) {
-      dalServices.rollback();
-      return null;
-    }
-    if (user.getPassword().equals(oldPassword)) {
-      dalServices.rollback();
-      return null;
+    if (!((User) user).checkPassword(oldPassword)) {
+      throw new BadRequestException("Old password is wrong");
     }
     user.setPassword(((User) user).hashPassword(newPassword));
     user = userDAO.updateUser(user);
-    dalServices.commit();
+    dalServices.close();
     return user;
   }
 }

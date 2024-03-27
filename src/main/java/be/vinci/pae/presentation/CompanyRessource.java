@@ -20,6 +20,11 @@ public class CompanyRessource {
   @Inject
   private CompanyUCC companyUCC;
 
+  /**
+   * Get all companies.
+   *
+   * @return the list of all companies
+   */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public List<CompanyDTO> getAll() {

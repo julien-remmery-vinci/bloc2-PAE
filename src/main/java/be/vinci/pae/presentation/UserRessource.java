@@ -8,7 +8,6 @@ package be.vinci.pae.presentation;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.presentation.exceptions.BadRequestException;
-import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.exceptions.UnauthorizedException;
 import be.vinci.pae.presentation.filters.Authorize;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -44,6 +43,7 @@ public class UserRessource {
    * UserDTO object is automatically converted to JSON by the JAX-RS runtime.
    *
    * @param json the JSON object containing the user's information
+   * @param request the HTTP request
    * @return the registered user as a UserDTO object
    */
   @POST
@@ -55,10 +55,6 @@ public class UserRessource {
     String oldPassword = json.get("oldPassword").asText();
     String newPassword = json.get("newPassword").asText();
     String confirmationPassword = json.get("confirmationPassword").asText();
-
-    if (authenticatedUser.getIdUser() <= 0) {
-      throw new NotFoundException("User not found");
-    }
 
     if (oldPassword == null || newPassword == null || confirmationPassword == null) {
       throw new BadRequestException("oldPassword or newPassword or confimation required");
@@ -90,7 +86,6 @@ public class UserRessource {
    * @return a list of UserDTO objects representing all users
    */
   @GET
-  @Path("all")
   @Produces(MediaType.APPLICATION_JSON)
   public List<UserDTO> getAllUsers() {
     return userUCC.getAllUsers();
