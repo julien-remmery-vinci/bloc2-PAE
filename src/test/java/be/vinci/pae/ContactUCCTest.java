@@ -197,7 +197,7 @@ public class ContactUCCTest {
   @Test
   @DisplayName("Test get list of contacts with a professor user")
   void testGetContactsProfessorUser() {
-    user.setRole(Role.PROFESSOR);
+    user.setRole(Role.TEACHER);
     assertNotNull(contactUCC.getContacts(user));
   }
 
