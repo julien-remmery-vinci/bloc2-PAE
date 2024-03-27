@@ -57,8 +57,9 @@ async function buildPage() {
     companyLink.addEventListener('click', (event) => {
       event.preventDefault();
       let url = window.location.href;
-      url += contact.state === 'initié' ? '/meet' : '/refusal';
-      url += `?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}&meetplace=${contact.meetPlace}`;
+      url += contact.state === 'initié' ?
+          `/meet?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}` :
+          `/refusal?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}&meetplace=${contact.meetPlace}`;
       Navigate(url);
     });
     companyCell.appendChild(companyLink);

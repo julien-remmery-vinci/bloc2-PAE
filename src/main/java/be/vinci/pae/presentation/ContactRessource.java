@@ -92,6 +92,7 @@ public class ContactRessource {
   @Authorize
   public ContactDTO meetContact(@Context ContainerRequest request, @PathParam("id") int idContact,
       JsonNode json) {
+    System.out.println(json.asText());
     if (idContact < 0) {
       throw new BadRequestException("Invalid id");
     }
