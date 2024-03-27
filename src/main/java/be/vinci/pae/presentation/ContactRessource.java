@@ -53,7 +53,7 @@ public class ContactRessource {
    *
    * @param request       the request's context
    * @param idContact     the id of the contact
-   * @param refusalReason string containing the refusal reason
+   * @param json          json containing the refusal reason
    * @return the contact
    */
   @POST
