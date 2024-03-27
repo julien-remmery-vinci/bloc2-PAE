@@ -3,6 +3,7 @@ package be.vinci.pae.dal.user;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
+import be.vinci.pae.presentation.exceptions.ConflictException;
 import be.vinci.pae.presentation.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -120,7 +121,7 @@ public class UserDAOImpl implements UserDAO {
       updateUser.executeUpdate();
       try (ResultSet rs = updateUser.executeQuery()) {
         if (!rs.next() && getOneById(user.getIdUser()).getVersion() != user.getVersion()) {
-          throw new RuntimeException("Version mismatch");
+          throw new ConflictException("Version mismatch");
         }
       }
     } catch (SQLException e) {
