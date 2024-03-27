@@ -1,5 +1,6 @@
 package be.vinci.pae;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import be.vinci.pae.business.Factory;
@@ -8,7 +9,9 @@ import be.vinci.pae.business.internship.InternshipUCC;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.dal.internship.InternshipDAO;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeAll;
@@ -51,4 +54,14 @@ public class InternshipUCCTest {
     assertThrows(NotFoundException.class, () -> internshipUCC.getInternshipById(user));
   }
 
+  @Test
+  @DisplayName("Test get internship by id method should not return null")
+  void testGetInternshipByIdNotNull() {
+    Date date = new Date(System.currentTimeMillis());
+    internship.setSignatureDate(date);
+    List<InternshipDTO> internships = new ArrayList<>();
+    internships.add(internship);
+    Mockito.when(internshipDAO.getInternshipById(user.getIdUser())).thenReturn(internships);
+    assertNotNull(internshipUCC.getInternshipById(user), "Internship should not be null");
+  }
 }
