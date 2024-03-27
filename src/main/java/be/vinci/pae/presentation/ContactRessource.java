@@ -144,7 +144,6 @@ public class ContactRessource {
    * @return the contact
    */
   @POST
-  @Path("/add")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
