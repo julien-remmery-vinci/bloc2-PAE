@@ -123,6 +123,11 @@ function renderRegisterForm() {
   });
   form.appendChild(div);
   form.appendChild(submit);
+  const error = document.createElement('p');
+  error.id = 'error';
+  error.className = 'text-danger text-center';
+  error.hidden = true;
+  form.appendChild(error);
   main.appendChild(form);
   const hidePassword = document.querySelector('#hidePassword');
   hidePassword.addEventListener('click', () => {
@@ -173,7 +178,12 @@ async function onRegister(e) {
 
   const response = await fetch('http://localhost:3000/auths/register', options);
 
-  if (!response.ok) throw new Error(`fetch error : ${response.status} : ${response.statusText}`);
+  if (response.status !== 200) {
+    const error = document.querySelector('#error');
+    error.textContent = 'Erreur lors de l\'inscription';
+    error.hidden = false;
+    return;
+  }
 
   const authenticatedUser = await response.json();
   setToken(authenticatedUser.token);
