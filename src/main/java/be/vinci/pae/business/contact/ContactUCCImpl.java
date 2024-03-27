@@ -93,8 +93,9 @@ public class ContactUCCImpl implements ContactUCC {
     }
     contact.setState(State.STARTED);
     contact = contactDAO.addContact(contact);
+    ContactDTO contactAll = contactDAO.getOneById(contact.getIdContact());
     dalServices.close();
-    return contact;
+    return contactAll;
   }
 
   @Override
