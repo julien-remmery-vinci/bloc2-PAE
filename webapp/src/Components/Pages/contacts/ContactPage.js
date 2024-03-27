@@ -106,23 +106,22 @@ async function buildPage() {
   });
   table.appendChild(tableBody);
   main.appendChild(title);
+  const addContactButton = document.createElement('button');
+  addContactButton.textContent = 'Ajouter un contact';
+  addContactButton.className = 'btn btn-primary';
+  addContactButton.style.marginLeft = '10%';
+  addContactButton.style.marginBottom = '2%';
+  addContactButton.style.width = '25%';
+  addContactButton.addEventListener('click', () => {
+    Navigate('/contact/add');
+  });
+  main.appendChild(addContactButton);
   containerDiv.appendChild(table);
   main.appendChild(containerDiv);
 
   if (contacts.length === 0) {
     noContacts();
   }
-
-  const addContactButton = document.createElement('button');
-  addContactButton.textContent = 'Ajouter un contact';
-  addContactButton.className = 'btn btn-primary';
-  addContactButton.style.marginTop = '5%';
-  addContactButton.style.marginLeft = '35%';
-  addContactButton.style.width = '25%';
-  addContactButton.addEventListener('click', () => {
-    Navigate('/contact/add');
-  });
-  main.appendChild(addContactButton);
 }
 
 function noContacts() {
