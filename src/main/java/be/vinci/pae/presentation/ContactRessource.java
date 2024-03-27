@@ -95,8 +95,12 @@ public class ContactRessource {
     if (idContact < 0) {
       throw new BadRequestException("Invalid id");
     }
-    String meetPlace = json.get("meetPlace").asText();
-    if (!json.hasNonNull("meetPlace") || meetPlace.isBlank()) {
+    JsonNode meetPlaceNode = json.get("meetPlace");
+    if (meetPlaceNode == null) {
+      throw new BadRequestException("Meet place is required");
+    }
+    String meetPlace = meetPlaceNode.asText();
+    if (meetPlace.isBlank()) {
       throw new BadRequestException("Meet place is required");
     }
     ContactDTO contact = contactUCC.meetContact(idContact, meetPlace,
