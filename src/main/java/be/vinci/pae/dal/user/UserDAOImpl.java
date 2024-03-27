@@ -24,7 +24,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public UserDTO getOneByEmail(String email) {
     try (PreparedStatement getUser = dalBackServices.getPS(
-        "SELECT * FROM pae.users WHERE user_email = ?")) {
+        "SELECT * FROM pae.users WHEREuser_email = ?")) {
       getUser.setString(1, email);
       try (ResultSet rs = getUser.executeQuery()) {
         if (rs.next()) {
@@ -32,7 +32,7 @@ public class UserDAOImpl implements UserDAO {
         }
       }
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
     return null;
   }
@@ -54,7 +54,7 @@ public class UserDAOImpl implements UserDAO {
         }
       }
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
     return null;
   }
@@ -74,7 +74,7 @@ public class UserDAOImpl implements UserDAO {
         }
       }
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
     return null;
   }
@@ -87,7 +87,7 @@ public class UserDAOImpl implements UserDAO {
         return getResults(rs);
       }
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
   }
 
@@ -127,7 +127,7 @@ public class UserDAOImpl implements UserDAO {
         }
       }
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
     return user;
   }

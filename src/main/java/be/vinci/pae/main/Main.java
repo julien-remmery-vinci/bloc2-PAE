@@ -35,9 +35,9 @@ public class Main {
 
     final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae.presentation")
         .register(ApplicationBinder.class)
-        .register(WebExceptionMapper.class)
         .register(JsonProcessingExceptionMapper.class)
-        .register(LogFilter.class);
+        .register(LogFilter.class)
+        .register(WebExceptionMapper.class);
 
     // create and start a new instance of grizzly http server
     // exposing the Jersey application at BASE_URI

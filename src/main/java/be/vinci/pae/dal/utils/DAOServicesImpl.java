@@ -51,7 +51,7 @@ public class DAOServicesImpl implements DAOServices {
       return object;
     } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException
              | IllegalAccessException | SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
   }
 }
