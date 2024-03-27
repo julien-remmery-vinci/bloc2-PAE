@@ -49,6 +49,15 @@ public interface ContactUCC {
    */
   List<ContactDTO> getContacts(UserDTO user);
 
+  /**
+   * This method is used to unfollow a contact. It first retrieves the contact by its id.
+   *
+   * @param id     the id of the contact
+   * @param idUser the id of the user
+   * @return the contact if it exists and the conditions are met, null otherwise
+   * @throws WebApplicationException if the id of the student does not match the id of the user or
+   *                                 if the state of the contact is not 'initiated'
+   */
   ContactDTO unfollowContact(int id, int idUser);
 
 }

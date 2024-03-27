@@ -43,6 +43,8 @@ public interface UserUCC {
    * Update the user.
    *
    * @param user the user to update
+   * @param oldPassword the old password of the user
+   * @param newPassword the new password of the user
    * @return the updated user
    */
   UserDTO updateUser(UserDTO user, String oldPassword, String newPassword);

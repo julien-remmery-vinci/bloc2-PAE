@@ -116,7 +116,6 @@ public class ContactUCCImpl implements ContactUCC {
     return contact;
   }
 
-
   @Override
   public ContactDTO unfollowContact(int id, int idUser) {
     Contact contact = (Contact) contactDAO.getOneById(id);
