@@ -44,6 +44,7 @@ public class UserRessource {
    * UserDTO object is automatically converted to JSON by the JAX-RS runtime.
    *
    * @param json the JSON object containing the user's information
+   * @param request the HTTP request
    * @return the registered user as a UserDTO object
    */
   @POST
