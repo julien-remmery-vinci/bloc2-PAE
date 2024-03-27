@@ -1,5 +1,6 @@
 package be.vinci.pae;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -10,6 +11,7 @@ import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.dal.internship.InternshipDAO;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -63,5 +65,24 @@ public class InternshipUCCTest {
     internships.add(internship);
     Mockito.when(internshipDAO.getInternshipById(user.getIdUser())).thenReturn(internships);
     assertNotNull(internshipUCC.getInternshipById(user), "Internship should not be null");
+  }
+
+  @Test
+  @DisplayName("Test get internship by id method for the current year")
+  void testGetInternshipByCurrentYear() {
+    List<InternshipDTO> internships = new ArrayList<>();
+    InternshipDTO internshipLastYear = (InternshipDTO) factory.getInternship();
+    internshipLastYear.setSignatureDate(Date.valueOf(LocalDate.now().minusYears(1)));
+    internships.add(internshipLastYear);
+    InternshipDTO internshipThisYear = (InternshipDTO) factory.getInternship();
+    internshipThisYear.setSignatureDate(Date.valueOf(LocalDate.now()));
+    internships.add(internshipThisYear);
+
+    Mockito.when(internshipDAO.getInternshipById(user.getIdUser())).thenReturn(internships);
+
+    InternshipDTO result = internshipUCC.getInternshipById(user);
+    assertNotNull(result, "Internship should not be null");
+    assertEquals(internshipThisYear.getSignatureDate(), result.getSignatureDate(),
+        "Internship of the current year should be returned");
   }
 }
