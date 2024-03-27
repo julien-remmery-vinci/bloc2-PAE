@@ -137,4 +137,9 @@ public class UserUCCTest {
     assertThrows(WebApplicationException.class, () -> userUCC.register(user));
   }
 
+  @Test
+  @DisplayName("Test getALLUsers method")
+  void getAllUsersTest() {
+    assertNotNull(userUCC.getAllUsers());
+  }
 }
