@@ -120,7 +120,7 @@ public class ContactDAOImpl implements ContactDAO {
     try (PreparedStatement ps = dalServices.getPS(
         "SELECT * FROM pae.contacts, pae.users, pae.companies WHERE contact_idCompany = "
             + "company_idCompany AND contact_idStudent = user_idUser AND contact_idStudent = ? AND"
-            + "contact_idCompany = ? AND contact_academicYear = ?;")) {
+            + " contact_idCompany = ? AND contact_academicYear = ?;")) {
       ps.setInt(1, idUser);
       ps.setInt(2, idCompany);
       ps.setString(3, academicYear);
