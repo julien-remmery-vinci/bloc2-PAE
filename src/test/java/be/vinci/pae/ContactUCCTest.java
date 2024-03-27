@@ -235,7 +235,7 @@ public class ContactUCCTest {
   @DisplayName("Test unfollow contact with contact in wrong state")
   void testUnfollowContactWrongState() {
     contact.setState(State.TURNED_DOWN);
-    assertThrows(WebApplicationException.class,
+    assertThrows(PreconditionFailedException.class,
         () -> contactUCC.unfollowContact(idContact, idUser));
   }
 
