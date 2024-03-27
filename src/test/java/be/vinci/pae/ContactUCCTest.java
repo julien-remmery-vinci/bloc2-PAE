@@ -171,6 +171,14 @@ public class ContactUCCTest {
   }
 
   @Test
+  @DisplayName("Test meetContact with non-matching user id")
+  void testMeetContactNonMatchingUserId() {
+    int nonMatchingIdUser = 2;
+    assertThrows(NotFoundException.class,
+        () -> contactUCC.meetContact(idContact, "meetPlace", nonMatchingIdUser));
+  }
+
+  @Test
   @DisplayName("Test meetContact with existing contact in right state")
   void testMeetContact() {
     contact.setState(State.STARTED);
@@ -206,6 +214,40 @@ public class ContactUCCTest {
   void testGetContactsAdminUser() {
     user.setRole(Role.ADMIN);
     assertNotNull(contactUCC.getContacts(user));
+  }
+
+  @Test
+  @DisplayName("Test unfollow contact with contact not found")
+  void testUnfollowContactNotFound() {
+    Mockito.when(contactDAO.getOneById(1)).thenReturn(null);
+    assertNull(contactUCC.unfollowContact(idContact, idUser));
+  }
+
+  @Test
+  @DisplayName("Test unfollow contact with non-matching user id")
+  void testUnfollowContactNonMatchingUserId() {
+    int nonMatchingIdUser = 2;
+    assertThrows(NotFoundException.class,
+        () -> contactUCC.unfollowContact(idContact, nonMatchingIdUser));
+  }
+
+  @Test
+  @DisplayName("Test unfollow contact with contact in wrong state")
+  void testUnfollowContactWrongState() {
+    contact.setState(State.TURNED_DOWN);
+    assertThrows(WebApplicationException.class,
+        () -> contactUCC.unfollowContact(idContact, idUser));
+  }
+
+  @Test
+  @DisplayName("Test unfollow contact with existing contact in right state")
+  void testUnfollowContact() {
+    contact.setState(State.ADMITTED);
+    assertAll(
+        () -> assertEquals(contact.getIdContact(),
+            contactUCC.unfollowContact(idContact, idUser).getIdContact()),
+        () -> assertEquals(State.UNSUPERVISED, contact.getState())
+    );
   }
 }
 
