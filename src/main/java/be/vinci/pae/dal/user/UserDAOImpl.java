@@ -86,7 +86,8 @@ public class UserDAOImpl implements UserDAO {
     List<Map<String, Object>> users = new ArrayList<>();
     try (PreparedStatement getUsers = dalBackServices.getPS(
         "SELECT u.*, exists(\n"
-            + "    SELECT contact_idcontact FROM pae.contacts WHERE contact_state = 'ACCEPTED' AND u.user_iduser = contact_idstudent\n"
+            + "    SELECT contact_idcontact FROM pae.contacts WHERE contact_state = 'ACCEPTED' "
+            + "AND u.user_iduser = contact_idstudent\n"
             + ") as \"accepted_contact\" FROM pae.users u")) {
       try (ResultSet rs = getUsers.executeQuery()) {
         while (rs.next()) {
