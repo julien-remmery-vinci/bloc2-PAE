@@ -25,6 +25,7 @@ import org.mockito.Mockito;
  * Test class for the UserUCC methods.
  */
 public class UserUCCTest {
+
   static ServiceLocator locator;
   private static UserUCC userUCC;
   private static UserDAO userDAO;
@@ -102,7 +103,7 @@ public class UserUCCTest {
   @DisplayName("Test for the register method of UserUCC with a teacher email")
   void registerTestTeacher() {
     user.setEmail("test.test@vinci.be");
-    user.setRole(Role.PROFESSOR);
+    user.setRole(Role.TEACHER);
     Mockito.when(userDAO.getOneByEmail("test.test@vinci.be")).thenReturn(null);
     Mockito.when(userDAO.addUser(user)).thenReturn(user);
     assertNotNull(userUCC.register(user));
