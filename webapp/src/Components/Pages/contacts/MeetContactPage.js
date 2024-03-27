@@ -5,8 +5,6 @@ import {
 import { clearPage, renderPageTitle } from '../../../utils/render';
 import Navigate from '../../Router/Navigate';
 
-const queryParams = new URLSearchParams(window.location.search);
-
 const MeetContactPage = () => {
   if (!isAuthenticated()) {
     Navigate('/login');
@@ -40,6 +38,7 @@ function renderMeetContactPage() {
         <button type="submit" class="btn btn-primary">Enregistrer</button>
       </form>
     `;
+  const queryParams = new URLSearchParams(window.location.search);
     const form = document.querySelector('form');
     form.addEventListener('submit', submitFunc);
     document.getElementById('entreprise').value = queryParams.get('tradename');
@@ -53,6 +52,7 @@ function renderMeetContactPage() {
 
 async function submitFunc (event) {
   event.preventDefault();
+  const queryParams = new URLSearchParams(window.location.search);
   const form = event.target;
   const formData = new FormData(form);
   const lieu = formData.get('lieu');
@@ -67,7 +67,7 @@ async function submitFunc (event) {
       body: JSON.stringify({ meetPlace: lieu }),
     });
     if (response.status === 200) {
-      Navigate('/contacts');
+      Navigate('/contact');
     } else {
       const error = await response.json();
       console.error(error);
