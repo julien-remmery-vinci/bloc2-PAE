@@ -104,16 +104,6 @@ public class UserDAOImpl implements UserDAO {
     return users;
   }
 
-  /**
-   * Processes a ResultSet to create a list of UserDTO objects. This method iterates over the rows
-   * in the given ResultSet. For each row, it creates a new UserDTO object, populates it with the
-   * data from the row, and adds it to a list. The list of UserDTO objects is then returned.
-   *
-   * @param rs the ResultSet to process
-   * @return a list of UserDTO objects representing the users in the ResultSet
-   * @throws SQLException if an error occurs while processing the ResultSet
-   */
-
   @Override
   public UserDTO updateUser(UserDTO user) {
     try (PreparedStatement updateUser = dalBackServices.getPS(
