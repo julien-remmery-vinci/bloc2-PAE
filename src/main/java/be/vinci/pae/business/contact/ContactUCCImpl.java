@@ -1,6 +1,7 @@
 package be.vinci.pae.business.contact;
 
 import be.vinci.pae.business.academicyear.AcademicYear;
+import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.contact.ContactDTO.State;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserDTO.Role;
@@ -77,7 +78,8 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ContactDTO addContact(ContactDTO contact) {
-    if (companyDAO.getCompanyById(contact.getIdCompany()) == null) {
+    CompanyDTO companyDTO = companyDAO.getCompanyById(contact.getIdCompany());
+    if (companyDTO == null) {
       throw new NotFoundException("The company does not exist");
     }
     if (contactDAO.getContactAccepted(contact.getIdStudent()) != null) {
@@ -91,9 +93,9 @@ public class ContactUCCImpl implements ContactUCC {
     }
     contact.setState(State.STARTED);
     contact = contactDAO.addContact(contact);
-    ContactDTO contactAll = contactDAO.getOneById(contact.getIdContact());
+    contact.setCompany(companyDTO);
     dalServices.close();
-    return contactAll;
+    return contact;
   }
 
   @Override
