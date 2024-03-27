@@ -138,7 +138,7 @@ public class UserUCCTest {
   }
 
   @Test
-  @DisplayName("Test getALLUsers method")
+  @DisplayName("Test getAllUsers method")
   void getAllUsersTest() {
     assertNotNull(userUCC.getAllUsers());
   }
