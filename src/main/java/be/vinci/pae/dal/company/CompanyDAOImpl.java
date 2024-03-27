@@ -34,7 +34,7 @@ public class CompanyDAOImpl implements CompanyDAO {
         return companies;
       }
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
   }
 
@@ -50,7 +50,7 @@ public class CompanyDAOImpl implements CompanyDAO {
         }
       }
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
     return null;
   }
