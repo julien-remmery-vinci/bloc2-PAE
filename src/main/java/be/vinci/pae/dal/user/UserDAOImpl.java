@@ -32,7 +32,7 @@ public class UserDAOImpl implements UserDAO {
         }
       }
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
     return null;
   }
@@ -54,7 +54,7 @@ public class UserDAOImpl implements UserDAO {
         }
       }
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
     return null;
   }
@@ -74,7 +74,7 @@ public class UserDAOImpl implements UserDAO {
         }
       }
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
     return null;
   }
@@ -87,7 +87,7 @@ public class UserDAOImpl implements UserDAO {
         return getResults(rs);
       }
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
   }
 
@@ -127,7 +127,7 @@ public class UserDAOImpl implements UserDAO {
         }
       }
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
     return user;
   }

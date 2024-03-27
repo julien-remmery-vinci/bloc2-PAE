@@ -38,7 +38,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
         conn = basicDataSource.getConnection();
         threadLocal.set(conn);
       } catch (SQLException e) {
-        throw new FatalException();
+        throw new FatalException(e);
       }
     }
     return conn;
@@ -49,7 +49,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
     try {
       return getConnection().prepareStatement(request);
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
   }
 
@@ -58,7 +58,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
     try {
       getConnection().setAutoCommit(false);
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
   }
 
@@ -67,7 +67,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
     try (Connection conn = getConnection()) {
       threadLocal.remove();
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
   }
 
@@ -78,7 +78,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
       conn.commit();
       conn.setAutoCommit(true);
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
   }
 
@@ -89,7 +89,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
       conn.rollback();
       conn.setAutoCommit(true);
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
   }
 

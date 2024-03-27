@@ -3,6 +3,7 @@ package be.vinci.pae.dal.internship;
 import be.vinci.pae.business.internship.InternshipDTO;
 import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
+import be.vinci.pae.presentation.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -49,7 +50,7 @@ public class InternshipDAOImpl implements InternshipDAO {
         return internships;
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
   }
 }

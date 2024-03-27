@@ -29,7 +29,7 @@ Content-Type: application/json
 Authorization: {{token}}
 
 {
-  "idCompany": 1
+  "idCompany": 4
 }
 
 ### Get list of contacts
@@ -41,4 +41,13 @@ POST {{contactUrl}}/1/unfollow
 Content-Type: application/json
 Authorization: {{token}}
 
-//Faire la requete meetContact
+### meet a contact
+POST {{contactUrl}}/5/meet
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "date": "2021-06-01",
+  "hour": "14:00",
+  "meetPlace": "Rue de la Loi 16, 1000 Bruxelles"
+}

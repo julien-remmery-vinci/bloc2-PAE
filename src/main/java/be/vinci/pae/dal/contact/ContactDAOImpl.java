@@ -35,7 +35,7 @@ public class ContactDAOImpl implements ContactDAO {
         }
       }
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
     return null;
   }
@@ -68,7 +68,7 @@ public class ContactDAOImpl implements ContactDAO {
         }
       }
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
   }
 
@@ -89,7 +89,7 @@ public class ContactDAOImpl implements ContactDAO {
         }
       }
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
     return null;
   }
@@ -109,7 +109,7 @@ public class ContactDAOImpl implements ContactDAO {
         }
       }
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
 
     return null;
@@ -131,7 +131,7 @@ public class ContactDAOImpl implements ContactDAO {
         }
       }
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
     return null;
   }
@@ -159,7 +159,7 @@ public class ContactDAOImpl implements ContactDAO {
         return contacts;
       }
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
   }
 
@@ -184,7 +184,7 @@ public class ContactDAOImpl implements ContactDAO {
         return contacts;
       }
     } catch (SQLException e) {
-      throw new FatalException();
+      throw new FatalException(e);
     }
   }
 }
