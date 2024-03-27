@@ -22,6 +22,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
+import java.util.Map;
 import org.glassfish.jersey.server.ContainerRequest;
 
 /**
@@ -42,7 +43,7 @@ public class UserRessource {
    * instance to register a new user and returns the registered user as a UserDTO object. The
    * UserDTO object is automatically converted to JSON by the JAX-RS runtime.
    *
-   * @param json the JSON object containing the user's information
+   * @param json    the JSON object containing the user's information
    * @param request the HTTP request
    * @return the registered user as a UserDTO object
    */
@@ -87,7 +88,7 @@ public class UserRessource {
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public List<UserDTO> getAllUsers() {
+  public List<Map<String, Object>> getAllUsers() {
     return userUCC.getAllUsers();
   }
 

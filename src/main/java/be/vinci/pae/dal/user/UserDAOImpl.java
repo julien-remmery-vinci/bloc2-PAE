@@ -9,7 +9,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of UserDAO.
@@ -80,15 +82,26 @@ public class UserDAOImpl implements UserDAO {
   }
 
   @Override
-  public List<UserDTO> getAllUsers() {
+  public List<Map<String, Object>> getAllUsers() {
+    List<Map<String, Object>> users = new ArrayList<>();
     try (PreparedStatement getUsers = dalBackServices.getPS(
-        "SELECT * FROM pae.users")) {
+        "SELECT u.*, exists(\n"
+            + "    SELECT contact_idcontact FROM pae.contacts WHERE contact_state = 'ACCEPTED' AND u.user_iduser = contact_idstudent\n"
+            + ") as \"accepted_contact\" FROM pae.users u")) {
       try (ResultSet rs = getUsers.executeQuery()) {
-        return getResults(rs);
+        while (rs.next()) {
+          UserDTO user = (UserDTO) daoServices.getDataFromRs(rs, "user");
+          boolean acceptedContact = rs.getBoolean("accepted_contact");
+          Map<String, Object> userMap = new HashMap<>();
+          userMap.put("user", user);
+          userMap.put("accepted_contact", acceptedContact);
+          users.add(userMap);
+        }
       }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+    return users;
   }
 
   /**
@@ -100,13 +113,6 @@ public class UserDAOImpl implements UserDAO {
    * @return a list of UserDTO objects representing the users in the ResultSet
    * @throws SQLException if an error occurs while processing the ResultSet
    */
-  private List<UserDTO> getResults(ResultSet rs) throws SQLException {
-    List<UserDTO> users = new ArrayList<>();
-    while (rs.next()) {
-      users.add((UserDTO) daoServices.getDataFromRs(rs, "user"));
-    }
-    return users;
-  }
 
   @Override
   public UserDTO updateUser(UserDTO user) {
