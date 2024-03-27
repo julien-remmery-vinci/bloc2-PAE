@@ -24,7 +24,7 @@ public class UserDAOImpl implements UserDAO {
   @Override
   public UserDTO getOneByEmail(String email) {
     try (PreparedStatement getUser = dalBackServices.getPS(
-        "SELECT * FROM pae.users WHEREuser_email = ?")) {
+        "SELECT * FROM pae.users WHERE user_email = ?")) {
       getUser.setString(1, email);
       try (ResultSet rs = getUser.executeQuery()) {
         if (rs.next()) {
