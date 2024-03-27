@@ -49,14 +49,14 @@ public class InternshipUCCTest {
 
   @Test
   @DisplayName("Test get internship by id method when the internship don't exists")
-  void testGetAllCompanies() {
+  void testGetInternshipNoInternships() {
     Mockito.when(internshipDAO.getInternshipById(user.getIdUser())).thenReturn(new ArrayList<>());
     assertThrows(NotFoundException.class, () -> internshipUCC.getInternshipById(user));
   }
 
   @Test
   @DisplayName("Test get internship by id method should not return null")
-  void testGetInternshipByIdNotNull() {
+  void testGetInternship() {
     Date date = new Date(System.currentTimeMillis());
     internship.setSignatureDate(date);
     List<InternshipDTO> internships = new ArrayList<>();
