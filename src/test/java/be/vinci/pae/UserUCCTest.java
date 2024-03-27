@@ -12,6 +12,7 @@ import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.dal.user.UserDAO;
+import be.vinci.pae.presentation.exceptions.BadRequestException;
 import jakarta.ws.rs.WebApplicationException;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
@@ -144,4 +145,19 @@ public class UserUCCTest {
   void getAllUsersTest() {
     assertNotNull(userUCC.getAllUsers());
   }
+
+  @Test
+  @DisplayName("Test for the update password method")
+  void updatePasswordTest() {
+    Mockito.when(userDAO.updateUser(user)).thenReturn(user);
+    assertNotNull(userUCC.updateUser(user, "admin", "test"));
+  }
+
+  @Test
+  @DisplayName("Test for the update password method with wrong password")
+  void updatePasswordTestWrongPassword() {
+    Mockito.when(userDAO.updateUser(user)).thenReturn(user);
+    assertThrows(BadRequestException.class, () -> userUCC.updateUser(user, "test", "test"));
+  }
+
 }

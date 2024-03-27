@@ -8,7 +8,6 @@ package be.vinci.pae.presentation;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.presentation.exceptions.BadRequestException;
-import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.exceptions.UnauthorizedException;
 import be.vinci.pae.presentation.filters.Authorize;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -55,10 +54,6 @@ public class UserRessource {
     String oldPassword = json.get("oldPassword").asText();
     String newPassword = json.get("newPassword").asText();
     String confirmationPassword = json.get("confirmationPassword").asText();
-
-    if (authenticatedUser.getIdUser() <= 0) {
-      throw new NotFoundException("User not found");
-    }
 
     if (oldPassword == null || newPassword == null || confirmationPassword == null) {
       throw new BadRequestException("oldPassword or newPassword or confimation required");
