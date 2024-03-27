@@ -53,7 +53,7 @@ public class ContactRessource {
    *
    * @param request       the request's context
    * @param idContact     the id of the contact
-   * @param refusalReason string containing the refusal reason
+   * @param json          json containing the refusal reason
    * @return the contact
    */
   @POST
@@ -62,14 +62,15 @@ public class ContactRessource {
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
   public ContactDTO refuseContact(@Context ContainerRequest request, @PathParam("id") int idContact,
-      String refusalReason) {
+      JsonNode json) {
     if (idContact < 0) {
       throw new BadRequestException("Invalid id");
     }
-    if (refusalReason == null || refusalReason.isBlank()) {
+    JsonNode refusalReason = json.get("refusalReason");
+    if (refusalReason == null || refusalReason.asText().isBlank()) {
       throw new BadRequestException("Refusal reason is required");
     }
-    ContactDTO contact = contactUCC.refuseContact(idContact, refusalReason,
+    ContactDTO contact = contactUCC.refuseContact(idContact, refusalReason.asText(),
         ((UserDTO) request.getProperty("user")).getIdUser());
     if (contact == null) {
       throw new NotFoundException("Contact not found");
