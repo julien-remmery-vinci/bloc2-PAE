@@ -24,7 +24,7 @@ Authorization: {{token}}
 }
 
 ### Add a contact
-POST {{contactUrl}}/add
+POST {{contactUrl}}
 Content-Type: application/json
 Authorization: {{token}}
 

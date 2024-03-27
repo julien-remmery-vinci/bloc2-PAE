@@ -152,6 +152,7 @@ public class ContactRessource {
       throw new BadRequestException("Invalid id");
     }
     contact.setIdStudent(((UserDTO) request.getProperty("user")).getIdUser());
+    contact.setUser((UserDTO) request.getProperty("user"));
     return contactUCC.addContact(contact);
   }
 
