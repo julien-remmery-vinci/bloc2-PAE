@@ -40,10 +40,7 @@ public class FatalException extends WebApplicationException {
    * @param cause the cause
    */
   public FatalException(Throwable cause) {
-    super(Response.status(STATUS)
-        .entity(cause.getMessage())
-        .type("text/plain")
-        .build());
+    super(cause);
   }
 
 }
