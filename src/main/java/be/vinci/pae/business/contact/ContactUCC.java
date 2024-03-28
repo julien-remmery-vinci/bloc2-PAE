@@ -67,4 +67,12 @@ public interface ContactUCC {
    * @return the list of contacts
    */
   List<ContactDTO> getContactsByCompany(int idCompany);
+
+  /**
+   * This method is used to blacklist a contact.
+   *
+   * @param c the contact to blacklist
+   * @return the contact if it exists and the conditions are met, null otherwise
+   */
+  ContactDTO blacklistContact(ContactDTO c);
 }
