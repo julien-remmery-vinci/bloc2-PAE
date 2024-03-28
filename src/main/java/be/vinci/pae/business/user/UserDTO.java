@@ -161,7 +161,7 @@ public interface UserDTO {
     /**
      * Professor role.
      */
-    PROFESSOR("professeur"),
+    TEACHER("professeur"),
     /**
      * Admin role.
      */

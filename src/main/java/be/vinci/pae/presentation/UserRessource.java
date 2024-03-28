@@ -8,7 +8,6 @@ package be.vinci.pae.presentation;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.presentation.exceptions.BadRequestException;
-import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.exceptions.UnauthorizedException;
 import be.vinci.pae.presentation.filters.Authorize;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -23,6 +22,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
+import java.util.Map;
 import org.glassfish.jersey.server.ContainerRequest;
 
 /**
@@ -43,7 +43,8 @@ public class UserRessource {
    * instance to register a new user and returns the registered user as a UserDTO object. The
    * UserDTO object is automatically converted to JSON by the JAX-RS runtime.
    *
-   * @param json the JSON object containing the user's information
+   * @param json    the JSON object containing the user's information
+   * @param request the HTTP request
    * @return the registered user as a UserDTO object
    */
   @POST
@@ -51,14 +52,10 @@ public class UserRessource {
   @Authorize
   @Consumes(MediaType.APPLICATION_JSON)
   public Response changePassword(JsonNode json, @Context ContainerRequest request) {
-    UserDTO authenticatedUser = (UserDTO) request.getProperty("user");
+    final UserDTO authenticatedUser = (UserDTO) request.getProperty("user");
     String oldPassword = json.get("oldPassword").asText();
     String newPassword = json.get("newPassword").asText();
     String confirmationPassword = json.get("confirmationPassword").asText();
-
-    if (authenticatedUser.getIdUser() <= 0) {
-      throw new NotFoundException("User not found");
-    }
 
     if (oldPassword == null || newPassword == null || confirmationPassword == null) {
       throw new BadRequestException("oldPassword or newPassword or confimation required");
@@ -90,9 +87,8 @@ public class UserRessource {
    * @return a list of UserDTO objects representing all users
    */
   @GET
-  @Path("all")
   @Produces(MediaType.APPLICATION_JSON)
-  public List<UserDTO> getAllUsers() {
+  public List<Map<String, Object>> getAllUsers() {
     return userUCC.getAllUsers();
   }
 

@@ -3,13 +3,16 @@ package be.vinci.pae.dal.user;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
+import be.vinci.pae.presentation.exceptions.ConflictException;
 import be.vinci.pae.presentation.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of UserDAO.
@@ -80,30 +83,25 @@ public class UserDAOImpl implements UserDAO {
   }
 
   @Override
-  public List<UserDTO> getAllUsers() {
+  public List<Map<String, Object>> getAllUsers() {
+    List<Map<String, Object>> users = new ArrayList<>();
     try (PreparedStatement getUsers = dalBackServices.getPS(
-        "SELECT * FROM pae.users")) {
+        "SELECT u.*, exists(\n"
+            + "    SELECT contact_idcontact FROM pae.contacts WHERE contact_state = 'ACCEPTED' "
+            + "AND u.user_iduser = contact_idstudent\n"
+            + ") as \"accepted_contact\" FROM pae.users u")) {
       try (ResultSet rs = getUsers.executeQuery()) {
-        return getResults(rs);
+        while (rs.next()) {
+          UserDTO user = (UserDTO) daoServices.getDataFromRs(rs, "user");
+          boolean acceptedContact = rs.getBoolean("accepted_contact");
+          Map<String, Object> userMap = new HashMap<>();
+          userMap.put("user", user);
+          userMap.put("accepted_contact", acceptedContact);
+          users.add(userMap);
+        }
       }
     } catch (SQLException e) {
       throw new FatalException(e);
-    }
-  }
-
-  /**
-   * Processes a ResultSet to create a list of UserDTO objects. This method iterates over the rows
-   * in the given ResultSet. For each row, it creates a new UserDTO object, populates it with the
-   * data from the row, and adds it to a list. The list of UserDTO objects is then returned.
-   *
-   * @param rs the ResultSet to process
-   * @return a list of UserDTO objects representing the users in the ResultSet
-   * @throws SQLException if an error occurs while processing the ResultSet
-   */
-  private List<UserDTO> getResults(ResultSet rs) throws SQLException {
-    List<UserDTO> users = new ArrayList<>();
-    while (rs.next()) {
-      users.add((UserDTO) daoServices.getDataFromRs(rs, "user"));
     }
     return users;
   }
@@ -123,7 +121,7 @@ public class UserDAOImpl implements UserDAO {
       updateUser.executeUpdate();
       try (ResultSet rs = updateUser.executeQuery()) {
         if (!rs.next() && getOneById(user.getIdUser()).getVersion() != user.getVersion()) {
-          throw new RuntimeException("Version mismatch");
+          throw new ConflictException("Version mismatch");
         }
       }
     } catch (SQLException e) {

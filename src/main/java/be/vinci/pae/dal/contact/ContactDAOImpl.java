@@ -3,6 +3,7 @@ package be.vinci.pae.dal.contact;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
+import be.vinci.pae.presentation.exceptions.ConflictException;
 import be.vinci.pae.presentation.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -64,7 +65,7 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setInt(9, contact.getVersion());
       try (ResultSet rs = ps.executeQuery()) {
         if (!rs.next() && getOneById(contact.getIdContact()).getVersion() != contact.getVersion()) {
-          throw new RuntimeException("Version mismatch");
+          throw new ConflictException("Version mismatch");
         }
       }
     } catch (SQLException e) {
@@ -77,7 +78,7 @@ public class ContactDAOImpl implements ContactDAO {
     try (PreparedStatement ps = dalServices.getPS(
         "INSERT INTO pae.contacts (contact_idCompany, contact_idStudent, contact_state, "
             + "contact_academicYear, contact_version) "
-            + "VALUES (?, ?, ?, ?, 1) RETURNING idContact;")) {
+            + "VALUES (?, ?, ?, ?, 1) RETURNING contact_idContact;")) {
       ps.setInt(1, contact.getIdCompany());
       ps.setInt(2, contact.getIdStudent());
       ps.setString(3, contact.getState().toString());

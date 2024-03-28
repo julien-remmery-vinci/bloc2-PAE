@@ -42,7 +42,6 @@ public class ContactUCCTest {
   private final int idUser = 1;
   private final String refusalReason = "refusalReason";
   Contact contact;
-  Contact contact2;
   Company company;
   User user;
 
@@ -63,12 +62,6 @@ public class ContactUCCTest {
     contact.setIdStudent(idUser);
     contact.setState(State.STARTED);
     Mockito.when(contactDAO.getOneById(1)).thenReturn(contact);
-
-    contact2 = (Contact) factory.getContact();
-    contact2.setIdContact(2);
-    contact2.setIdStudent(idUser);
-    contact2.setIdCompany(1);
-    contact2.setAcademicYear("2021-2022");
 
     company = (Company) factory.getCompany();
     company.setDesignation("company");
@@ -205,7 +198,7 @@ public class ContactUCCTest {
   @Test
   @DisplayName("Test get list of contacts with a professor user")
   void testGetContactsProfessorUser() {
-    user.setRole(Role.PROFESSOR);
+    user.setRole(Role.TEACHER);
     assertNotNull(contactUCC.getContacts(user));
   }
 

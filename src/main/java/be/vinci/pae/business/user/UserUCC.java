@@ -1,6 +1,7 @@
 package be.vinci.pae.business.user;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interface of UserUCCImpl.
@@ -37,12 +38,14 @@ public interface UserUCC {
    *
    * @return the list of all users
    */
-  List<UserDTO> getAllUsers();
+  List<Map<String, Object>> getAllUsers();
 
   /**
    * Update the user.
    *
-   * @param user the user to update
+   * @param user        the user to update
+   * @param oldPassword the old password of the user
+   * @param newPassword the new password of the user
    * @return the updated user
    */
   UserDTO updateUser(UserDTO user, String oldPassword, String newPassword);

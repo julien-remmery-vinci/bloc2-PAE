@@ -7,6 +7,7 @@ import be.vinci.pae.presentation.exceptions.BadRequestException;
 import jakarta.inject.Inject;
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of UserUCC.
@@ -98,26 +99,20 @@ public class UserUCCImpl implements UserUCC {
    *
    * @return the list of all users
    */
-  public List<UserDTO> getAllUsers() {
-    List<UserDTO> list = userDAO.getAllUsers();
+  public List<Map<String, Object>> getAllUsers() {
+    List<Map<String, Object>> list = userDAO.getAllUsers();
     dalServices.close();
     return list;
   }
 
   @Override
   public UserDTO updateUser(UserDTO user, String oldPassword, String newPassword) {
-    dalServices.start();
-    if (user == null) {
-      dalServices.rollback();
-      return null;
-    }
-    if (user.getPassword().equals(oldPassword)) {
-      dalServices.rollback();
-      return null;
+    if (!((User) user).checkPassword(oldPassword)) {
+      throw new BadRequestException("Old password is wrong");
     }
     user.setPassword(((User) user).hashPassword(newPassword));
     user = userDAO.updateUser(user);
-    dalServices.commit();
+    dalServices.close();
     return user;
   }
 }

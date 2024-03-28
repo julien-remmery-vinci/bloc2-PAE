@@ -1,6 +1,7 @@
 package be.vinci.pae.business.contact;
 
 import be.vinci.pae.business.academicyear.AcademicYear;
+import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.contact.ContactDTO.State;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserDTO.Role;
@@ -77,20 +78,22 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ContactDTO addContact(ContactDTO contact) {
-    if (companyDAO.getCompanyById(contact.getIdCompany()) == null) {
-      throw new NotFoundException("The company does not exist");
+    CompanyDTO companyDTO = companyDAO.getCompanyById(contact.getIdCompany());
+    if (companyDTO == null) {
+      throw new NotFoundException("L'entreprise n'existe pas.");
     }
     if (contactDAO.getContactAccepted(contact.getIdStudent()) != null) {
-      throw new PreconditionFailedException("You already have a contact accepted");
+      throw new PreconditionFailedException("Vous avez déjà un contact accepté");
     }
     contact.setAcademicYear(academicYear.getAcademicYear());
     if (contactDAO.getCompanyContact(contact.getIdStudent(), contact.getIdCompany(),
         contact.getAcademicYear()) != null) {
       throw new PreconditionFailedException(
-          "You already have a contact with that company for the current year");
+          "Vous avez déjà un contact avec cette entreprise pour cette année académique");
     }
     contact.setState(State.STARTED);
     contact = contactDAO.addContact(contact);
+    contact.setCompany(companyDTO);
     dalServices.close();
     return contact;
   }
@@ -114,7 +117,6 @@ public class ContactUCCImpl implements ContactUCC {
     dalServices.close();
     return contact;
   }
-
 
   @Override
   public ContactDTO unfollowContact(int id, int idUser) {

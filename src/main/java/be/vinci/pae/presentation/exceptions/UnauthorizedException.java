@@ -14,6 +14,9 @@ public class UnauthorizedException extends WebApplicationException {
    */
   public static final Status STATUS = Status.UNAUTHORIZED;
 
+  /**
+   * Default constructor.
+   */
   public UnauthorizedException() {
     super(Response.status(STATUS)
         .build());
