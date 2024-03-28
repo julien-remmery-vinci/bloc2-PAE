@@ -136,4 +136,17 @@ public class ContactUCCImpl implements ContactUCC {
     dalServices.close();
     return contact;
   }
+
+  @Override
+  public List<ContactDTO> getContactsByCompany(int idCompany) {
+    try {
+      CompanyDTO company = companyDAO.getCompanyById(idCompany);
+      if (company == null) {
+        throw new NotFoundException("Company not found");
+      }
+      return contactDAO.getContactsByCompany(idCompany);
+    } finally {
+      dalServices.close();
+    }
+  }
 }

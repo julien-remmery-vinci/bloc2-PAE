@@ -60,4 +60,11 @@ public interface ContactUCC {
    */
   ContactDTO unfollowContact(int id, int idUser);
 
+  /**
+   * Get all contacts with a company.
+   *
+   * @param idCompany the id of the company
+   * @return the list of contacts
+   */
+  List<ContactDTO> getContactsByCompany(int idCompany);
 }
