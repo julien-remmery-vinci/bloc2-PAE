@@ -21,4 +21,12 @@ public interface CompanyUCC {
    * @return the company
    */
   CompanyDTO getCompanyById(int id);
+
+  /**
+   * Blacklist a company.
+   *
+   * @param id     the id of the company
+   * @param reason the reason of the blacklist
+   */
+  CompanyDTO blacklistCompany(int id, String reason);
 }
