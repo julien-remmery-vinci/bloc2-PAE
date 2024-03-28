@@ -17,3 +17,12 @@ Content-Type: application/json
 ### Get all companies
 GET {{companiesUrl}}
 
+### Blacklist a company
+POST {{companiesUrl}}/1/blacklist
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "reason": "This company is a scam"
+}
+
