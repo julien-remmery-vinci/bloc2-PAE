@@ -14,6 +14,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
 
   private final BasicDataSource basicDataSource;
   private ThreadLocal<Connection> threadLocal;
+  private ThreadLocal<Integer> transactionCount;
 
   /**
    * Constructor of DALServicesImpl.
@@ -21,6 +22,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
   public DALServicesImpl() {
     basicDataSource = new BasicDataSource();
     threadLocal = new ThreadLocal<>();
+    transactionCount = new ThreadLocal<>();
 
     String url = Config.getProperty("DB_URL");
     String username = Config.getProperty("DB_USER");
@@ -37,6 +39,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
       try {
         conn = basicDataSource.getConnection();
         threadLocal.set(conn);
+        transactionCount.set(0);
       } catch (SQLException e) {
         throw new FatalException(e);
       }
@@ -56,7 +59,12 @@ public class DALServicesImpl implements DALBackServices, DALServices {
   @Override
   public void start() {
     try {
-      getConnection().setAutoCommit(false);
+      if (transactionCount.get() == 0) {
+        getConnection().setAutoCommit(false);
+        transactionCount.set(1);
+      } else {
+        transactionCount.set(transactionCount.get() + 1);
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
@@ -74,9 +82,13 @@ public class DALServicesImpl implements DALBackServices, DALServices {
   @Override
   public void commit() {
     try (Connection conn = getConnection()) {
-      threadLocal.remove();
-      conn.commit();
-      conn.setAutoCommit(true);
+      if (transactionCount.get() == 1) {
+        threadLocal.remove();
+        conn.commit();
+        conn.setAutoCommit(true);
+      } else {
+        transactionCount.set(transactionCount.get() - 1);
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
