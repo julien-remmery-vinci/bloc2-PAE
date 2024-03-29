@@ -1,10 +1,9 @@
 package be.vinci.pae.business.company;
 
-import be.vinci.pae.business.contact.ContactDTO;
-import be.vinci.pae.business.contact.ContactDTO.State;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
+import be.vinci.pae.presentation.exceptions.ConflictException;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
 import jakarta.inject.Inject;
 import java.util.List;
@@ -52,16 +51,15 @@ public class CompanyUCCImpl implements CompanyUCC {
       dalServices.start();
       CompanyDTO company = companyDAO.getCompanyById(idCompany);
       if (company == null) {
-        throw new NotFoundException("Company not found");
+        throw new NotFoundException("L'entreprise n'éxiste pas");
+      }
+      if (company.isBlacklisted()) {
+        throw new ConflictException("L'entreprise est déjà blacklistée");
       }
       company.setBlacklisted(true);
       company.setBlacklistMotivation(reason);
       companyDAO.updateCompany(company);
-      for (ContactDTO c : contactUCC.getContactsByCompany(idCompany)) {
-        if (c.getState().equals(State.STARTED) || c.getState().equals(State.ADMITTED)) {
-          contactUCC.blacklistContact(c);
-        }
-      }
+      contactUCC.blacklistContacts(idCompany);
       dalServices.commit();
       return company;
     } catch (Exception e) {
