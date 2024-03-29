@@ -28,5 +28,5 @@ public interface CompanyUCC {
    * @param id     the id of the company
    * @param reason the reason of the blacklist
    */
-  CompanyDTO blacklistCompany(int id, String reason);
+  List<Object> blacklistCompany(int id, String reason);
 }

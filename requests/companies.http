@@ -18,7 +18,7 @@ Content-Type: application/json
 GET {{companiesUrl}}
 
 ### Blacklist a company
-POST {{companiesUrl}}/2/blacklist
+POST {{companiesUrl}}/3/blacklist
 Authorization: {{token}}
 Content-Type: application/json
 

@@ -1,11 +1,13 @@
 package be.vinci.pae.business.company;
 
+import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.presentation.exceptions.ConflictException;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
 import jakarta.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,7 +48,7 @@ public class CompanyUCCImpl implements CompanyUCC {
   }
 
   @Override
-  public CompanyDTO blacklistCompany(int idCompany, String reason) {
+  public List<Object> blacklistCompany(int idCompany, String reason) {
     try {
       dalServices.start();
       CompanyDTO company = companyDAO.getCompanyById(idCompany);
@@ -59,9 +61,12 @@ public class CompanyUCCImpl implements CompanyUCC {
       company.setBlacklisted(true);
       company.setBlacklistMotivation(reason);
       companyDAO.updateCompany(company);
-      contactUCC.blacklistContacts(idCompany);
+      List<ContactDTO> contacts = contactUCC.blacklistContacts(idCompany);
       dalServices.commit();
-      return company;
+      List<Object> list = new ArrayList<>();
+      list.add(company);
+      list.addAll(contacts);
+      return list;
     } catch (Exception e) {
       dalServices.rollback();
       throw e;
