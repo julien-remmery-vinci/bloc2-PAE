@@ -1,6 +1,5 @@
 package be.vinci.pae.business.company;
 
-import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
@@ -61,11 +60,10 @@ public class CompanyUCCImpl implements CompanyUCC {
       company.setBlacklisted(true);
       company.setBlacklistMotivation(reason);
       companyDAO.updateCompany(company);
-      List<ContactDTO> contacts = contactUCC.blacklistContacts(idCompany);
-      dalServices.commit();
-      List<Object> list = new ArrayList<>();
+      ArrayList<Object> list = new ArrayList<>();
       list.add(company);
-      list.addAll(contacts);
+      list.addAll(contactUCC.blacklistContacts(idCompany));
+      dalServices.commit();
       return list;
     } catch (Exception e) {
       dalServices.rollback();
