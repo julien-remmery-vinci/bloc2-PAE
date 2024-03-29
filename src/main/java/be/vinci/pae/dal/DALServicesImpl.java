@@ -13,8 +13,8 @@ import org.apache.commons.dbcp2.BasicDataSource;
 public class DALServicesImpl implements DALBackServices, DALServices {
 
   private final BasicDataSource basicDataSource;
-  private ThreadLocal<Connection> threadLocal;
-  private ThreadLocal<Integer> transactionCount;
+  private final ThreadLocal<Connection> threadLocal;
+  private final ThreadLocal<Integer> transactionCount;
 
   /**
    * Constructor of DALServicesImpl.
@@ -60,11 +60,12 @@ public class DALServicesImpl implements DALBackServices, DALServices {
   public void start() {
     try {
       Connection conn = getConnection();
-      if (transactionCount.get() == 0) {
+      int t = transactionCount.get();
+      if (t == 0) {
         conn.setAutoCommit(false);
         transactionCount.set(1);
       } else {
-        transactionCount.set(transactionCount.get() + 1);
+        transactionCount.set(t + 1);
       }
     } catch (SQLException e) {
       throw new FatalException(e);
@@ -73,8 +74,12 @@ public class DALServicesImpl implements DALBackServices, DALServices {
 
   @Override
   public void close() {
-    try (Connection conn = getConnection()) {
-      threadLocal.remove();
+    Connection conn = getConnection();
+    try {
+      if (transactionCount.get() == 0) {
+        threadLocal.remove();
+        conn.close();
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
@@ -82,13 +87,16 @@ public class DALServicesImpl implements DALBackServices, DALServices {
 
   @Override
   public void commit() {
-    try (Connection conn = getConnection()) {
-      if (transactionCount.get() == 1) {
+    Connection conn = getConnection();
+    try {
+      int t = transactionCount.get();
+      if (t == 1) {
         threadLocal.remove();
         conn.commit();
         conn.setAutoCommit(true);
+        conn.close();
       } else {
-        transactionCount.set(transactionCount.get() - 1);
+        transactionCount.set(t - 1);
       }
     } catch (SQLException e) {
       throw new FatalException(e);
