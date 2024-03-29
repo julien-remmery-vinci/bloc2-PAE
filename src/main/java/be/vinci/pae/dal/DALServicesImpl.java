@@ -59,8 +59,9 @@ public class DALServicesImpl implements DALBackServices, DALServices {
   @Override
   public void start() {
     try {
+      Connection conn = getConnection();
       if (transactionCount.get() == 0) {
-        getConnection().setAutoCommit(false);
+        conn.setAutoCommit(false);
         transactionCount.set(1);
       } else {
         transactionCount.set(transactionCount.get() + 1);
