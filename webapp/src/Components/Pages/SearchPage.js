@@ -45,8 +45,9 @@ function renderSearchPage() {
 </div>
 <br>
     <div class="table-responsive d-flex justify-content-center align-items-center">
-    <table class="table table-bordered table-hover">
-    <thead>
+    <table class="table table-bordered table-hover caption-top">
+    <caption>Liste des utilisateurs</caption>
+    <thead class="table-light">
         <tr>
             <th>Nom</th>
             <th>Prénom</th>
@@ -66,13 +67,24 @@ function renderUsers(users) {
   users.forEach(userMap => {
     const { user, accepted_contact: acceptedContact } = userMap;
     const tr = document.createElement('tr');
-    tr.innerHTML = `
+    if (user.role === 'étudiant') {
+      tr.innerHTML = `
       <td>${user.lastname}</td>
       <td>${user.firstname}</td>
       <td>${user.role}</td>
       <td>${user.academicYear}</td>
       <td>${acceptedContact ? 'Oui' : 'Non'}</td>
     `;
+    } else {
+      tr.innerHTML = `
+        <td>${user.lastname}</td>
+        <td>${user.firstname}</td>
+        <td>${user.role}</td>
+        <td class="table-secondary">N/A</td>
+        <td class="table-secondary">N/A</td>
+      `;
+    }
+
     tbody.appendChild(tr);
   });
   table.appendChild(tbody);
