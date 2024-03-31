@@ -64,34 +64,51 @@ public class DALServicesImpl implements DALBackServices, DALServices {
 
   @Override
   public void close() {
-    try (Connection conn = getConnection()) {
-      threadLocal.remove();
+    Connection conn = getConnection();
+    try {
+      if (conn != null && !conn.isClosed()) {
+        conn.close();
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
+    } finally {
+      threadLocal.remove();
     }
   }
 
   @Override
   public void commit() {
-    try (Connection conn = getConnection()) {
+    Connection conn = getConnection();
+    try {
       conn.commit();
-      conn.setAutoCommit(true);
     } catch (SQLException e) {
       throw new FatalException(e);
     } finally {
-      close();
+      try {
+        conn.setAutoCommit(true);
+      } catch (SQLException e) {
+        throw new FatalException(e);
+      } finally {
+        close();
+      }
     }
   }
 
   @Override
   public void rollback() {
-    try (Connection conn = getConnection()) {
+    Connection conn = getConnection();
+    try {
       conn.rollback();
-      conn.setAutoCommit(true);
     } catch (SQLException e) {
       throw new FatalException(e);
     } finally {
-      close();
+      try {
+        conn.setAutoCommit(true);
+      } catch (SQLException e) {
+        throw new FatalException(e);
+      } finally {
+        close();
+      }
     }
   }
 
