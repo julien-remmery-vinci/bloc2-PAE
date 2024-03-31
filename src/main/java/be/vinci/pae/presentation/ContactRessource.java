@@ -51,9 +51,9 @@ public class ContactRessource {
   /**
    * Refuse a contact.
    *
-   * @param request       the request's context
-   * @param idContact     the id of the contact
-   * @param refusalReason string containing the refusal reason
+   * @param request   the request's context
+   * @param idContact the id of the contact
+   * @param json      json containing the refusal reason
    * @return the contact
    */
   @POST
@@ -62,14 +62,15 @@ public class ContactRessource {
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
   public ContactDTO refuseContact(@Context ContainerRequest request, @PathParam("id") int idContact,
-      String refusalReason) {
+      JsonNode json) {
     if (idContact < 0) {
       throw new BadRequestException("Invalid id");
     }
-    if (refusalReason == null || refusalReason.isBlank()) {
+    JsonNode refusalReason = json.get("refusalReason");
+    if (refusalReason == null || refusalReason.asText().isBlank()) {
       throw new BadRequestException("Refusal reason is required");
     }
-    ContactDTO contact = contactUCC.refuseContact(idContact, refusalReason,
+    ContactDTO contact = contactUCC.refuseContact(idContact, refusalReason.asText(),
         ((UserDTO) request.getProperty("user")).getIdUser());
     if (contact == null) {
       throw new NotFoundException("Contact not found");
@@ -152,7 +153,19 @@ public class ContactRessource {
       throw new BadRequestException("Invalid id");
     }
     contact.setIdStudent(((UserDTO) request.getProperty("user")).getIdUser());
+    contact.setUser((UserDTO) request.getProperty("user"));
     return contactUCC.addContact(contact);
+  }
+
+  @GET
+  @Path("/company/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  // TODO: Add the Authorize annotation for teachers
+  public List<ContactDTO> getContactsByCompany(@PathParam("id") int idCompany) {
+    if (idCompany < 0) {
+      throw new BadRequestException("Invalid id");
+    }
+    return contactUCC.getContactsByCompany(idCompany);
   }
 
 }

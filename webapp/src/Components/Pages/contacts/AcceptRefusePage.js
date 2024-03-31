@@ -5,8 +5,6 @@ import {
 } from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
-const queryParams = new URLSearchParams(window.location.search);
-
 const AcceptRefusePage = () => {
     if (!isAuthenticated()) {
         Navigate('/login');
@@ -43,6 +41,7 @@ function buildPage() {
 
 // Display contact informations
 function getContactInfos() {
+    const queryParams = new URLSearchParams(window.location.search);
     const contactInfosDiv = document.createElement('div');
     contactInfosDiv.className = 'p-5';
     const entrepriseName = document.createElement('label');
@@ -122,6 +121,7 @@ function getForm() {
 
 async function onSubmit(event) {
     event.preventDefault();
+    const queryParams = new URLSearchParams(window.location.search);
     const contactState = document.querySelector('select').value;
     const refusalReason = document.querySelector('textarea').value;
     const options = {
@@ -141,6 +141,8 @@ async function onSubmit(event) {
         .then(request => {
             if(request.status === 401) {
                 document.querySelector('.alert-danger').hidden = false;
+            } else {
+                Navigate('/contact');
             }
         });
     }

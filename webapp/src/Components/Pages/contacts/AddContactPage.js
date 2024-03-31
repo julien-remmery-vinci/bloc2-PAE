@@ -166,7 +166,7 @@ async function onSubmit(e) {
 
     const response = await fetch('http://localhost:3000/contacts/', options);
     if (response.status === 200) {
-        Navigate('/');
+        Navigate('/contact');
         
     } else {
         alert.hidden = false;

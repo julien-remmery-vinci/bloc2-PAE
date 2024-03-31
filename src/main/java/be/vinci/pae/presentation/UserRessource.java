@@ -52,7 +52,7 @@ public class UserRessource {
   @Authorize
   @Consumes(MediaType.APPLICATION_JSON)
   public Response changePassword(JsonNode json, @Context ContainerRequest request) {
-    UserDTO authenticatedUser = (UserDTO) request.getProperty("user");
+    final UserDTO authenticatedUser = (UserDTO) request.getProperty("user");
     String oldPassword = json.get("oldPassword").asText();
     String newPassword = json.get("newPassword").asText();
     String confirmationPassword = json.get("confirmationPassword").asText();

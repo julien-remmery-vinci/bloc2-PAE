@@ -6,8 +6,8 @@ POST {{authsUrl}}/login
 Content-Type: application/json
 
 {
-  "email": "admin.admin@vinci.be",
-  "password": "admin"
+  "email": "raphael.baroni@vinci.be",
+  "password": "Prof24,z"
 }
 
 > {%
@@ -16,4 +16,13 @@ Content-Type: application/json
 
 ### Get all companies
 GET {{companiesUrl}}
+
+### Blacklist a company
+POST {{companiesUrl}}/4/blacklist
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "reason": "This company is a scam"
+}
 

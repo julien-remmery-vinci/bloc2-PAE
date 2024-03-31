@@ -3,6 +3,7 @@ package be.vinci.pae.dal.contact;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
+import be.vinci.pae.presentation.exceptions.ConflictException;
 import be.vinci.pae.presentation.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -64,7 +65,7 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setInt(9, contact.getVersion());
       try (ResultSet rs = ps.executeQuery()) {
         if (!rs.next() && getOneById(contact.getIdContact()).getVersion() != contact.getVersion()) {
-          throw new RuntimeException("Version mismatch");
+          throw new ConflictException("Version mismatch");
         }
       }
     } catch (SQLException e) {
@@ -134,6 +135,26 @@ public class ContactDAOImpl implements ContactDAO {
       throw new FatalException(e);
     }
     return null;
+  }
+
+  @Override
+  public List<ContactDTO> getContactsByCompany(int idCompany) {
+    try (PreparedStatement ps = dalServices.getPS(
+        "SELECT * FROM pae.contacts, pae.users, pae.companies WHERE contact_idCompany = "
+            + "company_idCompany AND contact_idStudent = user_idUser AND "
+            + "contact_idCompany = ?;")) {
+      ps.setInt(1, idCompany);
+      try (ResultSet rs = ps.executeQuery()) {
+        List<ContactDTO> contacts = new ArrayList<>();
+        while (rs.next()) {
+          String prefix = "contact";
+          contacts.add((ContactDTO) daoServices.getDataFromRs(rs, prefix));
+        }
+        return contacts;
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
   }
 
 
