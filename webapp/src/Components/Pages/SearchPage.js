@@ -85,6 +85,12 @@ function renderUsers(users) {
       `;
     }
 
+    tr.addEventListener('click', () => {
+      if (user.role === 'étudiant') {
+        Navigate(`/student-info/${user.idUser}`);
+      }
+    });
+
     tbody.appendChild(tr);
   });
   table.appendChild(tbody);
