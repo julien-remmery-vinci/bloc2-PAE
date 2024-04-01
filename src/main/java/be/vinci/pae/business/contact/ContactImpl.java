@@ -137,6 +137,11 @@ public class ContactImpl implements Contact {
       this.state = state;
       return true;
     }
+    if (state.equals(State.BLACKLISTED) && (this.state.equals(State.STARTED) || this.state.equals(
+        State.ADMITTED))) {
+      this.state = state;
+      return true;
+    }
     return false;
   }
 }

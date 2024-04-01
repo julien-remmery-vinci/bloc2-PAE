@@ -60,4 +60,19 @@ public interface ContactUCC {
    */
   ContactDTO unfollowContact(int id, int idUser);
 
+  /**
+   * Get all contacts with a company.
+   *
+   * @param idCompany the id of the company
+   * @return the list of contacts
+   */
+  List<ContactDTO> getContactsByCompany(int idCompany);
+
+  /**
+   * This method is used to blacklist a contact.
+   *
+   * @param idCompany the id of the company to blacklist contacts for
+   * @return the list of the contacts of the company
+   */
+  List<ContactDTO> blacklistContacts(int idCompany);
 }

@@ -51,9 +51,9 @@ public class ContactRessource {
   /**
    * Refuse a contact.
    *
-   * @param request       the request's context
-   * @param idContact     the id of the contact
-   * @param json          json containing the refusal reason
+   * @param request   the request's context
+   * @param idContact the id of the contact
+   * @param json      json containing the refusal reason
    * @return the contact
    */
   @POST
@@ -155,6 +155,17 @@ public class ContactRessource {
     contact.setIdStudent(((UserDTO) request.getProperty("user")).getIdUser());
     contact.setUser((UserDTO) request.getProperty("user"));
     return contactUCC.addContact(contact);
+  }
+
+  @GET
+  @Path("/company/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  // TODO: Add the Authorize annotation for teachers
+  public List<ContactDTO> getContactsByCompany(@PathParam("id") int idCompany) {
+    if (idCompany < 0) {
+      throw new BadRequestException("Invalid id");
+    }
+    return contactUCC.getContactsByCompany(idCompany);
   }
 
 }

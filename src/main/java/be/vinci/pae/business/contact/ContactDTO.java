@@ -178,7 +178,11 @@ public interface ContactDTO {
     /**
      * Unsupervised state.
      */
-    UNSUPERVISED("non suivi");
+    UNSUPERVISED("non suivi"),
+    /**
+     * Blacklisted state.
+     */
+    BLACKLISTED("blacklisté");
 
     private final String state;
 

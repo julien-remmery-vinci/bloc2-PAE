@@ -136,4 +136,37 @@ public class ContactUCCImpl implements ContactUCC {
     dalServices.close();
     return contact;
   }
+
+  @Override
+  public List<ContactDTO> getContactsByCompany(int idCompany) {
+    try {
+      CompanyDTO company = companyDAO.getCompanyById(idCompany);
+      if (company == null) {
+        throw new NotFoundException("Company not found");
+      }
+      return contactDAO.getContactsByCompany(idCompany);
+    } finally {
+      dalServices.close();
+    }
+  }
+
+  @Override
+  public List<ContactDTO> blacklistContacts(int idCompany) {
+    try {
+      dalServices.start();
+      List<ContactDTO> contacts = getContactsByCompany(idCompany);
+      for (ContactDTO c : contacts) {
+        if (((Contact) c).updateState(State.BLACKLISTED)) {
+          contactDAO.updateContact(c);
+        }
+      }
+      dalServices.commit();
+      return contacts;
+    } catch (Exception e) {
+      dalServices.rollback();
+      throw e;
+    } finally {
+      dalServices.close();
+    }
+  }
 }
