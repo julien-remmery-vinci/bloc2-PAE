@@ -82,6 +82,8 @@ public class DALServicesImpl implements DALBackServices, DALServices {
       }
     } catch (SQLException e) {
       throw new FatalException(e);
+    } finally {
+      threadLocal.remove();
     }
   }
 
@@ -101,19 +103,31 @@ public class DALServicesImpl implements DALBackServices, DALServices {
     } catch (SQLException e) {
       throw new FatalException(e);
     } finally {
-      close();
+      try {
+        conn.setAutoCommit(true);
+      } catch (SQLException e) {
+        throw new FatalException(e);
+      } finally {
+        close();
+      }
     }
   }
 
   @Override
   public void rollback() {
-    try (Connection conn = getConnection()) {
+    Connection conn = getConnection();
+    try {
       conn.rollback();
-      conn.setAutoCommit(true);
     } catch (SQLException e) {
       throw new FatalException(e);
     } finally {
-      close();
+      try {
+        conn.setAutoCommit(true);
+      } catch (SQLException e) {
+        throw new FatalException(e);
+      } finally {
+        close();
+      }
     }
   }
 
