@@ -2,28 +2,6 @@ import { clearPage, renderPageTitle } from "../../utils/render";
 import Navigate from "../Router/Navigate";
 import isAuthenticated from "../../utils/auths"; // Import the 'isAuthenticated' function
 
-
-
-const StudentInfoPage = () => {
-    if (!isAuthenticated()) {
-        Navigate('/login');
-    } else {
-        renderPageTitle("Informations de l'étudiant");
-        document.title = "Informations de l'étudiant";
-        clearPage();
-        const id = window.location.pathname.split('/').pop();
-        fetchUserById(id);
-        renderStudentInfoPage();
-    } 
-};
-
-const fetchUserById = (id) => {
-  fetch(`http://localhost:3000/users${id}`)
-  .then(response => response.json())
-  .then(user => renderUser(user))
-  .catch(error => console.error(error));
-}
-
 const renderUser = (user) => {
   const main = document.querySelector('main');
   main.innerHTML = `
@@ -41,6 +19,26 @@ const renderUser = (user) => {
   </div>
   `;
 }
+
+const fetchUserById = (id) => {
+  fetch(`http://localhost:3000/users${id}`)
+  .then(response => response.json())
+  .then(user => renderUser(user))
+  .catch(error => console.error(error));
+}
+
+const StudentInfoPage = () => {
+    if (!isAuthenticated()) {
+        Navigate('/login');
+    } else {
+        renderPageTitle("Informations de l'étudiant");
+        document.title = "Informations de l'étudiant";
+        clearPage();
+        const id = window.location.pathname.split('/').pop();
+        fetchUserById(id);
+        renderStudentInfoPage();
+    } 
+};
 
 function renderStudentInfoPage() {
   const main = document.querySelector('main');
