@@ -64,4 +64,12 @@ public interface ContactDAO {
    */
   ContactDTO getCompanyContact(int idUser, int idCompany, String academicYear);
 
+  /**
+   * Get the contacts of a company.
+   *
+   * @param idCompany the id of the company
+   * @return the contacts
+   */
+  List<ContactDTO> getContactsByCompany(int idCompany);
+
 }

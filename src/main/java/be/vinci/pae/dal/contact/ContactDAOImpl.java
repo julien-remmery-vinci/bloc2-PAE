@@ -137,6 +137,26 @@ public class ContactDAOImpl implements ContactDAO {
     return null;
   }
 
+  @Override
+  public List<ContactDTO> getContactsByCompany(int idCompany) {
+    try (PreparedStatement ps = dalServices.getPS(
+        "SELECT * FROM pae.contacts, pae.users, pae.companies WHERE contact_idCompany = "
+            + "company_idCompany AND contact_idStudent = user_idUser AND "
+            + "contact_idCompany = ?;")) {
+      ps.setInt(1, idCompany);
+      try (ResultSet rs = ps.executeQuery()) {
+        List<ContactDTO> contacts = new ArrayList<>();
+        while (rs.next()) {
+          String prefix = "contact";
+          contacts.add((ContactDTO) daoServices.getDataFromRs(rs, prefix));
+        }
+        return contacts;
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
+
 
   /**
    * Get the contacts of a student.

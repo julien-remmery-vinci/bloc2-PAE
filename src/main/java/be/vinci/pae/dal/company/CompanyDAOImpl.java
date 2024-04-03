@@ -3,7 +3,9 @@ package be.vinci.pae.dal.company;
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
+import be.vinci.pae.presentation.exceptions.ConflictException;
 import be.vinci.pae.presentation.exceptions.FatalException;
+import be.vinci.pae.presentation.exceptions.NotFoundException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -53,5 +55,36 @@ public class CompanyDAOImpl implements CompanyDAO {
       throw new FatalException(e);
     }
     return null;
+  }
+
+  @Override
+  public CompanyDTO updateCompany(CompanyDTO company) {
+    try (PreparedStatement ps = dalServices.getPS(
+        "UPDATE pae.companies SET company_tradename = ?, company_designation = ?, company_address = ?, "
+            + "company_phonenumber = ?, company_email = ?, company_blacklisted = ?, company_blacklistmotivation = ?, "
+            + "company_version = company_version + 1 WHERE company_idCompany = ? AND company_version = ? RETURNING *")) {
+      ps.setString(1, company.getTradeName());
+      ps.setString(2, company.getDesignation());
+      ps.setString(3, company.getAddress());
+      ps.setString(4, company.getPhoneNumber());
+      ps.setString(5, company.getEmail());
+      ps.setBoolean(6, company.isBlacklisted());
+      ps.setString(7, company.getBlacklistMotivation());
+      ps.setInt(8, company.getIdCompany());
+      ps.setInt(9, company.getVersion());
+      try (ResultSet rs = ps.executeQuery()) {
+        if (!rs.next()) {
+          if (getCompanyById(company.getIdCompany()) == null) {
+            throw new NotFoundException("The company does not exist.");
+          } else {
+            throw new ConflictException(
+                "Version mismatch, the company has been updated by someone else.");
+          }
+        }
+        return company;
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
   }
 }
