@@ -5,6 +5,7 @@ import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
 import be.vinci.pae.presentation.exceptions.ConflictException;
 import be.vinci.pae.presentation.exceptions.FatalException;
+import be.vinci.pae.presentation.exceptions.NotFoundException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -120,14 +121,17 @@ public class UserDAOImpl implements UserDAO {
       updateUser.setInt(11, user.getVersion());
       updateUser.executeUpdate();
       try (ResultSet rs = updateUser.executeQuery()) {
+        if (getOneById(user.getIdUser()) == null) {
+          throw new NotFoundException("User not found");
+        }
         if (!rs.next() && getOneById(user.getIdUser()).getVersion() != user.getVersion()) {
           throw new ConflictException("Version mismatch");
         }
+        return user;
       }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    return user;
   }
 
   /**
@@ -147,5 +151,4 @@ public class UserDAOImpl implements UserDAO {
     ps.setString(7, user.getRole().toString());
     ps.setString(8, user.getAcademicYear());
   }
-
 }
