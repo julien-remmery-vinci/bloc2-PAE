@@ -78,7 +78,9 @@ public class DALServicesImpl implements DALBackServices, DALServices {
     try {
       if (transactionCount.get() == 0) {
         threadLocal.remove();
-        conn.close();
+        if (conn != null && !conn.isClosed()) {
+          conn.close();
+        }
       }
     } catch (SQLException e) {
       throw new FatalException(e);
@@ -94,7 +96,6 @@ public class DALServicesImpl implements DALBackServices, DALServices {
         threadLocal.remove();
         conn.commit();
         conn.setAutoCommit(true);
-        conn.close();
       } else {
         transactionCount.set(t - 1);
       }
@@ -107,14 +108,13 @@ public class DALServicesImpl implements DALBackServices, DALServices {
 
   @Override
   public void rollback() {
-    try (Connection conn = getConnection()) {
+    Connection conn = getConnection();
+    try {
       conn.rollback();
-      conn.setAutoCommit(true);
     } catch (SQLException e) {
       throw new FatalException(e);
     } finally {
       close();
     }
   }
-
 }
