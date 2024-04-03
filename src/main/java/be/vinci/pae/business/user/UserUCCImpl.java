@@ -40,8 +40,12 @@ public class UserUCCImpl implements UserUCC {
    */
   @Override
   public UserDTO login(String email, String password) {
-    UserDTO userFound = userDAO.getOneByEmail(email);
-    dalServices.close();
+    UserDTO userFound;
+    try {
+      userFound = userDAO.getOneByEmail(email);
+    } finally {
+      dalServices.close();
+    }
     // No user found for the provided email
     if (userFound == null) {
       return null;
@@ -61,25 +65,33 @@ public class UserUCCImpl implements UserUCC {
    * @return the registered user
    */
   public UserDTO register(UserDTO user) {
+    //TODO
     if (!((User) user).defineRole(user.getEmail())) {
       throw new BadRequestException("Invalid role");
     }
-    dalServices.start();
-    UserDTO userFound = userDAO.getOneByEmail(user.getEmail());
-    if (userFound != null) {
-      dalServices.rollback();
-      return null;
-    }
-    if (user.getRole().equals(UserDTO.Role.STUDENT)) {
-      user.setAcademicYear(academicYear.getAcademicYear());
-    }
-    user.setPassword(((User) user).hashPassword(user.getPassword()));
-    Date registerDate = new Date(System.currentTimeMillis());
-    user.setRegisterDate(registerDate);
-    user.getEmail().toLowerCase();
+    try {
+      dalServices.start();
+      UserDTO userFound = userDAO.getOneByEmail(user.getEmail());
+      if (userFound != null) {
+        dalServices.rollback();
+        return null;
+      }
+      if (user.getRole().equals(UserDTO.Role.STUDENT)) {
+        user.setAcademicYear(academicYear.getAcademicYear());
+      }
+      user.setPassword(((User) user).hashPassword(user.getPassword()));
+      Date registerDate = new Date(System.currentTimeMillis());
+      user.setRegisterDate(registerDate);
+      user.getEmail().toLowerCase();
 
-    user = userDAO.addUser(user);
-    dalServices.commit();
+      user = userDAO.addUser(user);
+      dalServices.commit();
+    } catch (Exception e) {
+      dalServices.rollback();
+      throw e;
+    } finally {
+      dalServices.close();
+    }
     return user;
   }
 
@@ -90,8 +102,13 @@ public class UserUCCImpl implements UserUCC {
    * @return the user, null if no user was found
    */
   public UserDTO getUser(int id) {
-    UserDTO user = userDAO.getOneById(id);
-    dalServices.close();
+    UserDTO user;
+    try {
+      dalServices.open();
+      user = userDAO.getOneById(id);
+    } finally {
+      dalServices.close();
+    }
     return user;
   }
 
@@ -101,8 +118,13 @@ public class UserUCCImpl implements UserUCC {
    * @return the list of all users
    */
   public List<Map<String, Object>> getAllUsers() {
-    List<Map<String, Object>> list = userDAO.getAllUsers();
-    dalServices.close();
+    List<Map<String, Object>> list;
+    try {
+      dalServices.open();
+      list = userDAO.getAllUsers();
+    } finally {
+      dalServices.close();
+    }
     return list;
   }
 
@@ -112,8 +134,12 @@ public class UserUCCImpl implements UserUCC {
       throw new BadRequestException("Old password is wrong");
     }
     user.setPassword(((User) user).hashPassword(newPassword));
-    user = userDAO.updateUser(user);
-    dalServices.close();
+    try {
+      dalServices.open();
+      user = userDAO.updateUser(user);
+    } finally {
+      dalServices.close();
+    }
     return user;
   }
 }
