@@ -169,4 +169,34 @@ public class ContactUCCImpl implements ContactUCC {
       dalServices.close();
     }
   }
+
+  // TODO: Add the start/commit/rollback of the transaction
+  @Override
+  public ContactDTO acceptContact(int idContact, UserDTO user) {
+    ContactDTO contact = contactDAO.getOneById(idContact);
+    if (contact == null) {
+      throw new NotFoundException("Contact not found");
+    }
+    if (contact.getIdStudent() != user.getIdUser()) {
+      throw new NotFoundException("You don't have a contact with this id");
+    }
+    if (!((Contact) contact).updateState(State.ACCEPTED)) {
+      throw new PreconditionFailedException(
+          "The contact must be in the state 'admitted' to be accepted");
+    }
+    contact.setState(State.ACCEPTED);
+    contactDAO.updateContact(contact);
+    suspendOtherContacts(user.getIdUser(), idContact);
+    dalServices.close();
+    return contact;
+  }
+
+  private void suspendOtherContacts(int userId, int acceptedContactId) {
+    List<ContactDTO> contacts = contactDAO.getContactsByStudentId(userId);
+    for (ContactDTO c : contacts) {
+      if (c.getIdContact() != acceptedContactId && ((Contact) c).updateState(State.ON_HOLD)) {
+        contactDAO.updateContact(c);
+      }
+    }
+  }
 }

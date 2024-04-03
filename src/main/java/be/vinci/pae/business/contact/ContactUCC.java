@@ -75,4 +75,13 @@ public interface ContactUCC {
    * @return the list of the contacts of the company
    */
   List<ContactDTO> blacklistContacts(int idCompany);
+
+  /**
+   * This method is used to accept a contact.
+   *
+   * @param idContact the id of the contact
+   * @param user      the user
+   * @return the contact if it exists and the conditions are met, null otherwise
+   */
+  ContactDTO acceptContact(int idContact, UserDTO user);
 }
