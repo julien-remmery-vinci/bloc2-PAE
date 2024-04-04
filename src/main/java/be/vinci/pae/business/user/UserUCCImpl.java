@@ -61,7 +61,6 @@ public class UserUCCImpl implements UserUCC {
    * @return the registered user
    */
   public UserDTO register(UserDTO user) {
-    user.setEmail(user.getEmail().toLowerCase());
     if (!((User) user).defineRole(user.getEmail())) {
       throw new BadRequestException("Invalid role");
     }
