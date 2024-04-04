@@ -75,4 +75,11 @@ public interface ContactUCC {
    * @return the list of the contacts of the company
    */
   List<ContactDTO> blacklistContacts(int idCompany);
+
+  /**
+   * This method is used to get all contacts.
+   *
+   * @return the list of all contacts
+   */
+  List<ContactDTO> getAllContacts();
 }
