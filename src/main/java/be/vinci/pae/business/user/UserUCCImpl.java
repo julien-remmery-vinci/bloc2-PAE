@@ -40,12 +40,8 @@ public class UserUCCImpl implements UserUCC {
    */
   @Override
   public UserDTO login(String email, String password) {
-    UserDTO userFound;
-    try {
-      userFound = userDAO.getOneByEmail(email);
-    } finally {
-      dalServices.close();
-    }
+    UserDTO userFound = userDAO.getOneByEmail(email);
+    dalServices.close();
     // No user found for the provided email
     if (userFound == null) {
       return null;
@@ -65,7 +61,6 @@ public class UserUCCImpl implements UserUCC {
    * @return the registered user
    */
   public UserDTO register(UserDTO user) {
-    //TODO
     if (!((User) user).defineRole(user.getEmail())) {
       throw new BadRequestException("Invalid role");
     }
@@ -82,14 +77,8 @@ public class UserUCCImpl implements UserUCC {
     Date registerDate = new Date(System.currentTimeMillis());
     user.setRegisterDate(registerDate);
 
-      user = userDAO.addUser(user);
-      dalServices.commit();
-    } catch (Exception e) {
-      dalServices.rollback();
-      throw e;
-    } finally {
-      dalServices.close();
-    }
+    user = userDAO.addUser(user);
+    dalServices.commit();
     return user;
   }
 
@@ -100,13 +89,8 @@ public class UserUCCImpl implements UserUCC {
    * @return the user, null if no user was found
    */
   public UserDTO getUser(int id) {
-    UserDTO user;
-    try {
-      dalServices.open();
-      user = userDAO.getOneById(id);
-    } finally {
-      dalServices.close();
-    }
+    UserDTO user = userDAO.getOneById(id);
+    dalServices.close();
     return user;
   }
 
@@ -116,13 +100,8 @@ public class UserUCCImpl implements UserUCC {
    * @return the list of all users
    */
   public List<Map<String, Object>> getAllUsers() {
-    List<Map<String, Object>> list;
-    try {
-      dalServices.open();
-      list = userDAO.getAllUsers();
-    } finally {
-      dalServices.close();
-    }
+    List<Map<String, Object>> list = userDAO.getAllUsers();
+    dalServices.close();
     return list;
   }
 
@@ -132,12 +111,8 @@ public class UserUCCImpl implements UserUCC {
       throw new BadRequestException("Old password is wrong");
     }
     user.setPassword(((User) user).hashPassword(newPassword));
-    try {
-      dalServices.open();
-      user = userDAO.updateUser(user);
-    } finally {
-      dalServices.close();
-    }
+    user = userDAO.updateUser(user);
+    dalServices.close();
     return user;
   }
 }
