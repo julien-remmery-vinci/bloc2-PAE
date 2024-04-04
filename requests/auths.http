@@ -56,7 +56,7 @@ Content-Type: application/json
 {
   "firstname": "haj",
   "lastname": "hajou",
-  "email": "haj.hu@vinci.be",
+  "email": "HAJ.hu@vinci.be",
   "phoneNumber": "123456789",
   "password": "haj",
   "role": "administratif"
