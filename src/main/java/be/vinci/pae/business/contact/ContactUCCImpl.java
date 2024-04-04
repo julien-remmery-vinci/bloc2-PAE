@@ -26,11 +26,6 @@ public class ContactUCCImpl implements ContactUCC {
   @Inject
   private AcademicYear academicYear;
 
-  /**
-   * Get the contact.
-   *
-   * @return the contact
-   */
   @Override
   public List<ContactDTO> getContacts(UserDTO user) {
     if (user == null) {
@@ -41,12 +36,6 @@ public class ContactUCCImpl implements ContactUCC {
     return list;
   }
 
-  /**
-   * Get list of contact.
-   *
-   * @param user the user
-   * @return a list of contact
-   */
   @Override
   public List<ContactDTO> getContactsByStudentId(UserDTO user) {
     if (user == null) {
