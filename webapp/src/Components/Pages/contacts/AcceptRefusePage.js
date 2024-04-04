@@ -135,7 +135,14 @@ async function onSubmit(event) {
         }),
     };
     if (contactState === 'true') {
-        // TODO add accept contact
+        fetch(`http://localhost:3000/contacts/${queryParams.get('id')}/accept`, options)
+        .then(request => {
+            if(request.status === 401) {
+                document.querySelector('.alert-danger').hidden = false;
+            } else {
+                Navigate('/contact');
+            }
+        });
     } else {
         fetch(`http://localhost:3000/contacts/${queryParams.get('id')}/refuse`, options)
         .then(request => {
