@@ -17,6 +17,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -90,6 +91,13 @@ public class UserRessource {
   @Produces(MediaType.APPLICATION_JSON)
   public List<Map<String, Object>> getAllUsers() {
     return userUCC.getAllUsers();
+  }
+
+  @GET
+  @Path("/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public UserDTO getUserById(@PathParam("id") int id) {
+    return userUCC.getUser(id);
   }
 
 }
