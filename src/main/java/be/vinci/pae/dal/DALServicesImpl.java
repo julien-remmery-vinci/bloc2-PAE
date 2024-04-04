@@ -78,12 +78,12 @@ public class DALServicesImpl implements DALBackServices, DALServices {
     try {
       if (transactionCount.get() == 0) {
         threadLocal.remove();
-        conn.close();
+        if (conn != null && !conn.isClosed()) {
+          conn.close();
+        }
       }
     } catch (SQLException e) {
       throw new FatalException(e);
-    } finally {
-      threadLocal.remove();
     }
   }
 
@@ -96,20 +96,13 @@ public class DALServicesImpl implements DALBackServices, DALServices {
         threadLocal.remove();
         conn.commit();
         conn.setAutoCommit(true);
-        conn.close();
       } else {
         transactionCount.set(t - 1);
       }
     } catch (SQLException e) {
       throw new FatalException(e);
     } finally {
-      try {
-        conn.setAutoCommit(true);
-      } catch (SQLException e) {
-        throw new FatalException(e);
-      } finally {
-        close();
-      }
+      close();
     }
   }
 
@@ -121,14 +114,7 @@ public class DALServicesImpl implements DALBackServices, DALServices {
     } catch (SQLException e) {
       throw new FatalException(e);
     } finally {
-      try {
-        conn.setAutoCommit(true);
-      } catch (SQLException e) {
-        throw new FatalException(e);
-      } finally {
-        close();
-      }
+      close();
     }
   }
-
 }
