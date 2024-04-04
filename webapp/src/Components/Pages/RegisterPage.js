@@ -154,7 +154,7 @@ async function onRegister(e) {
 
   const firstname = document.querySelector('#firstname').value;
   const lastname = document.querySelector('#lastname').value;
-  const email = document.querySelector('#email').value;
+  const email = document.querySelector('#email').value.toLowerCase();
   const phoneNumber = document.querySelector('#phoneNumber').value;
   const password = document.querySelector('#password').value;
   let role;
