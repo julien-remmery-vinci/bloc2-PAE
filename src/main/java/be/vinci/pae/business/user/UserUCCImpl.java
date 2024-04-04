@@ -69,20 +69,18 @@ public class UserUCCImpl implements UserUCC {
     if (!((User) user).defineRole(user.getEmail())) {
       throw new BadRequestException("Invalid role");
     }
-    try {
-      dalServices.start();
-      UserDTO userFound = userDAO.getOneByEmail(user.getEmail());
-      if (userFound != null) {
-        dalServices.rollback();
-        return null;
-      }
-      if (user.getRole().equals(UserDTO.Role.STUDENT)) {
-        user.setAcademicYear(academicYear.getAcademicYear());
-      }
-      user.setPassword(((User) user).hashPassword(user.getPassword()));
-      Date registerDate = new Date(System.currentTimeMillis());
-      user.setRegisterDate(registerDate);
-      user.getEmail().toLowerCase();
+    dalServices.start();
+    UserDTO userFound = userDAO.getOneByEmail(user.getEmail());
+    if (userFound != null) {
+      dalServices.rollback();
+      return null;
+    }
+    if (user.getRole().equals(UserDTO.Role.STUDENT)) {
+      user.setAcademicYear(academicYear.getAcademicYear());
+    }
+    user.setPassword(((User) user).hashPassword(user.getPassword()));
+    Date registerDate = new Date(System.currentTimeMillis());
+    user.setRegisterDate(registerDate);
 
       user = userDAO.addUser(user);
       dalServices.commit();
