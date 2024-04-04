@@ -117,4 +117,9 @@ public class DALServicesImpl implements DALBackServices, DALServices {
       close();
     }
   }
+
+  @Override
+  public void open() {
+    getConnection();
+  }
 }
