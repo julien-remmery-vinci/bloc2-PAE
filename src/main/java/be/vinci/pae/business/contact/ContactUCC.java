@@ -50,6 +50,14 @@ public interface ContactUCC {
   List<ContactDTO> getContacts(UserDTO user);
 
   /**
+   * Get list of contact.
+   *
+   * @param user the user
+   * @return a list of contact
+   */
+  List<ContactDTO> getContactsByStudentId(UserDTO user);
+
+  /**
    * This method is used to unfollow a contact. It first retrieves the contact by its id.
    *
    * @param id     the id of the contact

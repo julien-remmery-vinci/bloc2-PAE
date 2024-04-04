@@ -11,6 +11,7 @@ import Logout from "../Logout/Logout";
 import StagePage from "../Pages/stage/StagePage";
 import DashboardPage from "../Pages/DashboardPage";
 import CompanyPage from "../Pages/companies/CompanyPage";
+import StudentInfoPage from "../Pages/StudentInfoPage";
 
 // Define routes
 const routes = {
@@ -26,7 +27,8 @@ const routes = {
     '/profile': ProfilePage,
     '/stage': StagePage,
     '/dashboard': DashboardPage,
-    '/company': CompanyPage
+    '/company': CompanyPage,
+    '/student-info': StudentInfoPage,
 };
 
 export default routes;
