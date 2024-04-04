@@ -134,6 +134,22 @@ public class UserDAOImpl implements UserDAO {
     }
   }
 
+  @Override
+  public List<UserDTO> getStudents() {
+    try (PreparedStatement getStudents = dalBackServices.getPS(
+        "SELECT * FROM pae.users WHERE user_role = 'STUDENT'")) {
+      try (ResultSet rs = getStudents.executeQuery()) {
+        List<UserDTO> students = new ArrayList<>();
+        while (rs.next()) {
+          students.add((UserDTO) daoServices.getDataFromRs(rs, "user"));
+        }
+        return students;
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
+
   /**
    * Set the PreparedStatement.
    *
