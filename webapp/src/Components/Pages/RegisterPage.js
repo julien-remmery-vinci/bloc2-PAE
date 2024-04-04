@@ -38,7 +38,6 @@ function renderRegisterForm() {
   titleEmail.textContent = 'Email';
   const email = document.createElement('input');
   email.type = 'email';
-  email.value.toLowerCase();
   email.placeholder = 'ex: luc.jean@student.vinci.be';
   email.id = 'email';
   email.required = true;
