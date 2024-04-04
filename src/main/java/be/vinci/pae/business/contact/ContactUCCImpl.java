@@ -45,10 +45,10 @@ public class ContactUCCImpl implements ContactUCC {
       } else {
         list = contactDAO.getAllContacts();
       }
+      return list;
     } finally {
       dalServices.close();
     }
-    return list;
   }
 
 
@@ -62,10 +62,9 @@ public class ContactUCCImpl implements ContactUCC {
    */
   @Override
   public ContactDTO refuseContact(int idContact, String refusalReason, int idUser) {
-    ContactDTO contact;
     try {
       dalServices.open();
-      contact = contactDAO.getOneById(idContact);
+      ContactDTO contact = contactDAO.getOneById(idContact);
 
       if (contact == null) {
         return null;
@@ -79,10 +78,10 @@ public class ContactUCCImpl implements ContactUCC {
       }
       contact.setRefusalReason(refusalReason);
       contactDAO.updateContact(contact);
+      return contact;
     } finally {
       dalServices.close();
     }
-    return contact;
   }
 
   @Override
@@ -105,18 +104,17 @@ public class ContactUCCImpl implements ContactUCC {
       contact.setState(State.STARTED);
       contact = contactDAO.addContact(contact);
       contact.setCompany(companyDTO);
+      return contact;
     } finally {
       dalServices.close();
     }
-    return contact;
   }
 
   @Override
   public ContactDTO meetContact(int id, String meetPlace, int idUser) {
-    Contact contact;
     try {
       dalServices.open();
-      contact = (Contact) contactDAO.getOneById(id);
+      Contact contact = (Contact) contactDAO.getOneById(id);
       if (contact == null) {
         return null;
       }
@@ -130,18 +128,17 @@ public class ContactUCCImpl implements ContactUCC {
       contact.setState(State.ADMITTED);
       contact.setMeetPlace(meetPlace);
       contactDAO.updateContact(contact);
+      return contact;
     } finally {
       dalServices.close();
     }
-    return contact;
   }
 
   @Override
   public ContactDTO unfollowContact(int id, int idUser) {
-    Contact contact;
     try {
       dalServices.open();
-      contact = (Contact) contactDAO.getOneById(id);
+      Contact contact = (Contact) contactDAO.getOneById(id);
       if (contact == null) {
         return null;
       }
@@ -154,10 +151,10 @@ public class ContactUCCImpl implements ContactUCC {
       }
       contact.setState(State.UNSUPERVISED);
       contactDAO.updateContact(contact);
+      return contact;
     } finally {
       dalServices.close();
     }
-    return contact;
   }
 
   @Override
