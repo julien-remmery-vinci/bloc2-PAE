@@ -29,8 +29,13 @@ public class CompanyUCCImpl implements CompanyUCC {
    * @return all companies
    */
   public List<CompanyDTO> getAll() {
-    List<CompanyDTO> companies = companyDAO.getAll();
-    dalServices.close();
+    List<CompanyDTO> companies;
+    try {
+      dalServices.open();
+      companies = companyDAO.getAll();
+    } finally {
+      dalServices.close();
+    }
     return companies;
   }
 
@@ -41,8 +46,13 @@ public class CompanyUCCImpl implements CompanyUCC {
    * @return the company, null if no company was found
    */
   public CompanyDTO getCompanyById(int id) {
-    CompanyDTO company = companyDAO.getCompanyById(id);
-    dalServices.close();
+    CompanyDTO company;
+    try {
+      dalServices.open();
+      company = companyDAO.getCompanyById(id);
+    } finally {
+      dalServices.close();
+    }
     return company;
   }
 

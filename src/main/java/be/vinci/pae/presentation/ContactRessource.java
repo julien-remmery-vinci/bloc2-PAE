@@ -45,6 +45,9 @@ public class ContactRessource {
     if (user == null) {
       throw new NotFoundException("User not found");
     }
+    if (user.getRole() == UserDTO.Role.STUDENT) {
+      return contactUCC.getContactsByStudentId(user);
+    }
     return contactUCC.getContacts(user);
   }
 
