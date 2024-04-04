@@ -4,6 +4,7 @@ package be.vinci.pae.dal;
  * Interface of DALServicesImpl.
  */
 public interface DALServices {
+
   /**
    * Close the connection.
    */
@@ -23,4 +24,9 @@ public interface DALServices {
    * Rollback the transaction.
    */
   void rollback();
+
+  /**
+   * Open the connection.
+   */
+  void open();
 }
