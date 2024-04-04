@@ -2,17 +2,17 @@ import {clearPage} from "../../../utils/render";
 import {getToken, isAuthenticated} from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
-const StagePage = () => {
+const InternshipPage = () => {
   if (!isAuthenticated()) {
     Navigate('/login');
   } else {
     clearPage();
-    renderStagePage();
+    renderInternshipPage();
     document.title = "Stage";
   }
 }
 
-async function renderStagePage() {
+async function renderInternshipPage() {
   const stage = await getStage();
   const main = document.querySelector('main');
   main.className = 'd-flex flex-row justify-content-around align-items-center vh-100';
@@ -79,4 +79,4 @@ async function getStage() {
   return response.json();
 }
 
-export default StagePage;
+export default InternshipPage;
