@@ -61,6 +61,7 @@ public class UserUCCImpl implements UserUCC {
    * @return the registered user
    */
   public UserDTO register(UserDTO user) {
+    user.setEmail(user.getEmail().toLowerCase());
     if (!((User) user).defineRole(user.getEmail())) {
       throw new BadRequestException("Invalid role");
     }
@@ -76,7 +77,6 @@ public class UserUCCImpl implements UserUCC {
     user.setPassword(((User) user).hashPassword(user.getPassword()));
     Date registerDate = new Date(System.currentTimeMillis());
     user.setRegisterDate(registerDate);
-    user.setEmail(user.getEmail().toLowerCase());
 
     user = userDAO.addUser(user);
     dalServices.commit();
