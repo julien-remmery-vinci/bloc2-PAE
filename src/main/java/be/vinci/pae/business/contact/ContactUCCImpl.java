@@ -160,13 +160,23 @@ public class ContactUCCImpl implements ContactUCC {
           contactDAO.updateContact(c);
         }
       }
-      dalServices.commit();
       return contacts;
     } catch (Exception e) {
       dalServices.rollback();
       throw e;
     } finally {
+      dalServices.commit();
+    }
+  }
+
+  @Override
+  public List<ContactDTO> getAllContacts() {
+    try {
+      return contactDAO.getAllContacts();
+    } finally {
       dalServices.close();
     }
   }
+
+
 }
