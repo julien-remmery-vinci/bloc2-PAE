@@ -1,6 +1,6 @@
 import { clearPage, renderPageTitle } from "../../utils/render";
 import Navigate from "../Router/Navigate";
-import isAuthenticated from "../../utils/auths"; // Import the 'isAuthenticated' function
+import {isAuthenticated} from "../../utils/auths"; // Import the 'isAuthenticated' function
 
 const renderUser = (user) => {
   const main = document.querySelector('main');
@@ -34,7 +34,8 @@ const StudentInfoPage = () => {
         renderPageTitle("Informations de l'étudiant");
         document.title = "Informations de l'étudiant";
         clearPage();
-        const id = window.location.pathname.split('/').pop();
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
         fetchUserById(id);
         renderStudentInfoPage();
     } 

@@ -87,7 +87,7 @@ function renderUsers(users) {
 
     tr.addEventListener('click', () => {
       if (user.role === 'étudiant') {
-        Navigate(`/student-info/${user.idUser}`);
+        Navigate(`/student-info?id=${user.idUser}`);
       }
     });
 

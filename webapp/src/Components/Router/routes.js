@@ -24,7 +24,7 @@ const routes = {
     '/contact': ContactPage,
     '/profile': ProfilePage,
     '/stage': StagePage,
-    '/student-info/:id': StudentInfoPage,
+    '/student-info': StudentInfoPage,
 };
 
 export default routes;
