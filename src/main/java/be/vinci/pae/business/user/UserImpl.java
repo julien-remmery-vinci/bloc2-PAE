@@ -62,7 +62,7 @@ public class UserImpl implements User {
 
   @Override
   public void setEmail(String email) {
-    this.email = email;
+    this.email = email.toLowerCase();
   }
 
   @Override
