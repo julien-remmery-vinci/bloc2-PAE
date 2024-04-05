@@ -4,7 +4,6 @@ import be.vinci.pae.business.academicyear.AcademicYear;
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.contact.ContactDTO.State;
 import be.vinci.pae.business.user.UserDTO;
-import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
@@ -27,22 +26,22 @@ public class ContactUCCImpl implements ContactUCC {
   @Inject
   private AcademicYear academicYear;
 
-  /**
-   * Get the contact.
-   *
-   * @return the contact
-   */
   @Override
   public List<ContactDTO> getContacts(UserDTO user) {
     if (user == null) {
       throw new NotFoundException("User not found");
     }
-    List<ContactDTO> list;
-    if (user.getRole().equals(Role.STUDENT)) {
-      list = contactDAO.getContactsByStudentId(user.getIdUser());
-    } else {
-      list = contactDAO.getAllContacts();
+    List<ContactDTO> list = contactDAO.getAllContacts();
+    dalServices.close();
+    return list;
+  }
+
+  @Override
+  public List<ContactDTO> getContactsByStudentId(UserDTO user) {
+    if (user == null) {
+      throw new NotFoundException("User not found");
     }
+    List<ContactDTO> list = contactDAO.getContactsByStudentId(user.getIdUser());
     dalServices.close();
     return list;
   }
@@ -58,88 +57,108 @@ public class ContactUCCImpl implements ContactUCC {
    */
   @Override
   public ContactDTO refuseContact(int idContact, String refusalReason, int idUser) {
-    ContactDTO contact = contactDAO.getOneById(idContact);
+    ContactDTO contact;
+    try {
+      dalServices.open();
+      contact = contactDAO.getOneById(idContact);
 
-    if (contact == null) {
-      return null;
+      if (contact == null) {
+        return null;
+      }
+      if (contact.getIdStudent() != idUser) {
+        throw new NotFoundException("You don't have a contact with this id");
+      }
+      if (!((Contact) contact).updateState(State.TURNED_DOWN)) {
+        throw new PreconditionFailedException(
+            "Le contact doit être dans l'état 'pris' pour être refusé");
+      }
+      contact.setRefusalReason(refusalReason);
+      contactDAO.updateContact(contact);
+    } finally {
+      dalServices.close();
     }
-    if (contact.getIdStudent() != idUser) {
-      throw new NotFoundException("You don't have a contact with this id");
-    }
-    if (!((Contact) contact).updateState(State.TURNED_DOWN)) {
-      throw new PreconditionFailedException(
-          "Le contact doit être dans l'état 'pris' pour être refusé");
-    }
-    contact.setRefusalReason(refusalReason);
-    contactDAO.updateContact(contact);
-    dalServices.close();
     return contact;
   }
 
   @Override
   public ContactDTO addContact(ContactDTO contact) {
-    CompanyDTO companyDTO = companyDAO.getCompanyById(contact.getIdCompany());
-    if (companyDTO == null) {
-      throw new NotFoundException("L'entreprise n'existe pas.");
+    try {
+      dalServices.open();
+      CompanyDTO companyDTO = companyDAO.getCompanyById(contact.getIdCompany());
+      if (companyDTO == null) {
+        throw new NotFoundException("L'entreprise n'existe pas.");
+      }
+      if (contactDAO.getContactAccepted(contact.getIdStudent()) != null) {
+        throw new PreconditionFailedException("Vous avez déjà un contact accepté");
+      }
+      contact.setAcademicYear(academicYear.getAcademicYear());
+      if (contactDAO.getCompanyContact(contact.getIdStudent(), contact.getIdCompany(),
+          contact.getAcademicYear()) != null) {
+        throw new PreconditionFailedException(
+            "Vous avez déjà un contact avec cette entreprise pour cette année académique");
+      }
+      contact.setState(State.STARTED);
+      contact = contactDAO.addContact(contact);
+      contact.setCompany(companyDTO);
+    } finally {
+      dalServices.close();
     }
-    if (contactDAO.getContactAccepted(contact.getIdStudent()) != null) {
-      throw new PreconditionFailedException("Vous avez déjà un contact accepté");
-    }
-    contact.setAcademicYear(academicYear.getAcademicYear());
-    if (contactDAO.getCompanyContact(contact.getIdStudent(), contact.getIdCompany(),
-        contact.getAcademicYear()) != null) {
-      throw new PreconditionFailedException(
-          "Vous avez déjà un contact avec cette entreprise pour cette année académique");
-    }
-    contact.setState(State.STARTED);
-    contact = contactDAO.addContact(contact);
-    contact.setCompany(companyDTO);
-    dalServices.close();
     return contact;
   }
 
   @Override
   public ContactDTO meetContact(int id, String meetPlace, int idUser) {
-    Contact contact = (Contact) contactDAO.getOneById(id);
-    if (contact == null) {
-      return null;
+    Contact contact;
+    try {
+      dalServices.open();
+      contact = (Contact) contactDAO.getOneById(id);
+      if (contact == null) {
+        return null;
+      }
+      if (contact.getIdStudent() != idUser) {
+        throw new NotFoundException("You don't have a contact with this id");
+      }
+      if (!contact.updateState(State.ADMITTED)) {
+        throw new PreconditionFailedException(
+            "The contact must be in the state 'started' to be admitted");
+      }
+      contact.setState(State.ADMITTED);
+      contact.setMeetPlace(meetPlace);
+      contactDAO.updateContact(contact);
+    } finally {
+      dalServices.close();
     }
-    if (contact.getIdStudent() != idUser) {
-      throw new NotFoundException("You don't have a contact with this id");
-    }
-    if (!contact.updateState(State.ADMITTED)) {
-      throw new PreconditionFailedException(
-          "The contact must be in the state 'started' to be admitted");
-    }
-    contact.setState(State.ADMITTED);
-    contact.setMeetPlace(meetPlace);
-    contactDAO.updateContact(contact);
-    dalServices.close();
     return contact;
   }
 
   @Override
   public ContactDTO unfollowContact(int id, int idUser) {
-    Contact contact = (Contact) contactDAO.getOneById(id);
-    if (contact == null) {
-      return null;
+    Contact contact;
+    try {
+      dalServices.open();
+      contact = (Contact) contactDAO.getOneById(id);
+      if (contact == null) {
+        return null;
+      }
+      if (contact.getIdStudent() != idUser) {
+        throw new NotFoundException("You don't have a contact with this id");
+      }
+      if (!contact.updateState(State.UNSUPERVISED)) {
+        throw new PreconditionFailedException(
+            "The contact must be either in the state 'started' or 'admitted' to be unsupervised");
+      }
+      contact.setState(State.UNSUPERVISED);
+      contactDAO.updateContact(contact);
+    } finally {
+      dalServices.close();
     }
-    if (contact.getIdStudent() != idUser) {
-      throw new NotFoundException("You don't have a contact with this id");
-    }
-    if (!contact.updateState(State.UNSUPERVISED)) {
-      throw new PreconditionFailedException(
-          "The contact must be either in the state 'started' or 'admitted' to be unsupervised");
-    }
-    contact.setState(State.UNSUPERVISED);
-    contactDAO.updateContact(contact);
-    dalServices.close();
     return contact;
   }
 
   @Override
   public List<ContactDTO> getContactsByCompany(int idCompany) {
     try {
+      dalServices.open();
       CompanyDTO company = companyDAO.getCompanyById(idCompany);
       if (company == null) {
         throw new NotFoundException("Company not found");
