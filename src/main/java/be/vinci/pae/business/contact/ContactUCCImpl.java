@@ -4,7 +4,6 @@ import be.vinci.pae.business.academicyear.AcademicYear;
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.contact.ContactDTO.State;
 import be.vinci.pae.business.user.UserDTO;
-import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
@@ -27,11 +26,6 @@ public class ContactUCCImpl implements ContactUCC {
   @Inject
   private AcademicYear academicYear;
 
-  /**
-   * Get the contact.
-   *
-   * @return the contact
-   */
   @Override
   public List<ContactDTO> getContacts(UserDTO user) {
     List<ContactDTO> list;

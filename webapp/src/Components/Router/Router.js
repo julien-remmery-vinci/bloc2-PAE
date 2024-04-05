@@ -32,10 +32,10 @@ function onNavBarClick() {
 
 // Function to handle history change events
 function onHistoryChange() {
-  window.addEventListener('popstate', () => {
+  window.addEventListener('popstate', (event) => {
     const uri = window.location.pathname;
     const componentToRender = routes[uri];
-    componentToRender();
+    componentToRender(event.state);
   });
 }
 
