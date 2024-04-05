@@ -9,6 +9,8 @@ import ContactPage from "../Pages/contacts/ContactPage";
 import ProfilePage from "../Pages/ProfilePage";
 import Logout from "../Logout/Logout";
 import InternshipPage from "../Pages/stage/InternshipPage";
+import DashboardPage from "../Pages/DashboardPage";
+import CompanyPage from "../Pages/companies/CompanyPage";
 import StudentInfoPage from "../Pages/StudentInfoPage";
 import AddInternshipPage from "../Pages/stage/AddInternshipPage";
 
@@ -24,7 +26,13 @@ const routes = {
     '/contact/meet': MeetContactPage,
     '/contact': ContactPage,
     '/profile': ProfilePage,
+<<<<<<< HEAD
     '/stage': InternshipPage,
+=======
+    '/stage': StagePage,
+    '/dashboard': DashboardPage,
+    '/company': CompanyPage,
+>>>>>>> 17f1d00191ef721ba95ae8cdf99cb3df48e08566
     '/student-info': StudentInfoPage,
     '/stage/add': AddInternshipPage,
 };

@@ -1,11 +1,15 @@
 package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.company.CompanyUCC;
+import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.dal.company.CompanyDAO;
+import be.vinci.pae.presentation.exceptions.ConflictException;
+import be.vinci.pae.presentation.exceptions.NotFoundException;
 import java.util.ArrayList;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
@@ -22,6 +26,7 @@ public class CompanyUCCTest {
 
   static ServiceLocator locator;
   private static CompanyUCC companyUCC;
+  private static ContactUCC contactUCC;
   private static CompanyDAO companyDAO;
   private static Factory factory;
   CompanyDTO company;
@@ -30,15 +35,17 @@ public class CompanyUCCTest {
   static void beforeAll() {
     locator = ServiceLocatorUtilities.bind(new ApplicationBinderTest());
     companyUCC = locator.getService(CompanyUCC.class);
+    contactUCC = locator.getService(ContactUCC.class);
     factory = locator.getService(Factory.class);
     companyDAO = locator.getService(CompanyDAO.class);
   }
 
   @BeforeEach
   void setUp() {
-    company = (CompanyDTO) factory.getCompany();
+    company = factory.getCompany();
     company.setIdCompany(1);
-
+    company.setBlacklisted(false);
+    Mockito.when(companyDAO.getCompanyById(1)).thenReturn(company);
   }
 
   @Test
@@ -51,8 +58,37 @@ public class CompanyUCCTest {
   @Test
   @DisplayName("Test get company by id method when the company exists")
   void testGetCompanyById() {
-    Mockito.when(companyDAO.getCompanyById(1)).thenReturn(company);
     assertNotNull(companyUCC.getCompanyById(1));
+  }
+
+  @Test
+  @DisplayName("for for blacklistCompany method")
+  void blacklistCompanyTest() {
+    int idCompany = 1;
+    String refusalReason = "Test";
+    assertNotNull(companyUCC.blacklistCompany(idCompany, refusalReason));
+  }
+
+  @Test
+  @DisplayName("for for blacklistCompany method with wrong id")
+  void blacklistCompanyWrongIdTest() {
+    int idCompany = 1;
+    String refusalReason = "Test";
+    Mockito.when(companyDAO.getCompanyById(idCompany)).thenReturn(null);
+    assertThrows(NotFoundException.class,
+        () -> companyUCC.blacklistCompany(idCompany, refusalReason));
+  }
+
+  @Test
+  @DisplayName("for for blacklistCompany method with wrong state")
+  void blacklistCompanyWrongStateTest() {
+    int idCompany = 1;
+    String refusalReason = "Test";
+    CompanyDTO company = factory.getCompany();
+    company.setBlacklisted(true);
+    Mockito.when(companyDAO.getCompanyById(idCompany)).thenReturn(company);
+    assertThrows(ConflictException.class,
+        () -> companyUCC.blacklistCompany(idCompany, refusalReason));
   }
 
 
