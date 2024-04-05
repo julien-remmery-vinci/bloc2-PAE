@@ -73,13 +73,12 @@ public class CompanyUCCImpl implements CompanyUCC {
       ArrayList<Object> list = new ArrayList<>();
       list.add(company);
       list.addAll(contactUCC.blacklistContacts(idCompany));
-      dalServices.commit();
       return list;
     } catch (Exception e) {
       dalServices.rollback();
       throw e;
     } finally {
-      dalServices.close();
+      dalServices.commit();
     }
   }
 }
