@@ -100,4 +100,11 @@ public class UserRessource {
     return userUCC.getUser(id);
   }
 
+  @GET
+  @Path("/students")
+  @Produces(MediaType.APPLICATION_JSON)
+  public List<UserDTO> getStudents() {
+    return userUCC.getStudents();
+  }
+
 }
