@@ -1,6 +1,6 @@
 import { clearPage, renderPageTitle } from "../../utils/render";
 import Navigate from "../Router/Navigate";
-import {isAuthenticated} from "../../utils/auths"; // Import the 'isAuthenticated' function
+import {isAuthenticated, getToken} from "../../utils/auths"; // Import the 'isAuthenticated' function
 
 const fetchUserById = async (id) => {
   try {
@@ -13,6 +13,17 @@ const fetchUserById = async (id) => {
   } catch (error) {
     console.error(error);
   }
+};
+
+async function getContacts() {
+  const response = await fetch('http://localhost:3000/contacts', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': getToken()
+    }
+  });
+  return response.json();
 }
 
 const StudentInfoPage = () => {
@@ -26,7 +37,8 @@ const StudentInfoPage = () => {
       const id = urlParams.get('id');
       fetchUserById(id);
       renderUser();
-  } 
+      getContacts();
+  }
 };
 
 
@@ -38,11 +50,21 @@ function renderUser(user) {
       <div class="col">
         <h1>Informations de l'étudiant</h1>
         <p>Voici les informations de l'étudiant</p>
-        <p>Nom: ${user.name}</p>
-        <p>Prénom: ${user.firstname}</p>
-        <p>Email: ${user.email}</p>
-        <p>Role: ${user.role}</p>
+        <p>Nom: ${user?.lastname}</p>
+        <p>Prénom: ${user?.firstname}</p>
+        <p>Email: ${user?.email}</p>
+        <p>Numéro de téléphone: ${user?.phoneNumber}</p>
       </div>
+      <div class="col">
+        <h1>Contacts de l'étudiant</h1>
+        <table class="table table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th>Entreprise</th>
+            <th>Etat</th>
+          </tr>
+        </thead>
+        <tbody>
     </div>
   </div>
   `;
