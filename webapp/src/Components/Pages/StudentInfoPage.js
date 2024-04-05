@@ -1,6 +1,6 @@
 import { clearPage, renderPageTitle } from "../../utils/render";
 import Navigate from "../Router/Navigate";
-import {isAuthenticated, getToken} from "../../utils/auths"; // Import the 'isAuthenticated' function
+import {isAuthenticated, getToken} from "../../utils/auths";
 
 const fetchUserById = async (id) => {
   try {
@@ -37,7 +37,7 @@ const StudentInfoPage = () => {
       const id = urlParams.get('id');
       fetchUserById(id);
       renderUser();
-      getContacts();
+      getContacts().then(contacts => renderContacts(contacts));
   }
 };
 
@@ -69,5 +69,17 @@ function renderUser(user) {
   </div>
   `;
 };
+
+function renderContacts(contacts) {
+  const tbody = document.querySelector('tbody');
+  contacts.forEach(contact => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${contact.company.tradeName} - ${contact.company.designation || 'Pas de désignation'}</td>
+      <td>${contact.state}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
 
 export default StudentInfoPage;
