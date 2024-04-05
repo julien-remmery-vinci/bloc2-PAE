@@ -26,13 +26,9 @@ const routes = {
     '/contact/meet': MeetContactPage,
     '/contact': ContactPage,
     '/profile': ProfilePage,
-<<<<<<< HEAD
     '/stage': InternshipPage,
-=======
-    '/stage': StagePage,
     '/dashboard': DashboardPage,
     '/company': CompanyPage,
->>>>>>> 17f1d00191ef721ba95ae8cdf99cb3df48e08566
     '/student-info': StudentInfoPage,
     '/stage/add': AddInternshipPage,
 };
