@@ -136,6 +136,7 @@ async function onSubmit(event) {
     };
     if (contactState === 'true') {
         // TODO add accept contact
+        Navigate('/stage/add');
     } else {
         fetch(`http://localhost:3000/contacts/${queryParams.get('id')}/refuse`, options)
         .then(request => {

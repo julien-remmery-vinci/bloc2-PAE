@@ -10,6 +10,7 @@ import ProfilePage from "../Pages/ProfilePage";
 import Logout from "../Logout/Logout";
 import InternshipPage from "../Pages/stage/InternshipPage";
 import StudentInfoPage from "../Pages/StudentInfoPage";
+import AddInternshipPage from "../Pages/stage/AddInternshipPage";
 
 // Define routes
 const routes = {
@@ -25,6 +26,7 @@ const routes = {
     '/profile': ProfilePage,
     '/stage': InternshipPage,
     '/student-info': StudentInfoPage,
+    '/stage/add': AddInternshipPage,
 };
 
 export default routes;
