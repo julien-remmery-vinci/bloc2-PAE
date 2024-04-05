@@ -4,6 +4,7 @@ import be.vinci.pae.business.academicyear.AcademicYear;
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.contact.ContactDTO.State;
 import be.vinci.pae.business.user.UserDTO;
+import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
@@ -45,15 +46,17 @@ public class ContactUCCImpl implements ContactUCC {
     }
   }
 
+  @Override
+  public List<ContactDTO> getContactsByStudentId(UserDTO user) {
+    if (user == null) {
+      throw new NotFoundException("User not found");
+    }
+    List<ContactDTO> list = contactDAO.getContactsByStudentId(user.getIdUser());
+    dalServices.close();
+    return list;
+  }
 
-  /**
-   * Refuse a contact.
-   *
-   * @param idContact     the id of the contact
-   * @param refusalReason the refusal reason
-   * @param idUser        the id of the user
-   * @return the contact
-   */
+
   @Override
   public ContactDTO refuseContact(int idContact, String refusalReason, int idUser) {
     try {
