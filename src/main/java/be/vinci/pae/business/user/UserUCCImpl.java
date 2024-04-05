@@ -115,4 +115,16 @@ public class UserUCCImpl implements UserUCC {
     dalServices.close();
     return user;
   }
+
+  @Override
+  public List<UserDTO> getStudents() {
+    try {
+      return userDAO.getStudents();
+    } catch (Exception e) {
+      dalServices.close();
+      throw e;
+    } finally {
+      dalServices.close();
+    }
+  }
 }
