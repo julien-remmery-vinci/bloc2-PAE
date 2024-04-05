@@ -1,3 +1,4 @@
+import Chart from 'chart.js/auto';
 import {isAuthenticated} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
 import {clearPage} from "../../utils/render";
@@ -31,6 +32,7 @@ async function buildPage() {
   companiesDiv.id = 'companies';
   companies = await getCompanies();
   renderStats();
+  renderGraph(getCurrentAcademicYear());
   renderCompanies(getCurrentAcademicYear());
 }
 
@@ -60,8 +62,96 @@ function renderStats() {
   select.appendChild(option);
   select.addEventListener('change', (e) => {
     renderCompanies(e.target.value);
+    renderGraph(e.target.value);
   });
   div.appendChild(select);
+}
+
+async function renderGraph(academicYear) {
+  const graph = document.getElementById('graph');
+  if(graph) {
+    graph.remove();
+  }
+  const div = document.getElementById('stats');
+  const graphDiv = document.createElement('div');
+  graphDiv.id = 'graph';
+
+  // nb of students by academic year
+  const response = await fetch('http://localhost:3000/users/students');
+  const result = await response.json();
+
+  // nb of students for all academic years or for a specific academic year
+  let nbStudents = 0;
+  if(academicYear === 'all') {
+    nbStudents = result.length;
+  }
+  else {
+    const years = {};
+    result.forEach(student => {
+      const year = getAcademicYearFromRegisterDate(student.registerDate);
+      if(years[year] === undefined) {
+        years[year] = 1;
+      }
+      else {
+        years[year] += 1;
+      }
+    });
+    const stillSearching = result.filter(student =>
+      getAcademicYearFromRegisterDate(student.registerDate) !== student.academicYear
+    )
+    nbStudents = years[academicYear] || stillSearching.length;
+  }
+
+  // problem : a student has not found an internship in its registration year
+  // he has to find one in the next year, but he is not counted in the total number of students for that year
+  // trying to solve here
+
+  const nbStudentsWithInternship = getNbStudentsWithIntership(academicYear);
+  const nbStudentsWithoutInternship = nbStudents - nbStudentsWithInternship;
+  console.log(nbStudents, nbStudentsWithInternship, nbStudentsWithoutInternship)
+
+  async function showGraph() {
+    const canvas = document.createElement('canvas');
+    new Chart(canvas, {
+      type: 'pie',
+      data: {
+        labels: ['Ont un stage', 'Pas de stage'],
+        datasets: [{
+          label: `Nombre d'étudiants`,
+          data: [
+            nbStudentsWithInternship,
+            nbStudentsWithoutInternship
+          ],
+          backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)'
+          ],
+        }]
+      }
+    });
+    canvas.style.width = '60%';
+    canvas.style.height = '60 %';
+    canvas.style.margin = '10px auto';
+    graphDiv.appendChild(canvas);
+
+    const p = document.createElement('p');
+    p.textContent = `Nombre d'étudiants : ${nbStudents}`;
+    p.style.textAlign = 'center';
+    graphDiv.appendChild(p);
+    div.appendChild(graphDiv);
+  }
+
+  showGraph();
+}
+
+function getAcademicYearFromRegisterDate(registerDate) {
+  const date = new Date(registerDate);
+  const month = date.getMonth();
+  const year = date.getFullYear();
+  if(month+1 >= 9) {
+    return `${year}-${year + 1}`;
+  }
+  return `${year - 1}-${year}`;
 }
 
 function renderCompanies(academicYear) {
@@ -112,7 +202,7 @@ function renderCompanies(academicYear) {
     td1.textContent = company.tradeName;
     td2.textContent = company.designation;
     td3.textContent = company.phoneNumber;
-    td4.textContent = getNbStudents(company.idCompany, academicYear)
+    td4.textContent = getNbStudentsWithIntershipForCompany(company.idCompany, academicYear)
     td5.textContent = company.blacklisted ? "oui" : "non";
     trow.appendChild(td1);
     trow.appendChild(td2);
@@ -136,7 +226,7 @@ async function getCompanies() {
   return response.json();
 }
 
-function getNbStudents (companyId, academicYear) {
+function getNbStudentsWithIntershipForCompany(companyId, academicYear) {
   let nbStudents = 0;
   const index = companies.findIndex(company => company.idCompany === companyId);
 
@@ -156,6 +246,50 @@ function getNbStudents (companyId, academicYear) {
   return nbStudents;
 }
 
+// function getNbStudents(academicYear) {
+//   const students = [];
+//   if (academicYear === undefined || academicYear === 'all') {
+//     companies.forEach(company => {
+//       company.contacts.forEach(contact => {
+//         if(!students.includes(contact.idStudent)) {
+//           students.push(contact.idStudent);
+//         }
+//       });
+//     });
+//     return students.length;
+//   }
+//   companies.forEach(company => {
+//     company.contacts.forEach(contact => {
+//       if(contact.academicYear === academicYear && !students.includes(contact.idStudent)) {
+//         students.push(contact.idStudent);
+//       }
+//     });
+//   });
+//   return students.length;
+// }
+
+function getNbStudentsWithIntership(academicYear) {
+  const students = [];
+  if (academicYear === undefined || academicYear === 'all') {
+    companies.forEach(company => {
+      company.contacts.forEach(contact => {
+        if(!students.includes(contact.idStudent) && contact.state === 'accepté') {
+          students.push(contact.idStudent);
+        }
+      });
+    });
+    return students.length;
+  }
+  companies.forEach(company => {
+    company.contacts.forEach(contact => {
+      if(contact.academicYear === academicYear && !students.includes(contact.idStudent) && contact.state === 'accepté') {
+        students.push(contact.idStudent);
+      }
+    });
+  });
+  return students.length;
+}
+
 function getAcademicYears() {
   const academicYears = [];
   companies.forEach(company => {
@@ -172,7 +306,7 @@ function getCurrentAcademicYear() {
   const date = new Date();
   const month = date.getMonth();
   const year = date.getFullYear();
-  if(month >= 9) {
+  if(month+1 >= 9) {
     return `${year}-${year + 1}`;
   }
   return `${year - 1}-${year}`;
