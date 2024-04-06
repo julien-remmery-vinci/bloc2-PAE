@@ -14,30 +14,49 @@ const InternshipPage = () => {
 
 async function renderInternshipPage() {
     const main = document.querySelector('main');
-    main.className = 'd-flex flex-row justify-content-around align-items-center vh-100';
-    const stageSection = document.createElement('section');
-    const responsibleSection = document.createElement('section');
-    stageSection.innerHTML = `
-    <h2>Mon stage</h2>
-    <p>Vous n'avez pas encore de stage pour cette année</p>
-    `;
-    responsibleSection.innerHTML = `
-        <h2>Inscrire un responsable</h2>
-        <form class="p-5 w-150 bg-light rounded shadow col-md-8">
-            <label for="name" class="fw-bold mb-1">Nom:</label><br>
-            <input type="text" id="name" name="name" class="form-control mb-3"><br>
-            <label for="name" class="fw-bold mb-1">Prénom:</label><br>
-            <input type="text" id="firstname" name="firstname" class="form-control mb-3"><br>
-            <label for="phone" class="fw-bold mb-1">Téléphone:</label><br>
-            <input type="tel" id="phone" name="phone" class="form-control mb-3"><br>
-            <label for="email" class="fw-bold mb-1">Email:</label><br>
-            <input type="email" id="email" name="email" class="form-control mb-3">
-            <button type="submit" class="btn btn-primary mt-3">Sauver</button>
-        </form>
-    `;
-    main.appendChild(stageSection);
-    main.appendChild(responsibleSection);
-
+    const title = document.createElement('h3');
+    title.textContent = 'Ajouter un stage';
+    title.style.textAlign = 'center';
+    main.appendChild(title);
+    const mainDiv = document.createElement('div');
+    mainDiv.style.display = 'flex';
+    const leftDiv = document.createElement('div');
+    leftDiv.style.width = '50%';
+    leftDiv.appendChild(getInternshipInfos());
+    const rightDiv = document.createElement('div');
+    rightDiv.style.width = '50%';
+    mainDiv.appendChild(leftDiv);
+    main.appendChild(mainDiv);
 }
+
+function getInternshipInfos() {
+    const queryParams = new URLSearchParams(window.location.search);
+    const contactInfosDiv = document.createElement('div');
+    contactInfosDiv.className = 'p-5';
+    const entrepriseName = document.createElement('label');
+    entrepriseName.textContent = 'Entreprise';
+    contactInfosDiv.appendChild(entrepriseName);
+    const entrepriseNameValue = document.createElement('input');
+    entrepriseNameValue.type = 'text';
+    console.log(queryParams);
+    console.log(queryParams.get('tradename'));
+    entrepriseNameValue.value = queryParams.get('tradename');
+    entrepriseNameValue.readOnly = true;
+    entrepriseNameValue.className = 'bg-info form-control';
+    contactInfosDiv.appendChild(entrepriseNameValue);
+    if(queryParams.get('designation') !== 'null'){
+        const entrepriseDesignation = document.createElement('label');
+        entrepriseDesignation.textContent = 'Appellation';
+        const entrepriseDesignationValue = document.createElement('input');
+        entrepriseDesignationValue.type = 'text';
+        entrepriseDesignationValue.value = queryParams.get('designation');
+        entrepriseDesignationValue.readOnly = true;
+        entrepriseDesignationValue.className = 'bg-info form-control';
+        contactInfosDiv.appendChild(entrepriseDesignation);
+        contactInfosDiv.appendChild(entrepriseDesignationValue);
+    }
+    return contactInfosDiv;
+}
+
 
 export default InternshipPage;
