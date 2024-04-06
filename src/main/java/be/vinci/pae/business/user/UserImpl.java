@@ -19,7 +19,7 @@ public class UserImpl implements User {
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
   private String phoneNumber;
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yy hh:mm:ss")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   private Date registerDate;
   private Role role;
   private String academicYear;
@@ -142,7 +142,7 @@ public class UserImpl implements User {
       return true;
     } else {
       return !email.matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@vinci\\.be$")
-              || this.role != Role.STUDENT;
+          || this.role != Role.STUDENT;
     }
   }
 
