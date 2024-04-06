@@ -22,14 +22,16 @@ async function buildPage() {
   const rowDiv = document.createElement('div');
   rowDiv.className = 'row';
   const colDiv1 = document.createElement('div');
-  colDiv1.className = 'col';
+  colDiv1.className = 'col-6';
   const colDiv2 = document.createElement('div');
-  colDiv2.className = 'col';
+  colDiv2.className = 'col-6';
+
   const title = document.createElement('h3');
   title.textContent = 'Ajouter un nouveau contact';
   title.style.textAlign = 'center';
   title.style.marginBottom = '5%';
   main.appendChild(title);
+
   const company = document.createElement('label');
   company.textContent = 'Entreprise';
   company.style.marginLeft = '15%';
@@ -116,7 +118,7 @@ async function buildPage() {
   submit.className = 'btn btn-primary';
   submit.style.marginBottom = '25%';
   submit.style.marginLeft = '15%';
-  submit.style.width = '25%';
+  submit.style.width = '50%';
   colDiv1.appendChild(submit);
   rowDiv.appendChild(colDiv1);
   containerDiv.appendChild(rowDiv);
@@ -124,71 +126,67 @@ async function buildPage() {
 
   submit.addEventListener('click', onSubmit);
 
-
   const createCompanyButton = document.createElement('button');
   createCompanyButton.textContent = 'Ajouter une entreprise non répertoriée';
   createCompanyButton.className = 'btn btn-secondary';
   colDiv2.style.marginBottom = '50%';
-  colDiv2.style.marginLeft = '50%';
-  colDiv2.style.width = '25%';
   colDiv2.appendChild(createCompanyButton);
+  rowDiv.appendChild(colDiv2);
 
   createCompanyButton.addEventListener('click', () => {
-    const form = document.createElement('form');
-    form.id = 'companyForm';
+      if (document.getElementById('companyForm')) {
+      return;
+      }
+      const form = document.createElement('form');
+      form.id = 'companyForm';
 
-    const nameLabel = document.createElement('label');
-    nameLabel.textContent = 'Nom';
-    form.appendChild(nameLabel);
-    const nameInput = document.createElement('input');
-    nameInput.type = 'text';
-    nameInput.className = 'form-control';
-    nameInput.required = true;
-    form.appendChild(nameInput);
+      const nameLabel = document.createElement('label');
+      nameLabel.textContent = 'Nom';
+      form.appendChild(nameLabel);
+      const nameInput = document.createElement('input');
+      nameInput.type = 'text';
+      nameInput.className = 'form-control';
+      nameInput.required = true;
+      form.appendChild(nameInput);
 
-    const addressLabel = document.createElement('label');
-    addressLabel.textContent = 'Adresse';
-    form.appendChild(addressLabel);
-    const addressInput = document.createElement('input');
-    addressInput.type = 'text';
-    addressInput.className = 'form-control';
-    addressInput.required = true;
-    form.appendChild(addressInput);
+      const addressLabel = document.createElement('label');
+      addressLabel.textContent = 'Adresse';
+      form.appendChild(addressLabel);
+      const addressInput = document.createElement('input');
+      addressInput.type = 'text';
+      addressInput.className = 'form-control';
+      addressInput.required = true;
+      form.appendChild(addressInput);
 
-    const phoneLabel = document.createElement('label');
-    phoneLabel.textContent = 'Numero de téléphone';
-    form.appendChild(phoneLabel);
-    const phoneInput = document.createElement('input');
-    phoneInput.type = 'text';
-    phoneInput.className = 'form-control';
-    phoneInput.required = false;
-    form.appendChild(phoneInput);
+      const phoneLabel = document.createElement('label');
+      phoneLabel.textContent = 'Numero de téléphone';
+      form.appendChild(phoneLabel);
+      const phoneInput = document.createElement('input');
+      phoneInput.type = 'text';
+      phoneInput.className = 'form-control';
+      phoneInput.required = false;
+      form.appendChild(phoneInput);
 
-    const appellationLabel = document.createElement('label');
-    appellationLabel.textContent = 'Appellation';
-    form.appendChild(appellationLabel);
-    const appellationInput = document.createElement('input');
-    appellationInput.type = 'text';
-    appellationInput.className = 'form-control';
-    appellationInput.required = false;
-    form.appendChild(appellationInput);
+      const appellationLabel = document.createElement('label');
+      appellationLabel.textContent = 'Appellation';
+      form.appendChild(appellationLabel);
+      const appellationInput = document.createElement('input');
+      appellationInput.type = 'text';
+      appellationInput.className = 'form-control';
+      appellationInput.required = false;
+      form.appendChild(appellationInput);
 
-    const submitButton = document.createElement('input');
-    submitButton.type = 'submit';
-    submitButton.value = "Ajouter l'entreprise";
-    submitButton.className = 'btn btn-primary';
+      const submitButton = document.createElement('input');
+      submitButton.type = 'submit';
+      submitButton.value = "Ajouter l'entreprise";
+      submitButton.className = 'btn btn-primary';
+      form.appendChild(submitButton);
 
-    form.appendChild(submitButton);
-    rowDiv.appendChild(form);
-
-    colDiv2.appendChild(form);
-    rowDiv.appendChild(colDiv2);
-    containerDiv.appendChild(rowDiv);
-    main.appendChild(containerDiv);
+      colDiv2.appendChild(form);
+      containerDiv.appendChild(rowDiv);
+      main.appendChild(containerDiv);
   });
-  main.appendChild(colDiv2);
 }
-
 // fetch function to get all entreprises
 async function getCompanies() {
   const response = await fetch('http://localhost:3000/companies', {
