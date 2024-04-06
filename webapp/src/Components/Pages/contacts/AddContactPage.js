@@ -17,6 +17,14 @@ const AddContactPage = () => {
 async function buildPage() {
   const companyList = await getCompanies();
   const main = document.querySelector('main');
+  const containerDiv = document.createElement('div');
+  containerDiv.className = 'container';
+  const rowDiv = document.createElement('div');
+  rowDiv.className = 'row';
+  const colDiv1 = document.createElement('div');
+  colDiv1.className = 'col';
+  const colDiv2 = document.createElement('div');
+  colDiv2.className = 'col';
   const title = document.createElement('h3');
   title.textContent = 'Ajouter un nouveau contact';
   title.style.textAlign = 'center';
@@ -25,7 +33,7 @@ async function buildPage() {
   const company = document.createElement('label');
   company.textContent = 'Entreprise';
   company.style.marginLeft = '15%';
-  main.appendChild(company);
+  colDiv1.appendChild(company);
   const companies = document.createElement('select');
 
   companies.className = 'form-control';
@@ -45,12 +53,12 @@ async function buildPage() {
     companies.appendChild(option);
   });
 
-  main.appendChild(companies);
+  colDiv1.appendChild(companies);
 
   const designation = document.createElement('label');
   designation.textContent = 'Appellation';
   designation.style.marginLeft = '15%';
-  main.appendChild(designation);
+  colDiv1.appendChild(designation);
 
   const designations = document.createElement('select');
   designations.id = 'designation';
@@ -58,7 +66,7 @@ async function buildPage() {
   designations.style.width = '25%';
   designations.style.marginLeft = '15%';
 
-  main.appendChild(designations);
+  colDiv1.appendChild(designations);
 
   companies.addEventListener('change', (e) => {
     const alert = document.querySelector('#alert');
@@ -100,7 +108,7 @@ async function buildPage() {
   alert.style.marginLeft = '15%';
   alert.style.width = '40%';
   alert.hidden = true;
-  main.appendChild(alert);
+  colDiv1.appendChild(alert);
 
   const submit = document.createElement('input');
   submit.value = 'Enregistrer';
@@ -109,18 +117,21 @@ async function buildPage() {
   submit.style.marginBottom = '25%';
   submit.style.marginLeft = '15%';
   submit.style.width = '25%';
-  main.appendChild(submit);
+  colDiv1.appendChild(submit);
+  rowDiv.appendChild(colDiv1);
+  containerDiv.appendChild(rowDiv);
+  main.appendChild(containerDiv);
 
   submit.addEventListener('click', onSubmit);
 
+
   const createCompanyButton = document.createElement('button');
-  const divv = document.createElement('div');
   createCompanyButton.textContent = 'Ajouter une entreprise non répertoriée';
   createCompanyButton.className = 'btn btn-secondary';
-  divv.style.marginBottom = '50%';
-  divv.style.marginLeft = '50%';
-  divv.style.width = '25%';
-  divv.appendChild(createCompanyButton);
+  colDiv2.style.marginBottom = '50%';
+  colDiv2.style.marginLeft = '50%';
+  colDiv2.style.width = '25%';
+  colDiv2.appendChild(createCompanyButton);
 
   createCompanyButton.addEventListener('click', () => {
     const form = document.createElement('form');
@@ -164,13 +175,18 @@ async function buildPage() {
 
     const submitButton = document.createElement('input');
     submitButton.type = 'submit';
-    submitButton.value = 'Create Company';
+    submitButton.value = "Ajouter l'entreprise";
     submitButton.className = 'btn btn-primary';
-    form.appendChild(submitButton);
 
-    divv.appendChild(form);
+    form.appendChild(submitButton);
+    rowDiv.appendChild(form);
+
+    colDiv2.appendChild(form);
+    rowDiv.appendChild(colDiv2);
+    containerDiv.appendChild(rowDiv);
+    main.appendChild(containerDiv);
   });
-  main.appendChild(divv);
+  main.appendChild(colDiv2);
 }
 
 // fetch function to get all entreprises
