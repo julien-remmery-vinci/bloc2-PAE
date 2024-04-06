@@ -60,8 +60,9 @@ public class CompanyDAOImpl implements CompanyDAO {
   @Override
   public CompanyDTO addCompany(CompanyDTO company) {
     try (PreparedStatement ps = dalServices.getPS(
-        "INSERT INTO pae.companies (company_tradename, company_designation, company_address, "
-            + "company_phonenumber, company_email, company_blacklisted, company_blacklistmotivation) "
+        "INSERT INTO pae.companies (company_tradename, company_designation,"
+            + " company_address, company_phonenumber, company_email, "
+            + "company_blacklisted, company_blacklistmotivation) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING company_idCompany;")) {
       ps.setInt(1, company.getIdCompany());
       ps.setString(2, company.getTradeName());
@@ -86,9 +87,11 @@ public class CompanyDAOImpl implements CompanyDAO {
   @Override
   public CompanyDTO updateCompany(CompanyDTO company) {
     try (PreparedStatement ps = dalServices.getPS(
-        "UPDATE pae.companies SET company_tradename = ?, company_designation = ?, company_address = ?, "
-            + "company_phonenumber = ?, company_email = ?, company_blacklisted = ?, company_blacklistmotivation = ?, "
-            + "company_version = company_version + 1 WHERE company_idCompany = ? AND company_version = ? RETURNING *")) {
+        "UPDATE pae.companies SET company_tradename = ?, company_designation = ?,"
+            + " company_address = ?, company_phonenumber = ?, company_email = ?,"
+            + " company_blacklisted = ?, company_blacklistmotivation = ?, "
+            + "company_version = company_version + 1 WHERE company_idCompany = ?"
+            + " AND company_version = ? RETURNING *")) {
       ps.setString(1, company.getTradeName());
       ps.setString(2, company.getDesignation());
       ps.setString(3, company.getAddress());
