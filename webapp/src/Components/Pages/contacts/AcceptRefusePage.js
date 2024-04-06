@@ -136,7 +136,9 @@ async function onSubmit(event) {
     };
     if (contactState === 'true') {
         // TODO add accept contact
-        Navigate('/stage/add');
+        let url = window.location.href;
+        url = `/stage/add?id=${queryParams.get('id')}&tradename=${queryParams.get('tradename')}&designation=${queryParams.get('designation')}`;
+        Navigate(url);
     } else {
         fetch(`http://localhost:3000/contacts/${queryParams.get('id')}/refuse`, options)
         .then(request => {
