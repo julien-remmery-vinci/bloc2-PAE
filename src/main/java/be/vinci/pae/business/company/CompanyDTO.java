@@ -53,6 +53,19 @@ public interface CompanyDTO {
    * @return the address of the company
    */
   String getAddress();
+  /**
+   * Set the city of the company.
+   *
+   * @param city the city of the company
+   */
+  void setCity(String city);
+
+  /**
+   * Get the city of the company.
+   *
+   * @return the city of the company
+   */
+  String getCity();
 
   /**
    * Set the address of the company.
