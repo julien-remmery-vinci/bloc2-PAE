@@ -38,8 +38,6 @@ function getInternshipInfos() {
     contactInfosDiv.appendChild(entrepriseName);
     const entrepriseNameValue = document.createElement('input');
     entrepriseNameValue.type = 'text';
-    console.log(queryParams);
-    console.log(queryParams.get('tradename'));
     entrepriseNameValue.value = queryParams.get('tradename');
     entrepriseNameValue.readOnly = true;
     entrepriseNameValue.className = 'bg-info form-control';
