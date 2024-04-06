@@ -4,6 +4,8 @@ import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.company.CompanyUCC;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.contact.ContactUCC;
+import be.vinci.pae.business.user.UserDTO;
+import be.vinci.pae.presentation.filters.Authorize;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -17,8 +19,10 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import java.util.List;
+import org.glassfish.jersey.server.ContainerRequest;
 
 /**
  * Company route.
@@ -67,6 +71,17 @@ public class CompanyRessource {
     }
     result.put("contacts", o);
     return result;
+  }
+
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public CompanyDTO addCompany(CompanyDTO company) {
+    if (company.getTradeName() == null || company.getAddress() == null) {
+      throw new BadRequestException("Name or adress is missing");
+    }
+    return companyUCC.addCompany(company);
   }
 
   @GET

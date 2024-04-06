@@ -58,6 +58,32 @@ public class CompanyDAOImpl implements CompanyDAO {
   }
 
   @Override
+  public CompanyDTO addCompany(CompanyDTO company) {
+    try (PreparedStatement ps = dalServices.getPS(
+        "INSERT INTO pae.companies (company_tradename, company_designation, company_address, "
+            + "company_phonenumber, company_email, company_blacklisted, company_blacklistmotivation) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING company_idCompany;")) {
+      ps.setInt(1, company.getIdCompany());
+      ps.setString(2, company.getTradeName());
+      ps.setString(3, company.getDesignation());
+      ps.setString(4, company.getAddress());
+      ps.setString(5, company.getPhoneNumber());
+      ps.setString(6, company.getEmail());
+      ps.setBoolean(7, company.isBlacklisted());
+      ps.setString(8, company.getBlacklistMotivation());
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          company.setIdCompany(rs.getInt(1));
+          return company;
+        }
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return null;
+  }
+
+  @Override
   public CompanyDTO updateCompany(CompanyDTO company) {
     try (PreparedStatement ps = dalServices.getPS(
         "UPDATE pae.companies SET company_tradename = ?, company_designation = ?, company_address = ?, "
