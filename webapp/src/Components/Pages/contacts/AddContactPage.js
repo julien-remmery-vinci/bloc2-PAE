@@ -185,6 +185,8 @@ async function buildPage() {
       colDiv2.appendChild(form);
       containerDiv.appendChild(rowDiv);
       main.appendChild(containerDiv);
+
+      submitButton.addEventListener('click', createSubmit);
   });
 }
 // fetch function to get all entreprises
@@ -199,7 +201,33 @@ async function getCompanies() {
   }
   return undefined;
 }
-
+async function createSubmit(e) {
+  e.preventDefault();
+  const name = document.querySelector('input[type="text"]').value;
+  const address = document.querySelectorAll('input[type="text"]')[1].value;
+  const phone = document.querySelectorAll('input[type="text"]')[2].value;
+  const appellation = document.querySelectorAll('input[type="text"]')[3].value;
+  const alert = document.querySelector('#alert');
+  if (name === '' || address === '') {
+    alert.hidden = false;
+    alert.textContent = 'Veuillez remplir les champs obligatoires';
+    return;
+  }
+  const options = {
+    method: 'POST', body: JSON.stringify({
+      tradeName: name, address, phone, designation: appellation,
+    }), headers: {
+      'Content-Type': 'application/json', 'Authorization': getToken(),
+    },
+  };
+  const response = await fetch('http://localhost:3000/companies/', options);
+  if (response.status === 200) {
+    Navigate('/contact');
+  } else {
+    alert.hidden = false;
+    alert.textContent = await response.text();
+  }
+}
 // function to submit the form
 async function onSubmit(e) {
   e.preventDefault();
@@ -211,7 +239,6 @@ async function onSubmit(e) {
     alert.textContent = 'Veuillez sélectionner une entreprise et une appellation';
     return;
   }
-
   // trying to get the company id
   const companyList = await getCompanies();
   let companyFound = 0;
