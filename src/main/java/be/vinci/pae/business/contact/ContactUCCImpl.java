@@ -4,7 +4,6 @@ import be.vinci.pae.business.academicyear.AcademicYear;
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.contact.ContactDTO.State;
 import be.vinci.pae.business.user.UserDTO;
-import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
@@ -35,11 +34,7 @@ public class ContactUCCImpl implements ContactUCC {
       if (user == null) {
         throw new NotFoundException("User not found");
       }
-      if (user.getRole().equals(Role.STUDENT)) {
-        list = contactDAO.getContactsByStudentId(user.getIdUser());
-      } else {
-        list = contactDAO.getAllContacts();
-      }
+      list = contactDAO.getAllContacts();
       return list;
     } finally {
       dalServices.close();
