@@ -14,5 +14,6 @@ Content-Type: application/json
   client.global.set("token", response.body.token);
 %}
 
-### Get all intership supervisors
-GET {{intershipsupervisors}}
+### Get list of intership supervisors for a company
+GET {{intershipsupervisors}}/company/2
+
