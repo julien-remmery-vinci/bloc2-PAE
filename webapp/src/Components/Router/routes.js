@@ -9,6 +9,8 @@ import ContactPage from "../Pages/contacts/ContactPage";
 import ProfilePage from "../Pages/ProfilePage";
 import Logout from "../Logout/Logout";
 import StagePage from "../Pages/stage/StagePage";
+import DashboardPage from "../Pages/DashboardPage";
+import CompanyPage from "../Pages/companies/CompanyPage";
 import StudentInfoPage from "../Pages/StudentInfoPage";
 
 // Define routes
@@ -24,6 +26,8 @@ const routes = {
     '/contact': ContactPage,
     '/profile': ProfilePage,
     '/stage': StagePage,
+    '/dashboard': DashboardPage,
+    '/company': CompanyPage,
     '/student-info': StudentInfoPage,
 };
 

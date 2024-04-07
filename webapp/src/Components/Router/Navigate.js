@@ -6,12 +6,12 @@
  * has to import all the pages to render them.
  */
 
-const Navigate = (toUri) => {
+const Navigate = (toUri, data) => {
     const fromUri = window.location.pathname;
     if (fromUri === toUri) return;
   
-    window.history.pushState({}, '', toUri);
-    const popStateEvent = new PopStateEvent('popstate', { state: {} });
+    window.history.pushState(data, '', toUri);
+    const popStateEvent = new PopStateEvent('popstate', { state: data });
     dispatchEvent(popStateEvent);
   };
   

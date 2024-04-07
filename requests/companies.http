@@ -26,3 +26,15 @@ Content-Type: application/json
   "reason": "This company is a scam"
 }
 
+### Create a company
+POST {{companiesUrl}}
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "tradeName": "Company 1",
+  "address": "Rue de la Loi 16, 1000 Bruxelles",
+  "city": "Bruxelles",
+  "phoneNumber": "02 123 45 67"
+}
+

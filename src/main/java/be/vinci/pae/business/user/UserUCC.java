@@ -50,6 +50,7 @@ public interface UserUCC {
    */
   UserDTO updateUser(UserDTO user, String oldPassword, String newPassword);
 
+
   /**
    * Update the user.
    *
@@ -62,4 +63,11 @@ public interface UserUCC {
    */
   UserDTO updateUser(UserDTO authenticatedUser, String firstName, String lastName, String email,
       String telephone);
+
+  /**
+   * Get all students.
+   *
+   * @return the list of all students
+   */
+  List<UserDTO> getStudents();
 }
