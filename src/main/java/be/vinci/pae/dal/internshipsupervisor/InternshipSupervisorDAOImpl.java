@@ -23,12 +23,14 @@ public class InternshipSupervisorDAOImpl implements InternshipSupervisorDAO {
   private DAOServices daoServices;
 
   @Override
-  public List<InternshipSupervisorDTO> getAll() {
-    List<InternshipSupervisorDTO> list = new ArrayList<>();
+  public List<InternshipSupervisorDTO> getSupervisorsByCompanyID(int idCompany) {
     try (PreparedStatement ps = dalServices.getPS(
         "SELECT * FROM pae.internshipSupervisors, pae.companies WHERE "
-            + "internshipsupervisor_idCompany = company_idCompany;")) {
+            + "internshipsupervisor_idCompany = company_idCompany AND "
+            + "internshipsupervisor_idCompany=?;")) {
+      ps.setInt(1, idCompany);
       try (ResultSet rs = ps.executeQuery()) {
+        List<InternshipSupervisorDTO> list = new ArrayList<>();
         while (rs.next()) {
           String prefix = "internshipSupervisor";
           list.add((InternshipSupervisorDTO) daoServices.getDataFromRs(rs, prefix));
