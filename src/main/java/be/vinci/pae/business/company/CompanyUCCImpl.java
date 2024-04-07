@@ -29,14 +29,12 @@ public class CompanyUCCImpl implements CompanyUCC {
    * @return all companies
    */
   public List<CompanyDTO> getAll() {
-    List<CompanyDTO> companies;
     try {
       dalServices.open();
-      companies = companyDAO.getAll();
+      return companyDAO.getAll();
     } finally {
       dalServices.close();
     }
-    return companies;
   }
 
   /**
@@ -46,14 +44,12 @@ public class CompanyUCCImpl implements CompanyUCC {
    * @return the company, null if no company was found
    */
   public CompanyDTO getCompanyById(int id) {
-    CompanyDTO company;
     try {
       dalServices.open();
-      company = companyDAO.getCompanyById(id);
+      return companyDAO.getCompanyById(id);
     } finally {
       dalServices.close();
     }
-    return company;
   }
 
   @Override
@@ -73,8 +69,25 @@ public class CompanyUCCImpl implements CompanyUCC {
       ArrayList<Object> list = new ArrayList<>();
       list.add(company);
       list.addAll(contactUCC.blacklistContacts(idCompany));
-      dalServices.commit();
       return list;
+    } catch (Exception e) {
+      dalServices.rollback();
+      throw e;
+    } finally {
+      dalServices.commit();
+    }
+  }
+
+  @Override
+  public CompanyDTO addCompany(CompanyDTO company) {
+    try {
+      dalServices.start();
+      if (companyDAO.getCompanyById(company.getIdCompany()) != null) {
+        throw new ConflictException("L'entreprise existe déjà");
+      }
+      company = companyDAO.addCompany(company);
+      dalServices.commit();
+      return company;
     } catch (Exception e) {
       dalServices.rollback();
       throw e;

@@ -9,6 +9,7 @@ public class CompanyImpl implements Company {
   private String tradeName;
   private String designation;
   private String address;
+  private String city;
   private String phoneNumber;
   private String email;
   private boolean blacklisted;
@@ -94,6 +95,14 @@ public class CompanyImpl implements Company {
   @Override
   public void setBlacklistMotivation(String blacklistMotivation) {
     this.blacklistMotivation = blacklistMotivation;
+  }
+
+  public String getCity() {
+    return city;
+  }
+
+  public void setCity(String city) {
+    this.city = city;
   }
 
   @Override

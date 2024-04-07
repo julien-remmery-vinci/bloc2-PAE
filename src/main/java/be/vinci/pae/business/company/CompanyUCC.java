@@ -29,4 +29,12 @@ public interface CompanyUCC {
    * @param reason the reason of the blacklist
    */
   List<Object> blacklistCompany(int id, String reason);
+
+  /**
+   * Add a company.
+   *
+   * @param company the company to add
+   * @return the company added
+   */
+  CompanyDTO addCompany(CompanyDTO company);
 }

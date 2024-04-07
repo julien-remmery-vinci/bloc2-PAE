@@ -47,4 +47,11 @@ public interface UserDAO {
    * @return the updated user
    */
   UserDTO updateUser(UserDTO user);
+
+  /**
+   * Get all students.
+   *
+   * @return the list of all students
+   */
+  List<UserDTO> getStudents();
 }

@@ -10,6 +10,7 @@ import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.academicyear.AcademicYear;
 import be.vinci.pae.business.company.Company;
 import be.vinci.pae.business.contact.Contact;
+import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.contact.ContactDTO.State;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.business.user.User;
@@ -20,6 +21,8 @@ import be.vinci.pae.dal.contact.ContactDAO;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.exceptions.PreconditionFailedException;
 import jakarta.ws.rs.WebApplicationException;
+import java.util.ArrayList;
+import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeAll;
@@ -241,6 +244,42 @@ public class ContactUCCTest {
             contactUCC.unfollowContact(idContact, idUser).getIdContact()),
         () -> assertEquals(State.UNSUPERVISED, contact.getState())
     );
+  }
+
+  @Test
+  @DisplayName("test for getContactsByCompany method")
+  void getContactsByCompanyTest() {
+    int idCompany = 1;
+    Mockito.when(contactDAO.getContactsByCompany(idCompany)).thenReturn(new ArrayList<>());
+    assertNotNull(contactUCC.getContactsByCompany(idCompany));
+  }
+
+  @Test
+  @DisplayName("test for getContactsByCompany method with wrong company id")
+  void getContactsByCompanyWrongIdTest() {
+    int idCompany = 1;
+    Mockito.when(companyDAO.getCompanyById(idCompany)).thenReturn(null);
+    assertThrows(NotFoundException.class, () -> contactUCC.getContactsByCompany(idCompany));
+  }
+
+  @Test
+  @DisplayName("test for blacklistContacts method")
+  void blacklistContactsTest() {
+    int idCompany = 1;
+    List<ContactDTO> contacts = new ArrayList<>();
+    ContactDTO contact = factory.getContact();
+    contact.setState(State.ADMITTED);
+    contacts.add(contact);
+    Mockito.when(contactDAO.getContactsByCompany(idCompany)).thenReturn(contacts);
+    assertNotNull(contactUCC.blacklistContacts(idCompany));
+  }
+
+  @Test
+  @DisplayName("test for blacklistContacts method with wrong company id")
+  void blacklistContactsTestWrongId() {
+    int idCompany = 1;
+    Mockito.when(companyDAO.getCompanyById(idCompany)).thenReturn(null);
+    assertThrows(NotFoundException.class, () -> contactUCC.blacklistContacts(idCompany));
   }
 }
 
