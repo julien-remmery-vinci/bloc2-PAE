@@ -60,12 +60,14 @@ function getInternshipInfos() {
 
 function getSupervisorInfos() {
     const supervisorInfosDiv = document.createElement('div');
-    supervisorInfosDiv.className = 'p-5';
     const supervisorLabel = document.createElement('label');
-    supervisorLabel.textContent = 'Superviseur';
+    supervisorLabel.textContent = 'Veuillez selectionner un responsable de stage';
+    supervisorLabel.style.marginTop = '5%';
+    supervisorLabel.style.marginBottom = '1%';
     supervisorInfosDiv.appendChild(supervisorLabel);
     const supervisorSelect = document.createElement('select');
     supervisorSelect.className = 'form-control';
+    supervisorSelect.style.width = '50%';
     getSupervisors().then(supervisors => {
         supervisors.forEach(supervisor => {
             const option = document.createElement('option');
