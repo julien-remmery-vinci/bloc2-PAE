@@ -1,5 +1,5 @@
 import {clearPage} from "../../../utils/render";
-import {isAuthenticated} from "../../../utils/auths";
+import {isAuthenticated, getToken} from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
 const InternshipPage = () => {
@@ -25,7 +25,9 @@ async function renderInternshipPage() {
     leftDiv.appendChild(getInternshipInfos());
     const rightDiv = document.createElement('div');
     rightDiv.style.width = '50%';
+    rightDiv.appendChild(getSupervisorInfos());
     mainDiv.appendChild(leftDiv);
+    mainDiv.appendChild(rightDiv);
     main.appendChild(mainDiv);
 }
 
@@ -54,6 +56,40 @@ function getInternshipInfos() {
         contactInfosDiv.appendChild(entrepriseDesignationValue);
     }
     return contactInfosDiv;
+}
+
+function getSupervisorInfos() {
+    const supervisorInfosDiv = document.createElement('div');
+    supervisorInfosDiv.className = 'p-5';
+    const supervisorLabel = document.createElement('label');
+    supervisorLabel.textContent = 'Superviseur';
+    supervisorInfosDiv.appendChild(supervisorLabel);
+    const supervisorSelect = document.createElement('select');
+    supervisorSelect.className = 'form-control';
+    getSupervisors().then(supervisors => {
+        supervisors.forEach(supervisor => {
+            const option = document.createElement('option');
+            option.value = supervisor.idSupervisor;
+            option.textContent = `${supervisor.firstName  } ${  supervisor.lastName}`;
+            supervisorSelect.appendChild(option);
+        });
+    });
+    supervisorInfosDiv.appendChild(supervisorSelect);
+    return supervisorInfosDiv;
+}
+
+async function getSupervisors(){
+  const supervisors = await fetch('http://localhost:3000/internshipSupervisors', {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': getToken(),
+      },
+  });
+  if (supervisors.status === 200) {
+      return supervisors.json();
+  }
+  return "error";
 }
 
 
