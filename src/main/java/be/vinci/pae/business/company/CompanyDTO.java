@@ -1,6 +1,5 @@
 package be.vinci.pae.business.company;
 
-import be.vinci.pae.business.user.UserImpl;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
@@ -57,6 +56,7 @@ public interface CompanyDTO {
    * @return the address of the company
    */
   String getAddress();
+
   /**
    * Set the city of the company.
    *

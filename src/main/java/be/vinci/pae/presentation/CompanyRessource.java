@@ -70,12 +70,19 @@ public class CompanyRessource {
     return result;
   }
 
+  /**
+   * Add a company.
+   *
+   * @param company the company to add
+   * @return the added company
+   */
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
   public CompanyDTO addCompany(CompanyDTO company) {
-    if (company.getTradeName() == null || company.getAddress() == null || company.getCity() == null) {
+    if (company.getTradeName() == null || company.getAddress() == null ||
+            company.getCity() == null) {
       throw new BadRequestException("Name or adress is missing");
     }
     return companyUCC.addCompany(company);

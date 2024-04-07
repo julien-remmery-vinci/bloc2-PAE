@@ -63,7 +63,7 @@ public class CompanyDAOImpl implements CompanyDAO {
         "INSERT INTO pae.companies (company_tradeName, company_designation,"
             + " company_address, company_city, company_phoneNumber, company_email, "
             + "company_blacklisted, company_blacklistmotivation, company_version) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING company_idCompany;")) {
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, 1) RETURNING company_idCompany;")) {
       ps.setString(2, company.getTradeName());
       ps.setString(3, company.getDesignation());
       ps.setString(4, company.getAddress());
@@ -72,7 +72,6 @@ public class CompanyDAOImpl implements CompanyDAO {
       ps.setString(7, company.getEmail());
       ps.setBoolean(8, company.isBlacklisted());
       ps.setString(9, company.getBlacklistMotivation());
-      ps.setInt(10, company.getVersion());
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           company.setIdCompany(rs.getInt(1));
@@ -96,7 +95,7 @@ public class CompanyDAOImpl implements CompanyDAO {
       ps.setString(1, company.getTradeName());
       ps.setString(2, company.getDesignation());
       ps.setString(3, company.getAddress());
-      ps.setString(4,company.getCity());
+      ps.setString(4, company.getCity());
       ps.setString(5, company.getPhoneNumber());
       ps.setString(6, company.getEmail());
       ps.setBoolean(7, company.isBlacklisted());
