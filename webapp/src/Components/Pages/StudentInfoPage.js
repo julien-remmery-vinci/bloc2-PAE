@@ -44,14 +44,27 @@ function renderUser(user) {
   const main = document.querySelector('main');
   main.innerHTML = `
   <div class="container">
-    <div class="row">
-      <div class="col">
-        <h1>Informations de l'étudiant</h1>
-        <p>Voici les informations de l'étudiant</p>
-        <p>Nom: ${user?.lastname}</p>
-        <p>Prénom: ${user?.firstname}</p>
-        <p>Email: ${user?.email}</p>
-        <p>Numéro de téléphone: ${user?.phoneNumber}</p>
+  <div class="row">
+  <div class="col">
+    <h1>Informations de l'étudiant</h1>
+    <form>
+      <div class="mb-3">
+        <label for="lastname" class="form-label">Nom</label>
+        <input type="text" class="form-control rounded" id="lastname" value="${user?.lastname}" readonly>
+      </div>
+      <div class="mb-3">
+        <label for="firstname" class="form-label">Prénom</label>
+        <input type="text" class="form-control rounded" id="firstname" value="${user?.firstname}" readonly>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control rounded" id="email" value="${user?.email}" readonly>
+      </div>
+      <div class="mb-3">
+        <label for="phoneNumber" class="form-label">Numéro de téléphone</label>
+        <input type="tel" class="form-control rounded" id="phoneNumber" value="${user?.phoneNumber}" readonly>
+      </div>
+    </form>
       </div>
       <div class="col">
         <h1>Contacts de l'étudiant</h1>
