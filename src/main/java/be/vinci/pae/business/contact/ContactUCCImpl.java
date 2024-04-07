@@ -196,5 +196,13 @@ public class ContactUCCImpl implements ContactUCC {
     }
   }
 
-
+  @Override
+  public List<ContactDTO> getContactsByStudentIdBis(int idStudent) {
+    try {
+      dalServices.open();
+      return contactDAO.getContactsByStudentId(idStudent);
+    } finally {
+      dalServices.close();
+    }
+  }
 }
