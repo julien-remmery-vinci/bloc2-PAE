@@ -68,6 +68,11 @@ function getSupervisorInfos() {
     const supervisorSelect = document.createElement('select');
     supervisorSelect.className = 'form-control';
     supervisorSelect.style.width = '50%';
+    if (supervisorSelect.length === 0) {
+        const option = document.createElement('option');
+        option.textContent = 'Aucun responsable de stage trouvé';
+        supervisorSelect.appendChild(option);
+    } else {
     getSupervisors().then(supervisors => {
         supervisors.forEach(supervisor => {
             const option = document.createElement('option');
@@ -76,12 +81,14 @@ function getSupervisorInfos() {
             supervisorSelect.appendChild(option);
         });
     });
+    }
     supervisorInfosDiv.appendChild(supervisorSelect);
     return supervisorInfosDiv;
 }
 
 async function getSupervisors(){
-  const supervisors = await fetch('http://localhost:3000/internshipSupervisors', {
+  const queryParams = new URLSearchParams(window.location.search);
+  const supervisors = await fetch(`http://localhost:3000/internshipSupervisors/company/${queryParams.get('idCompany')}`, {
       method: 'GET',
       headers: {
           'Content-Type': 'application/json',
@@ -93,6 +100,8 @@ async function getSupervisors(){
   }
   return "error";
 }
+
+
 
 
 export default InternshipPage;
