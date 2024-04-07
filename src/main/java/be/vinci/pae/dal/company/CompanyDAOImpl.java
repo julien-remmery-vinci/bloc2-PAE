@@ -64,9 +64,9 @@ public class CompanyDAOImpl implements CompanyDAO {
             + " company_address, company_city, company_phoneNumber, company_email, "
             + "company_blacklisted, company_blacklistmotivation, company_version) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, 1) RETURNING company_idCompany;")) {
-      ps.setString(2, company.getTradeName());
-      ps.setString(4, company.getAddress());
-      ps.setBoolean(8, company.isBlacklisted());
+      ps.setString(1, company.getTradeName());
+      ps.setString(3, company.getAddress());
+      ps.setBoolean(7, company.isBlacklisted());
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           company.setIdCompany(rs.getInt(1));
