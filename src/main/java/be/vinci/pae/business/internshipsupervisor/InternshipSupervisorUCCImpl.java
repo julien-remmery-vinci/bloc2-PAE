@@ -1,5 +1,6 @@
 package be.vinci.pae.business.internshipsupervisor;
 
+import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.internshipsupervisor.InternshipSupervisorDAO;
