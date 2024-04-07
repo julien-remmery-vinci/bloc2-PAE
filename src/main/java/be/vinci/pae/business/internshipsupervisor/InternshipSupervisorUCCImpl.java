@@ -1,6 +1,7 @@
 package be.vinci.pae.business.internshipsupervisor;
 
 import be.vinci.pae.dal.DALServices;
+import be.vinci.pae.dal.internshipsupervisor.InternshipSupervisorDAO;
 import jakarta.inject.Inject;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class InternshipSupervisorUCCImpl implements InternshipSupervisorUCC {
   private DALServices dalServices;
 
   @Inject
-  private InternshipSupervisorUCC internshipSupervisorDAO;
+  private InternshipSupervisorDAO internshipSupervisorDAO;
 
   @Override
   public List<InternshipSupervisorDTO> getAll() {
