@@ -14,5 +14,11 @@ public interface InternshipSupervisorUCC {
    */
   List<InternshipSupervisorDTO> getSupervisorsByCompanyID(int idCompany);
 
-
+  /**
+   * Add an internship supervisor.
+   *
+   * @param internshipSupervisor the internship supervisor to add
+   * @return the internship supervisor added
+   */
+  InternshipSupervisorDTO addInternshipSupervisor(InternshipSupervisorDTO internshipSupervisor);
 }

@@ -41,4 +41,28 @@ public class InternshipSupervisorDAOImpl implements InternshipSupervisorDAO {
       throw new FatalException(e);
     }
   }
+
+  @Override
+  public InternshipSupervisorDTO addInternshipSupervisor(
+      InternshipSupervisorDTO internshipSupervisor) {
+    try (PreparedStatement ps = dalServices.getPS(
+        "INSERT INTO pae.internshipSupervisors (internshipsupervisor_idCompany, "
+            + "internshipsupervisor_firstname, internshipSupervisor_lastname, internshipsupervisor_email, internshipsupervisor_phoneNumber)"
+            + " VALUES (?, ?, ?, ?, ?, 1) RETURNING internshipsupervisor_idInternshipSupervisor;")) {
+      ps.setInt(1, internshipSupervisor.getIdCompany());
+      ps.setString(2, internshipSupervisor.getFirstName());
+      ps.setString(3, internshipSupervisor.getLastName());
+      ps.setString(4, internshipSupervisor.getEmail());
+      ps.setString(5, internshipSupervisor.getPhoneNumber());
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          internshipSupervisor.setIdInternshipSupervisor(rs.getInt(1));
+          return internshipSupervisor;
+        }
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return null;
+  }
 }

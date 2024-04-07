@@ -17,3 +17,15 @@ Content-Type: application/json
 ### Get list of intership supervisors for a company
 GET {{intershipsupervisors}}/company/2
 
+### Create a intership supervisor
+POST {{intershipsupervisors}}
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "eqfgeuyqgl@gsrgr.com",
+  "phoneNumber": "123456789",
+  "idCompany": 2
+}

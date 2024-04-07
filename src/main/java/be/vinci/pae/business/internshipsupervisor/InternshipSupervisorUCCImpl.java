@@ -35,4 +35,21 @@ public class InternshipSupervisorUCCImpl implements InternshipSupervisorUCC {
       dalServices.close();
     }
   }
+
+  @Override
+  public InternshipSupervisorDTO addInternshipSupervisor(
+      InternshipSupervisorDTO internshipSupervisor) {
+    try {
+      dalServices.open();
+      CompanyDTO companyDTO = companyDAO.getCompanyById(internshipSupervisor.getIdCompany());
+      if (companyDTO == null) {
+        throw new NotFoundException("L'entreprise n'existe pas.");
+      }
+      internshipSupervisor = internshipSupervisorDAO.addInternshipSupervisor(internshipSupervisor);
+      internshipSupervisor.setCompany(companyDTO);
+      return internshipSupervisor;
+    } finally {
+      dalServices.close();
+    }
+  }
 }
