@@ -2,6 +2,9 @@ package be.vinci.pae.presentation;
 
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.company.CompanyUCC;
+import be.vinci.pae.business.contact.ContactDTO;
+import be.vinci.pae.business.contact.ContactUCC;
+import be.vinci.pae.presentation.filters.Authorize;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -28,6 +31,8 @@ public class CompanyRessource {
   private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
   private CompanyUCC companyUCC;
+  @Inject
+  private ContactUCC contactUCC;
 
   /**
    * Get all companies.
@@ -63,6 +68,46 @@ public class CompanyRessource {
     }
     result.put("contacts", o);
     return result;
+  }
+
+  /**
+   * Add a company.
+   *
+   * @param company the company to add
+   * @return the added company
+   */
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public CompanyDTO addCompany(CompanyDTO company) {
+    if (company.getTradeName() == null || company.getAddress() == null ||
+            company.getCity() == null) {
+      throw new BadRequestException("Name or adress is missing");
+    }
+    return companyUCC.addCompany(company);
+  }
+
+  @GET
+  @Path("/contacts")
+  @Produces(MediaType.APPLICATION_JSON)
+  public ArrayNode getAllWithContacts() {
+    List<CompanyDTO> companies = companyUCC.getAll();
+    List<ContactDTO> contacts = contactUCC.getAllContacts();
+    
+    ArrayNode companiesArray = jsonMapper.createArrayNode();
+    for (CompanyDTO company : companies) {
+      ObjectNode companyNode = jsonMapper.convertValue(company, ObjectNode.class);
+      ArrayNode contactsArray = jsonMapper.createArrayNode();
+      for (ContactDTO contact : contacts) {
+        if (contact.getIdCompany() == company.getIdCompany()) {
+          contactsArray.add(jsonMapper.convertValue(contact, ObjectNode.class));
+        }
+      }
+      companyNode.put("contacts", contactsArray);
+      companiesArray.add(companyNode);
+    }
+    return companiesArray;
   }
 
 }

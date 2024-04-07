@@ -4,6 +4,7 @@ import be.vinci.pae.business.academicyear.AcademicYear;
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.contact.ContactDTO.State;
 import be.vinci.pae.business.user.UserDTO;
+import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
@@ -28,12 +29,21 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public List<ContactDTO> getContacts(UserDTO user) {
-    if (user == null) {
-      throw new NotFoundException("User not found");
+    List<ContactDTO> list;
+    try {
+      dalServices.open();
+      if (user == null) {
+        throw new NotFoundException("User not found");
+      }
+      if (user.getRole().equals(Role.STUDENT)) {
+        list = contactDAO.getContactsByStudentId(user.getIdUser());
+      } else {
+        list = contactDAO.getAllContacts();
+      }
+      return list;
+    } finally {
+      dalServices.close();
     }
-    List<ContactDTO> list = contactDAO.getAllContacts();
-    dalServices.close();
-    return list;
   }
 
   @Override
@@ -47,20 +57,11 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
 
-  /**
-   * Refuse a contact.
-   *
-   * @param idContact     the id of the contact
-   * @param refusalReason the refusal reason
-   * @param idUser        the id of the user
-   * @return the contact
-   */
   @Override
   public ContactDTO refuseContact(int idContact, String refusalReason, int idUser) {
-    ContactDTO contact;
     try {
       dalServices.open();
-      contact = contactDAO.getOneById(idContact);
+      ContactDTO contact = contactDAO.getOneById(idContact);
 
       if (contact == null) {
         return null;
@@ -74,10 +75,10 @@ public class ContactUCCImpl implements ContactUCC {
       }
       contact.setRefusalReason(refusalReason);
       contactDAO.updateContact(contact);
+      return contact;
     } finally {
       dalServices.close();
     }
-    return contact;
   }
 
   @Override
@@ -100,18 +101,17 @@ public class ContactUCCImpl implements ContactUCC {
       contact.setState(State.STARTED);
       contact = contactDAO.addContact(contact);
       contact.setCompany(companyDTO);
+      return contact;
     } finally {
       dalServices.close();
     }
-    return contact;
   }
 
   @Override
   public ContactDTO meetContact(int id, String meetPlace, int idUser) {
-    Contact contact;
     try {
       dalServices.open();
-      contact = (Contact) contactDAO.getOneById(id);
+      Contact contact = (Contact) contactDAO.getOneById(id);
       if (contact == null) {
         return null;
       }
@@ -125,18 +125,17 @@ public class ContactUCCImpl implements ContactUCC {
       contact.setState(State.ADMITTED);
       contact.setMeetPlace(meetPlace);
       contactDAO.updateContact(contact);
+      return contact;
     } finally {
       dalServices.close();
     }
-    return contact;
   }
 
   @Override
   public ContactDTO unfollowContact(int id, int idUser) {
-    Contact contact;
     try {
       dalServices.open();
-      contact = (Contact) contactDAO.getOneById(id);
+      Contact contact = (Contact) contactDAO.getOneById(id);
       if (contact == null) {
         return null;
       }
@@ -149,10 +148,10 @@ public class ContactUCCImpl implements ContactUCC {
       }
       contact.setState(State.UNSUPERVISED);
       contactDAO.updateContact(contact);
+      return contact;
     } finally {
       dalServices.close();
     }
-    return contact;
   }
 
   @Override
@@ -179,13 +178,23 @@ public class ContactUCCImpl implements ContactUCC {
           contactDAO.updateContact(c);
         }
       }
-      dalServices.commit();
       return contacts;
     } catch (Exception e) {
       dalServices.rollback();
       throw e;
     } finally {
+      dalServices.commit();
+    }
+  }
+
+  @Override
+  public List<ContactDTO> getAllContacts() {
+    try {
+      return contactDAO.getAllContacts();
+    } finally {
       dalServices.close();
     }
   }
+
+
 }
