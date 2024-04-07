@@ -80,6 +80,29 @@ public class UserRessource {
     return Response.status(204, "Password changed").build();
   }
 
+  @POST
+  @Path("/update")
+  @Authorize
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public UserDTO updateUser(JsonNode json, @Context ContainerRequest request) {
+    final UserDTO authenticatedUser = (UserDTO) request.getProperty("user");
+    String firstName = json.get("firstName").asText();
+    String lastName = json.get("lastName").asText();
+    String email = json.get("email").asText();
+    String telephone = json.get("telephone").asText();
+
+    if (firstName == null || lastName == null || email == null || telephone == null) {
+      throw new BadRequestException("All fields are required");
+    }
+
+    if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || telephone.isEmpty()) {
+      throw new BadRequestException("All fields are required");
+    }
+
+    return userUCC.updateUser(authenticatedUser, firstName, lastName, email, telephone);
+  }
+
   /**
    * Handles HTTP GET requests to fetch all users. This method uses the injected UserUCC instance to
    * fetch all users and returns them as a list of UserDTO objects. The list is automatically

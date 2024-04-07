@@ -1,5 +1,9 @@
 import {clearPage} from "../../utils/render";
-import {getAuthenticatedUser, isAuthenticated} from "../../utils/auths";
+import {
+  getAuthenticatedUser,
+  getToken,
+  isAuthenticated
+} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
 
 const ProfilePage = async () => {
@@ -13,7 +17,6 @@ const ProfilePage = async () => {
 }
 
 function renderProfilPage() {
-  // Votre code existant
   const main = document.querySelector('main');
   const DocumentTitle = document.createElement('h3');
   DocumentTitle.textContent = 'Profil';
@@ -33,10 +36,22 @@ function renderProfilPage() {
     title.className = 'fw-bold mb-1';
 
     const input = document.createElement('input');
-    input.readOnly = true;
     input.id = field;
     input.value = `${authenticatedUser[field]}`;
     input.className = 'form-control mb-3';
+
+    input.addEventListener('input', () => {
+      const existingButton = Array.from(
+          form.getElementsByTagName('button')).find(
+          button => button.textContent === 'Sauver');
+      if (!existingButton) {
+        const sauver = document.createElement('button');
+        sauver.textContent = 'Sauver';
+        sauver.className = 'btn btn-success mt-2';
+        sauver.addEventListener('click', onSaveProfile);
+        form.appendChild(sauver);
+      }
+    });
 
     form.appendChild(title);
     form.appendChild(input);
@@ -48,27 +63,21 @@ function renderProfilPage() {
   form.appendChild(changePasswordButton);
   main.appendChild(form);
 
-// Ajout de l'écouteur d'événements
   changePasswordButton.addEventListener('click', event => {
-    event.preventDefault();  // Empêche l'action par défaut du bouton
+    event.preventDefault();
 
-    // Cache le bouton "Modifier mot de passe"
     changePasswordButton.style.display = 'none';
 
-    // Création du formulaire de modification de mot de passe
     const passwordForm = document.createElement('form');
     passwordForm.className = 'p-5 w-50 bg-light rounded shadow';
     passwordForm.className = 'mx-auto p-5 w-50 position-relative float-end bg-light rounded shadow';
 
-
-    // Ajout des champs du formulaire
     const oldPasswordField = document.createElement('input');
     oldPasswordField.type = 'password';
     oldPasswordField.placeholder = 'Ancien mot de passe';
     oldPasswordField.className = 'form-control mb-3';
     passwordForm.appendChild(oldPasswordField);
 
-    // Ajout des champs du formulaire
     const passwordField = document.createElement('input');
     passwordField.type = 'password';
     passwordField.placeholder = 'Nouveau mot de passe';
@@ -81,14 +90,13 @@ function renderProfilPage() {
     confirmPasswordField.className = 'form-control mb-3';
     passwordForm.appendChild(confirmPasswordField);
 
-    // Ajout du bouton de soumission du formulaire
     const submitButton = document.createElement('button');
     submitButton.type = 'submit';
     submitButton.textContent = 'Sauver';
     submitButton.className = 'btn btn-primary';
+    submitButton.addEventListener('click', onSavePassword);
     passwordForm.appendChild(submitButton);
 
-    // Ajout du bouton d'annulation
     const cancelButton = document.createElement('button');
     cancelButton.type = 'button';
     cancelButton.textContent = 'Annuler';
@@ -99,9 +107,68 @@ function renderProfilPage() {
     });
     passwordForm.appendChild(cancelButton);
 
-    // Ajout du formulaire à la page
     main.appendChild(passwordForm);
   });
+}
+
+async function onSaveProfile(e) {
+  e.preventDefault();
+  const firstname = document.querySelector('#firstname').value;
+  const lastname = document.querySelector('#lastname').value;
+  const email = document.querySelector('#email').value.toLowerCase();
+  const phoneNumber = document.querySelector('#phoneNumber').value;
+
+  const options = {
+    method: 'POST',
+    body: JSON.stringify({
+      firstname,
+      lastname,
+      email,
+      phoneNumber,
+
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': getToken()
+    },
+  };
+
+  const response = await fetch('http://localhost:3000/auths/user/update', options);
+
+  if (response.status !== 200) {
+    const error = document.querySelector('#error');
+    error.textContent = 'Erreur lors de la modification du profil';
+    error.hidden = false;
+  }
+}
+
+async function onSavePassword(e) {
+  e.preventDefault();
+  const oldPassword = document.querySelector('#oldPasswordField').value;
+  const newPassword = document.querySelector('#passwordField').value;
+  const confirmationPassword = document.querySelector('#confirmPasswordField').value;
+
+
+  const options = {
+    method: 'POST',
+    body: JSON.stringify({
+      oldPassword,
+      newPassword,
+      confirmationPassword,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': getToken()
+    },
+  };
+
+  const response = await fetch('http://localhost:3000/auths/user/changepassword', options);
+
+  if (response.status !== 200) {
+    const error = document.querySelector('#error');
+    error.textContent = 'Erreur lors du changement de mot de passe';
+    error.hidden = false;
+  }
 }
 
 export default ProfilePage;

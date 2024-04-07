@@ -49,4 +49,17 @@ public interface UserUCC {
    * @return the updated user
    */
   UserDTO updateUser(UserDTO user, String oldPassword, String newPassword);
+
+  /**
+   * Update the user.
+   *
+   * @param authenticatedUser the authenticated user
+   * @param firstName         the first name of the user
+   * @param lastName          the last name of the user
+   * @param email             the email of the user
+   * @param telephone         the telephone of the user
+   * @return the updated user
+   */
+  UserDTO updateUser(UserDTO authenticatedUser, String firstName, String lastName, String email,
+      String telephone);
 }

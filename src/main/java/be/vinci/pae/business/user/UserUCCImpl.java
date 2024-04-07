@@ -115,4 +115,19 @@ public class UserUCCImpl implements UserUCC {
     dalServices.close();
     return user;
   }
+
+  @Override
+  public UserDTO updateUser(UserDTO authenticatedUser, String firstName, String lastName,
+      String email, String telephone) {
+    if (authenticatedUser == null) {
+      throw new BadRequestException("User not found");
+    }
+    authenticatedUser.setFirstname(firstName);
+    authenticatedUser.setLastname(lastName);
+    authenticatedUser.setEmail(email);
+    authenticatedUser.setPhoneNumber(telephone);
+    authenticatedUser = userDAO.updateUser(authenticatedUser);
+    dalServices.close();
+    return authenticatedUser;
+  }
 }
