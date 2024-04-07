@@ -90,4 +90,12 @@ public interface ContactUCC {
    * @return the list of all contacts
    */
   List<ContactDTO> getAllContacts();
+
+  /**
+   * This method is used to get all contacts by student id.
+   *
+   * @param idStudent the id of the student
+   * @return the list of all contacts by student id
+   */
+  List<ContactDTO> getContactsByStudentIdBis(int idStudent);
 }

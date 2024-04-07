@@ -171,22 +171,13 @@ public class ContactRessource {
     return contactUCC.getContactsByCompany(idCompany);
   }
 
-  @POST
-  @Path("/{id}/accept")
-  @Authorize
-  @Consumes(MediaType.APPLICATION_JSON)
+  @GET
+  @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
-  public ContactDTO acceptContact(@Context ContainerRequest request,
-      @PathParam("id") int idContact) {
-    UserDTO user = (UserDTO) request.getProperty("user");
-    if (idContact < 0) {
+  public List<ContactDTO> getContactsByStudentId(@PathParam("id") int idStudent) {
+    if (idStudent < 0) {
       throw new BadRequestException("Invalid id");
     }
-    ContactDTO contact = contactUCC.acceptContact(idContact, user);
-    if (contact == null) {
-      throw new NotFoundException("Contact not found");
-    }
-    return contact;
+    return contactUCC.getContactsByStudentIdBis(idStudent);
   }
-
 }
