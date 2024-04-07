@@ -171,4 +171,13 @@ public class ContactRessource {
     return contactUCC.getContactsByCompany(idCompany);
   }
 
+  @GET
+  @Path("/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public List<ContactDTO> getContactsByStudentId(@PathParam("id") int idStudent) {
+    if (idStudent < 0) {
+      throw new BadRequestException("Invalid id");
+    }
+    return contactUCC.getContactsByStudentIdBis(idStudent);
+  }
 }

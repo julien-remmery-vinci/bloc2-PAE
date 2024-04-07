@@ -68,4 +68,22 @@ public class CompanyUCCImpl implements CompanyUCC {
       dalServices.commit();
     }
   }
+
+  @Override
+  public CompanyDTO addCompany(CompanyDTO company) {
+    try {
+      dalServices.start();
+      if (companyDAO.getCompanyById(company.getIdCompany()) != null) {
+        throw new ConflictException("L'entreprise existe déjà");
+      }
+      company = companyDAO.addCompany(company);
+      dalServices.commit();
+      return company;
+    } catch (Exception e) {
+      dalServices.rollback();
+      throw e;
+    } finally {
+      dalServices.close();
+    }
+  }
 }

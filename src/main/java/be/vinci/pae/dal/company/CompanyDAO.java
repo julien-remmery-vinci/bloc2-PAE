@@ -29,4 +29,12 @@ public interface CompanyDAO {
    * @param company the company to update
    */
   CompanyDTO updateCompany(CompanyDTO company);
+
+  /**
+   * Add a company.
+   *
+   * @param company the company to add
+   * @return the company added
+   */
+  CompanyDTO addCompany(CompanyDTO company);
 }

@@ -4,6 +4,7 @@ import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.company.CompanyUCC;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.contact.ContactUCC;
+import be.vinci.pae.presentation.filters.Authorize;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -67,6 +68,23 @@ public class CompanyRessource {
     }
     result.put("contacts", o);
     return result;
+  }
+
+  /**
+   * Add a company.
+   *
+   * @param company the company to add
+   * @return the added company
+   */
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public CompanyDTO addCompany(CompanyDTO company) {
+    if (company.getTradeName() == null || company.getAddress() == null) {
+      throw new BadRequestException("Name or adress is missing");
+    }
+    return companyUCC.addCompany(company);
   }
 
   @GET
