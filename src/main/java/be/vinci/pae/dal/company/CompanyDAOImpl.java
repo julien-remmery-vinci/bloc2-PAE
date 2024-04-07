@@ -58,20 +58,46 @@ public class CompanyDAOImpl implements CompanyDAO {
   }
 
   @Override
+  public CompanyDTO addCompany(CompanyDTO company) {
+    try (PreparedStatement ps = dalServices.getPS(
+        "INSERT INTO pae.companies (company_tradeName, company_designation,"
+            + " company_address, company_city, company_phoneNumber, company_email, "
+            + "company_blacklisted, company_blacklistmotivation, company_version) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, 1) RETURNING company_idCompany;")) {
+      ps.setString(1, company.getTradeName());
+      ps.setString(3, company.getAddress());
+      ps.setBoolean(7, company.isBlacklisted());
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          company.setIdCompany(rs.getInt(1));
+
+          return company;
+        }
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return null;
+  }
+
+  @Override
   public CompanyDTO updateCompany(CompanyDTO company) {
     try (PreparedStatement ps = dalServices.getPS(
-        "UPDATE pae.companies SET company_tradename = ?, company_designation = ?, company_address = ?, "
-            + "company_phonenumber = ?, company_email = ?, company_blacklisted = ?, company_blacklistmotivation = ?, "
-            + "company_version = company_version + 1 WHERE company_idCompany = ? AND company_version = ? RETURNING *")) {
+        "UPDATE pae.companies SET company_tradename = ?, company_designation = ?,"
+            + " company_address = ?, company_city = ?, company_phonenumber = ?, company_email = ?,"
+            + " company_blacklisted = ?, company_blacklistmotivation = ?, "
+            + "company_version = company_version + 1 WHERE company_idCompany = ?"
+            + " AND company_version = ? RETURNING *")) {
       ps.setString(1, company.getTradeName());
       ps.setString(2, company.getDesignation());
       ps.setString(3, company.getAddress());
-      ps.setString(4, company.getPhoneNumber());
-      ps.setString(5, company.getEmail());
-      ps.setBoolean(6, company.isBlacklisted());
-      ps.setString(7, company.getBlacklistMotivation());
-      ps.setInt(8, company.getIdCompany());
-      ps.setInt(9, company.getVersion());
+      ps.setString(4, company.getCity());
+      ps.setString(5, company.getPhoneNumber());
+      ps.setString(6, company.getEmail());
+      ps.setBoolean(7, company.isBlacklisted());
+      ps.setString(8, company.getBlacklistMotivation());
+      ps.setInt(9, company.getIdCompany());
+      ps.setInt(10, company.getVersion());
       try (ResultSet rs = ps.executeQuery()) {
         if (!rs.next()) {
           if (getCompanyById(company.getIdCompany()) == null) {
