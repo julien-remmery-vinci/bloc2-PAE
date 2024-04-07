@@ -64,7 +64,6 @@ public class CompanyDAOImpl implements CompanyDAO {
             + " company_address, company_city, company_phoneNumber, company_email, "
             + "company_blacklisted, company_blacklistmotivation, company_version) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING company_idCompany;")) {
-      ps.setInt(1, company.getIdCompany());
       ps.setString(2, company.getTradeName());
       ps.setString(3, company.getDesignation());
       ps.setString(4, company.getAddress());
