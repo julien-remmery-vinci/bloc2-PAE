@@ -59,7 +59,7 @@ async function buildPage() {
       let url = window.location.href;
       url += contact.state === 'initié' ?
           `/meet?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}` :
-          `/refusal?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}&meetplace=${contact.meetPlace}`;
+          `/refusal?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}&meetplace=${contact.meetPlace}&companyid=${contact.company.idCompany}`;
       Navigate(url);
     });
     companyCell.appendChild(companyLink);

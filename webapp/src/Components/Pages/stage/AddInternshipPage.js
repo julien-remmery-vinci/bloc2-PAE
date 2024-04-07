@@ -26,6 +26,7 @@ async function renderInternshipPage() {
     const rightDiv = document.createElement('div');
     rightDiv.style.width = '50%';
     rightDiv.appendChild(getSupervisorInfos());
+    rightDiv.appendChild(addNewSupervisor());
     mainDiv.appendChild(leftDiv);
     mainDiv.appendChild(rightDiv);
     main.appendChild(mainDiv);
@@ -101,7 +102,88 @@ async function getSupervisors(){
   return "error";
 }
 
+function addNewSupervisor() {
+    const addSupervisorDiv = document.createElement('div');
+    addSupervisorDiv.style.marginTop = '5%';
+    const addSupervisorLabel = document.createElement('label');
+    addSupervisorLabel.textContent = 'Vous ne trouvez pas le responsable de stage que vous cherchez ?';
+    addSupervisorLabel.style.marginBottom = '1%';
+    addSupervisorDiv.appendChild(addSupervisorLabel);
+    const addSupervisorButton = document.createElement('button');
+    addSupervisorButton.textContent = 'Ajouter un nouveau responsable de stage';
+    addSupervisorButton.className = 'btn btn-primary';
+    addSupervisorButton.style.width = '50%';
+    addSupervisorButton.addEventListener('click', () => {
+        addNewSupervisorForm();
+    });
+    addSupervisorDiv.appendChild(addSupervisorButton);
+    return addSupervisorDiv;
+}
 
+function addNewSupervisorForm() {
+    const main = document.querySelector('main');
+    const form = document.createElement('form');
+    form.className = 'p-5';
+    const firstNameLabel = document.createElement('label');
+    firstNameLabel.textContent = 'Prénom';
+    form.appendChild(firstNameLabel);
+    const firstNameInput = document.createElement('input');
+    firstNameInput.type = 'text';
+    firstNameInput.className = 'form-control';
+    form.appendChild(firstNameInput);
+    const lastNameLabel = document.createElement('label');
+    lastNameLabel.textContent = 'Nom';
+    form.appendChild(lastNameLabel);
+    const lastNameInput = document.createElement('input');
+    lastNameInput.type = 'text';
+    lastNameInput.className = 'form-control';
+    form.appendChild(lastNameInput);
+    const emailLabel = document.createElement('label');
+    emailLabel.textContent = 'Email (facultatif)';
+    form.appendChild(emailLabel);
+    const emailInput = document.createElement('input');
+    emailInput.type = 'email';
+    emailInput.className = 'form-control';
+    form.appendChild(emailInput);
+    const phoneLabel = document.createElement('label');
+    phoneLabel.textContent = 'Téléphone';
+    form.appendChild(phoneLabel);
+    const phoneInput = document.createElement('input');
+    phoneInput.type = 'text';
+    phoneInput.className = 'form-control';
+    form.appendChild(phoneInput);
+    const submitButton = document.createElement('button');
+    submitButton.textContent = 'Enregistrer';
+    submitButton.className = 'btn btn-primary';
+    submitButton.style.width = '50%';
+    submitButton.style.marginTop = '5%';
+    submitButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        const supervisor = {
+            firstName: firstNameInput.value,
+            lastName: lastNameInput.value,
+            email: emailInput.value,
+            phone: phoneInput.value,
+        };
+        addSupervisor(supervisor);
+    });
+    form.appendChild(submitButton);
+    main.appendChild(form);
+}
+
+async function addSupervisor(supervisor) {
+    const response = await fetch('http://localhost:3000/internshipSupervisors', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': getToken(),
+        },
+        body: JSON.stringify(supervisor),
+    });
+    if (response.status === 201) {
+        alert('Responsable de stage ajouté avec succès');
+    }
+}
 
 
 export default InternshipPage;
