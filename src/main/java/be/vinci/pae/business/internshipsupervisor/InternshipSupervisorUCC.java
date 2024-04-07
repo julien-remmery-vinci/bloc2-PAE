@@ -12,6 +12,7 @@ public interface InternshipSupervisorUCC {
    *
    * @return all a list of internship supervisors
    */
-  List<InternshipSupervisorDTO> getAll();
+  List<InternshipSupervisorDTO> getSupervisorsByCompanyID(int idCompany);
+
 
 }
