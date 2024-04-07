@@ -117,6 +117,19 @@ public class UserUCCImpl implements UserUCC {
   }
 
   @Override
+  public UserDTO updateUser(UserDTO authenticatedUser, String firstName, String lastName,
+      String email, String telephone) {
+    authenticatedUser.setFirstname(firstName);
+    authenticatedUser.setLastname(lastName);
+    authenticatedUser.setEmail(email);
+    authenticatedUser.setPhoneNumber(telephone);
+    authenticatedUser = userDAO.updateUser(authenticatedUser);
+    dalServices.close();
+    return authenticatedUser;
+  }
+
+
+  @Override
   public List<UserDTO> getStudents() {
     try {
       return userDAO.getStudents();
