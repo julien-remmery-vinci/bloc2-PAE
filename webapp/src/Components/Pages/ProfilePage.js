@@ -74,18 +74,21 @@ function renderProfilPage() {
 
     const oldPasswordField = document.createElement('input');
     oldPasswordField.type = 'password';
+    oldPasswordField.id = 'oldPasswordField';
     oldPasswordField.placeholder = 'Ancien mot de passe';
     oldPasswordField.className = 'form-control mb-3';
     passwordForm.appendChild(oldPasswordField);
 
     const passwordField = document.createElement('input');
     passwordField.type = 'password';
+    passwordField.id = 'passwordField';
     passwordField.placeholder = 'Nouveau mot de passe';
     passwordField.className = 'form-control mb-3';
     passwordForm.appendChild(passwordField);
 
     const confirmPasswordField = document.createElement('input');
     confirmPasswordField.type = 'password';
+    confirmPasswordField.id = 'confirmPasswordField';
     confirmPasswordField.placeholder = 'Confirmer le nouveau mot de passe';
     confirmPasswordField.className = 'form-control mb-3';
     passwordForm.appendChild(confirmPasswordField);
@@ -119,7 +122,7 @@ async function onSaveProfile(e) {
   const phoneNumber = document.querySelector('#phoneNumber').value;
 
   const options = {
-    method: 'POST',
+    method: 'PUT',
     body: JSON.stringify({
       firstname,
       lastname,
@@ -133,7 +136,7 @@ async function onSaveProfile(e) {
     },
   };
 
-  const response = await fetch('http://localhost:3000/auths/user/update', options);
+  const response = await fetch('http://localhost:3000/users/update', options);
 
   if (response.status !== 200) {
     const error = document.querySelector('#error');
@@ -162,12 +165,15 @@ async function onSavePassword(e) {
     },
   };
 
-  const response = await fetch('http://localhost:3000/auths/user/changepassword', options);
+  const response = await fetch('http://localhost:3000/users/changepassword', options);
 
-  if (response.status !== 200) {
+  if (response.status !== 204) {
     const error = document.querySelector('#error');
     error.textContent = 'Erreur lors du changement de mot de passe';
     error.hidden = false;
+  }
+  if (response.status === 204) {
+    alert('Mot de passe modifié avec succès');
   }
 }
 
