@@ -1,26 +1,22 @@
-import { clearPage, renderPageTitle } from "../../utils/render";
-import {isAuthenticated} from "../../utils/auths";
-import Navigate from "../Router/Navigate";
+import { clearPage, renderPageTitle } from '../../utils/render';
+import { isAuthenticated } from '../../utils/auths';
+import Navigate from '../Router/Navigate';
 
 const fetchUsers = async () => {
-  try {
-    fetch("http://localhost:3000/users")
-      .then(response => response.json())
-      .then(data => {
-        renderUsers(data);
-      })
-      .catch((error) => console.error(error));
-  } catch (error) {
-    console.error(error);
-  }
+  fetch('http://localhost:3000/users')
+    .then((response) => response.json())
+    .then((data) => {
+      renderUsers(data);
+    })
+    .catch((error) => console.error(error));
 };
 
 const SearchPage = () => {
   if (!isAuthenticated()) {
     Navigate('/login');
   } else {
-    renderPageTitle("Recherche");
-    document.title = "Recherche";
+    renderPageTitle('Recherche');
+    document.title = 'Recherche';
     clearPage();
     fetchUsers();
     renderSearchPage();
@@ -59,12 +55,12 @@ function renderSearchPage() {
     </table>
     </div>
 `;
-};
+}
 
 function renderUsers(users) {
   const table = document.querySelector('table');
   const tbody = document.createElement('tbody');
-  users.forEach(userMap => {
+  users.forEach((userMap) => {
     const { user, accepted_contact: acceptedContact } = userMap;
     const tr = document.createElement('tr');
     if (user.role === 'étudiant') {
@@ -94,6 +90,6 @@ function renderUsers(users) {
     tbody.appendChild(tr);
   });
   table.appendChild(tbody);
-};
+}
 
 export default SearchPage;
