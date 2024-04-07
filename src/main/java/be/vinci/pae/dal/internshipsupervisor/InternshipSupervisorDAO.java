@@ -11,6 +11,7 @@ public interface InternshipSupervisorDAO {
   /**
    * Get all the internship supervisors.
    *
+   * @param idCompany the id of the company
    * @return all a list of internship supervisors
    */
   List<InternshipSupervisorDTO> getSupervisorsByCompanyID(int idCompany);
