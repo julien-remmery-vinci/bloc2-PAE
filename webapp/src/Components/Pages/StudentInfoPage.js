@@ -1,12 +1,12 @@
-import { clearPage, renderPageTitle } from "../../utils/render";
-import Navigate from "../Router/Navigate";
-import {isAuthenticated, getToken} from "../../utils/auths";
+import { clearPage, renderPageTitle } from '../../utils/render';
+import Navigate from '../Router/Navigate';
+import { isAuthenticated } from '../../utils/auths';
 
 const fetchUserById = async (id) => {
   try {
     fetch(`http://localhost:3000/users/${id}`)
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         renderUser(data);
       })
       .catch((error) => console.error(error));
@@ -15,32 +15,30 @@ const fetchUserById = async (id) => {
   }
 };
 
-async function getContacts() {
-  const response = await fetch('http://localhost:3000/contacts', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': getToken()
-    }
-  });
-  return response.json();
-}
+const fetchContacts = async (id) => {
+  fetch(`http://localhost:3000/contacts/${id}`)
+  .then(response => response.json())
+  .then(data => {
+    renderContacts(data);
+  })
+  .catch((error) => console.error(error));
+};
 
 const StudentInfoPage = () => {
   if (!isAuthenticated()) {
-      Navigate('/login');
+    Navigate('/login');
   } else {
-      renderPageTitle("Informations de l'étudiant");
-      document.title = "Informations de l'étudiant";
-      clearPage();
-      const urlParams = new URLSearchParams(window.location.search);
-      const id = urlParams.get('id');
-      fetchUserById(id);
-      renderUser();
-      getContacts().then(contacts => renderContacts(contacts));
+    renderPageTitle("Informations de l'étudiant");
+    document.title = "Informations de l'étudiant";
+    clearPage();
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+    fetchUserById(id);
+    fetchContacts(id);
+    renderUser();
+    renderContacts();
   }
 };
-
 
 function renderUser(user) {
   const main = document.querySelector('main');
@@ -68,11 +66,12 @@ function renderUser(user) {
     </div>
   </div>
   `;
-};
+}
 
 function renderContacts(contacts) {
   const tbody = document.querySelector('tbody');
-  contacts.forEach(contact => {
+  if (!contacts) return;
+  contacts.forEach((contact) => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${contact.company.tradeName} - ${contact.company.designation || 'Pas de désignation'}</td>
