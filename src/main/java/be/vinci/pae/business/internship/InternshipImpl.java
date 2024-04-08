@@ -1,7 +1,9 @@
 package be.vinci.pae.business.internship;
 
+import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorDTO;
+import be.vinci.pae.business.user.UserDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.sql.Date;
 
@@ -13,6 +15,8 @@ public class InternshipImpl implements Internship {
   private int idInternship;
 
   private int idStudent;
+
+  private UserDTO student;
 
   private String internshipProject;
 
@@ -29,6 +33,8 @@ public class InternshipImpl implements Internship {
 
   private int idCompany;
 
+  private CompanyDTO company;
+
   private int version;
 
 
@@ -40,6 +46,22 @@ public class InternshipImpl implements Internship {
   @Override
   public void setIdInternship(int idInternship) {
     this.idInternship = idInternship;
+  }
+
+  public UserDTO getStudent() {
+    return student;
+  }
+
+  public void setStudent(UserDTO student) {
+    this.student = student;
+  }
+
+  public CompanyDTO getCompany() {
+    return company;
+  }
+
+  public void setCompany(CompanyDTO company) {
+    this.company = company;
   }
 
   @Override
