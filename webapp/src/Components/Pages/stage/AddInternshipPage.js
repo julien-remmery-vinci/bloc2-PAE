@@ -193,7 +193,7 @@ async function addSupervisor(supervisor) {
         body: JSON.stringify(supervisor),
     });
     if (response.status === 200) {
-        Navigate('/stage');
+        InternshipPage();
     } else {
         const alert = document.querySelector('#alert');
         alert.hidden = false;
