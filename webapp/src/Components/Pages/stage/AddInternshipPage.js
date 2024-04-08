@@ -25,7 +25,7 @@ async function renderInternshipPage() {
     leftDiv.appendChild(getInternshipInfos());
     const rightDiv = document.createElement('div');
     rightDiv.style.width = '50%';
-    rightDiv.appendChild(getSupervisorInfos());
+    rightDiv.appendChild(await getSupervisorInfos());
     rightDiv.appendChild(addNewSupervisor());
     mainDiv.appendChild(leftDiv);
     mainDiv.appendChild(rightDiv);
@@ -59,7 +59,7 @@ function getInternshipInfos() {
     return contactInfosDiv;
 }
 
-function getSupervisorInfos() {
+async function getSupervisorInfos() {
     const supervisorInfosDiv = document.createElement('div');
     const supervisorLabel = document.createElement('label');
     supervisorLabel.textContent = 'Veuillez selectionner un responsable de stage';
@@ -69,20 +69,21 @@ function getSupervisorInfos() {
     const supervisorSelect = document.createElement('select');
     supervisorSelect.className = 'form-control';
     supervisorSelect.style.width = '50%';
-    if (supervisorSelect.length === 0) {
-        const option = document.createElement('option');
-        option.textContent = 'Aucun responsable de stage trouvé';
-        supervisorSelect.appendChild(option);
+    const supervisorList = await getSupervisors();
+    if(supervisorList.length === 0){
+        const supervisorOption = document.createElement('option');
+        supervisorOption.text = 'Aucun responsable de stage trouvé';
+        supervisorSelect.appendChild(supervisorOption);
     } else {
-    getSupervisors().then(supervisors => {
-        supervisors.forEach(supervisor => {
-            const option = document.createElement('option');
-            option.value = supervisor.idSupervisor;
-            option.textContent = `${supervisor.firstName  } ${  supervisor.lastName}`;
-            supervisorSelect.appendChild(option);
+        supervisorList.forEach(supervisor => {
+            const supervisorOption = document.createElement('option');
+            supervisorOption.text = `${supervisor.firstName} ${supervisor.lastName}`;
+            supervisorOption.value = supervisor.id;
+            supervisorSelect.appendChild(supervisorOption);
         });
-    });
     }
+
+    
     supervisorInfosDiv.appendChild(supervisorSelect);
     return supervisorInfosDiv;
 }
@@ -99,7 +100,7 @@ async function getSupervisors(){
   if (supervisors.status === 200) {
       return supervisors.json();
   }
-  return "error";
+  return undefined;
 }
 
 function addNewSupervisor() {
@@ -130,6 +131,7 @@ function addNewSupervisorForm() {
     const firstNameInput = document.createElement('input');
     firstNameInput.type = 'text';
     firstNameInput.className = 'form-control';
+    firstNameInput.required = true;
     form.appendChild(firstNameInput);
     const lastNameLabel = document.createElement('label');
     lastNameLabel.textContent = 'Nom';
@@ -137,6 +139,7 @@ function addNewSupervisorForm() {
     const lastNameInput = document.createElement('input');
     lastNameInput.type = 'text';
     lastNameInput.className = 'form-control';
+    lastNameInput.required = true;
     form.appendChild(lastNameInput);
     const emailLabel = document.createElement('label');
     emailLabel.textContent = 'Email (facultatif)';
@@ -151,19 +154,28 @@ function addNewSupervisorForm() {
     const phoneInput = document.createElement('input');
     phoneInput.type = 'text';
     phoneInput.className = 'form-control';
+    phoneInput.required = true;
     form.appendChild(phoneInput);
     const submitButton = document.createElement('button');
     submitButton.textContent = 'Enregistrer';
     submitButton.className = 'btn btn-primary';
     submitButton.style.width = '50%';
     submitButton.style.marginTop = '5%';
+    const alert = document.createElement('p');
+    alert.id = 'alert';
+    alert.className = 'alert alert-danger';
+    alert.style.width = '40%';  
+    alert.hidden = true;
+    form.appendChild(alert);
+
     submitButton.addEventListener('click', (e) => {
         e.preventDefault();
         const supervisor = {
             firstName: firstNameInput.value,
             lastName: lastNameInput.value,
             email: emailInput.value,
-            phone: phoneInput.value,
+            phoneNumber: phoneInput.value,
+            idCompany: new URLSearchParams(window.location.search).get('idCompany'),
         };
         addSupervisor(supervisor);
     });
@@ -180,8 +192,13 @@ async function addSupervisor(supervisor) {
         },
         body: JSON.stringify(supervisor),
     });
-    if (response.status === 201) {
-        alert('Responsable de stage ajouté avec succès');
+    if (response.status === 200) {
+        Navigate('/stage');
+    } else {
+        const alert = document.querySelector('#alert');
+        alert.hidden = false;
+        alert.textContent = await response.text();
+
     }
 }
 
