@@ -65,4 +65,23 @@ public class InternshipSupervisorDAOImpl implements InternshipSupervisorDAO {
     }
     return null;
   }
+
+  @Override
+  public InternshipSupervisorDTO getInternshipSupervisorById(int id) {
+    try (PreparedStatement ps = dalServices.getPS(
+        "SELECT * FROM pae.internshipSupervisors, pae.companies WHERE "
+            + "internshipsupervisor_idCompany = company_idCompany AND "
+            + "internshipsupervisor_idInternshipSupervisor=?;")) {
+      ps.setInt(1, id);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          String prefix = "internshipSupervisor";
+          return (InternshipSupervisorDTO) daoServices.getDataFromRs(rs, prefix);
+        }
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return null;
+  }
 }
