@@ -1,9 +1,7 @@
 package be.vinci.pae.business.internship;
 
-import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorDTO;
-import be.vinci.pae.business.user.UserDTO;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.sql.Date;
 
@@ -27,34 +25,6 @@ public interface InternshipDTO {
    * @param idInternship the idInternship to set
    */
   void setIdInternship(int idInternship);
-
-  /**
-   * getter for student.
-   *
-   * @return the student
-   */
-  UserDTO getStudent();
-
-  /**
-   * setter for student.
-   *
-   * @param student the student to set
-   */
-  void setStudent(UserDTO student);
-
-  /**
-   * getter for company.
-   *
-   * @return the company
-   */
-  CompanyDTO getCompany();
-
-  /**
-   * setter for company.
-   *
-   * @param company the company to set
-   */
-  void setCompany(CompanyDTO company);
 
   /**
    * getter for idStudent.

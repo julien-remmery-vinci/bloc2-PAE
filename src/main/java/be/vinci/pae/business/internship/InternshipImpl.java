@@ -48,22 +48,6 @@ public class InternshipImpl implements Internship {
     this.idInternship = idInternship;
   }
 
-  public UserDTO getStudent() {
-    return student;
-  }
-
-  public void setStudent(UserDTO student) {
-    this.student = student;
-  }
-
-  public CompanyDTO getCompany() {
-    return company;
-  }
-
-  public void setCompany(CompanyDTO company) {
-    this.company = company;
-  }
-
   @Override
   public int getIdStudent() {
     return idStudent;
