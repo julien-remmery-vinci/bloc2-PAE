@@ -158,6 +158,15 @@ async function buildPage() {
       addressInput.required = true;
       form.appendChild(addressInput);
 
+      const cityLabel = document.createElement('label');
+      cityLabel.textContent = 'Ville';
+      form.appendChild(cityLabel);
+      const cityInput = document.createElement('input');
+      cityInput.type = 'text';
+      cityInput.className = 'form-control';
+      cityInput.required = false;
+      form.appendChild(cityInput);
+
       const phoneLabel = document.createElement('label');
       phoneLabel.textContent = 'Numero de téléphone';
       form.appendChild(phoneLabel);
@@ -203,19 +212,24 @@ async function getCompanies() {
 }
 async function createSubmit(e) {
   e.preventDefault();
-  const name = document.querySelector('input[type="text"]').value;
+  const tradeName = document.querySelector('input[type="text"]').value;
   const address = document.querySelectorAll('input[type="text"]')[1].value;
-  const phoneNumber = document.querySelectorAll('input[type="text"]')[2].value;
-  const appellation = document.querySelectorAll('input[type="text"]')[3].value;
+  const city = document.querySelectorAll('input[type="text"]')[2].value;
+  const phoneNumber = document.querySelectorAll('input[type="text"]')[3].value;
+  const designation = document.querySelectorAll('input[type="text"]')[4].value;
   const alert = document.querySelector('#alert');
-  if (name === '' || address === '') {
+  if (tradeName === '' || address === '') {
     alert.hidden = false;
     alert.textContent = 'Veuillez remplir les champs obligatoires';
     return;
   }
   const options = {
     method: 'POST', body: JSON.stringify({
-      tradeName: name, address, phoneNumber, designation: appellation,
+          tradeName,
+          designation,
+          address,
+          city,
+          phoneNumber
     }), headers: {
       'Content-Type': 'application/json', 'Authorization': getToken(),
     },
