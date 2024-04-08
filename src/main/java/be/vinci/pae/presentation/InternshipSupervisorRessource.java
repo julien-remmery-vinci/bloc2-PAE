@@ -43,16 +43,16 @@ public class InternshipSupervisorRessource {
   public InternshipSupervisorDTO addInternshipSupervisor(
       InternshipSupervisorDTO internshipSupervisor) {
     if (internshipSupervisor.getIdCompany() < 0) {
-      throw new IllegalArgumentException("Invalid id");
+      throw new IllegalArgumentException("Invalid Company id");
     }
     if (internshipSupervisor.getFirstName() == null || internshipSupervisor.getFirstName().isEmpty()
         || internshipSupervisor.getLastName() == null
         || internshipSupervisor.getLastName().isEmpty()) {
-      throw new IllegalArgumentException("Invalid name");
+      throw new IllegalArgumentException("Nom invalide");
     }
     if (internshipSupervisor.getPhoneNumber() == null
         || internshipSupervisor.getPhoneNumber().isEmpty()) {
-      throw new IllegalArgumentException("Invalid phone number");
+      throw new IllegalArgumentException("Numéro invalide");
     }
     return internshipSupervisorUCC.addInternshipSupervisor(internshipSupervisor);
   }
