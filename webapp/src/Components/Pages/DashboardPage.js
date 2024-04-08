@@ -26,8 +26,8 @@ async function buildPage() {
   // companiesDiv.style.border = '1px solid blue';
   statsDiv.style.width = '40%';
   companiesDiv.style.width = '60%';
-  statsDiv.style.height = '92vh';
-  companiesDiv.style.height = '92vh';
+  statsDiv.style.height = '90vh';
+  companiesDiv.style.height = '90vh';
   statsDiv.id = 'stats';
   companiesDiv.id = 'companies';
   companies = await getCompanies();
@@ -156,6 +156,9 @@ function getAcademicYearFromRegisterDate(registerDate) {
 
 function renderCompanies(academicYear) {
   const div = document.getElementById('companies');
+  div.style.overflow = 'auto';
+  div.style.height = '85vh';
+  div.style.scrollBehavior = 'smooth'
   div.innerHTML = '';
   const title = document.createElement('h3');
   title.textContent = 'Liste des entreprises';
@@ -170,7 +173,10 @@ function renderCompanies(academicYear) {
   const table = document.createElement('table');
   table.className = 'table';
   table.style.width = '80%';
+  table.style.maxHeight = '40vh';
   const thead = document.createElement('thead');
+  thead.style.position = 'sticky';
+  thead.style.top = '0';
   const tbody = document.createElement('tbody');
   const tr = document.createElement('tr');
   const th1 = document.createElement('th');

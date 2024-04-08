@@ -25,7 +25,7 @@ function buildPage(data) {
   contactsDiv.id = 'contacts';
   mainDiv.appendChild(infosDiv);
   mainDiv.appendChild(contactsDiv);
-  mainDiv.style.height = '92vh';
+  mainDiv.style.height = '90vh';
   main.appendChild(mainDiv);
   displayCompanyInfos(data);
   displayContacts(data.contacts);
@@ -161,12 +161,18 @@ function displayCompanyInfos(company) {
 }
 
 function displayContacts(contacts) {
-  document.getElementById('contacts').innerHTML = '';
+  const div = document.getElementById('contacts');
+  div.innerHTML = '';
+  div.style.overflow = 'auto';
+  div.style.height = '60vh';
+  div.style.scrollBehavior = 'smooth';
   const table = document.createElement('table');
   table.className = 'table';
   table.style.width = '80%';
   table.style.margin = 'auto';
   const thead = document.createElement('thead');
+  thead.style.position = 'sticky';
+  thead.style.top = '0';
   const tbody = document.createElement('tbody');
   const tr = document.createElement('tr');
   const th1 = document.createElement('th');
