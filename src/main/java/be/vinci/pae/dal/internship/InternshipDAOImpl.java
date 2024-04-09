@@ -55,6 +55,31 @@ public class InternshipDAOImpl implements InternshipDAO {
   }
 
   @Override
+  public InternshipDTO addInternship(InternshipDTO internship) {
+    try (PreparedStatement ps = dalServices.getPS(
+        "INSERT INTO pae.internships (internship_idCompany, internship_idStudent, "
+            + "internship_idContact, internship_idInternshipSupervisor, internship_internshipprojet, "
+            + "internship_signatureDate, internship_version) "
+            + "VALUES (?, ?, ?, ?, ?, ?, 1) RETURNING internship_idInternship;")) {
+      ps.setInt(1, internship.getIdCompany());
+      ps.setInt(2, internship.getIdStudent());
+      ps.setInt(3, internship.getIdContact());
+      ps.setInt(4, internship.getIdInternshipSupervisor());
+      ps.setString(5, internship.getInternshipProject());
+      ps.setDate(6, internship.getSignatureDate());
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          internship.setIdInternship(rs.getInt(1));
+          return internship;
+        }
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return null;
+  }
+
+  @Override
   public InternshipDTO getInternshipByStudentId(int id) {
     try (PreparedStatement ps = dalServices.getPS(
         "SELECT * FROM pae.internships WHERE internship_idStudent = ?")) {

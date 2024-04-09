@@ -16,6 +16,13 @@ public interface InternshipDAO {
    */
   List<InternshipDTO> getInternshipById(int id);
 
+  /**
+   * Get all internships.
+   *
+   * @param internship the internship to add
+   * @return the internship added
+   */
+  InternshipDTO addInternship(InternshipDTO internship);
 
   /**
    * Get internship by student id.
