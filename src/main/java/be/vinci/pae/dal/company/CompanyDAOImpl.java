@@ -60,17 +60,17 @@ public class CompanyDAOImpl implements CompanyDAO {
   @Override
   public CompanyDTO addCompany(CompanyDTO company) {
     try (PreparedStatement ps = dalServices.getPS(
-        "INSERT INTO pae.companies (company_tradeName, company_designation,"
-            + " company_address, company_city, company_phoneNumber, company_email, "
-            + "company_blacklisted, company_blacklistmotivation, company_version) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, 1) RETURNING company_idCompany;")) {
+        "INSERT INTO pae.companies (company_tradeName, company_designation, company_address, "
+            + "company_city, company_phoneNumber, company_blacklisted, company_version) "
+            + "VALUES (?, ?, ?, ?, ?, FALSE, 1) RETURNING company_idCompany;")) {
       ps.setString(1, company.getTradeName());
+      ps.setString(2, company.getDesignation());
       ps.setString(3, company.getAddress());
-      ps.setBoolean(7, company.isBlacklisted());
+      ps.setString(4, company.getCity());
+      ps.setString(5, company.getPhoneNumber());
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           company.setIdCompany(rs.getInt(1));
-
           return company;
         }
       }

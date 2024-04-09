@@ -28,24 +28,29 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public List<ContactDTO> getContacts(UserDTO user) {
-    if (user == null) {
-      throw new NotFoundException("User not found");
+    try {
+      dalServices.open();
+      if (user == null) {
+        throw new NotFoundException("User not found");
+      }
+      return contactDAO.getAllContacts();
+    } finally {
+      dalServices.close();
     }
-    List<ContactDTO> list = contactDAO.getAllContacts();
-    dalServices.close();
-    return list;
   }
 
   @Override
   public List<ContactDTO> getContactsByStudentId(UserDTO user) {
-    if (user == null) {
-      throw new NotFoundException("User not found");
+    try {
+      dalServices.open();
+      if (user == null) {
+        throw new NotFoundException("User not found");
+      }
+      return contactDAO.getContactsByStudentId(user.getIdUser());
+    } finally {
+      dalServices.close();
     }
-    List<ContactDTO> list = contactDAO.getContactsByStudentId(user.getIdUser());
-    dalServices.close();
-    return list;
   }
-
 
   @Override
   public ContactDTO refuseContact(int idContact, String refusalReason, int idUser) {
@@ -181,6 +186,16 @@ public class ContactUCCImpl implements ContactUCC {
   public List<ContactDTO> getAllContacts() {
     try {
       return contactDAO.getAllContacts();
+    } finally {
+      dalServices.close();
+    }
+  }
+
+  @Override
+  public List<ContactDTO> getContactsByStudentIdBis(int idStudent) {
+    try {
+      dalServices.open();
+      return contactDAO.getContactsByStudentId(idStudent);
     } finally {
       dalServices.close();
     }
