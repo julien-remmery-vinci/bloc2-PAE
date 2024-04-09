@@ -55,3 +55,8 @@ Authorization: {{token}}
 ### Get list of contacts for a company
 GET {{contactUrl}}/company/2
 Authorization: {{token}}
+
+### accept a contact
+POST {{contactUrl}}/19/accept
+Content-Type: application/json
+Authorization: {{token}}
