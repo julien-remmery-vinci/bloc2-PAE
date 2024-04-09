@@ -27,6 +27,34 @@ async function renderInternshipPage() {
     rightDiv.style.width = '50%';
     rightDiv.appendChild(await getSupervisorInfos());
     rightDiv.appendChild(addNewSupervisor());
+    const subjectDiv = document.createElement('div');
+    subjectDiv.style.marginTop = '5%';
+    const subjectLabel = document.createElement('label');
+    subjectLabel.textContent = 'Sujet du stage (s’il est déjà mentionné dans le document de modalités)';
+    subjectDiv.appendChild(subjectLabel);
+    const subjectInput = document.createElement('input');
+    subjectInput.type = 'text';
+    subjectInput.className = 'form-control';
+    subjectInput.required = true;
+    subjectInput.style.width = '50%';
+    subjectDiv.appendChild(subjectInput);
+    rightDiv.appendChild(subjectDiv);
+    const submitButton = document.createElement('button');
+    submitButton.textContent = 'Enregistrer';
+    submitButton.className = 'btn btn-primary';
+    submitButton.style.width = '50%';
+    submitButton.style.marginTop = '5%';
+    submitButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        const queryParams = new URLSearchParams(window.location.search);
+        const internship = {
+            idCompany: queryParams.get('idCompany'),
+            idSupervisor: document.querySelector('select').value,
+            subject: subjectInput.value,
+        };
+        addInternship(internship);
+    });
+    rightDiv.appendChild(submitButton);
     mainDiv.appendChild(leftDiv);
     mainDiv.appendChild(rightDiv);
     main.appendChild(mainDiv);
@@ -199,6 +227,24 @@ async function addSupervisor(supervisor) {
         alert.hidden = false;
         alert.textContent = await response.text();
 
+    }
+}
+
+async function addInternship(internship) {
+    const response = await fetch('http://localhost:3000/internships', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': getToken(),
+        },
+        body: JSON.stringify(internship),
+    });
+    if (response.status === 200) {
+        Navigate('/stage');
+    } else {
+        const alert = document.querySelector('#alert');
+        alert.hidden = false;
+        alert.textContent = await response.text();
     }
 }
 
