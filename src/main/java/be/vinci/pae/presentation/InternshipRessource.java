@@ -44,6 +44,13 @@ public class InternshipRessource {
     return internshipUCC.getInternshipById(user);
   }
 
+  /**
+   * Add an internship.
+   *
+   * @param request    the request's context
+   * @param internship the internship to add
+   * @return the added internship
+   */
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)

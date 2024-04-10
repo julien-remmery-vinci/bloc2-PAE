@@ -54,8 +54,8 @@ public class InternshipUCCImpl implements InternshipUCC {
   public InternshipDTO addInternship(InternshipDTO internship) {
     try {
       dalServices.start();
-      InternshipSupervisorDTO internshipSupervisor = internshipSupervisorDAO.getInternshipSupervisorById(
-          internship.getIdInternshipSupervisor());
+      InternshipSupervisorDTO internshipSupervisor = internshipSupervisorDAO.
+          getInternshipSupervisorById(internship.getIdInternshipSupervisor());
       if (internshipSupervisor == null) {
         throw new NotFoundException("Internship supervisor not found");
       }

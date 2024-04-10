@@ -25,7 +25,7 @@ public interface InternshipSupervisorDAO {
   InternshipSupervisorDTO addInternshipSupervisor(InternshipSupervisorDTO internshipSupervisor);
 
   /**
-   * Get an internship supervisor by its id
+   * Get an internship supervisor by its id.
    */
   InternshipSupervisorDTO getInternshipSupervisorById(int id);
 }

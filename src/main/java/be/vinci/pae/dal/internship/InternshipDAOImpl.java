@@ -58,7 +58,8 @@ public class InternshipDAOImpl implements InternshipDAO {
   public InternshipDTO addInternship(InternshipDTO internship) {
     try (PreparedStatement ps = dalServices.getPS(
         "INSERT INTO pae.internships (internship_idCompany, internship_idStudent, "
-            + "internship_idContact, internship_idInternshipSupervisor, internship_internshipprojet, "
+            + "internship_idContact, internship_idInternshipSupervisor, "
+            + "internship_internshipprojet, "
             + "internship_signatureDate, internship_version) "
             + "VALUES (?, ?, ?, ?, ?, ?, 1) RETURNING internship_idInternship;")) {
       ps.setInt(1, internship.getIdCompany());

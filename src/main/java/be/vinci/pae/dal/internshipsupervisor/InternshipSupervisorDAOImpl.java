@@ -47,8 +47,11 @@ public class InternshipSupervisorDAOImpl implements InternshipSupervisorDAO {
       InternshipSupervisorDTO internshipSupervisor) {
     try (PreparedStatement ps = dalServices.getPS(
         "INSERT INTO pae.internshipSupervisors (internshipsupervisor_idCompany, "
-            + "internshipsupervisor_firstname, internshipSupervisor_lastname, internshipsupervisor_email, internshipsupervisor_phoneNumber, internshipSupervisor_version)"
-            + " VALUES (?, ?, ?, ?, ?, 1) RETURNING internshipsupervisor_idInternshipSupervisor;")) {
+            + "internshipsupervisor_firstname, internshipSupervisor_lastname, "
+            + "internshipsupervisor_email, internshipsupervisor_phoneNumber, "
+            + "internshipSupervisor_version)"
+            + " VALUES (?, ?, ?, ?, ?, 1) RETURNING "
+            + "internshipsupervisor_idInternshipSupervisor;")) {
       ps.setInt(1, internshipSupervisor.getIdCompany());
       ps.setString(2, internshipSupervisor.getFirstName());
       ps.setString(3, internshipSupervisor.getLastName());

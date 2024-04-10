@@ -26,6 +26,12 @@ public class InternshipSupervisorRessource {
   @Inject
   private InternshipSupervisorUCC internshipSupervisorUCC;
 
+  /**
+   * Get all supervisors by a company id.
+   *
+   * @param idCompany the id of the company
+   * @return the list of all supervisors
+   */
   @GET
   @Path("/company/{id}")
   @Produces(MediaType.APPLICATION_JSON)
@@ -36,6 +42,12 @@ public class InternshipSupervisorRessource {
     return internshipSupervisorUCC.getSupervisorsByCompanyID(idCompany);
   }
 
+  /**
+   * Add an internship supervisor.
+   *
+   * @param internshipSupervisor the internship supervisor to add
+   * @return the internship supervisor added
+   */
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)

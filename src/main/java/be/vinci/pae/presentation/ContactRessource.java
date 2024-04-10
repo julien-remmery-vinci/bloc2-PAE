@@ -160,6 +160,13 @@ public class ContactRessource {
     return contactUCC.addContact(contact);
   }
 
+
+  /**
+   * Get all contacts by company.
+   *
+   * @param idCompany the id of the company
+   * @return the list of contacts
+   */
   @GET
   @Path("/company/{id}")
   @Produces(MediaType.APPLICATION_JSON)
@@ -197,6 +204,12 @@ public class ContactRessource {
   }
 
 
+  /**
+   * Get all contacts by student.
+   *
+   * @param idStudent the id of the student
+   * @return the list of contacts
+   */
   @GET
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
