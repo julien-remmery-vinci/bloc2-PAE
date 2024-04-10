@@ -91,5 +91,19 @@ public class CompanyUCCTest {
         () -> companyUCC.blacklistCompany(idCompany, refusalReason));
   }
 
+  @Test
+  @DisplayName("test to add a company that already exists")
+  void testAddCompanyNull() {
+    assertThrows(ConflictException.class, () -> companyUCC.addCompany(company));
+  }
+
+  @Test
+    @DisplayName("test to add a company")
+  void testAddCompany() {
+    company.setIdCompany(4);
+    Mockito.when(companyDAO.getCompanyById(company.getIdCompany())).thenReturn(null);
+    Mockito.when(companyDAO.addCompany(company)).thenReturn(company);
+    assertNotNull(companyUCC.addCompany(company));
+  }
 
 }
