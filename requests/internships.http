@@ -6,8 +6,8 @@ POST {{authsUrl}}/login
 Content-Type: application/json
 
 {
-  "email": "julien.remmery@student.vinci.be",
-  "password": "test"
+  "email": "hadjera.emroska@student.vinci.be",
+  "password": "12345678"
 }
 
 > {%
@@ -17,3 +17,17 @@ Content-Type: application/json
 ### Try to get all internships
 GET {{contactUrl}}
 Authorization: {{token}}
+
+### Try to add an internship
+POST {{contactUrl}}
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "idStudent": 14,
+  "idCompany": 3,
+  "idContact": 33,
+  "internshipProject": "Internship 1",
+  "idInternshipSupervisor": 8,
+  "signatureDate": "2021-01-01"
+}
