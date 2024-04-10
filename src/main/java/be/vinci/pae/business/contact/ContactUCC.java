@@ -98,4 +98,13 @@ public interface ContactUCC {
    * @return the list of all contacts by student id
    */
   List<ContactDTO> getContactsByStudentIdBis(int idStudent);
+
+  /**
+   * This method is used to accept a contact.
+   *
+   * @param idContact the id of the contact
+   * @param user      the user
+   * @return the contact
+   */
+  ContactDTO acceptContact(int idContact, UserDTO user);
 }
