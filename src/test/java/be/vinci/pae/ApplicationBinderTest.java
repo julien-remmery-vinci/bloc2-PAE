@@ -10,12 +10,15 @@ import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.business.contact.ContactUCCImpl;
 import be.vinci.pae.business.internship.InternshipUCC;
 import be.vinci.pae.business.internship.InternshipUCCImpl;
+import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorUCC;
+import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorUCCImpl;
 import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.business.user.UserUCCImpl;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
 import be.vinci.pae.dal.internship.InternshipDAO;
+import be.vinci.pae.dal.internshipsupervisor.InternshipSupervisorDAO;
 import be.vinci.pae.dal.user.UserDAO;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.ext.Provider;
@@ -41,5 +44,7 @@ public class ApplicationBinderTest extends AbstractBinder {
     bind(AcademicYearImpl.class).to(AcademicYear.class).in(Singleton.class);
     bind(Mockito.mock(InternshipDAO.class)).to(InternshipDAO.class);
     bind(InternshipUCCImpl.class).to(InternshipUCC.class).in(Singleton.class);
+    bind(Mockito.mock(InternshipSupervisorDAO.class)).to(InternshipSupervisorDAO.class);
+    bind(InternshipSupervisorUCCImpl.class).to(InternshipSupervisorUCC.class).in(Singleton.class);
   }
 }
