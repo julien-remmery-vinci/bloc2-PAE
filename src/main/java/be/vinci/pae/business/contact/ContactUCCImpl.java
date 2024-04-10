@@ -202,21 +202,21 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ContactDTO acceptContact(int idContact, UserDTO user) {
+  public ContactDTO acceptContact(int idContact, int idUser) {
     try {
       dalServices.start();
       ContactDTO contact = contactDAO.getOneById(idContact);
       if (contact == null) {
         throw new NotFoundException("Contact not found");
       }
-      if (contact.getIdStudent() != user.getIdUser()) {
+      if (contact.getIdStudent() != idUser) {
         throw new PreconditionFailedException("You don't have a contact with this id");
       }
       if (!((Contact) contact).updateState(State.ACCEPTED)) {
         throw new PreconditionFailedException(
             "The contact must be in the state 'admitted' to be accepted");
       }
-      List<ContactDTO> contacts = contactDAO.getContactsByStudentId(user.getIdUser());
+      List<ContactDTO> contacts = contactDAO.getContactsByStudentId(idUser);
       for (ContactDTO c : contacts) {
         if (c.getIdContact() != idContact && ((Contact) c).updateState(State.ON_HOLD)) {
           contactDAO.updateContact(c);
