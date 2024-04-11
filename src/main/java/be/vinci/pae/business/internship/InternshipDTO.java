@@ -2,11 +2,13 @@ package be.vinci.pae.business.internship;
 
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorDTO;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.sql.Date;
 
 /**
  * The Interface InternshipDTO.
  */
+@JsonDeserialize(as = InternshipImpl.class)
 public interface InternshipDTO {
 
 

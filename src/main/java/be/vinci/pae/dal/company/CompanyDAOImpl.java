@@ -3,9 +3,9 @@ package be.vinci.pae.dal.company;
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
-import be.vinci.pae.presentation.exceptions.ConflictException;
-import be.vinci.pae.presentation.exceptions.FatalException;
-import be.vinci.pae.presentation.exceptions.NotFoundException;
+import be.vinci.pae.exceptions.ConflictException;
+import be.vinci.pae.exceptions.FatalException;
+import be.vinci.pae.exceptions.NotFoundException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -61,13 +61,9 @@ public class CompanyDAOImpl implements CompanyDAO {
   public CompanyDTO addCompany(CompanyDTO company) {
     try (PreparedStatement ps = dalServices.getPS(
         "INSERT INTO pae.companies (company_tradeName, company_designation, company_address, "
-            + "company_city, company_phoneNumber, company_blacklisted, company_version) "
-            + "VALUES (?, ?, ?, ?, ?, FALSE, 1) RETURNING company_idCompany;")) {
-      ps.setString(1, company.getTradeName());
-      ps.setString(2, company.getDesignation());
-      ps.setString(3, company.getAddress());
-      ps.setString(4, company.getCity());
-      ps.setString(5, company.getPhoneNumber());
+            + "company_city, company_phoneNumber, company_email, company_blacklisted, company_version) "
+            + "VALUES (?, ?, ?, ?, ?, ?, FALSE, 1) RETURNING company_idCompany;")) {
+      psSetString(company, ps);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           company.setIdCompany(rs.getInt(1));
@@ -80,6 +76,15 @@ public class CompanyDAOImpl implements CompanyDAO {
     return null;
   }
 
+  private void psSetString(CompanyDTO company, PreparedStatement ps) throws SQLException {
+    ps.setString(1, company.getTradeName());
+    ps.setString(2, company.getDesignation());
+    ps.setString(3, company.getAddress());
+    ps.setString(4, company.getCity());
+    ps.setString(5, company.getPhoneNumber());
+    ps.setString(6, company.getEmail());
+  }
+
   @Override
   public CompanyDTO updateCompany(CompanyDTO company) {
     try (PreparedStatement ps = dalServices.getPS(
@@ -88,12 +93,7 @@ public class CompanyDAOImpl implements CompanyDAO {
             + " company_blacklisted = ?, company_blacklistmotivation = ?, "
             + "company_version = company_version + 1 WHERE company_idCompany = ?"
             + " AND company_version = ? RETURNING *")) {
-      ps.setString(1, company.getTradeName());
-      ps.setString(2, company.getDesignation());
-      ps.setString(3, company.getAddress());
-      ps.setString(4, company.getCity());
-      ps.setString(5, company.getPhoneNumber());
-      ps.setString(6, company.getEmail());
+      psSetString(company, ps);
       ps.setBoolean(7, company.isBlacklisted());
       ps.setString(8, company.getBlacklistMotivation());
       ps.setInt(9, company.getIdCompany());

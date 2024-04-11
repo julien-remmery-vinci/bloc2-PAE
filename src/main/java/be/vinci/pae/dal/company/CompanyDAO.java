@@ -27,6 +27,7 @@ public interface CompanyDAO {
    * Update a company.
    *
    * @param company the company to update
+   * @return the company updated
    */
   CompanyDTO updateCompany(CompanyDTO company);
 

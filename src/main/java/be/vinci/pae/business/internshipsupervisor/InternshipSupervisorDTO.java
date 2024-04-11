@@ -1,10 +1,12 @@
 package be.vinci.pae.business.internshipsupervisor;
 
 import be.vinci.pae.business.company.CompanyDTO;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
  * The Interface InternshipSupervisorDTO.
  */
+@JsonDeserialize(as = InternshipSupervisorImpl.class)
 public interface InternshipSupervisorDTO {
 
   /**

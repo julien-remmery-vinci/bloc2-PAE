@@ -1,23 +1,24 @@
-package be.vinci.pae.presentation.exceptions;
+package be.vinci.pae.exceptions;
+
 
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Class for the UnauthorizedException.
+ * Class for the ConflictException.
  */
-public class UnauthorizedException extends WebApplicationException {
+public class ConflictException extends WebApplicationException {
 
   /**
    * The status of the exception.
    */
-  public static final Status STATUS = Status.UNAUTHORIZED;
+  public static final Status STATUS = Status.CONFLICT;
 
   /**
-   * Default constructor.
+   * Constructor without a message.
    */
-  public UnauthorizedException() {
+  public ConflictException() {
     super(Response.status(STATUS)
         .build());
   }
@@ -27,7 +28,7 @@ public class UnauthorizedException extends WebApplicationException {
    *
    * @param message the message
    */
-  public UnauthorizedException(String message) {
+  public ConflictException(String message) {
     super(Response.status(STATUS)
         .entity(message)
         .type("text/plain")
@@ -39,10 +40,11 @@ public class UnauthorizedException extends WebApplicationException {
    *
    * @param cause the cause
    */
-  public UnauthorizedException(Throwable cause) {
+  public ConflictException(Throwable cause) {
     super(Response.status(STATUS)
         .entity(cause.getMessage())
         .type("text/plain")
         .build());
   }
 }
+

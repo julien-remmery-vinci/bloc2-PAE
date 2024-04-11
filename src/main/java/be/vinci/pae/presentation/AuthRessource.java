@@ -2,10 +2,10 @@ package be.vinci.pae.presentation;
 
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
-import be.vinci.pae.presentation.exceptions.BadRequestException;
-import be.vinci.pae.presentation.exceptions.ConflictException;
-import be.vinci.pae.presentation.exceptions.NotFoundException;
-import be.vinci.pae.presentation.exceptions.UnauthorizedException;
+import be.vinci.pae.exceptions.BadRequestException;
+import be.vinci.pae.exceptions.ConflictException;
+import be.vinci.pae.exceptions.NotFoundException;
+import be.vinci.pae.exceptions.UnauthorizedException;
 import be.vinci.pae.presentation.filters.Authorize;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;

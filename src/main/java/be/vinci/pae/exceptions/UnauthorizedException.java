@@ -1,23 +1,23 @@
-package be.vinci.pae.presentation.exceptions;
+package be.vinci.pae.exceptions;
 
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Class for the ForbiddenException.
+ * Class for the UnauthorizedException.
  */
-public class ForbiddenException extends WebApplicationException {
+public class UnauthorizedException extends WebApplicationException {
 
   /**
    * The status of the exception.
    */
-  public static final Status STATUS = Status.FORBIDDEN;
+  public static final Status STATUS = Status.UNAUTHORIZED;
 
   /**
-   * Constructor without a message.
+   * Default constructor.
    */
-  public ForbiddenException() {
+  public UnauthorizedException() {
     super(Response.status(STATUS)
         .build());
   }
@@ -27,7 +27,7 @@ public class ForbiddenException extends WebApplicationException {
    *
    * @param message the message
    */
-  public ForbiddenException(String message) {
+  public UnauthorizedException(String message) {
     super(Response.status(STATUS)
         .entity(message)
         .type("text/plain")
@@ -39,7 +39,7 @@ public class ForbiddenException extends WebApplicationException {
    *
    * @param cause the cause
    */
-  public ForbiddenException(Throwable cause) {
+  public UnauthorizedException(Throwable cause) {
     super(Response.status(STATUS)
         .entity(cause.getMessage())
         .type("text/plain")

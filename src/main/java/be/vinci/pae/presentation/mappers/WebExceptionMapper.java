@@ -1,6 +1,6 @@
 package be.vinci.pae.presentation.mappers;
 
-import be.vinci.pae.presentation.exceptions.FatalException;
+import be.vinci.pae.exceptions.FatalException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;

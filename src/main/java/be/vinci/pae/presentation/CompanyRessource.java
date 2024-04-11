@@ -45,6 +45,14 @@ public class CompanyRessource {
     return companyUCC.getAll();
   }
 
+
+  /**
+   * Blacklist a company.
+   *
+   * @param id   the id of the company
+   * @param json the reason of the blacklist
+   * @return the company and its contacts
+   */
   @POST
   @Path("/{id}/blacklist")
   @Consumes(MediaType.APPLICATION_JSON)
@@ -87,13 +95,19 @@ public class CompanyRessource {
     return companyUCC.addCompany(company);
   }
 
+
+  /**
+   * Get all companies with their contacts.
+   *
+   * @return the list of all companies with their contacts
+   */
   @GET
   @Path("/contacts")
   @Produces(MediaType.APPLICATION_JSON)
   public ArrayNode getAllWithContacts() {
     List<CompanyDTO> companies = companyUCC.getAll();
     List<ContactDTO> contacts = contactUCC.getAllContacts();
-    
+
     ArrayNode companiesArray = jsonMapper.createArrayNode();
     for (CompanyDTO company : companies) {
       ObjectNode companyNode = jsonMapper.convertValue(company, ObjectNode.class);

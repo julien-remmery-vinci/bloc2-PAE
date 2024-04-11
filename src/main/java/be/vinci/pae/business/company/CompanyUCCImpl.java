@@ -3,8 +3,8 @@ package be.vinci.pae.business.company;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
-import be.vinci.pae.presentation.exceptions.ConflictException;
-import be.vinci.pae.presentation.exceptions.NotFoundException;
+import be.vinci.pae.exceptions.ConflictException;
+import be.vinci.pae.exceptions.NotFoundException;
 import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +23,7 @@ public class CompanyUCCImpl implements CompanyUCC {
   @Inject
   private ContactUCC contactUCC;
 
-  /**
-   * Get all companies.
-   *
-   * @return all companies
-   */
+  @Override
   public List<CompanyDTO> getAll() {
     try {
       dalServices.open();
@@ -37,12 +33,7 @@ public class CompanyUCCImpl implements CompanyUCC {
     }
   }
 
-  /**
-   * Get a company by its id.
-   *
-   * @param id the id of the company
-   * @return the company, null if no company was found
-   */
+  @Override
   public CompanyDTO getCompanyById(int id) {
     try {
       dalServices.open();

@@ -8,8 +8,8 @@ import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.company.CompanyUCC;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.dal.company.CompanyDAO;
-import be.vinci.pae.presentation.exceptions.ConflictException;
-import be.vinci.pae.presentation.exceptions.NotFoundException;
+import be.vinci.pae.exceptions.ConflictException;
+import be.vinci.pae.exceptions.NotFoundException;
 import java.util.ArrayList;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
@@ -98,7 +98,7 @@ public class CompanyUCCTest {
   }
 
   @Test
-    @DisplayName("test to add a company")
+  @DisplayName("test to add a company")
   void testAddCompany() {
     company.setIdCompany(4);
     Mockito.when(companyDAO.getCompanyById(company.getIdCompany())).thenReturn(null);
