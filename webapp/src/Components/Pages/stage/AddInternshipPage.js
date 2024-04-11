@@ -206,10 +206,14 @@ function addNewSupervisorForm() {
 
     submitButton.addEventListener('click', (e) => {
         e.preventDefault();
+        let emailValue = document.querySelector('input[type="email"]').value;
+        if(emailValue === ''){ 
+            emailValue = null;
+        }
         const supervisor = {
             firstName: firstNameInput.value,
             lastName: lastNameInput.value,
-            email: emailInput.value,
+            email: emailValue,
             phoneNumber: phoneInput.value,
             idCompany: new URLSearchParams(window.location.search).get('idCompany'),
         };

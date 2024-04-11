@@ -24,10 +24,9 @@ Authorization: {{token}}
 Content-Type: application/json
 
 {
-  "idStudent": 14,
-  "idCompany": 3,
-  "idContact": 33,
+  "idCompany": 1,
+  "idContact": 104,
   "internshipProject": "Internship 1",
-  "idInternshipSupervisor": 8,
-  "signatureDate": "2021-01-01"
+  "idInternshipSupervisor": 3,
+  "signatureDate": "2024-02-22"
 }
