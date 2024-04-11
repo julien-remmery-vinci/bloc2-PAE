@@ -10,7 +10,6 @@ import be.vinci.pae.dal.internship.InternshipDAO;
 import be.vinci.pae.dal.internshipsupervisor.InternshipSupervisorDAO;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
 import jakarta.inject.Inject;
-import java.sql.Date;
 import java.time.LocalDate;
 
 /**
@@ -67,8 +66,6 @@ public class InternshipUCCImpl implements InternshipUCC {
       if (internshipDAO.getInternshipByStudentId(internship.getIdStudent()) != null) {
         throw new NotFoundException("You already have an internship");
       }
-      Date registerDate = new Date(System.currentTimeMillis());
-      internship.setSignatureDate(registerDate);
       contactUCC.acceptContact(internship.getIdContact(), internship.getIdStudent());
       internship = internshipDAO.addInternship(internship);
       ContactDTO contact = contactDAO.getOneById(internship.getIdContact());
