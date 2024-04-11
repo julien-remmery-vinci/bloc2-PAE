@@ -1,12 +1,11 @@
-package be.vinci.pae.dal.internshipsupervisor;
+package be.vinci.pae.business.internshipsupervisor;
 
-import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorDTO;
 import java.util.List;
 
 /**
- * Interface of InternshipSupervisorDAOImpl.
+ * Interface of InternshipSupervisorUCCImpl.
  */
-public interface InternshipSupervisorDAO {
+public interface InternshipSupervisorUCC {
 
   /**
    * Get all the internship supervisors.
@@ -23,9 +22,4 @@ public interface InternshipSupervisorDAO {
    * @return the internship supervisor added
    */
   InternshipSupervisorDTO addInternshipSupervisor(InternshipSupervisorDTO internshipSupervisor);
-
-  /**
-   * Get an internship supervisor by its id.
-   */
-  InternshipSupervisorDTO getInternshipSupervisorById(int id);
 }

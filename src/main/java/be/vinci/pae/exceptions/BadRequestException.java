@@ -1,23 +1,23 @@
-package be.vinci.pae.presentation.exceptions;
+package be.vinci.pae.exceptions;
 
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Class for the FatalException.
+ * Class for the BadRequestException.
  */
-public class FatalException extends WebApplicationException {
+public class BadRequestException extends WebApplicationException {
 
   /**
    * The status of the exception.
    */
-  public static final Status STATUS = Status.INTERNAL_SERVER_ERROR;
+  public static final Status STATUS = Status.BAD_REQUEST;
 
   /**
    * Constructor without a message.
    */
-  public FatalException() {
+  public BadRequestException() {
     super(Response.status(STATUS)
         .build());
   }
@@ -27,7 +27,7 @@ public class FatalException extends WebApplicationException {
    *
    * @param message the message
    */
-  public FatalException(String message) {
+  public BadRequestException(String message) {
     super(Response.status(STATUS)
         .entity(message)
         .type("text/plain")
@@ -39,8 +39,10 @@ public class FatalException extends WebApplicationException {
    *
    * @param cause the cause
    */
-  public FatalException(Throwable cause) {
-    super(cause);
+  public BadRequestException(Throwable cause) {
+    super(Response.status(STATUS)
+        .entity(cause.getMessage())
+        .type("text/plain")
+        .build());
   }
-
 }

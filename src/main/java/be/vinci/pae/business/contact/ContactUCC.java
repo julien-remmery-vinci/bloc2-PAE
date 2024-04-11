@@ -103,8 +103,8 @@ public interface ContactUCC {
    * This method is used to accept a contact.
    *
    * @param idContact the id of the contact
-   * @param user      the user
+   * @param idUser    the user
    * @return the contact
    */
-  ContactDTO acceptContact(int idContact, UserDTO user);
+  ContactDTO acceptContact(int idContact, int idUser);
 }

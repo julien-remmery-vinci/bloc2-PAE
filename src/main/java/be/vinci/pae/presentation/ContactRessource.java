@@ -5,8 +5,8 @@ import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserDTO.Role;
-import be.vinci.pae.presentation.exceptions.BadRequestException;
-import be.vinci.pae.presentation.exceptions.NotFoundException;
+import be.vinci.pae.exceptions.BadRequestException;
+import be.vinci.pae.exceptions.NotFoundException;
 import be.vinci.pae.presentation.filters.Authorize;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.inject.Inject;
@@ -161,6 +161,13 @@ public class ContactRessource {
     return contactUCC.addContact(contact);
   }
 
+
+  /**
+   * Get all contacts by company.
+   *
+   * @param idCompany the id of the company
+   * @return the list of contacts
+   */
   @GET
   @Path("/company/{id}")
   @Produces(MediaType.APPLICATION_JSON)
@@ -172,32 +179,13 @@ public class ContactRessource {
     return contactUCC.getContactsByCompany(idCompany);
   }
 
+
   /**
-   * Accept a contact.
+   * Get all contacts by student.
    *
-   * @param request   the request's context
-   * @param idContact the id of the contact
-   * @return the contact
+   * @param idStudent the id of the student
+   * @return the list of contacts
    */
-  @POST
-  @Path("/{id}/accept")
-  @Authorize(roles = {Role.STUDENT})
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  public ContactDTO acceptContact(@Context ContainerRequest request,
-      @PathParam("id") int idContact) {
-    UserDTO user = (UserDTO) request.getProperty("user");
-    if (idContact < 0) {
-      throw new BadRequestException("Invalid id");
-    }
-    ContactDTO contact = contactUCC.acceptContact(idContact, user);
-    if (contact == null) {
-      throw new NotFoundException("Contact not found");
-    }
-    return contact;
-  }
-
-
   @GET
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)

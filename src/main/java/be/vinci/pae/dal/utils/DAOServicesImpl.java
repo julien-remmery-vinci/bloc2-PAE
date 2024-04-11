@@ -1,7 +1,7 @@
 package be.vinci.pae.dal.utils;
 
 import be.vinci.pae.business.Factory;
-import be.vinci.pae.presentation.exceptions.FatalException;
+import be.vinci.pae.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
