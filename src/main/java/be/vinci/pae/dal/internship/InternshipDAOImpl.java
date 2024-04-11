@@ -83,7 +83,15 @@ public class InternshipDAOImpl implements InternshipDAO {
   @Override
   public InternshipDTO getInternshipByStudentId(int id) {
     try (PreparedStatement ps = dalServices.getPS(
-        "SELECT * FROM pae.internships WHERE internship_idStudent = ?")) {
+        "SELECT * FROM pae.internships, pae.contacts, pae.users, pae.companies, "
+            + "pae.internshipSupervisors WHERE\n"
+            + "internship_idCompany = company_idCompany AND\n"
+            + "internship_idStudent = user_idUser AND\n"
+            + "internship_idContact = contact_idContact AND\n"
+            + "internship_idInternshipSupervisor = internshipSupervisor_idInternshipSupervisor\n"
+            + " AND internship_idCompany = company_idCompany AND\n"
+            + "contact_idStudent = user_idUser AND\n"
+            + "internship_idStudent = ?")) {
       ps.setInt(1, id);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
