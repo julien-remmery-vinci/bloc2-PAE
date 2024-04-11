@@ -42,7 +42,7 @@ function renderProfilPage() {
 
     const popup = document.createElement('div');
     popup.id = 'popup';
-    popup.style.display = 'none'; // Cache la pop-up
+    popup.style.display = 'none';
     document.body.appendChild(popup);
 
     input.addEventListener('input', () => {
@@ -56,7 +56,6 @@ function renderProfilPage() {
         form.appendChild(sauver);
       }
     });
-
     form.appendChild(title);
     form.appendChild(input);
   });
@@ -82,6 +81,16 @@ function renderProfilPage() {
     oldPasswordField.placeholder = 'Ancien mot de passe';
     oldPasswordField.className = 'form-control mb-3';
     passwordForm.appendChild(oldPasswordField);
+
+    const hidePassword = document.querySelector('#hidePassword');
+  hidePassword.addEventListener('click', () => {
+    const password = document.querySelector('#password');
+    if (password.type === 'password') {
+      password.type = 'text';
+    } else {
+      password.type = 'password';
+    }
+  });
 
     const passwordField = document.createElement('input');
     passwordField.type = 'password';
