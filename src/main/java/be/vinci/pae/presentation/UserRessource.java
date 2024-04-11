@@ -17,6 +17,7 @@ import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -79,6 +80,34 @@ public class UserRessource {
       throw new UnauthorizedException("oldPassword is wrong");
     }
     return Response.status(204, "Password changed").build();
+  }
+
+  @PUT
+  @Path("/update")
+  @Authorize
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public UserDTO updateUser(JsonNode json, @Context ContainerRequest request) {
+    final UserDTO authenticatedUser = (UserDTO) request.getProperty("user");
+    String firstName = json.get("firstname").asText();
+    String lastName = json.get("lastname").asText();
+    String email = json.get("email").asText();
+    String telephone = json.get("phoneNumber").asText();
+
+    if (firstName == null || lastName == null || email == null || telephone == null) {
+      throw new BadRequestException("All fields are required");
+    }
+
+    if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || telephone.isEmpty()) {
+      throw new BadRequestException("All fields are required");
+    }
+
+    if (!email.matches(
+        "^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
+      throw new BadRequestException("email is not valid");
+    }
+
+    return userUCC.updateUser(authenticatedUser, firstName, lastName, email, telephone);
   }
 
   /**

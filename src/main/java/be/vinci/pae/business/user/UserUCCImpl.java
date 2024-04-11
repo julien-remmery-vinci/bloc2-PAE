@@ -107,14 +107,33 @@ public class UserUCCImpl implements UserUCC {
 
   @Override
   public UserDTO updateUser(UserDTO user, String oldPassword, String newPassword) {
-    if (!((User) user).checkPassword(oldPassword)) {
-      throw new BadRequestException("Old password is wrong");
+    try {
+      dalServices.open();
+      if (!((User) user).checkPassword(oldPassword)) {
+        throw new BadRequestException("Old password is wrong");
+      }
+      user.setPassword(((User) user).hashPassword(newPassword));
+      return userDAO.updateUser(user);
+    } finally {
+      dalServices.close();
     }
-    user.setPassword(((User) user).hashPassword(newPassword));
-    user = userDAO.updateUser(user);
-    dalServices.close();
-    return user;
   }
+
+  @Override
+  public UserDTO updateUser(UserDTO authenticatedUser, String firstName, String lastName,
+      String email, String telephone) {
+    try {
+      dalServices.open();
+      authenticatedUser.setFirstname(firstName);
+      authenticatedUser.setLastname(lastName);
+      authenticatedUser.setEmail(email);
+      authenticatedUser.setPhoneNumber(telephone);
+      return userDAO.updateUser(authenticatedUser);
+    } finally {
+      dalServices.close();
+    }
+  }
+
 
   @Override
   public List<UserDTO> getStudents() {

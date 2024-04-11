@@ -36,3 +36,16 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555; /* color of the scroll thumb when hovering */
 }
+
+#popup {
+  position: fixed;
+  bottom: 20px;
+  left: 85%;
+  transform: translateX(-50%);
+  background-color: blue; /* Change la couleur de fond en bleu */
+  color: white;
+  padding: 16px;
+  border-radius: 5px;
+  text-align: center;
+  z-index: 1000;
+}

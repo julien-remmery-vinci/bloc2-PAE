@@ -113,13 +113,12 @@ public class UserDAOImpl implements UserDAO {
         "UPDATE pae.users SET user_lastname = ?, user_firstname = ?,"
             + " user_email = ?, user_password = ?, user_phoneNumber = ?,"
             + " user_registerDate = ?, user_role = ?, user_academicYear = ?, "
-            + "user_version ? WHERE user_idUser = ?"
+            + "user_version = ? WHERE user_idUser = ?"
             + " AND user_version = ? RETURNING user_idUser")) {
       setPs(updateUser, user);
       updateUser.setInt(9, user.getVersion() + 1);
       updateUser.setInt(10, user.getIdUser());
       updateUser.setInt(11, user.getVersion());
-      updateUser.executeUpdate();
       try (ResultSet rs = updateUser.executeQuery()) {
         if (getOneById(user.getIdUser()) == null) {
           throw new NotFoundException("User not found");
