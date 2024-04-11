@@ -3,7 +3,7 @@ package be.vinci.pae.presentation;
 import be.vinci.pae.business.internship.InternshipDTO;
 import be.vinci.pae.business.internship.InternshipUCC;
 import be.vinci.pae.business.user.UserDTO;
-import be.vinci.pae.presentation.exceptions.NotFoundException;
+import be.vinci.pae.exceptions.NotFoundException;
 import be.vinci.pae.presentation.filters.Authorize;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

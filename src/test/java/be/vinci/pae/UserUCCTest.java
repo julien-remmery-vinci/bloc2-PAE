@@ -12,7 +12,7 @@ import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.dal.user.UserDAO;
-import be.vinci.pae.presentation.exceptions.BadRequestException;
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.WebApplicationException;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;

@@ -7,8 +7,9 @@ import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
-import be.vinci.pae.presentation.exceptions.NotFoundException;
-import be.vinci.pae.presentation.exceptions.PreconditionFailedException;
+
+import be.vinci.pae.exceptions.NotFoundException;
+import be.vinci.pae.exceptions.PreconditionFailedException;
 import jakarta.inject.Inject;
 import java.util.List;
 

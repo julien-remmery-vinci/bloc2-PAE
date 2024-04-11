@@ -3,9 +3,10 @@ package be.vinci.pae.dal.user;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
-import be.vinci.pae.presentation.exceptions.ConflictException;
-import be.vinci.pae.presentation.exceptions.FatalException;
-import be.vinci.pae.presentation.exceptions.NotFoundException;
+
+import be.vinci.pae.exceptions.ConflictException;
+import be.vinci.pae.exceptions.FatalException;
+import be.vinci.pae.exceptions.NotFoundException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
