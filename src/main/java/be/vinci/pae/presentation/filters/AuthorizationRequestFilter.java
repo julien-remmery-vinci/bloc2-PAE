@@ -2,7 +2,6 @@ package be.vinci.pae.presentation.filters;
 
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserUCC;
-
 import be.vinci.pae.exceptions.ForbiddenException;
 import be.vinci.pae.exceptions.TokenDecodingException;
 import be.vinci.pae.exceptions.UnauthorizedException;

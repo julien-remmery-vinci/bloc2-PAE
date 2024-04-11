@@ -3,7 +3,6 @@ package be.vinci.pae.dal.internship;
 import be.vinci.pae.business.internship.InternshipDTO;
 import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
-
 import be.vinci.pae.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;

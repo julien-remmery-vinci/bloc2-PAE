@@ -3,7 +3,6 @@ package be.vinci.pae.business.company;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
-
 import be.vinci.pae.exceptions.ConflictException;
 import be.vinci.pae.exceptions.NotFoundException;
 import jakarta.inject.Inject;

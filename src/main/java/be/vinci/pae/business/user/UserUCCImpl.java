@@ -3,7 +3,6 @@ package be.vinci.pae.business.user;
 import be.vinci.pae.business.academicyear.AcademicYear;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.user.UserDAO;
-
 import be.vinci.pae.exceptions.BadRequestException;
 import jakarta.inject.Inject;
 import java.sql.Date;

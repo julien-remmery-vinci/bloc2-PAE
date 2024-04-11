@@ -3,7 +3,6 @@ package be.vinci.pae.dal.contact;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
-
 import be.vinci.pae.exceptions.ConflictException;
 import be.vinci.pae.exceptions.FatalException;
 import jakarta.inject.Inject;
