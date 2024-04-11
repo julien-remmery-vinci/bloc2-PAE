@@ -23,6 +23,7 @@ public class UserImpl implements User {
   private Date registerDate;
   private Role role;
   private String academicYear;
+  private String profilePicture;
   private int version;
 
   @Override
@@ -113,6 +114,16 @@ public class UserImpl implements User {
   @Override
   public void setRegisterDate(Date registerDate) {
     this.registerDate = registerDate;
+  }
+
+  @Override
+  public String getProfilePicture() {
+    return profilePicture;
+  }
+
+  @Override
+  public void setProfilePicture(String profilePicture) {
+    this.profilePicture = profilePicture;
   }
 
   @Override

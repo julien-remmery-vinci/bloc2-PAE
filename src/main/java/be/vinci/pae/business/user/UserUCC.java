@@ -70,4 +70,18 @@ public interface UserUCC {
    * @return the list of all students
    */
   List<UserDTO> getStudents();
+
+  /**
+   * Update the user's profile picture
+   *
+   * @param user the user to update
+   */
+  void modifyProfilePicture(UserDTO user);
+
+  /**
+   * Remove the user's profile picture
+   *
+   * @param user the user to update
+   */
+  void removeProfilePicture(UserDTO user);
 }

@@ -5,6 +5,7 @@ import {
   isAuthenticated
 } from "../../utils/auths";
 import Navigate from "../Router/Navigate";
+import defaultImage from "../../img/default-user-image.jpg";
 
 const ProfilePage = async () => {
   if (!isAuthenticated()) {
@@ -12,17 +13,136 @@ const ProfilePage = async () => {
   } else {
     clearPage();
     document.title = "Profil";
-    renderProfilPage();
+    buildPage();
   }
 }
 
-function renderProfilPage() {
+function buildPage() {
   const main = document.querySelector('main');
-  main.className = 'd-flex flex-column justify-content-center align-items-center vh-90';
+  const mainDiv = document.createElement('div');
+  mainDiv.style.maxWidth = '80vw';
+  mainDiv.style.maxHeight = '90vh';
+  mainDiv.style.display = 'flex';
+  const leftDiv = document.createElement('div');
+  leftDiv.id = 'leftDiv';
+  leftDiv.style.width = '50%';
+  leftDiv.style.border = '1px solid black'
+  const rightDiv = document.createElement('div');
+  rightDiv.id = 'rightDiv';
+  rightDiv.style.width = '100%'
+  mainDiv.appendChild(leftDiv);
+  mainDiv.appendChild(rightDiv);
+  main.appendChild(mainDiv);
+  renderPictureInfos()
+  renderProfilPage();
+}
+
+function renderPictureInfos() {
+  const div = document.querySelector('#leftDiv');
+  const img = document.createElement('img');
+
+  const user = getAuthenticatedUser();
+
+  console.log(user)
+
+  img.src = user.profilePicture ? user.profilePicture : defaultImage;
+  img.alt = 'image de profil';
+  img.className = 'img-thumbnail';
+  div.appendChild(img);
+
+  const buttonDiv = document.createElement('div');
+
+  const modifyButton = document.createElement('button');
+  modifyButton.textContent = 'Modifer';
+  modifyButton.addEventListener('click', displayImageInput);
+  modifyButton.className = 'btn btn-primary mt-2';
+  modifyButton.id = 'modifyPic';
+  buttonDiv.appendChild(modifyButton);
+
+  const removeButton = document.createElement('button');
+  removeButton.textContent = 'Supprimer';
+  removeButton.addEventListener('click', removeProfilePicture);
+  buttonDiv.appendChild(removeButton);
+  removeButton.className = 'btn btn-primary mt-2';
+  removeButton.id = 'removePic';
+  div.appendChild(buttonDiv);
+}
+
+function displayImageInput() {
+  const modifyButton = document.querySelector('#modifyPic');
+  modifyButton.hidden = !modifyButton.hidden;
+  const removeButton = document.querySelector('#removePic');
+  removeButton.hidden = !removeButton.hidden;
+
+  const div = document.querySelector('#leftDiv');
+
+  const imageInput = document.createElement('input');
+  imageInput.type = 'file'
+  imageInput.accept = '.png, .jpg, .jpeg';
+  imageInput.id = 'profilePicInput';
+
+  const imageInputError = document.createElement('p');
+  imageInputError.className = 'alert alert-danger';
+  imageInputError.textContent = 'Image trop grande, max 5Mb !';
+  imageInputError.hidden = true;
+
+  imageInput.addEventListener('input',(event) => {
+    const {target} = event
+    if (target.files && target.files[0]) {
+      const maxAllowedSize = 5 * 1024 * 1024;
+      if (target.files[0].size > maxAllowedSize) {
+        imageInputError.hidden = false;
+      }
+    }
+  });
+  div.appendChild(imageInput);
+  div.appendChild(imageInputError);
+
+  const saveButton = document.createElement('button');
+  saveButton.textContent = 'Enregistrer';
+  saveButton.className = 'btn btn-success  mt-2';
+  saveButton.addEventListener('click', modifyProfilePicture);
+  div.appendChild(saveButton);
+}
+
+async function modifyProfilePicture() {
+  console.log('modify pic')
+  const file = document.querySelector('#profilePicInput').files[0];
+  console.log(file)
+  const response = await fetch('http://localhost:3000/users/picture/modify', {
+    method: 'POST',
+    headers: {
+      Authorization: getToken()
+    },
+    body: JSON.stringify({
+      picture: file
+    })
+  });
+  if(response.status !== 200) {
+    console.log('error')
+  }
+}
+
+async function removeProfilePicture() {
+  console.log('remove pic')
+  const response = await fetch('http://localhost:3000/users/picture/remove', {
+    method: 'POST',
+    headers: {
+      Authorization: getToken()
+    }
+  });
+  if(response.status !== 200) {
+    console.log('error')
+  }
+}
+
+
+function renderProfilPage() {
+  const rightDiv = document.querySelector('#rightDiv');
   const form = document.createElement('form');
   const authenticatedUser = getAuthenticatedUser();
-  form.className = 'p-5 w-50 bg-light rounded shadow';
-  form.className = 'mx-auto p-5 w-50 position-relative float-end bg-light rounded shadow';
+  form.className = 'p-5 bg-light rounded shadow';
+  form.className = 'p-5 position-relative bg-light rounded shadow';
   const fields = ['lastname', 'firstname', 'email', 'phoneNumber'];
   const labels = ['Lastname', 'Firstname', 'Email', 'Numéro de téléphone'];
 
@@ -60,7 +180,7 @@ function renderProfilPage() {
   changePasswordButton.textContent = 'Modifier mot de passe';
   changePasswordButton.className = 'position-absolute bottom-10 start-50 translate-middle-x btn btn-primary';
   form.appendChild(changePasswordButton);
-  main.appendChild(form);
+  rightDiv.appendChild(form);
 
   changePasswordButton.addEventListener('click', event => {
     event.preventDefault();

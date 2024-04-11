@@ -27,6 +27,7 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 import org.glassfish.jersey.server.ContainerRequest;
+import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.base64.Base64;
 
 /**
  * This class is a Singleton and a RESTful resource that handles HTTP requests related to users.
@@ -137,6 +138,36 @@ public class UserRessource {
   @Authorize(roles = {Role.ADMIN, Role.TEACHER})
   public List<UserDTO> getStudents() {
     return userUCC.getStudents();
+  }
+
+  @POST
+  @Path("/picture/modify")
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  @Authorize(roles = {Role.STUDENT, Role.TEACHER, Role.ADMIN})
+  public Response modifyPicture(@Context ContainerRequest request, JsonNode json) {
+    if (!json.hasNonNull("picture")) {
+      throw new BadRequestException("Please provide an image");
+    }
+
+    UserDTO user = (UserDTO) request.getProperty("user");
+    user.setProfilePicture(Base64.toBase64String(json.get("picture").asText().getBytes()));
+
+    userUCC.modifyProfilePicture(user);
+
+    return Response.status(200).build();
+  }
+
+  @POST
+  @Path("/picture/remove")
+  @Authorize(roles = {Role.STUDENT, Role.TEACHER, Role.ADMIN})
+  public Response removePicture(@Context ContainerRequest request) {
+    UserDTO user = (UserDTO) request.getProperty("user");
+
+    user.setProfilePicture(null);
+
+    userUCC.removeProfilePicture(user);
+
+    return Response.status(200).build();
   }
 
 }

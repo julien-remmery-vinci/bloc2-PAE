@@ -146,4 +146,24 @@ public class UserUCCImpl implements UserUCC {
       dalServices.close();
     }
   }
+
+  @Override
+  public void modifyProfilePicture(UserDTO user) {
+    try {
+      dalServices.open();
+      userDAO.updateUser(user);
+    } finally {
+      dalServices.close();
+    }
+  }
+
+  @Override
+  public void removeProfilePicture(UserDTO user) {
+    try {
+      dalServices.open();
+      userDAO.updateUser(user);
+    } finally {
+      dalServices.close();
+    }
+  }
 }
