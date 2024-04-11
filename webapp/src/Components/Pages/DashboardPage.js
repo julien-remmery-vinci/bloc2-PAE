@@ -31,6 +31,11 @@ async function buildPage() {
   statsDiv.id = 'stats';
   companiesDiv.id = 'companies';
   companies = await getCompanies();
+  companies.sort((a, b) => {
+    const tradeNameComparison = a.tradeName.localeCompare(b.tradeName);
+    if(tradeNameComparison === 0) return a.designation ? a.designation.localeCompare(b.designation) : 0;
+    return tradeNameComparison;
+  });
   renderStats();
   renderGraph(getCurrentAcademicYear());
   renderCompanies(getCurrentAcademicYear());
@@ -130,7 +135,7 @@ async function renderGraph(academicYear) {
       }
     });
     canvas.style.width = '60%';
-    canvas.style.height = '60 %';
+    canvas.style.height = '60%';
     canvas.style.margin = '10px auto';
     graphDiv.appendChild(canvas);
 
