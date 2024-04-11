@@ -23,11 +23,7 @@ public class CompanyUCCImpl implements CompanyUCC {
   @Inject
   private ContactUCC contactUCC;
 
-  /**
-   * Get all companies.
-   *
-   * @return all companies
-   */
+  @Override
   public List<CompanyDTO> getAll() {
     try {
       dalServices.open();
@@ -37,12 +33,7 @@ public class CompanyUCCImpl implements CompanyUCC {
     }
   }
 
-  /**
-   * Get a company by its id.
-   *
-   * @param id the id of the company
-   * @return the company, null if no company was found
-   */
+  @Override
   public CompanyDTO getCompanyById(int id) {
     try {
       dalServices.open();

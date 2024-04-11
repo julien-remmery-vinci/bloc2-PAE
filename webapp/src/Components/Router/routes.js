@@ -8,10 +8,11 @@ import MeetContactPage from "../Pages/contacts/MeetContactPage";
 import ContactPage from "../Pages/contacts/ContactPage";
 import ProfilePage from "../Pages/ProfilePage";
 import Logout from "../Logout/Logout";
-import StagePage from "../Pages/stage/StagePage";
+import InternshipPage from "../Pages/stage/InternshipPage";
 import DashboardPage from "../Pages/DashboardPage";
 import CompanyPage from "../Pages/companies/CompanyPage";
 import StudentInfoPage from "../Pages/StudentInfoPage";
+import AddInternshipPage from "../Pages/stage/AddInternshipPage";
 
 // Define routes
 const routes = {
@@ -25,10 +26,11 @@ const routes = {
     '/contact/meet': MeetContactPage,
     '/contact': ContactPage,
     '/profile': ProfilePage,
-    '/stage': StagePage,
+    '/stage': InternshipPage,
     '/dashboard': DashboardPage,
     '/company': CompanyPage,
     '/student-info': StudentInfoPage,
+    '/stage/add': AddInternshipPage,
 };
 
 export default routes;

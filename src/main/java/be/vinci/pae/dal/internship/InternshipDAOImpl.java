@@ -53,4 +53,55 @@ public class InternshipDAOImpl implements InternshipDAO {
       throw new FatalException(e);
     }
   }
+
+  @Override
+  public InternshipDTO addInternship(InternshipDTO internship) {
+    try (PreparedStatement ps = dalServices.getPS(
+        "INSERT INTO pae.internships (internship_idCompany, internship_idStudent, "
+            + "internship_idContact, internship_idInternshipSupervisor, "
+            + "internship_internshipproject, "
+            + "internship_signatureDate, internship_version) "
+            + "VALUES (?, ?, ?, ?, ?, ?, 1) RETURNING internship_idInternship;")) {
+      ps.setInt(1, internship.getIdCompany());
+      ps.setInt(2, internship.getIdStudent());
+      ps.setInt(3, internship.getIdContact());
+      ps.setInt(4, internship.getIdInternshipSupervisor());
+      ps.setString(5, internship.getInternshipProject());
+      ps.setDate(6, internship.getSignatureDate());
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          internship.setIdInternship(rs.getInt(1));
+          return internship;
+        }
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return null;
+  }
+
+  @Override
+  public InternshipDTO getInternshipByStudentId(int id) {
+    try (PreparedStatement ps = dalServices.getPS(
+        "SELECT * FROM pae.internships, pae.contacts, pae.users, pae.companies, "
+            + "pae.internshipSupervisors WHERE\n"
+            + "internship_idCompany = company_idCompany AND\n"
+            + "internship_idStudent = user_idUser AND\n"
+            + "internship_idContact = contact_idContact AND\n"
+            + "internship_idInternshipSupervisor = internshipSupervisor_idInternshipSupervisor\n"
+            + " AND internship_idCompany = company_idCompany AND\n"
+            + "contact_idStudent = user_idUser AND\n"
+            + "internship_idStudent = ?")) {
+      ps.setInt(1, id);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          String prefix = "internship";
+          return (InternshipDTO) daoServices.getDataFromRs(rs, prefix);
+        }
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return null;
+  }
 }
