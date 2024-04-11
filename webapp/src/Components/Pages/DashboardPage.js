@@ -3,7 +3,7 @@ import {isAuthenticated} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
 import {clearPage} from "../../utils/render";
 
-let companies;
+let companies = [];
 
 const DashboardPage = () => {
   if (!isAuthenticated()) {
@@ -18,16 +18,21 @@ const DashboardPage = () => {
 async function buildPage() {
   const main = document.querySelector('main');
   const statsDiv = document.createElement('div');
+  const rightDiv = document.createElement('div');
   const companiesDiv = document.createElement('div');
+  const searchDiv = document.createElement('div');
+  rightDiv.appendChild(companiesDiv);
+  rightDiv.appendChild(searchDiv);
   main.appendChild(statsDiv);
-  main.appendChild(companiesDiv);
+  main.appendChild(rightDiv);
   main.style.display = 'flex';
-  // statsDiv.style.border = '1px solid red';
-  // companiesDiv.style.border = '1px solid blue';
   statsDiv.style.width = '40%';
-  companiesDiv.style.width = '60%';
   statsDiv.style.height = '90vh';
-  companiesDiv.style.height = '90vh';
+  rightDiv.style.width = '60%';
+  rightDiv.style.height = '90vh';
+  searchDiv.id = 'searchDiv';
+  searchDiv.style.display = 'flex';
+  rightDiv.id = 'rightDiv';
   statsDiv.id = 'stats';
   companiesDiv.id = 'companies';
   companies = await getCompanies();
@@ -39,6 +44,7 @@ async function buildPage() {
   renderStats();
   renderGraph(getCurrentAcademicYear());
   renderCompanies(getCurrentAcademicYear());
+  renderSearch();
 }
 
 function renderStats() {
@@ -159,21 +165,12 @@ function getAcademicYearFromRegisterDate(registerDate) {
   return `${year - 1}-${year}`;
 }
 
-function renderCompanies(academicYear) {
+function renderCompanies(academicYear, filteredCompanies) {
   const div = document.getElementById('companies');
   div.style.overflow = 'auto';
-  div.style.height = '85vh';
+  div.style.height = '80vh';
   div.style.scrollBehavior = 'smooth'
   div.innerHTML = '';
-  const title = document.createElement('h3');
-  title.textContent = 'Liste des entreprises';
-  title.style.textAlign = 'center';
-  div.appendChild(title);
-  const error = document.createElement('p');
-  error.textContent = 'Erreur lors de la récupération des entreprises';
-  error.hidden = true;
-  error.className = 'alert alert-danger';
-  error.id = 'companies-error';
 
   const table = document.createElement('table');
   table.className = 'table';
@@ -203,28 +200,113 @@ function renderCompanies(academicYear) {
   table.appendChild(thead);
   table.appendChild(tbody);
   div.appendChild(table);
-  companies.forEach(company => {
-    const trow = document.createElement('tr');
-    const td1 = document.createElement('td');
-    const td2 = document.createElement('td');
-    const td3 = document.createElement('td');
-    const td4 = document.createElement('td');
-    const td5 = document.createElement('td');
-    td1.textContent = company.tradeName;
-    td2.textContent = company.designation;
-    td3.textContent = company.phoneNumber;
-    td4.textContent = getNbStudentsWithIntershipForCompany(company.idCompany, academicYear)
-    td5.textContent = company.blacklisted ? "oui" : "non";
-    trow.appendChild(td1);
-    trow.appendChild(td2);
-    trow.appendChild(td3);
-    trow.appendChild(td4);
-    trow.appendChild(td5);
-    tbody.appendChild(trow);
-    trow.style.cursor = 'pointer';
-    trow.addEventListener('click', () => {
-      Navigate(`/company`, company);
+  const error = document.createElement('p');
+  error.textContent = 'Aucune entreprise trouvée';
+  error.hidden = true;
+  error.className = 'alert alert-danger';
+  error.id = 'companies-error';
+  error.style.textAlign = 'center';
+  error.style.width = '30%';
+  error.style.height = '7%';
+  error.style.margin = '10px auto';
+  error.style.display = 'block';
+  error.style.fontSize = '1.2em';
+  error.style.borderRadius = '5px';
+  error.style.padding = '5px';
+  div.appendChild(error);
+
+  if(filteredCompanies !== undefined && filteredCompanies.length === 0 || companies.length === 0) {
+    error.hidden = false;
+  }
+  else if(filteredCompanies) {
+    filteredCompanies.forEach(company => {
+      const trow = document.createElement('tr');
+      const td1 = document.createElement('td');
+      const td2 = document.createElement('td');
+      const td3 = document.createElement('td');
+      const td4 = document.createElement('td');
+      const td5 = document.createElement('td');
+      td1.textContent = company.tradeName;
+      td2.textContent = company.designation;
+      td3.textContent = company.phoneNumber;
+      td4.textContent = getNbStudentsWithIntershipForCompany(company.idCompany,
+          academicYear);
+      td5.textContent = company.blacklisted ? "oui" : "non";
+      trow.appendChild(td1);
+      trow.appendChild(td2);
+      trow.appendChild(td3);
+      trow.appendChild(td4);
+      trow.appendChild(td5);
+      tbody.appendChild(trow);
+      trow.style.cursor = 'pointer';
+      trow.addEventListener('click', () => {
+        Navigate(`/company`, company);
+      });
     });
+  }
+  else {
+    companies.forEach(company => {
+      const trow = document.createElement('tr');
+      const td1 = document.createElement('td');
+      const td2 = document.createElement('td');
+      const td3 = document.createElement('td');
+      const td4 = document.createElement('td');
+      const td5 = document.createElement('td');
+      td1.textContent = company.tradeName;
+      td2.textContent = company.designation;
+      td3.textContent = company.phoneNumber;
+      td4.textContent = getNbStudentsWithIntershipForCompany(company.idCompany,
+          academicYear);
+      td5.textContent = company.blacklisted ? "oui" : "non";
+      trow.appendChild(td1);
+      trow.appendChild(td2);
+      trow.appendChild(td3);
+      trow.appendChild(td4);
+      trow.appendChild(td5);
+      tbody.appendChild(trow);
+      trow.style.cursor = 'pointer';
+      trow.addEventListener('click', () => {
+        Navigate(`/company`, company);
+      });
+    });
+  }
+}
+
+function renderSearch() {
+  const div = document.querySelector('#searchDiv');
+  const search = document.createElement('input');
+  search.type = 'text';
+  search.placeholder = 'Rechercher une entreprise';
+  search.className = 'form-control';
+  search.style.width = '45%';
+  search.style.margin = '10px auto';
+  search.style.display = 'block';
+  search.style.fontSize = '1.2em';
+  search.style.borderRadius = '5px';
+  search.style.padding = '5px';
+  search.style.cursor = 'pointer';
+  search.style.textAlign = 'center';
+  div.appendChild(search);
+  search.addEventListener('input', () => {
+    const filteredCompanies = companies.filter(company => company.tradeName.toLowerCase().includes(search.value.toLowerCase()));
+    renderCompanies(undefined, filteredCompanies);
+  });
+
+  const reset = document.createElement('button');
+  reset.textContent = 'Réinitialiser';
+  reset.className = 'btn btn-warning';
+  reset.style.width = '15%';
+  reset.style.margin = '10px auto';
+  reset.style.display = 'block';
+  reset.style.fontSize = '1.2em';
+  reset.style.borderRadius = '5px';
+  reset.style.padding = '5px';
+  reset.style.cursor = 'pointer';
+  reset.style.textAlign = 'center';
+  div.appendChild(reset);
+  reset.addEventListener('click', () => {
+    search.value = '';
+    renderCompanies();
   });
 }
 
@@ -256,28 +338,6 @@ function getNbStudentsWithIntershipForCompany(companyId, academicYear) {
   });
   return nbStudents;
 }
-
-// function getNbStudents(academicYear) {
-//   const students = [];
-//   if (academicYear === undefined || academicYear === 'all') {
-//     companies.forEach(company => {
-//       company.contacts.forEach(contact => {
-//         if(!students.includes(contact.idStudent)) {
-//           students.push(contact.idStudent);
-//         }
-//       });
-//     });
-//     return students.length;
-//   }
-//   companies.forEach(company => {
-//     company.contacts.forEach(contact => {
-//       if(contact.academicYear === academicYear && !students.includes(contact.idStudent)) {
-//         students.push(contact.idStudent);
-//       }
-//     });
-//   });
-//   return students.length;
-// }
 
 function getNbStudentsWithIntership(academicYear) {
   const students = [];
