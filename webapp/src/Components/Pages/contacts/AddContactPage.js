@@ -39,7 +39,7 @@ async function buildPage() {
   const companies = document.createElement('select');
 
   companies.className = 'form-control';
-  companies.style.width = '25%';
+  companies.style.width = '50%';
   companies.style.marginLeft = '15%';
 
   const defaultOption = document.createElement('option');
@@ -65,8 +65,9 @@ async function buildPage() {
   const designations = document.createElement('select');
   designations.id = 'designation';
   designations.className = 'form-control';
-  designations.style.width = '25%';
+  designations.style.width = '50%';
   designations.style.marginLeft = '15%';
+  designations.style.marginBottom = '10px';
 
   colDiv1.appendChild(designations);
 
@@ -134,6 +135,7 @@ async function buildPage() {
   rowDiv.appendChild(colDiv2);
 
   createCompanyButton.addEventListener('click', () => {
+    createCompanyButton.hidden = !createCompanyButton.hidden;
       if (document.getElementById('companyForm')) {
       return;
       }
@@ -159,7 +161,7 @@ async function buildPage() {
       form.appendChild(addressInput);
 
       const cityLabel = document.createElement('label');
-      cityLabel.textContent = 'Ville';
+      cityLabel.textContent = 'Ville (optionnel)';
       form.appendChild(cityLabel);
       const cityInput = document.createElement('input');
       cityInput.type = 'text';
@@ -168,7 +170,7 @@ async function buildPage() {
       form.appendChild(cityInput);
 
       const phoneLabel = document.createElement('label');
-      phoneLabel.textContent = 'Numero de téléphone';
+      phoneLabel.textContent = 'Numero de téléphone (optionnel)';
       form.appendChild(phoneLabel);
       const phoneInput = document.createElement('input');
       phoneInput.type = 'text';
@@ -176,20 +178,40 @@ async function buildPage() {
       phoneInput.required = false;
       form.appendChild(phoneInput);
 
+      const emailLabel = document.createElement('label');
+      emailLabel.textContent = 'Email (optionnel)';
+      form.appendChild(emailLabel);
+      const emailInput = document.createElement('input');
+      emailInput.type = 'text';
+      emailInput.className = 'form-control';
+      emailInput.required = false;
+      form.appendChild(emailInput);
+
       const appellationLabel = document.createElement('label');
-      appellationLabel.textContent = 'Appellation';
+      appellationLabel.textContent = 'Appellation (optionnel)';
       form.appendChild(appellationLabel);
       const appellationInput = document.createElement('input');
       appellationInput.type = 'text';
       appellationInput.className = 'form-control';
       appellationInput.required = false;
+      appellationInput.style.marginBottom = '10px';
       form.appendChild(appellationInput);
 
       const submitButton = document.createElement('input');
       submitButton.type = 'submit';
       submitButton.value = "Ajouter l'entreprise";
       submitButton.className = 'btn btn-primary';
+      submitButton.style.marginRight = '10px';
       form.appendChild(submitButton);
+
+      const cancelButton = document.createElement('button');
+      cancelButton.textContent = 'Annuler';
+      cancelButton.className = 'btn btn-secondary';
+      form.appendChild(cancelButton);
+      cancelButton.addEventListener('click', () => {
+        createCompanyButton.hidden = !createCompanyButton.hidden;
+        form.remove();
+      });
 
       colDiv2.appendChild(form);
       containerDiv.appendChild(rowDiv);
@@ -214,14 +236,27 @@ async function createSubmit(e) {
   e.preventDefault();
   const tradeName = document.querySelector('input[type="text"]').value;
   const address = document.querySelectorAll('input[type="text"]')[1].value;
-  const city = document.querySelectorAll('input[type="text"]')[2].value;
-  const phoneNumber = document.querySelectorAll('input[type="text"]')[3].value;
-  const designation = document.querySelectorAll('input[type="text"]')[4].value;
+  let city = document.querySelectorAll('input[type="text"]')[2].value;
+  let phoneNumber = document.querySelectorAll('input[type="text"]')[3].value;
+  let email = document.querySelectorAll('input[type="text"]')[4].value;
+  let designation = document.querySelectorAll('input[type="text"]')[5].value;
   const alert = document.querySelector('#alert');
   if (tradeName === '' || address === '') {
     alert.hidden = false;
     alert.textContent = 'Veuillez remplir les champs obligatoires';
     return;
+  }
+  if (designation === '') {
+    designation = null;
+  }
+  if (city === '') {
+    city = null;
+  }
+  if (phoneNumber === '') {
+    phoneNumber = null;
+  }
+  if (email === '') {
+    email = null;
   }
   const options = {
     method: 'POST', body: JSON.stringify({
@@ -229,7 +264,8 @@ async function createSubmit(e) {
           designation,
           address,
           city,
-          phoneNumber
+          phoneNumber,
+          email
     }), headers: {
       'Content-Type': 'application/json', 'Authorization': getToken(),
     },

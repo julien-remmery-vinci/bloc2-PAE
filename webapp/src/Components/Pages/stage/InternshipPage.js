@@ -15,7 +15,7 @@ const InternshipPage = () => {
 async function renderInternshipPage() {
   const stage = await getStage();
   const main = document.querySelector('main');
-  main.className = 'd-flex flex-row justify-content-around align-items-center vh-100';
+  main.className = 'd-flex flex-row justify-content-around align-items-center vh-90';
 
   // Créer les éléments HTML
   const stageSection = document.createElement('section');
