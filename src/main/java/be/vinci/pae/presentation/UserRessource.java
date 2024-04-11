@@ -6,6 +6,7 @@
 package be.vinci.pae.presentation;
 
 import be.vinci.pae.business.user.UserDTO;
+import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.presentation.exceptions.BadRequestException;
 import be.vinci.pae.presentation.exceptions.UnauthorizedException;
@@ -50,7 +51,7 @@ public class UserRessource {
    */
   @POST
   @Path("/changepassword")
-  @Authorize
+  @Authorize(roles = {Role.ADMIN, Role.STUDENT, Role.TEACHER})
   @Consumes(MediaType.APPLICATION_JSON)
   public Response changePassword(JsonNode json, @Context ContainerRequest request) {
     final UserDTO authenticatedUser = (UserDTO) request.getProperty("user");
@@ -89,6 +90,7 @@ public class UserRessource {
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(roles = {Role.ADMIN, Role.TEACHER})
   public List<Map<String, Object>> getAllUsers() {
     return userUCC.getAllUsers();
   }
@@ -103,6 +105,7 @@ public class UserRessource {
   @GET
   @Path("/students")
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(roles = {Role.ADMIN, Role.TEACHER})
   public List<UserDTO> getStudents() {
     return userUCC.getStudents();
   }

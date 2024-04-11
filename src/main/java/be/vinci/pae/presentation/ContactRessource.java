@@ -4,6 +4,7 @@ package be.vinci.pae.presentation;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.business.user.UserDTO;
+import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.presentation.exceptions.BadRequestException;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
 import be.vinci.pae.presentation.filters.Authorize;
@@ -150,7 +151,7 @@ public class ContactRessource {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
+  @Authorize(roles = {Role.STUDENT})
   public ContactDTO addContact(@Context ContainerRequest request, ContactDTO contact) {
     if (contact.getIdCompany() < 0) {
       throw new BadRequestException("Invalid id");
@@ -163,7 +164,7 @@ public class ContactRessource {
   @GET
   @Path("/company/{id}")
   @Produces(MediaType.APPLICATION_JSON)
-  // TODO: Add the Authorize annotation for teachers
+  @Authorize(roles = {Role.TEACHER})
   public List<ContactDTO> getContactsByCompany(@PathParam("id") int idCompany) {
     if (idCompany < 0) {
       throw new BadRequestException("Invalid id");
@@ -180,7 +181,7 @@ public class ContactRessource {
    */
   @POST
   @Path("/{id}/accept")
-  @Authorize
+  @Authorize(roles = {Role.STUDENT})
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ContactDTO acceptContact(@Context ContainerRequest request,
