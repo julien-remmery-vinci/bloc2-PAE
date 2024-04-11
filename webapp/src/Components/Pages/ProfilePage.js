@@ -40,13 +40,17 @@ function renderProfilPage() {
     input.value = `${authenticatedUser[field]}`;
     input.className = 'form-control mb-3';
 
+    const popup = document.createElement('div');
+    popup.id = 'popup';
+    popup.style.display = 'none'; // Cache la pop-up
+    document.body.appendChild(popup);
+
     input.addEventListener('input', () => {
-      const existingButton = Array.from(
-          form.getElementsByTagName('button')).find(
-          button => button.textContent === 'Sauver');
+      const existingButton = document.querySelector('#sauver');
       if (!existingButton) {
         const sauver = document.createElement('button');
         sauver.textContent = 'Sauver';
+        sauver.id = 'sauver';
         sauver.className = 'btn btn-success mt-2';
         sauver.addEventListener('click', onSaveProfile);
         form.appendChild(sauver);
@@ -94,14 +98,12 @@ function renderProfilPage() {
     passwordForm.appendChild(confirmPasswordField);
 
     const submitButton = document.createElement('button');
-    submitButton.type = 'submit';
     submitButton.textContent = 'Sauver';
     submitButton.className = 'btn btn-primary';
     submitButton.addEventListener('click', onSavePassword);
     passwordForm.appendChild(submitButton);
 
     const cancelButton = document.createElement('button');
-    cancelButton.type = 'button';
     cancelButton.textContent = 'Annuler';
     cancelButton.className = 'btn btn-secondary ms-2';
     cancelButton.addEventListener('click', () => {
@@ -110,8 +112,15 @@ function renderProfilPage() {
     });
     passwordForm.appendChild(cancelButton);
 
+    const error = document.createElement('div');
+    error.id = 'error';
+    error.style.color = 'red';
+    error.hidden = true;
+    passwordForm.appendChild(error);
+
     main.appendChild(passwordForm);
   });
+
 }
 
 async function onSaveProfile(e) {
@@ -149,8 +158,8 @@ async function onSavePassword(e) {
   e.preventDefault();
   const oldPassword = document.querySelector('#oldPasswordField').value;
   const newPassword = document.querySelector('#passwordField').value;
-  const confirmationPassword = document.querySelector('#confirmPasswordField').value;
-
+  const confirmationPassword = document.querySelector(
+      '#confirmPasswordField').value;
 
   const options = {
     method: 'POST',
@@ -165,7 +174,8 @@ async function onSavePassword(e) {
     },
   };
 
-  const response = await fetch('http://localhost:3000/users/changepassword', options);
+  const response = await fetch('http://localhost:3000/users/changepassword',
+      options);
 
   if (response.status !== 204) {
     const error = document.querySelector('#error');
@@ -173,7 +183,12 @@ async function onSavePassword(e) {
     error.hidden = false;
   }
   if (response.status === 204) {
-    alert('Mot de passe modifié avec succès');
+    const popup = document.querySelector('#popup');
+    popup.textContent = 'Mot de passe modifié avec succès';
+    popup.style.display = 'block';
+    setTimeout(() => {
+      popup.style.display = 'none';
+    }, 10000);
   }
 }
 
