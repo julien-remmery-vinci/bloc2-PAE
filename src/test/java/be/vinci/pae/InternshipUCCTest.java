@@ -9,7 +9,7 @@ import be.vinci.pae.business.internship.InternshipDTO;
 import be.vinci.pae.business.internship.InternshipUCC;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.dal.internship.InternshipDAO;
-import be.vinci.pae.presentation.exceptions.NotFoundException;
+import be.vinci.pae.exceptions.NotFoundException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;

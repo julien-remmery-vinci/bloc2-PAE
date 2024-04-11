@@ -1,24 +1,23 @@
-package be.vinci.pae.presentation.exceptions;
-
+package be.vinci.pae.exceptions;
 
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Exception thrown when a token cannot be decoded.
+ * Class for the FatalException.
  */
-public class TokenDecodingException extends WebApplicationException {
+public class FatalException extends WebApplicationException {
 
   /**
    * The status of the exception.
    */
-  public static final Status STATUS = Status.UNAUTHORIZED;
+  public static final Status STATUS = Status.INTERNAL_SERVER_ERROR;
 
   /**
    * Constructor without a message.
    */
-  public TokenDecodingException() {
+  public FatalException() {
     super(Response.status(STATUS)
         .build());
   }
@@ -28,7 +27,7 @@ public class TokenDecodingException extends WebApplicationException {
    *
    * @param message the message
    */
-  public TokenDecodingException(String message) {
+  public FatalException(String message) {
     super(Response.status(STATUS)
         .entity(message)
         .type("text/plain")
@@ -40,7 +39,8 @@ public class TokenDecodingException extends WebApplicationException {
    *
    * @param cause the cause
    */
-  public TokenDecodingException(Throwable cause) {
-    super(cause.getMessage(), cause, STATUS);
+  public FatalException(Throwable cause) {
+    super(cause);
   }
+
 }

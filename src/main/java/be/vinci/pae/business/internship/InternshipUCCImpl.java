@@ -3,7 +3,7 @@ package be.vinci.pae.business.internship;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.internship.InternshipDAO;
-import be.vinci.pae.presentation.exceptions.NotFoundException;
+import be.vinci.pae.exceptions.NotFoundException;
 import jakarta.inject.Inject;
 import java.time.LocalDate;
 

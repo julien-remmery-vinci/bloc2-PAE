@@ -1,23 +1,23 @@
-package be.vinci.pae.presentation.exceptions;
+package be.vinci.pae.exceptions;
 
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Class for the BadRequestException.
+ * Class for the NotFoundException.
  */
-public class BadRequestException extends WebApplicationException {
+public class NotFoundException extends WebApplicationException {
 
   /**
    * The status of the exception.
    */
-  public static final Status STATUS = Status.BAD_REQUEST;
+  public static final Status STATUS = Status.NOT_FOUND;
 
   /**
    * Constructor without a message.
    */
-  public BadRequestException() {
+  public NotFoundException() {
     super(Response.status(STATUS)
         .build());
   }
@@ -27,7 +27,7 @@ public class BadRequestException extends WebApplicationException {
    *
    * @param message the message
    */
-  public BadRequestException(String message) {
+  public NotFoundException(String message) {
     super(Response.status(STATUS)
         .entity(message)
         .type("text/plain")
@@ -39,7 +39,7 @@ public class BadRequestException extends WebApplicationException {
    *
    * @param cause the cause
    */
-  public BadRequestException(Throwable cause) {
+  public NotFoundException(Throwable cause) {
     super(Response.status(STATUS)
         .entity(cause.getMessage())
         .type("text/plain")

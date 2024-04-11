@@ -1,23 +1,23 @@
-package be.vinci.pae.presentation.exceptions;
+package be.vinci.pae.exceptions;
 
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Class for the NotFoundException.
+ * Class for the PreconditionFailedException.
  */
-public class NotFoundException extends WebApplicationException {
+public class PreconditionFailedException extends WebApplicationException {
 
   /**
    * The status of the exception.
    */
-  public static final Status STATUS = Status.NOT_FOUND;
+  public static final Status STATUS = Status.PRECONDITION_FAILED;
 
   /**
    * Constructor without a message.
    */
-  public NotFoundException() {
+  public PreconditionFailedException() {
     super(Response.status(STATUS)
         .build());
   }
@@ -27,7 +27,7 @@ public class NotFoundException extends WebApplicationException {
    *
    * @param message the message
    */
-  public NotFoundException(String message) {
+  public PreconditionFailedException(String message) {
     super(Response.status(STATUS)
         .entity(message)
         .type("text/plain")
@@ -39,7 +39,7 @@ public class NotFoundException extends WebApplicationException {
    *
    * @param cause the cause
    */
-  public NotFoundException(Throwable cause) {
+  public PreconditionFailedException(Throwable cause) {
     super(Response.status(STATUS)
         .entity(cause.getMessage())
         .type("text/plain")
