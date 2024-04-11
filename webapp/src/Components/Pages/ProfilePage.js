@@ -38,7 +38,7 @@ function renderProfilPage() {
 
     const popup = document.createElement('div');
     popup.id = 'popup';
-    popup.style.display = 'none'; // Cache la pop-up
+    popup.style.display = 'none';
     document.body.appendChild(popup);
 
     input.addEventListener('input', () => {
@@ -52,7 +52,6 @@ function renderProfilPage() {
         form.appendChild(sauver);
       }
     });
-
     form.appendChild(title);
     form.appendChild(input);
   });
