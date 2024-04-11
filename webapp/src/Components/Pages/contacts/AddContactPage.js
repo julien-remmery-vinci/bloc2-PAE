@@ -159,7 +159,7 @@ async function buildPage() {
       form.appendChild(addressInput);
 
       const cityLabel = document.createElement('label');
-      cityLabel.textContent = 'Ville';
+      cityLabel.textContent = 'Ville (optionnel)';
       form.appendChild(cityLabel);
       const cityInput = document.createElement('input');
       cityInput.type = 'text';
@@ -168,7 +168,7 @@ async function buildPage() {
       form.appendChild(cityInput);
 
       const phoneLabel = document.createElement('label');
-      phoneLabel.textContent = 'Numero de téléphone';
+      phoneLabel.textContent = 'Numero de téléphone (optionnel)';
       form.appendChild(phoneLabel);
       const phoneInput = document.createElement('input');
       phoneInput.type = 'text';
@@ -176,8 +176,17 @@ async function buildPage() {
       phoneInput.required = false;
       form.appendChild(phoneInput);
 
+      const emailLabel = document.createElement('label');
+      emailLabel.textContent = 'Email (optionnel)';
+      form.appendChild(emailLabel);
+      const emailInput = document.createElement('input');
+      emailInput.type = 'text';
+      emailInput.className = 'form-control';
+      emailInput.required = false;
+      form.appendChild(emailInput);
+
       const appellationLabel = document.createElement('label');
-      appellationLabel.textContent = 'Appellation';
+      appellationLabel.textContent = 'Appellation (optionnel)';
       form.appendChild(appellationLabel);
       const appellationInput = document.createElement('input');
       appellationInput.type = 'text';
@@ -214,14 +223,27 @@ async function createSubmit(e) {
   e.preventDefault();
   const tradeName = document.querySelector('input[type="text"]').value;
   const address = document.querySelectorAll('input[type="text"]')[1].value;
-  const city = document.querySelectorAll('input[type="text"]')[2].value;
-  const phoneNumber = document.querySelectorAll('input[type="text"]')[3].value;
-  const designation = document.querySelectorAll('input[type="text"]')[4].value;
+  let city = document.querySelectorAll('input[type="text"]')[2].value;
+  let phoneNumber = document.querySelectorAll('input[type="text"]')[3].value;
+  let email = document.querySelectorAll('input[type="text"]')[4].value;
+  let designation = document.querySelectorAll('input[type="text"]')[5].value;
   const alert = document.querySelector('#alert');
   if (tradeName === '' || address === '') {
     alert.hidden = false;
     alert.textContent = 'Veuillez remplir les champs obligatoires';
     return;
+  }
+  if (designation === '') {
+    designation = null;
+  }
+  if (city === '') {
+    city = null;
+  }
+  if (phoneNumber === '') {
+    phoneNumber = null;
+  }
+  if (email === '') {
+    email = null;
   }
   const options = {
     method: 'POST', body: JSON.stringify({
@@ -229,7 +251,8 @@ async function createSubmit(e) {
           designation,
           address,
           city,
-          phoneNumber
+          phoneNumber,
+          email
     }), headers: {
       'Content-Type': 'application/json', 'Authorization': getToken(),
     },
