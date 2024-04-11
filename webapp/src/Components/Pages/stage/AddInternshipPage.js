@@ -27,6 +27,12 @@ async function renderInternshipPage() {
     rightDiv.style.width = '50%';
     rightDiv.appendChild(await getSupervisorInfos());
     rightDiv.appendChild(addNewSupervisor());
+    const alert = document.createElement('p');
+    alert.id = 'alert';
+    alert.className = 'alert alert-danger';
+    alert.style.width = '40%';  
+    alert.hidden = true;
+    rightDiv.appendChild(alert);
     const subjectDiv = document.createElement('div');
     subjectDiv.style.marginTop = '5%';
     const subjectLabel = document.createElement('label');
@@ -35,7 +41,7 @@ async function renderInternshipPage() {
     const subjectInput = document.createElement('input');
     subjectInput.type = 'text';
     subjectInput.className = 'form-control';
-    subjectInput.required = true;
+    subjectInput.required = false;
     subjectInput.style.width = '50%';
     subjectDiv.appendChild(subjectInput);
     rightDiv.appendChild(subjectDiv);
@@ -48,9 +54,12 @@ async function renderInternshipPage() {
         e.preventDefault();
         const queryParams = new URLSearchParams(window.location.search);
         const internship = {
+            idStudent: queryParams.get('idStudent'),
             idCompany: queryParams.get('idCompany'),
-            idSupervisor: document.querySelector('select').value,
-            subject: subjectInput.value,
+            idContact: queryParams.get('idContact'),
+            internshipProject: subjectInput.value,
+            idInternshipSupervisor: document.querySelector('select').value,
+            
         };
         addInternship(internship);
     });
@@ -106,7 +115,7 @@ async function getSupervisorInfos() {
         supervisorList.forEach(supervisor => {
             const supervisorOption = document.createElement('option');
             supervisorOption.text = `${supervisor.firstName} ${supervisor.lastName}`;
-            supervisorOption.value = supervisor.id;
+            supervisorOption.value = supervisor.idInternshipSupervisor;
             supervisorSelect.appendChild(supervisorOption);
         });
     }
