@@ -1,10 +1,12 @@
 package be.vinci.pae.business.internship;
 
+import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorDTO;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.dal.DALServices;
+import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
 import be.vinci.pae.dal.internship.InternshipDAO;
 import be.vinci.pae.dal.internshipsupervisor.InternshipSupervisorDAO;
@@ -28,6 +30,9 @@ public class InternshipUCCImpl implements InternshipUCC {
 
   @Inject
   private ContactDAO contactDAO;
+
+  @Inject
+  private CompanyDAO companyDAO;
 
   @Inject
   private ContactUCC contactUCC;
@@ -60,16 +65,26 @@ public class InternshipUCCImpl implements InternshipUCC {
       dalServices.start();
       InternshipSupervisorDTO internshipSupervisor = internshipSupervisorDAO.
           getInternshipSupervisorById(internship.getIdInternshipSupervisor());
+      CompanyDTO company = companyDAO.getCompanyById(internship.getIdCompany());
       if (internshipSupervisor == null) {
         throw new NotFoundException("Internship supervisor not found");
       }
+      if (company == null) {
+        throw new NotFoundException("Company not found");
+      }
       if (internshipDAO.getInternshipByStudentId(internship.getIdStudent()) != null) {
         throw new NotFoundException("You already have an internship");
+      }
+      if (internship.getIdCompany() != internshipSupervisor.getIdCompany()) {
+        throw new NotFoundException("Company and internship supervisor don't match");
       }
       contactUCC.acceptContact(internship.getIdContact(), internship.getIdStudent());
       internship = internshipDAO.addInternship(internship);
       ContactDTO contact = contactDAO.getOneById(internship.getIdContact());
       internship.setContact(contact);
+      if (internship.getIdCompany() != contact.getIdCompany()) {
+        throw new NotFoundException("Company and contact don't match");
+      }
       InternshipSupervisorDTO supervisor = internshipSupervisorDAO
           .getInternshipSupervisorById(internship.getIdInternshipSupervisor());
       internship.setInternshipSupervisor(supervisor);
