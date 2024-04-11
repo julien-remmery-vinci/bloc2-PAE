@@ -15,6 +15,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import java.sql.Date;
+import java.time.LocalDate;
 import org.glassfish.jersey.server.ContainerRequest;
 
 /**
@@ -67,6 +69,21 @@ public class InternshipRessource {
     }
     if (internship.getIdStudent() < 0) {
       throw new BadRequestException("Invalid Student id");
+    }
+    System.out.println(internship.getSignatureDate());
+    if (internship.getSignatureDate() == null) {
+      throw new BadRequestException("Invalid Start Date");
+    }
+    Date date = Date.valueOf(LocalDate.now());
+    Date startAcademicYear;
+    if (date.toLocalDate().getMonthValue() >= 9) {
+      startAcademicYear = Date.valueOf(LocalDate.of(LocalDate.now().getYear(), 9, 1));
+    } else {
+      startAcademicYear = Date.valueOf(LocalDate.of(LocalDate.now().getYear() - 1, 9, 1));
+    }
+    if (internship.getSignatureDate().after(date) || internship.getSignatureDate()
+        .before(startAcademicYear)) {
+      throw new BadRequestException("Invalid Start Date");
     }
     internship.setIdStudent(((UserDTO) request.getProperty("user")).getIdUser());
     return internshipUCC.addInternship(internship);
