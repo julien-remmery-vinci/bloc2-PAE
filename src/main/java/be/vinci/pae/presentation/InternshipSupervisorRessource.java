@@ -2,7 +2,7 @@ package be.vinci.pae.presentation;
 
 import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorDTO;
 import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorUCC;
-import be.vinci.pae.presentation.exceptions.BadRequestException;
+import be.vinci.pae.exceptions.BadRequestException;
 import be.vinci.pae.presentation.filters.Authorize;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

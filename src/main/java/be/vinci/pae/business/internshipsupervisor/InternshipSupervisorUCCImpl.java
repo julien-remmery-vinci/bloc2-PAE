@@ -4,7 +4,7 @@ import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.internshipsupervisor.InternshipSupervisorDAO;
-import be.vinci.pae.presentation.exceptions.NotFoundException;
+import be.vinci.pae.exceptions.NotFoundException;
 import jakarta.inject.Inject;
 import java.util.List;
 
