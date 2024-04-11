@@ -1,9 +1,11 @@
 package be.vinci.pae.business.internship;
 
+import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorDTO;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.dal.DALServices;
+import be.vinci.pae.dal.contact.ContactDAO;
 import be.vinci.pae.dal.internship.InternshipDAO;
 import be.vinci.pae.dal.internshipsupervisor.InternshipSupervisorDAO;
 import be.vinci.pae.presentation.exceptions.NotFoundException;
@@ -24,6 +26,9 @@ public class InternshipUCCImpl implements InternshipUCC {
 
   @Inject
   private InternshipSupervisorDAO internshipSupervisorDAO;
+
+  @Inject
+  private ContactDAO contactDAO;
 
   @Inject
   private ContactUCC contactUCC;
@@ -64,13 +69,19 @@ public class InternshipUCCImpl implements InternshipUCC {
       }
       Date registerDate = new Date(System.currentTimeMillis());
       internship.setSignatureDate(registerDate);
-      contactUCC.acceptContact(internship.getIdContact(), internship.getContact().getUser());
-      return internshipDAO.addInternship(internship);
+      contactUCC.acceptContact(internship.getIdContact(), internship.getIdStudent());
+      internship = internshipDAO.addInternship(internship);
+      ContactDTO contact = contactDAO.getOneById(internship.getIdContact());
+      internship.setContact(contact);
+      InternshipSupervisorDTO supervisor = internshipSupervisorDAO
+          .getInternshipSupervisorById(internship.getIdInternshipSupervisor());
+      internship.setInternshipSupervisor(supervisor);
+      return internship;
     } catch (Exception e) {
       dalServices.rollback();
       throw e;
     } finally {
-      dalServices.close();
+      dalServices.commit();
     }
   }
 }
