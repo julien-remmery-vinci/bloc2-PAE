@@ -54,7 +54,6 @@ async function renderInternshipPage() {
         e.preventDefault();
         const queryParams = new URLSearchParams(window.location.search);
         const internship = {
-            idStudent: queryParams.get('idStudent'),
             idCompany: queryParams.get('idCompany'),
             idContact: queryParams.get('idContact'),
             internshipProject: subjectInput.value,
