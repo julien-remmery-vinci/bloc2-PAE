@@ -2,7 +2,7 @@ import {clearPage} from "../../utils/render";
 import {
   getAuthenticatedUser,
   getToken,
-  isAuthenticated
+  isAuthenticated, setAuthenticatedUser
 } from "../../utils/auths";
 import Navigate from "../Router/Navigate";
 import defaultImage from "../../img/default-user-image.jpg";
@@ -39,15 +39,17 @@ function buildPage() {
 
 function renderPictureInfos() {
   const div = document.querySelector('#leftDiv');
+  div.innerHTML = '';
   const img = document.createElement('img');
 
   const user = getAuthenticatedUser();
 
   console.log(user)
 
-  img.src = user.profilePicture ? user.profilePicture : defaultImage;
+  img.src = user.profilePicture ? `data:image/png;base64, ${user.profilePicture}` : `${defaultImage}`;
   img.alt = 'image de profil';
   img.className = 'img-thumbnail';
+  img.id = 'profilePic';
   div.appendChild(img);
 
   const buttonDiv = document.createElement('div');
@@ -89,6 +91,7 @@ function displayImageInput() {
   imageInput.addEventListener('input',(event) => {
     const {target} = event
     if (target.files && target.files[0]) {
+      // TODO set max size in pixels
       const maxAllowedSize = 5 * 1024 * 1024;
       if (target.files[0].size > maxAllowedSize) {
         imageInputError.hidden = false;
@@ -102,24 +105,28 @@ function displayImageInput() {
   saveButton.textContent = 'Enregistrer';
   saveButton.className = 'btn btn-success  mt-2';
   saveButton.addEventListener('click', modifyProfilePicture);
+  saveButton.id = 'savePic';
   div.appendChild(saveButton);
 }
 
 async function modifyProfilePicture() {
   console.log('modify pic')
   const file = document.querySelector('#profilePicInput').files[0];
-  console.log(file)
+  const formData = new FormData();
+  formData.append('file', file);
   const response = await fetch('http://localhost:3000/users/picture/modify', {
     method: 'POST',
     headers: {
       Authorization: getToken()
     },
-    body: JSON.stringify({
-      picture: file
-    })
+    body: formData
   });
   if(response.status !== 200) {
-    console.log('error')
+    // TODO
+  } else {
+    const data = await response.json();
+    setAuthenticatedUser(data);
+    renderPictureInfos();
   }
 }
 
@@ -132,7 +139,11 @@ async function removeProfilePicture() {
     }
   });
   if(response.status !== 200) {
-    console.log('error')
+    // TODO
+  } else {
+    const data = await response.json();
+    setAuthenticatedUser(data);
+    renderPictureInfos();
   }
 }
 
