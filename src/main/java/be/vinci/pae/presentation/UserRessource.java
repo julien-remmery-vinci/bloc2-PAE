@@ -89,7 +89,7 @@ public class UserRessource {
 
   @PUT
   @Path("/update")
-  @Authorize
+  @Authorize(roles = {Role.ADMIN, Role.STUDENT, Role.TEACHER})
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public UserDTO updateUser(JsonNode json, @Context ContainerRequest request) {
@@ -132,6 +132,7 @@ public class UserRessource {
   @GET
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(roles = {Role.ADMIN, Role.TEACHER})
   public UserDTO getUserById(@PathParam("id") int id) {
     return userUCC.getUser(id);
   }
