@@ -1,5 +1,5 @@
 import Chart from 'chart.js/auto';
-import {isAuthenticated} from "../../utils/auths";
+import {getToken, isAuthenticated} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
 import {clearPage} from "../../utils/render";
 
@@ -42,7 +42,7 @@ async function buildPage() {
     return tradeNameComparison;
   });
   renderStats();
-  renderGraph(getCurrentAcademicYear());
+  await renderGraph(getCurrentAcademicYear());
   renderCompanies(getCurrentAcademicYear());
   renderSearch();
 }
@@ -71,9 +71,9 @@ function renderStats() {
   option.value = 'all';
   option.textContent = 'Toutes les années';
   select.appendChild(option);
-  select.addEventListener('change', (e) => {
+  select.addEventListener('change', async (e) => {
     renderCompanies(e.target.value);
-    renderGraph(e.target.value);
+    await renderGraph(e.target.value);
   });
   div.appendChild(select);
 }
@@ -88,7 +88,12 @@ async function renderGraph(academicYear) {
   graphDiv.id = 'graph';
 
   // nb of students by academic year
-  const response = await fetch('http://localhost:3000/users/students');
+  const response = await fetch('http://localhost:3000/users/students', {
+    method: 'GET',
+    headers: {
+      Authorization: getToken(),
+    }
+  });
   const result = await response.json();
 
   // nb of students for all academic years or for a specific academic year
@@ -312,9 +317,14 @@ function renderSearch() {
 
 async function getCompanies() {
   // fetch companies
-  const response = await fetch('http://localhost:3000/companies/contacts');
+  const response = await fetch('http://localhost:3000/companies/contacts', {
+    method: 'GET',
+    headers: {
+      Authorization: getToken(),
+    }
+  });
   if(response.status !== 200) {
-    document.getElementById('companies-error').querySelector('p').hidden = false;
+    // TODO handle error
   }
   return response.json();
 }

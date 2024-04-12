@@ -1,9 +1,15 @@
 import { clearPage, renderPageTitle } from '../../utils/render';
-import { isAuthenticated } from '../../utils/auths';
+import {getToken, isAuthenticated} from '../../utils/auths';
 import Navigate from '../Router/Navigate';
 
 const fetchUsers = async () => {
-  fetch('http://localhost:3000/users')
+  fetch('http://localhost:3000/users', {
+    method: 'GET',
+    headers: {
+      Authorization: getToken(),
+    },
+
+  })
     .then((response) => response.json())
     .then((data) => {
       renderUsers(data);

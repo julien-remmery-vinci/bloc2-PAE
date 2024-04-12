@@ -101,6 +101,10 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<version>2.20.0</version>
 		</dependency>
+		<dependency>
+			<artifactId>jersey-media-multipart</artifactId>
+			<groupId>org.glassfish.jersey.media</groupId>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>

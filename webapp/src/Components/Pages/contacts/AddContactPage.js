@@ -270,7 +270,7 @@ async function createSubmit(e) {
       'Content-Type': 'application/json', 'Authorization': getToken(),
     },
   };
-  const response = await fetch('http://localhost:3000/companies/', options);
+  const response = await fetch('http://localhost:3000/companies', options);
   if (response.status === 200) {
       Navigate('/contact');
   } else {
@@ -308,7 +308,7 @@ async function onSubmit(e) {
     },
   };
 
-  const response = await fetch('http://localhost:3000/contacts/', options);
+  const response = await fetch('http://localhost:3000/contacts', options);
   if (response.status === 200) {
     Navigate('/contact');
 
