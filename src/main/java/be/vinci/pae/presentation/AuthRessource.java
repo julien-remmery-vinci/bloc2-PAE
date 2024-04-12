@@ -1,6 +1,7 @@
 package be.vinci.pae.presentation;
 
 import be.vinci.pae.business.user.UserDTO;
+import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.exceptions.BadRequestException;
 import be.vinci.pae.exceptions.ConflictException;
@@ -153,7 +154,7 @@ public class AuthRessource {
    */
   @GET
   @Path("/user")
-  @Authorize
+  @Authorize(roles = {Role.STUDENT, Role.TEACHER, Role.ADMIN})
   @Produces(MediaType.APPLICATION_JSON)
   public UserDTO getUser(@Context ContainerRequest request) {
     UserDTO authenticatedUser = (UserDTO) request.getProperty("user");
