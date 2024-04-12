@@ -1,16 +1,17 @@
-import {clearPage} from "../../../utils/render";
+import {clearPage, renderBreadcrumb} from "../../../utils/render";
 import {
   getToken, isAuthenticated
 } from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
-const AddContactPage = () => {
+const AddContactPage = async () => {
   if (!isAuthenticated()) {
     Navigate('/login');
   } else {
     clearPage();
     document.title = "Ajouter un contact";
-    buildPage();
+    renderBreadcrumb({"Accueil": "/", "Contacts": "/contact", "Ajouter un contact": "/contact/add"})
+    await buildPage();
   }
 }
 

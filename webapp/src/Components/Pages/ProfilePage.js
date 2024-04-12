@@ -1,9 +1,5 @@
-import {clearPage} from "../../utils/render";
-import {
-  getAuthenticatedUser,
-  getToken,
-  isAuthenticated, setAuthenticatedUser
-} from "../../utils/auths";
+import {clearPage, renderBreadcrumb} from "../../utils/render";
+import {getAuthenticatedUser, isAuthenticated, getToken, setAuthenticatedUser} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
 import defaultImage from "../../img/default-user-image.jpg";
 
@@ -13,6 +9,7 @@ const ProfilePage = async () => {
   } else {
     clearPage();
     document.title = "Profil";
+    renderBreadcrumb({"Accueil": "/", "Profil": "/profile"})
     buildPage();
   }
 }

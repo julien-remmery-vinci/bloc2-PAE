@@ -1,13 +1,14 @@
-import {clearPage} from "../../../utils/render";
+import {clearPage, renderBreadcrumb} from "../../../utils/render";
 import {getToken, isAuthenticated} from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
-const InternshipPage = () => {
+const InternshipPage = async () => {
   if (!isAuthenticated()) {
     Navigate('/login');
   } else {
     clearPage();
-    renderInternshipPage();
+    renderBreadcrumb({"Accueil": "/", "Stage": "/stage"})
+    await renderInternshipPage();
     document.title = "Stage";
   }
 }
@@ -15,7 +16,9 @@ const InternshipPage = () => {
 async function renderInternshipPage() {
   const stage = await getStage();
   const main = document.querySelector('main');
-  main.className = 'd-flex flex-row justify-content-around align-items-center vh-90';
+  const div = document.createElement('div');
+  div.className = 'd-flex flex-row justify-content-around align-items-center vh-90';
+  main.appendChild(div);
 
   // Créer les éléments HTML
   const stageSection = document.createElement('section');
