@@ -1,4 +1,4 @@
-import {clearPage} from "../../utils/render";
+import {clearPage, renderBreadcrumb} from "../../utils/render";
 import {getAuthenticatedUser, isAuthenticated} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
 
@@ -8,6 +8,7 @@ const ProfilePage = async () => {
   } else {
     clearPage();
     document.title = "Profil";
+    renderBreadcrumb({"Accueil": "/", "Profil": "/profile"})
     renderProfilPage();
   }
 }

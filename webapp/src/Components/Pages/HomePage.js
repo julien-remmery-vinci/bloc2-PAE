@@ -1,4 +1,4 @@
-import { clearPage } from "../../utils/render";
+import {clearPage, renderBreadcrumb} from "../../utils/render";
 import {getAuthenticatedUser, isAuthenticated} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
 
@@ -7,6 +7,7 @@ const HomePage = () => {
         Navigate('/login');
     } else {
         clearPage();
+        renderBreadcrumb({"Accueil": "/"})
         renderHomePage(getAuthenticatedUser());
         document.title = "Home";
     }

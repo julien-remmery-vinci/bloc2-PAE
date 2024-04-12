@@ -1,5 +1,5 @@
 import { getRememberMe, isAuthenticated, setAuthenticatedUser, setRememberMe, setToken } from '../../utils/auths';
-import { clearPage, renderPageTitle } from '../../utils/render';
+import { clearPage, renderPageTitle, renderBreadcrumb } from '../../utils/render';
 import Navbar from '../Navbar/Navbar';
 import Navigate from '../Router/Navigate';
 
@@ -11,6 +11,7 @@ const LoginPage = () => {
     clearPage();
     renderPageTitle('Connexion');
     document.title = "Connexion";
+    renderBreadcrumb({"Connexion": "/login"});
     renderLoginForm();
   }
 };

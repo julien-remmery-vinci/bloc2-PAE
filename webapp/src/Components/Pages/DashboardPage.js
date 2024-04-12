@@ -1,27 +1,30 @@
 import Chart from 'chart.js/auto';
 import {isAuthenticated} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
-import {clearPage} from "../../utils/render";
+import {clearPage, renderBreadcrumb} from "../../utils/render";
 
 let companies;
 
-const DashboardPage = () => {
+const DashboardPage = async () => {
   if (!isAuthenticated()) {
     Navigate('/login');
   } else {
     clearPage();
     document.title = "Statistiques";
-    buildPage();
+    renderBreadcrumb({"Accueil": "/", "Statistiques": "/dashboard"});
+    await buildPage();
   }
 }
 
 async function buildPage() {
   const main = document.querySelector('main');
+  const mainDiv = document.createElement('div');
   const statsDiv = document.createElement('div');
   const companiesDiv = document.createElement('div');
-  main.appendChild(statsDiv);
-  main.appendChild(companiesDiv);
-  main.style.display = 'flex';
+  mainDiv.appendChild(statsDiv);
+  mainDiv.appendChild(companiesDiv);
+  main.appendChild(mainDiv);
+  mainDiv.style.display = 'flex';
   // statsDiv.style.border = '1px solid red';
   // companiesDiv.style.border = '1px solid blue';
   statsDiv.style.width = '40%';

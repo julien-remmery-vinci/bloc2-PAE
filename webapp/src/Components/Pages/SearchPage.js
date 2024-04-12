@@ -1,4 +1,4 @@
-import { clearPage, renderPageTitle } from '../../utils/render';
+import {clearPage, renderBreadcrumb, renderPageTitle} from '../../utils/render';
 import { isAuthenticated } from '../../utils/auths';
 import Navigate from '../Router/Navigate';
 
@@ -11,21 +11,23 @@ const fetchUsers = async () => {
     .catch((error) => console.error(error));
 };
 
-const SearchPage = () => {
+const SearchPage = async () => {
   if (!isAuthenticated()) {
     Navigate('/login');
   } else {
     renderPageTitle('Recherche');
     document.title = 'Recherche';
     clearPage();
-    fetchUsers();
+    renderBreadcrumb(
+        {"Accueil": "/", "Liste des utilisateurs": "/search"});
+    await fetchUsers();
     renderSearchPage();
   }
 };
 
 function renderSearchPage() {
   const main = document.querySelector('main');
-  main.innerHTML = `
+  main.innerHTML += `
   <div class="search-container d-flex justify-content-between">
   <div class="filter-container">
     <h3>Filtres</h3>
