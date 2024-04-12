@@ -1,4 +1,4 @@
-import {clearPage} from "../../../utils/render";
+import {clearPage, renderBreadcrumb} from "../../../utils/render";
 import {
     getToken,
     isAuthenticated
@@ -11,16 +11,13 @@ const AcceptRefusePage = () => {
     } else {
         clearPage();
         document.title = "Accepter ou refuser un contact";
+        renderBreadcrumb({"Accueil": "/", "Contacts": "/contact", "Accepter ou refuser un contact": "/contact/refusal"})
         buildPage();
     }
 }
 
 function buildPage() {
     const main = document.querySelector('main');
-    const title = document.createElement('h3');
-    title.textContent = 'Indiquer que le contact a été accepté ou refusé';
-    title.style.textAlign = 'center';
-    main.appendChild(title);
     const mainDiv = document.createElement('div');
     mainDiv.style.display = 'flex';
     const leftDiv = document.createElement('div');

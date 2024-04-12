@@ -31,13 +31,10 @@ async function buildPage() {
   const searchDiv = document.createElement('div');
   rightDiv.appendChild(companiesDiv);
   rightDiv.appendChild(searchDiv);
-  main.appendChild(statsDiv);
-  main.appendChild(rightDiv);
-  main.style.display = 'flex';
+  mainDiv.appendChild(statsDiv);
+  mainDiv.appendChild(rightDiv);
   statsDiv.style.width = '40%';
-  statsDiv.style.height = '90vh';
   rightDiv.style.width = '60%';
-  rightDiv.style.height = '90vh';
   searchDiv.id = 'searchDiv';
   searchDiv.style.display = 'flex';
   rightDiv.id = 'rightDiv';

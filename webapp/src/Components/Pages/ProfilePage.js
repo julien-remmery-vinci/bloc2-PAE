@@ -1,6 +1,5 @@
 import {clearPage, renderBreadcrumb} from "../../utils/render";
-import {getAuthenticatedUser, isAuthenticated, getToken} from "../../utils/auths";
-import {clearPage} from "../../utils/render";
+import {getAuthenticatedUser, isAuthenticated, getToken, setAuthenticatedUser} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
 import defaultImage from "../../img/default-user-image.jpg";
 

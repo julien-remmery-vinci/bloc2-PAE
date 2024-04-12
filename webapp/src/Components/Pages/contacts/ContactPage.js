@@ -1,17 +1,18 @@
-import {clearPage} from "../../../utils/render";
+import {clearPage, renderBreadcrumb} from "../../../utils/render";
 import {
   getToken,
   isAuthenticated
 } from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
-const ContactPage = () => {
+const ContactPage = async () => {
   if (!isAuthenticated()) {
     Navigate('/login');
   } else {
     clearPage();
     document.title = "Contacts";
-    buildPage();
+    renderBreadcrumb({"Accueil": "/", "Contacts": "/contacts"})
+    await buildPage();
   }
 }
 
