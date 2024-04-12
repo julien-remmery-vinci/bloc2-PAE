@@ -87,6 +87,13 @@ public class UserRessource {
     return Response.status(204, "Password changed").build();
   }
 
+  /**
+   * Update user information.
+   *
+   * @param json    json containing the new user information
+   * @param request the request's context
+   * @return the updated user
+   */
   @PUT
   @Path("/update")
   @Authorize(roles = {Role.ADMIN, Role.STUDENT, Role.TEACHER})
@@ -129,6 +136,12 @@ public class UserRessource {
     return userUCC.getAllUsers();
   }
 
+  /**
+   * Get a user by its id.
+   *
+   * @param id the id of the user
+   * @return the user
+   */
   @GET
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
@@ -137,6 +150,11 @@ public class UserRessource {
     return userUCC.getUser(id);
   }
 
+  /**
+   * Get all students.
+   *
+   * @return the list of all students
+   */
   @GET
   @Path("/students")
   @Produces(MediaType.APPLICATION_JSON)
@@ -145,6 +163,13 @@ public class UserRessource {
     return userUCC.getStudents();
   }
 
+  /**
+   * Modify the profile picture of a user.
+   *
+   * @param request the request's context
+   * @param file    the picture to upload
+   * @return the updated user
+   */
   @POST
   @Path("/picture/modify")
   @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -164,6 +189,12 @@ public class UserRessource {
     }
   }
 
+  /**
+   * Remove the profile picture of a user.
+   *
+   * @param request the request's context
+   * @return the updated user
+   */
   @POST
   @Path("/picture/remove")
   @Produces(MediaType.APPLICATION_JSON)
