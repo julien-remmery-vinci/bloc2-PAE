@@ -3,12 +3,17 @@ package be.vinci.pae.dal.user;
 import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
+import be.vinci.pae.exceptions.ConflictException;
+import be.vinci.pae.exceptions.FatalException;
+import be.vinci.pae.exceptions.NotFoundException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of UserDAO.
@@ -31,7 +36,7 @@ public class UserDAOImpl implements UserDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
     return null;
   }
@@ -53,7 +58,7 @@ public class UserDAOImpl implements UserDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
     return null;
   }
@@ -63,7 +68,8 @@ public class UserDAOImpl implements UserDAO {
     try (PreparedStatement addUser = dalBackServices.getPS(
         "INSERT INTO pae.users (user_lastname, user_firstname, "
             + "user_email, user_password, user_phoneNumber, user_registerDate,"
-            + " user_role, user_academicYear, user_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1) "
+            + " user_role, user_academicYear, user_profilePicture, user_version) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1) "
             + "RETURNING user_idUser")) {
       setPs(addUser, user);
       try (ResultSet rs = addUser.executeQuery()) {
@@ -73,74 +79,76 @@ public class UserDAOImpl implements UserDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
     return null;
   }
 
-  /**
-   * Fetches all users from the database. This method prepares a SQL statement to fetch all users
-   * from the database. It then executes the statement and processes the result set by calling the
-   * getResults method.
-   *
-   * @return a list of UserDTO objects representing all users in the database
-   * @throws RuntimeException if a SQLException is caught
-   */
-  public List<UserDTO> getAllUsers() {
+  @Override
+  public List<Map<String, Object>> getAllUsers() {
+    List<Map<String, Object>> users = new ArrayList<>();
     try (PreparedStatement getUsers = dalBackServices.getPS(
-        "SELECT * FROM pae.users")) {
+        "SELECT u.*, exists(\n"
+            + "    SELECT contact_idcontact FROM pae.contacts WHERE contact_state = 'ACCEPTED' "
+            + "AND u.user_iduser = contact_idstudent\n"
+            + ") as \"accepted_contact\" FROM pae.users u")) {
       try (ResultSet rs = getUsers.executeQuery()) {
-        return getResults(rs);
+        while (rs.next()) {
+          UserDTO user = (UserDTO) daoServices.getDataFromRs(rs, "user");
+          boolean acceptedContact = rs.getBoolean("accepted_contact");
+          Map<String, Object> userMap = new HashMap<>();
+          userMap.put("user", user);
+          userMap.put("accepted_contact", acceptedContact);
+          users.add(userMap);
+        }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  /**
-   * Processes a ResultSet to create a list of UserDTO objects. This method iterates over the rows
-   * in the given ResultSet. For each row, it creates a new UserDTO object, populates it with the
-   * data from the row, and adds it to a list. The list of UserDTO objects is then returned.
-   *
-   * @param rs the ResultSet to process
-   * @return a list of UserDTO objects representing the users in the ResultSet
-   * @throws SQLException if an error occurs while processing the ResultSet
-   */
-  private List<UserDTO> getResults(ResultSet rs) throws SQLException {
-    List<UserDTO> users = new ArrayList<>();
-    while (rs.next()) {
-      users.add((UserDTO) daoServices.getDataFromRs(rs, "user"));
+      throw new FatalException(e);
     }
     return users;
   }
 
-  /**
-   * Update a user in the database.
-   *
-   * @param user the user to update
-   * @return the user updated
-   */
+  @Override
   public UserDTO updateUser(UserDTO user) {
     try (PreparedStatement updateUser = dalBackServices.getPS(
         "UPDATE pae.users SET user_lastname = ?, user_firstname = ?,"
             + " user_email = ?, user_password = ?, user_phoneNumber = ?,"
             + " user_registerDate = ?, user_role = ?, user_academicYear = ?, "
-            + "user_version ? WHERE user_idUser = ?"
+            + " user_profilePicture = ?, "
+            + " user_version = ? WHERE user_idUser = ?"
             + " AND user_version = ? RETURNING user_idUser")) {
       setPs(updateUser, user);
-      updateUser.setInt(9, user.getVersion() + 1);
-      updateUser.setInt(10, user.getIdUser());
-      updateUser.setInt(11, user.getVersion());
-      updateUser.executeUpdate();
+      updateUser.setInt(10, user.getVersion() + 1);
+      updateUser.setInt(11, user.getIdUser());
+      updateUser.setInt(12, user.getVersion());
       try (ResultSet rs = updateUser.executeQuery()) {
-        if (!rs.next() && getOneById(user.getIdUser()).getVersion() != user.getVersion()) {
-          throw new RuntimeException("Version mismatch");
+        if (getOneById(user.getIdUser()) == null) {
+          throw new NotFoundException("User not found");
         }
+        if (!rs.next() && getOneById(user.getIdUser()).getVersion() != user.getVersion()) {
+          throw new ConflictException("Version mismatch");
+        }
+        return user;
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
-    return user;
+  }
+
+  @Override
+  public List<UserDTO> getStudents() {
+    try (PreparedStatement getStudents = dalBackServices.getPS(
+        "SELECT * FROM pae.users WHERE user_role = 'STUDENT'")) {
+      try (ResultSet rs = getStudents.executeQuery()) {
+        List<UserDTO> students = new ArrayList<>();
+        while (rs.next()) {
+          students.add((UserDTO) daoServices.getDataFromRs(rs, "user"));
+        }
+        return students;
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
   }
 
   /**
@@ -159,6 +167,6 @@ public class UserDAOImpl implements UserDAO {
     ps.setDate(6, user.getRegisterDate());
     ps.setString(7, user.getRole().toString());
     ps.setString(8, user.getAcademicYear());
+    ps.setString(9, user.getProfilePicture());
   }
-
 }

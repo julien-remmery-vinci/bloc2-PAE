@@ -3,6 +3,8 @@ package be.vinci.pae.dal.contact;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
+import be.vinci.pae.exceptions.ConflictException;
+import be.vinci.pae.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,7 +36,7 @@ public class ContactDAOImpl implements ContactDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
     return null;
   }
@@ -63,11 +65,11 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setInt(9, contact.getVersion());
       try (ResultSet rs = ps.executeQuery()) {
         if (!rs.next() && getOneById(contact.getIdContact()).getVersion() != contact.getVersion()) {
-          throw new RuntimeException("Version mismatch");
+          throw new ConflictException("Version mismatch");
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
   }
 
@@ -76,7 +78,7 @@ public class ContactDAOImpl implements ContactDAO {
     try (PreparedStatement ps = dalServices.getPS(
         "INSERT INTO pae.contacts (contact_idCompany, contact_idStudent, contact_state, "
             + "contact_academicYear, contact_version) "
-            + "VALUES (?, ?, ?, ?, 1) RETURNING idContact;")) {
+            + "VALUES (?, ?, ?, ?, 1) RETURNING contact_idContact;")) {
       ps.setInt(1, contact.getIdCompany());
       ps.setInt(2, contact.getIdStudent());
       ps.setString(3, contact.getState().toString());
@@ -88,7 +90,7 @@ public class ContactDAOImpl implements ContactDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
     return null;
   }
@@ -108,7 +110,7 @@ public class ContactDAOImpl implements ContactDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
 
     return null;
@@ -119,7 +121,7 @@ public class ContactDAOImpl implements ContactDAO {
     try (PreparedStatement ps = dalServices.getPS(
         "SELECT * FROM pae.contacts, pae.users, pae.companies WHERE contact_idCompany = "
             + "company_idCompany AND contact_idStudent = user_idUser AND contact_idStudent = ? AND"
-            + "contact_idCompany = ? AND contact_academicYear = ?;")) {
+            + " contact_idCompany = ? AND contact_academicYear = ?;")) {
       ps.setInt(1, idUser);
       ps.setInt(2, idCompany);
       ps.setString(3, academicYear);
@@ -130,9 +132,29 @@ public class ContactDAOImpl implements ContactDAO {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
     return null;
+  }
+
+  @Override
+  public List<ContactDTO> getContactsByCompany(int idCompany) {
+    try (PreparedStatement ps = dalServices.getPS(
+        "SELECT * FROM pae.contacts, pae.users, pae.companies WHERE contact_idCompany = "
+            + "company_idCompany AND contact_idStudent = user_idUser AND "
+            + "contact_idCompany = ?;")) {
+      ps.setInt(1, idCompany);
+      try (ResultSet rs = ps.executeQuery()) {
+        List<ContactDTO> contacts = new ArrayList<>();
+        while (rs.next()) {
+          String prefix = "contact";
+          contacts.add((ContactDTO) daoServices.getDataFromRs(rs, prefix));
+        }
+        return contacts;
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
   }
 
 
@@ -158,7 +180,7 @@ public class ContactDAOImpl implements ContactDAO {
         return contacts;
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
   }
 
@@ -183,7 +205,7 @@ public class ContactDAOImpl implements ContactDAO {
         return contacts;
       }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
   }
 }

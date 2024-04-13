@@ -1,13 +1,13 @@
 package be.vinci.pae.presentation;
 
 import be.vinci.pae.business.user.UserDTO;
+import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.business.user.UserUCC;
-import be.vinci.pae.presentation.exceptions.BadRequestException;
-import be.vinci.pae.presentation.exceptions.ConflictException;
-import be.vinci.pae.presentation.exceptions.NotFoundException;
-import be.vinci.pae.presentation.exceptions.UnauthorizedException;
+import be.vinci.pae.exceptions.BadRequestException;
+import be.vinci.pae.exceptions.ConflictException;
+import be.vinci.pae.exceptions.NotFoundException;
+import be.vinci.pae.exceptions.UnauthorizedException;
 import be.vinci.pae.presentation.filters.Authorize;
-import be.vinci.pae.presentation.filters.Log;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -31,7 +31,6 @@ import org.glassfish.jersey.server.ContainerRequest;
  */
 @Singleton
 @Path("/auths")
-@Log
 public class AuthRessource {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
@@ -155,7 +154,7 @@ public class AuthRessource {
    */
   @GET
   @Path("/user")
-  @Authorize
+  @Authorize(roles = {Role.STUDENT, Role.TEACHER, Role.ADMIN})
   @Produces(MediaType.APPLICATION_JSON)
   public UserDTO getUser(@Context ContainerRequest request) {
     UserDTO authenticatedUser = (UserDTO) request.getProperty("user");

@@ -49,6 +49,62 @@ public interface ContactUCC {
    */
   List<ContactDTO> getContacts(UserDTO user);
 
+  /**
+   * Get list of contact.
+   *
+   * @param user the user
+   * @return a list of contact
+   */
+  List<ContactDTO> getContactsByStudentId(UserDTO user);
+
+  /**
+   * This method is used to unfollow a contact. It first retrieves the contact by its id.
+   *
+   * @param id     the id of the contact
+   * @param idUser the id of the user
+   * @return the contact if it exists and the conditions are met, null otherwise
+   * @throws WebApplicationException if the id of the student does not match the id of the user or
+   *                                 if the state of the contact is not 'initiated'
+   */
   ContactDTO unfollowContact(int id, int idUser);
 
+  /**
+   * Get all contacts with a company.
+   *
+   * @param idCompany the id of the company
+   * @return the list of contacts
+   */
+  List<ContactDTO> getContactsByCompany(int idCompany);
+
+  /**
+   * This method is used to blacklist a contact.
+   *
+   * @param idCompany the id of the company to blacklist contacts for
+   * @return the list of the contacts of the company
+   */
+  List<ContactDTO> blacklistContacts(int idCompany);
+
+  /**
+   * This method is used to get all contacts.
+   *
+   * @return the list of all contacts
+   */
+  List<ContactDTO> getAllContacts();
+
+  /**
+   * This method is used to get all contacts by student id.
+   *
+   * @param idStudent the id of the student
+   * @return the list of all contacts by student id
+   */
+  List<ContactDTO> getContactsByStudentIdBis(int idStudent);
+
+  /**
+   * This method is used to accept a contact.
+   *
+   * @param idContact the id of the contact
+   * @param idUser    the user
+   * @return the contact
+   */
+  ContactDTO acceptContact(int idContact, int idUser);
 }

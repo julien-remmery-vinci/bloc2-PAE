@@ -22,4 +22,20 @@ public interface CompanyDAO {
    * @return the company, null if no company was found
    */
   CompanyDTO getCompanyById(int id);
+
+  /**
+   * Update a company.
+   *
+   * @param company the company to update
+   * @return the company updated
+   */
+  CompanyDTO updateCompany(CompanyDTO company);
+
+  /**
+   * Add a company.
+   *
+   * @param company the company to add
+   * @return the company added
+   */
+  CompanyDTO addCompany(CompanyDTO company);
 }

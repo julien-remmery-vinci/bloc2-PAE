@@ -3,9 +3,11 @@ package be.vinci.pae.business.user;
 import be.vinci.pae.business.academicyear.AcademicYear;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.user.UserDAO;
-import be.vinci.pae.presentation.exceptions.BadRequestException;
+import be.vinci.pae.exceptions.BadRequestException;
 import jakarta.inject.Inject;
+import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of UserUCC.
@@ -44,13 +46,10 @@ public class UserUCCImpl implements UserUCC {
     if (userFound == null) {
       return null;
     }
-    User u = (User) userFound;
-
     // Check for matching password
-    if (u.checkPassword(password)) {
-      return u;
+    if (((User) userFound).checkPassword(password)) {
+      return userFound;
     }
-
     //Password did not match
     return null;
   }
@@ -75,7 +74,7 @@ public class UserUCCImpl implements UserUCC {
       user.setAcademicYear(academicYear.getAcademicYear());
     }
     user.setPassword(((User) user).hashPassword(user.getPassword()));
-    java.sql.Date registerDate = new java.sql.Date(System.currentTimeMillis());
+    Date registerDate = new Date(System.currentTimeMillis());
     user.setRegisterDate(registerDate);
 
     user = userDAO.addUser(user);
@@ -100,26 +99,71 @@ public class UserUCCImpl implements UserUCC {
    *
    * @return the list of all users
    */
-  public List<UserDTO> getAllUsers() {
-    List<UserDTO> list = userDAO.getAllUsers();
+  public List<Map<String, Object>> getAllUsers() {
+    List<Map<String, Object>> list = userDAO.getAllUsers();
     dalServices.close();
     return list;
   }
 
   @Override
   public UserDTO updateUser(UserDTO user, String oldPassword, String newPassword) {
-    dalServices.start();
-    if (user == null) {
-      dalServices.rollback();
-      return null;
+    try {
+      dalServices.open();
+      if (!((User) user).checkPassword(oldPassword)) {
+        throw new BadRequestException("Old password is wrong");
+      }
+      user.setPassword(((User) user).hashPassword(newPassword));
+      return userDAO.updateUser(user);
+    } finally {
+      dalServices.close();
     }
-    if (user.getPassword().equals(oldPassword)) {
-      dalServices.rollback();
-      return null;
+  }
+
+  @Override
+  public UserDTO updateUser(UserDTO authenticatedUser, String firstName, String lastName,
+      String email, String telephone) {
+    try {
+      dalServices.open();
+      authenticatedUser.setFirstname(firstName);
+      authenticatedUser.setLastname(lastName);
+      authenticatedUser.setEmail(email);
+      authenticatedUser.setPhoneNumber(telephone);
+      return userDAO.updateUser(authenticatedUser);
+    } finally {
+      dalServices.close();
     }
-    user.setPassword(((User) user).hashPassword(newPassword));
-    user = userDAO.updateUser(user);
-    dalServices.commit();
-    return user;
+  }
+
+
+  @Override
+  public List<UserDTO> getStudents() {
+    try {
+      return userDAO.getStudents();
+    } catch (Exception e) {
+      dalServices.close();
+      throw e;
+    } finally {
+      dalServices.close();
+    }
+  }
+
+  @Override
+  public void modifyProfilePicture(UserDTO user) {
+    try {
+      dalServices.open();
+      userDAO.updateUser(user);
+    } finally {
+      dalServices.close();
+    }
+  }
+
+  @Override
+  public void removeProfilePicture(UserDTO user) {
+    try {
+      dalServices.open();
+      userDAO.updateUser(user);
+    } finally {
+      dalServices.close();
+    }
   }
 }

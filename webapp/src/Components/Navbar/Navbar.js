@@ -1,6 +1,7 @@
 import {
   getAuthenticatedUser, isAuthenticated,
 } from "../../utils/auths";
+import logo2 from "../../img/logo2.png";
 
 const Navbar = () => {
   renderNavbar();
@@ -10,7 +11,7 @@ async function renderNavbar() {
   const defaultNavbar = `
     <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">VinciOBS</a>
+            <a class="navbar-brand" href="#" id="logo"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -31,7 +32,7 @@ async function renderNavbar() {
   const studentNavbar = `
     <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#" data-uri="/">VinciOBS</a>
+            <a class="navbar-brand" href="#" id="logo"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -41,7 +42,7 @@ async function renderNavbar() {
                         <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/profile">Profil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="">Stage</a>
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/stage">Stage</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/contact">Contacts</a>
@@ -58,7 +59,7 @@ async function renderNavbar() {
   const teacherNavbar = `
     <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#" data-uri="/">VinciOBS</a>
+            <a class="navbar-brand" href="#" id="logo"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -71,13 +72,13 @@ async function renderNavbar() {
                         <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/profile">Profil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="">Recherches</a>
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/search">Recherches</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="">Responsables</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="">Statistiques</a>
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/dashboard">Statistiques</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/logout">Déconnexion</a>
@@ -91,7 +92,7 @@ async function renderNavbar() {
   const adminNavbar = `
     <nav class="navbar navbar-expand-lg navbar-light bg-primary-subtle">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#" data-uri="/">VinciOBS</a>
+            <a class="navbar-brand" href="#" id="logo"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -120,6 +121,9 @@ async function renderNavbar() {
     else if(userRole === 'professeur') navbar.innerHTML = teacherNavbar;
     else if(userRole === 'administratif') navbar.innerHTML = adminNavbar;
   }
+
+    const logo = document.querySelector('#logo');
+    logo.innerHTML = `<img src="${logo2}" alt="logo" width=30% height=30%>`;
 }
 
 export default Navbar;

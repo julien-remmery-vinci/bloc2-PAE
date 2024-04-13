@@ -2,17 +2,30 @@ package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import be.vinci.pae.business.Factory;
+import be.vinci.pae.business.academicyear.AcademicYear;
+import be.vinci.pae.business.company.Company;
 import be.vinci.pae.business.contact.Contact;
+import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.contact.ContactDTO.State;
 import be.vinci.pae.business.contact.ContactUCC;
+import be.vinci.pae.business.user.User;
+import be.vinci.pae.business.user.UserDTO;
+import be.vinci.pae.business.user.UserDTO.Role;
+import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
+import be.vinci.pae.exceptions.NotFoundException;
+import be.vinci.pae.exceptions.PreconditionFailedException;
 import jakarta.ws.rs.WebApplicationException;
+import java.util.ArrayList;
+import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,25 +36,77 @@ import org.mockito.Mockito;
  */
 public class ContactUCCTest {
 
+  static Factory factory;
+  private static ContactUCC contactUCC;
+  private static ContactDAO contactDAO;
+  private static CompanyDAO companyDAO;
+  private static AcademicYear academicYear;
   private final int idContact = 1;
   private final int idUser = 1;
   private final String refusalReason = "refusalReason";
   Contact contact;
-  private ContactUCC contactUCC;
-  private ContactDAO contactDAO;
+  Company company;
+  User user;
 
-  @BeforeEach
-  void setUp() {
+  @BeforeAll
+  static void beforeAll() {
     ServiceLocator locator = ServiceLocatorUtilities.bind(new ApplicationBinderTest());
     contactUCC = locator.getService(ContactUCC.class);
     contactDAO = locator.getService(ContactDAO.class);
-    Factory factory = locator.getService(Factory.class);
+    companyDAO = locator.getService(CompanyDAO.class);
+    academicYear = locator.getService(AcademicYear.class);
+    factory = locator.getService(Factory.class);
+  }
 
+  @BeforeEach
+  void setUp() {
     contact = (Contact) factory.getContact();
     contact.setIdContact(idContact);
     contact.setIdStudent(idUser);
-    contact.setState(State.ADMITTED);
+    contact.setState(State.STARTED);
     Mockito.when(contactDAO.getOneById(1)).thenReturn(contact);
+
+    company = (Company) factory.getCompany();
+    company.setDesignation("company");
+    company.setIdCompany(1);
+
+    Mockito.when(companyDAO.getCompanyById(1)).thenReturn(company);
+
+    user = (User) factory.getUser();
+    user.setIdUser(idUser);
+    user.setRole(UserDTO.Role.STUDENT);
+  }
+
+  @Test
+  @DisplayName("Test addContact with all conditions met")
+  void testAddContact() {
+    contact.setIdCompany(1);
+    contact.setAcademicYear("2021-2022");
+    Mockito.when(contactDAO.addContact(contact)).thenReturn(contact);
+    Mockito.when(contactDAO.getContactAccepted(idUser)).thenReturn(null);
+    Mockito.when(contactDAO.getCompanyContact(idUser, 1, academicYear.getAcademicYear()))
+        .thenReturn(null);
+    assertAll(
+        () -> assertNotNull(contactUCC.addContact(contact)),
+        () -> assertEquals(State.STARTED, contact.getState())
+    );
+  }
+
+  @Test
+  @DisplayName("Test addContact with company already in contact")
+  void testAddContactCompanyAlreadyInContact() {
+    contact.setIdCompany(1);
+    Mockito.when(contactDAO.getCompanyContact(contact.getIdStudent(), contact.getIdCompany(),
+        academicYear.getAcademicYear())).thenReturn(contact);
+    assertThrows(PreconditionFailedException.class, () -> contactUCC.addContact(contact));
+  }
+
+  @Test
+  @DisplayName("Test addContact when there is already a contact accepted")
+  void testAddContactAlreadyAccepted() {
+    contact.setIdCompany(1);
+    Mockito.when(contactDAO.getContactAccepted(idUser)).thenReturn(contact);
+    assertThrows(PreconditionFailedException.class, () -> contactUCC.addContact(contact));
   }
 
   @Test
@@ -49,6 +114,14 @@ public class ContactUCCTest {
   void testRefuseContactWrongState() {
     contact.setState(State.TURNED_DOWN);
     assertThrows(WebApplicationException.class,
+        () -> contactUCC.refuseContact(idContact, refusalReason, idUser));
+  }
+
+  @Test
+  @DisplayName("Test refuseContact with contact that doesn't belong to the user")
+  void testRefuseContactWrongUser() {
+    contact.setIdStudent(2);
+    assertThrows(NotFoundException.class,
         () -> contactUCC.refuseContact(idContact, refusalReason, idUser));
   }
 
@@ -62,12 +135,14 @@ public class ContactUCCTest {
   @Test
   @DisplayName("Test refuseContact with existing contact in right state")
   void refuseContactTest() {
+    contact.setState(State.ADMITTED);
     contactUCC.refuseContact(idContact, refusalReason, idUser);
     assertAll(
         () -> assertEquals(State.TURNED_DOWN, contact.getState()),
         () -> assertEquals(refusalReason, contact.getRefusalReason())
     );
   }
+
 
   @Test
   @DisplayName("Test addContact with company not found")
@@ -92,6 +167,14 @@ public class ContactUCCTest {
   }
 
   @Test
+  @DisplayName("Test meetContact with non-matching user id")
+  void testMeetContactNonMatchingUserId() {
+    int nonMatchingIdUser = 2;
+    assertThrows(NotFoundException.class,
+        () -> contactUCC.meetContact(idContact, "meetPlace", nonMatchingIdUser));
+  }
+
+  @Test
   @DisplayName("Test meetContact with existing contact in right state")
   void testMeetContact() {
     contact.setState(State.STARTED);
@@ -102,4 +185,103 @@ public class ContactUCCTest {
         () -> assertEquals("meetPlace", contact.getMeetPlace())
     );
   }
+
+  @Test
+  @DisplayName("Test get list of contacts")
+  void testGetStudentaddContacts() {
+    assertNotNull(contactUCC.getContacts(user));
+  }
+
+  @Test
+  @DisplayName("Test get list of contacts with a null user")
+  void testGetContactsNullUser() {
+    assertThrows(NotFoundException.class, () -> contactUCC.getContacts(null));
+  }
+
+  @Test
+  @DisplayName("Test get list of contacts with a professor user")
+  void testGetContactsProfessorUser() {
+    user.setRole(Role.TEACHER);
+    assertNotNull(contactUCC.getContacts(user));
+  }
+
+  @Test
+  @DisplayName("Test get list of contacts with a admin user")
+  void testGetContactsAdminUser() {
+    user.setRole(Role.ADMIN);
+    assertNotNull(contactUCC.getContacts(user));
+  }
+
+  @Test
+  @DisplayName("Test unfollow contact with contact not found")
+  void testUnfollowContactNotFound() {
+    Mockito.when(contactDAO.getOneById(1)).thenReturn(null);
+    assertNull(contactUCC.unfollowContact(idContact, idUser));
+  }
+
+  @Test
+  @DisplayName("Test unfollow contact with non-matching user id")
+  void testUnfollowContactNonMatchingUserId() {
+    int nonMatchingIdUser = 2;
+    assertThrows(NotFoundException.class,
+        () -> contactUCC.unfollowContact(idContact, nonMatchingIdUser));
+  }
+
+  @Test
+  @DisplayName("Test unfollow contact with contact in wrong state")
+  void testUnfollowContactWrongState() {
+    contact.setState(State.TURNED_DOWN);
+    assertThrows(PreconditionFailedException.class,
+        () -> contactUCC.unfollowContact(idContact, idUser));
+  }
+
+  @Test
+  @DisplayName("Test unfollow contact with existing contact in right state")
+  void testUnfollowContact() {
+    contact.setState(State.ADMITTED);
+    assertAll(
+        () -> assertEquals(contact.getIdContact(),
+            contactUCC.unfollowContact(idContact, idUser).getIdContact()),
+        () -> assertEquals(State.UNSUPERVISED, contact.getState())
+    );
+  }
+
+  @Test
+  @DisplayName("test for getContactsByCompany method")
+  void getContactsByCompanyTest() {
+    int idCompany = 1;
+    Mockito.when(contactDAO.getContactsByCompany(idCompany)).thenReturn(new ArrayList<>());
+    assertNotNull(contactUCC.getContactsByCompany(idCompany));
+  }
+
+  @Test
+  @DisplayName("test for getContactsByCompany method with wrong company id")
+  void getContactsByCompanyWrongIdTest() {
+    int idCompany = 1;
+    Mockito.when(companyDAO.getCompanyById(idCompany)).thenReturn(null);
+    assertThrows(NotFoundException.class, () -> contactUCC.getContactsByCompany(idCompany));
+  }
+
+  @Test
+  @DisplayName("test for blacklistContacts method")
+  void blacklistContactsTest() {
+    int idCompany = 1;
+    List<ContactDTO> contacts = new ArrayList<>();
+    ContactDTO contact = factory.getContact();
+    contact.setState(State.ADMITTED);
+    contacts.add(contact);
+    Mockito.when(contactDAO.getContactsByCompany(idCompany)).thenReturn(contacts);
+    assertNotNull(contactUCC.blacklistContacts(idCompany));
+  }
+
+  @Test
+  @DisplayName("test for blacklistContacts method with wrong company id")
+  void blacklistContactsTestWrongId() {
+    int idCompany = 1;
+    Mockito.when(companyDAO.getCompanyById(idCompany)).thenReturn(null);
+    assertThrows(NotFoundException.class, () -> contactUCC.blacklistContacts(idCompany));
+  }
 }
+
+
+

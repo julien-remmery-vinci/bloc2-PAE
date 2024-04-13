@@ -6,8 +6,8 @@ POST {{authsUrl}}/login
 Content-Type: application/json
 
 {
-  "email": "julien.remmery@student.vinci.be",
-  "password": "test"
+  "email": "hadjera.emroska@student.vinci.be",
+  "password": "12345678"
 }
 
 > {%
@@ -24,12 +24,12 @@ Authorization: {{token}}
 }
 
 ### Add a contact
-POST {{contactUrl}}/add
+POST {{contactUrl}}
 Content-Type: application/json
 Authorization: {{token}}
 
 {
-  "idCompany": 1
+  "idCompany": 4
 }
 
 ### Get list of contacts
@@ -41,4 +41,22 @@ POST {{contactUrl}}/1/unfollow
 Content-Type: application/json
 Authorization: {{token}}
 
-//Faire la requete meetContact
+### meet a contact
+POST {{contactUrl}}/5/meet
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "date": "2021-06-01",
+  "hour": "14:00",
+  "meetPlace": "Rue de la Loi 16, 1000 Bruxelles"
+}
+
+### Get list of contacts for a company
+GET {{contactUrl}}/company/2
+Authorization: {{token}}
+
+### accept a contact
+POST {{contactUrl}}/19/accept
+Content-Type: application/json
+Authorization: {{token}}

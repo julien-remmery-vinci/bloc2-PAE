@@ -136,6 +136,10 @@ public interface UserDTO {
    */
   void setRegisterDate(Date registerDate);
 
+  String getProfilePicture();
+
+  void setProfilePicture(String profilePicture);
+
   /**
    * Get the role of the user.
    *
@@ -161,7 +165,7 @@ public interface UserDTO {
     /**
      * Professor role.
      */
-    PROFESSOR("professeur"),
+    TEACHER("professeur"),
     /**
      * Admin role.
      */

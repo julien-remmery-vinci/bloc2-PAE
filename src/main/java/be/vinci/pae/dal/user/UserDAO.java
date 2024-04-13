@@ -2,6 +2,7 @@ package be.vinci.pae.dal.user;
 
 import be.vinci.pae.business.user.UserDTO;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interface of UserDAOImpl.
@@ -37,7 +38,7 @@ public interface UserDAO {
    *
    * @return the list of all users
    */
-  List<UserDTO> getAllUsers();
+  List<Map<String, Object>> getAllUsers();
 
   /**
    * Update a user in the database.
@@ -46,4 +47,11 @@ public interface UserDAO {
    * @return the updated user
    */
   UserDTO updateUser(UserDTO user);
+
+  /**
+   * Get all students.
+   *
+   * @return the list of all students
+   */
+  List<UserDTO> getStudents();
 }

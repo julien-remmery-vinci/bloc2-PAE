@@ -19,10 +19,11 @@ public class UserImpl implements User {
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
   private String phoneNumber;
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yy hh:mm:ss")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   private Date registerDate;
   private Role role;
   private String academicYear;
+  private String profilePicture;
   private int version;
 
   @Override
@@ -62,7 +63,7 @@ public class UserImpl implements User {
 
   @Override
   public void setEmail(String email) {
-    this.email = email;
+    this.email = email.toLowerCase();
   }
 
   @Override
@@ -116,6 +117,16 @@ public class UserImpl implements User {
   }
 
   @Override
+  public String getProfilePicture() {
+    return profilePicture;
+  }
+
+  @Override
+  public void setProfilePicture(String profilePicture) {
+    this.profilePicture = profilePicture;
+  }
+
+  @Override
   public String getAcademicYear() {
     return academicYear;
   }
@@ -142,7 +153,7 @@ public class UserImpl implements User {
       return true;
     } else {
       return !email.matches("^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@vinci\\.be$")
-              || this.role != Role.STUDENT;
+          || this.role != Role.STUDENT;
     }
   }
 

@@ -14,3 +14,38 @@
 .table {
   margin: 0 10%;
 }
+
+.w-150 {
+  width: 150% !important;
+}
+
+/* This will change the scrollbar for the whole page */
+::-webkit-scrollbar {
+  width: 10px; /* width of the entire scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* color of the tracking area */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888; /* color of the scroll thumb */
+  border-radius: 10px; /* roundness of the scroll thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* color of the scroll thumb when hovering */
+}
+
+#popup {
+  position: fixed;
+  bottom: 20px;
+  left: 85%;
+  transform: translateX(-50%);
+  background-color: blue; /* Change la couleur de fond en bleu */
+  color: white;
+  padding: 16px;
+  border-radius: 5px;
+  text-align: center;
+  z-index: 1000;
+}

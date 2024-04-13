@@ -1,17 +1,18 @@
-import {clearPage} from "../../../utils/render";
+import {clearPage, renderBreadcrumb} from "../../../utils/render";
 import {
   getToken,
   isAuthenticated
 } from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
-const ContactPage = () => {
+const ContactPage = async () => {
   if (!isAuthenticated()) {
     Navigate('/login');
   } else {
     clearPage();
     document.title = "Contacts";
-    buildPage();
+    renderBreadcrumb({"Accueil": "/", "Contacts": "/contacts"})
+    await buildPage();
   }
 }
 
@@ -66,9 +67,10 @@ async function buildPage() {
     companyLink.addEventListener('click', (event) => {
       event.preventDefault();
       let url = window.location.href;
-      url += contact.state === 'initié' ? '/meet' : '/refusal';
-      url += `?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}&meetplace=${contact.meetPlace}`;
-      window.location.href = url;
+      url += contact.state === 'initié' ?
+          `/meet?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}` :
+          `/refusal?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}&meetplace=${contact.meetPlace}&companyid=${contact.company.idCompany}&userid=${contact.idStudent}`;
+      Navigate(url);
     });
     companyCell.appendChild(companyLink);
     row.appendChild(companyCell);
@@ -122,6 +124,16 @@ async function buildPage() {
   });
   table.appendChild(tableBody);
   main.appendChild(title);
+  const addContactButton = document.createElement('button');
+  addContactButton.textContent = 'Ajouter un contact';
+  addContactButton.className = 'btn btn-primary';
+  addContactButton.style.marginLeft = '10%';
+  addContactButton.style.marginBottom = '2%';
+  addContactButton.style.width = '25%';
+  addContactButton.addEventListener('click', () => {
+    Navigate('/contact/add');
+  });
+  main.appendChild(addContactButton);
   containerDiv.appendChild(table);
   main.appendChild(containerDiv);
 

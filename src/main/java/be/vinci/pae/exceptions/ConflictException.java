@@ -1,19 +1,25 @@
-package be.vinci.pae.presentation.exceptions;
+package be.vinci.pae.exceptions;
+
 
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Class for the ForbiddenException.
+ * Class for the ConflictException.
  */
-public class ForbiddenException extends WebApplicationException {
+public class ConflictException extends WebApplicationException {
+
+  /**
+   * The status of the exception.
+   */
+  public static final Status STATUS = Status.CONFLICT;
 
   /**
    * Constructor without a message.
    */
-  public ForbiddenException() {
-    super(Response.status(Response.Status.FORBIDDEN)
+  public ConflictException() {
+    super(Response.status(STATUS)
         .build());
   }
 
@@ -22,8 +28,8 @@ public class ForbiddenException extends WebApplicationException {
    *
    * @param message the message
    */
-  public ForbiddenException(String message) {
-    super(Response.status(Status.FORBIDDEN)
+  public ConflictException(String message) {
+    super(Response.status(STATUS)
         .entity(message)
         .type("text/plain")
         .build());
@@ -34,10 +40,11 @@ public class ForbiddenException extends WebApplicationException {
    *
    * @param cause the cause
    */
-  public ForbiddenException(Throwable cause) {
-    super(Response.status(Status.FORBIDDEN)
+  public ConflictException(Throwable cause) {
+    super(Response.status(STATUS)
         .entity(cause.getMessage())
         .type("text/plain")
         .build());
   }
 }
+

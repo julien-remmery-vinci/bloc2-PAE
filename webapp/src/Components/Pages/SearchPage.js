@@ -1,35 +1,39 @@
-import { clearPage, renderPageTitle } from "../../utils/render";
-import {isAuthenticated} from "../../utils/auths";
-import Navigate from "../Router/Navigate";
+import {getToken, isAuthenticated} from '../../utils/auths';
+import {clearPage, renderBreadcrumb, renderPageTitle} from '../../utils/render';
+import Navigate from '../Router/Navigate';
 
 const fetchUsers = async () => {
-  try {
-    fetch("http://localhost:3000/users/all")
-      .then(response => response.json())
-      .then(data => {
-        renderUsers(data);
-      })
-      .catch((error) => console.error(error));
-  } catch (error) {
-    console.error(error);
-  }
+  fetch('http://localhost:3000/users', {
+    method: 'GET',
+    headers: {
+      Authorization: getToken(),
+    },
+
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      renderUsers(data);
+    })
+    .catch((error) => console.error(error));
 };
 
-const SearchPage = () => {
+const SearchPage = async () => {
   if (!isAuthenticated()) {
     Navigate('/login');
   } else {
-    renderPageTitle("Recherche");
-    document.title = "Recherche";
+    renderPageTitle('Recherche');
+    document.title = 'Recherche';
     clearPage();
-    fetchUsers();
+    renderBreadcrumb(
+        {"Accueil": "/", "Liste des utilisateurs": "/search"});
+    await fetchUsers();
     renderSearchPage();
   }
 };
 
 function renderSearchPage() {
   const main = document.querySelector('main');
-  main.innerHTML = `
+  main.innerHTML += `
   <div class="search-container d-flex justify-content-between">
   <div class="filter-container">
     <h3>Filtres</h3>
@@ -45,8 +49,9 @@ function renderSearchPage() {
 </div>
 <br>
     <div class="table-responsive d-flex justify-content-center align-items-center">
-    <table class="table table-bordered table-hover">
-    <thead>
+    <table class="table table-bordered table-hover caption-top">
+    <caption>Liste des utilisateurs</caption>
+    <thead class="table-light">
         <tr>
             <th>Nom</th>
             <th>Prénom</th>
@@ -58,20 +63,38 @@ function renderSearchPage() {
     </table>
     </div>
 `;
-};
+}
 
 function renderUsers(users) {
   const table = document.querySelector('table');
   const tbody = document.createElement('tbody');
-  users.forEach(user => {
+  users.forEach((userMap) => {
+    const { user, accepted_contact: acceptedContact } = userMap;
     const tr = document.createElement('tr');
-    tr.innerHTML = `
+    if (user.role === 'étudiant') {
+      tr.innerHTML = `
       <td>${user.lastname}</td>
       <td>${user.firstname}</td>
       <td>${user.role}</td>
       <td>${user.academicYear}</td>
-      <td>${user.internshipAccepted}</td>
+      <td>${acceptedContact ? 'Oui' : 'Non'}</td>
     `;
+    } else {
+      tr.innerHTML = `
+        <td>${user.lastname}</td>
+        <td>${user.firstname}</td>
+        <td>${user.role}</td>
+        <td class="table-secondary">N/A</td>
+        <td class="table-secondary">N/A</td>
+      `;
+    }
+
+    tr.addEventListener('click', () => {
+      if (user.role === 'étudiant') {
+        Navigate(`/student-info?id=${user.idUser}`);
+      }
+    });
+
     tbody.appendChild(tr);
   });
   table.appendChild(tbody);

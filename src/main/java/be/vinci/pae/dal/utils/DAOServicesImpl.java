@@ -1,6 +1,7 @@
 package be.vinci.pae.dal.utils;
 
 import be.vinci.pae.business.Factory;
+import be.vinci.pae.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -23,7 +24,7 @@ public class DAOServicesImpl implements DAOServices {
       String classPrefix = prefix.substring(0, 1).toUpperCase() + prefix.substring(1);
       // Get the implementation class
       Class<?> implementationClass = Class.forName(
-          "be.vinci.pae.business." + prefix + "." + classPrefix + "Impl");
+          "be.vinci.pae.business." + prefix.toLowerCase() + "." + classPrefix + "Impl");
       // Get the method to get the implementation of the class
       Method getImpl = factory.getClass().getDeclaredMethod("get" + classPrefix);
       // Get the object from the factory using the method
@@ -50,7 +51,7 @@ public class DAOServicesImpl implements DAOServices {
       return object;
     } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException
              | IllegalAccessException | SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     }
   }
 }
