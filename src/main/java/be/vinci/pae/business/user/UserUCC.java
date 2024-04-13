@@ -50,10 +50,38 @@ public interface UserUCC {
    */
   UserDTO updateUser(UserDTO user, String oldPassword, String newPassword);
 
+
+  /**
+   * Update the user.
+   *
+   * @param authenticatedUser the authenticated user
+   * @param firstName         the first name of the user
+   * @param lastName          the last name of the user
+   * @param email             the email of the user
+   * @param telephone         the telephone of the user
+   * @return the updated user
+   */
+  UserDTO updateUser(UserDTO authenticatedUser, String firstName, String lastName, String email,
+      String telephone);
+
   /**
    * Get all students.
    *
    * @return the list of all students
    */
   List<UserDTO> getStudents();
+
+  /**
+   * Update the user's profile picture.
+   *
+   * @param user the user to update
+   */
+  void modifyProfilePicture(UserDTO user);
+
+  /**
+   * Remove the user's profile picture.
+   *
+   * @param user the user to update
+   */
+  void removeProfilePicture(UserDTO user);
 }

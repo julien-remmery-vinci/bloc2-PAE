@@ -4,6 +4,7 @@ package be.vinci.pae.presentation;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.business.user.UserDTO;
+import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.exceptions.BadRequestException;
 import be.vinci.pae.exceptions.NotFoundException;
 import be.vinci.pae.presentation.filters.Authorize;
@@ -39,7 +40,7 @@ public class ContactRessource {
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
+  @Authorize(roles = {Role.STUDENT})
   public List<ContactDTO> getContacts(@Context ContainerRequest request) {
     UserDTO user = (UserDTO) request.getProperty("user");
     if (user == null) {
@@ -63,7 +64,7 @@ public class ContactRessource {
   @Path("/{id}/refuse")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
+  @Authorize(roles = {Role.STUDENT})
   public ContactDTO refuseContact(@Context ContainerRequest request, @PathParam("id") int idContact,
       JsonNode json) {
     if (idContact < 0) {
@@ -93,7 +94,7 @@ public class ContactRessource {
   @Path("/{id}/meet")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
+  @Authorize(roles = {Role.STUDENT})
   public ContactDTO meetContact(@Context ContainerRequest request, @PathParam("id") int idContact,
       JsonNode json) {
     if (idContact < 0) {
@@ -126,7 +127,7 @@ public class ContactRessource {
   @Path("/{id}/unfollow")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
+  @Authorize(roles = {Role.STUDENT})
   public ContactDTO unfollowContact(@Context ContainerRequest request,
       @PathParam("id") int idContact) {
     if (idContact < 0) {
@@ -150,7 +151,7 @@ public class ContactRessource {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
+  @Authorize(roles = {Role.STUDENT})
   public ContactDTO addContact(@Context ContainerRequest request, ContactDTO contact) {
     if (contact.getIdCompany() < 0) {
       throw new BadRequestException("Invalid id");
@@ -170,7 +171,7 @@ public class ContactRessource {
   @GET
   @Path("/company/{id}")
   @Produces(MediaType.APPLICATION_JSON)
-  // TODO: Add the Authorize annotation for teachers
+  @Authorize(roles = {Role.TEACHER})
   public List<ContactDTO> getContactsByCompany(@PathParam("id") int idCompany) {
     if (idCompany < 0) {
       throw new BadRequestException("Invalid id");
@@ -188,6 +189,7 @@ public class ContactRessource {
   @GET
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(roles = {Role.TEACHER})
   public List<ContactDTO> getContactsByStudentId(@PathParam("id") int idStudent) {
     if (idStudent < 0) {
       throw new BadRequestException("Invalid id");

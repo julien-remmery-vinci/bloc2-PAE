@@ -3,6 +3,7 @@ package be.vinci.pae.presentation;
 import be.vinci.pae.business.internship.InternshipDTO;
 import be.vinci.pae.business.internship.InternshipUCC;
 import be.vinci.pae.business.user.UserDTO;
+import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.exceptions.BadRequestException;
 import be.vinci.pae.exceptions.NotFoundException;
 import be.vinci.pae.presentation.filters.Authorize;
@@ -36,7 +37,7 @@ public class InternshipRessource {
    * @return the internship
    */
   @GET
-  @Authorize
+  @Authorize(roles = {Role.ADMIN, Role.STUDENT, Role.TEACHER})
   @Produces(MediaType.APPLICATION_JSON)
   public InternshipDTO getInternshipById(@Context ContainerRequest request) {
     UserDTO user = (UserDTO) request.getProperty("user");
@@ -56,7 +57,7 @@ public class InternshipRessource {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
+  @Authorize(roles = {Role.STUDENT})
   public InternshipDTO addInternship(@Context ContainerRequest request, InternshipDTO internship) {
     if (internship.getIdCompany() < 0) {
       throw new BadRequestException("Invalid Company id");

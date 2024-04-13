@@ -1,4 +1,4 @@
-import {clearPage} from "../../../utils/render";
+import {clearPage, renderBreadcrumb} from "../../../utils/render";
 import {
     getToken,
     isAuthenticated
@@ -11,16 +11,13 @@ const AcceptRefusePage = () => {
     } else {
         clearPage();
         document.title = "Accepter ou refuser un contact";
+        renderBreadcrumb({"Accueil": "/", "Contacts": "/contact", "Accepter ou refuser un contact": "/contact/refusal"})
         buildPage();
     }
 }
 
 function buildPage() {
     const main = document.querySelector('main');
-    const title = document.createElement('h3');
-    title.textContent = 'Indiquer que le contact a été accepté ou refusé';
-    title.style.textAlign = 'center';
-    main.appendChild(title);
     const mainDiv = document.createElement('div');
     mainDiv.style.display = 'flex';
     const leftDiv = document.createElement('div');
@@ -51,7 +48,8 @@ function getContactInfos() {
     entrepriseNameValue.type = 'text';
     entrepriseNameValue.value = queryParams.get('tradename');
     entrepriseNameValue.readOnly = true;
-    entrepriseNameValue.className = 'bg-info form-control';
+    entrepriseNameValue.className = 'form-control';
+    entrepriseNameValue.disabled = true;
     contactInfosDiv.appendChild(entrepriseNameValue);
     if(queryParams.get('designation') !== 'null'){
         const entrepriseDesignation = document.createElement('label');
@@ -60,7 +58,8 @@ function getContactInfos() {
         entrepriseDesignationValue.type = 'text';
         entrepriseDesignationValue.value = queryParams.get('designation');
         entrepriseDesignationValue.readOnly = true;
-        entrepriseDesignationValue.className = 'bg-info form-control';
+        entrepriseDesignationValue.className = 'form-control';
+        entrepriseDesignationValue.disabled = true;
         contactInfosDiv.appendChild(entrepriseDesignation);
         contactInfosDiv.appendChild(entrepriseDesignationValue);
     }
@@ -71,7 +70,8 @@ function getContactInfos() {
     entrepriseMeetPlaceValue.type = 'text';
     entrepriseMeetPlaceValue.value = queryParams.get('meetplace');
     entrepriseMeetPlaceValue.readOnly = true;
-    entrepriseMeetPlaceValue.className = 'bg-info form-control';
+    entrepriseMeetPlaceValue.className = 'form-control';
+    entrepriseMeetPlaceValue.disabled = true;
     contactInfosDiv.appendChild(entrepriseMeetPlaceValue);
     return contactInfosDiv;
 }
@@ -82,6 +82,7 @@ function getForm() {
     contactState.textContent = 'Etat';
     const contactStateValue = document.createElement('select');
     contactStateValue.className = 'form-select';
+    contactStateValue.style.marginBottom = '10px';
     const optionAccepted = document.createElement('option');
     optionAccepted.value = 'true';
     optionAccepted.textContent = 'Accepté';

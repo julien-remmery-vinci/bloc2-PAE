@@ -1,10 +1,15 @@
 import { clearPage, renderPageTitle } from '../../utils/render';
 import Navigate from '../Router/Navigate';
-import { isAuthenticated } from '../../utils/auths';
+import { isAuthenticated, getToken } from '../../utils/auths';
 
 const fetchUserById = async (id) => {
   try {
-    fetch(`http://localhost:3000/users/${id}`)
+    fetch(`http://localhost:3000/users/${id}`, {
+      method: 'GET',
+      headers: {
+        Authorization: getToken(),
+      },
+    })
       .then((response) => response.json())
       .then((data) => {
         renderUser(data);
@@ -16,7 +21,12 @@ const fetchUserById = async (id) => {
 };
 
 const fetchContacts = async (id) => {
-  fetch(`http://localhost:3000/contacts/${id}`)
+  fetch(`http://localhost:3000/contacts/${id}`, {
+    method: 'GET',
+    headers: {
+      Authorization: getToken(),
+    },
+  })
   .then(response => response.json())
   .then(data => {
     renderContacts(data);

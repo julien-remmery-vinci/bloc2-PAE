@@ -1,16 +1,17 @@
-import {clearPage} from "../../../utils/render";
+import {clearPage, renderBreadcrumb} from "../../../utils/render";
 import {
   getToken, isAuthenticated
 } from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
-const AddContactPage = () => {
+const AddContactPage = async () => {
   if (!isAuthenticated()) {
     Navigate('/login');
   } else {
     clearPage();
     document.title = "Ajouter un contact";
-    buildPage();
+    renderBreadcrumb({"Accueil": "/", "Contacts": "/contact", "Ajouter un contact": "/contact/add"})
+    await buildPage();
   }
 }
 
@@ -39,7 +40,7 @@ async function buildPage() {
   const companies = document.createElement('select');
 
   companies.className = 'form-control';
-  companies.style.width = '25%';
+  companies.style.width = '50%';
   companies.style.marginLeft = '15%';
 
   const defaultOption = document.createElement('option');
@@ -65,8 +66,9 @@ async function buildPage() {
   const designations = document.createElement('select');
   designations.id = 'designation';
   designations.className = 'form-control';
-  designations.style.width = '25%';
+  designations.style.width = '50%';
   designations.style.marginLeft = '15%';
+  designations.style.marginBottom = '10px';
 
   colDiv1.appendChild(designations);
 
@@ -134,6 +136,7 @@ async function buildPage() {
   rowDiv.appendChild(colDiv2);
 
   createCompanyButton.addEventListener('click', () => {
+    createCompanyButton.hidden = !createCompanyButton.hidden;
       if (document.getElementById('companyForm')) {
       return;
       }
@@ -192,13 +195,24 @@ async function buildPage() {
       appellationInput.type = 'text';
       appellationInput.className = 'form-control';
       appellationInput.required = false;
+      appellationInput.style.marginBottom = '10px';
       form.appendChild(appellationInput);
 
       const submitButton = document.createElement('input');
       submitButton.type = 'submit';
       submitButton.value = "Ajouter l'entreprise";
       submitButton.className = 'btn btn-primary';
+      submitButton.style.marginRight = '10px';
       form.appendChild(submitButton);
+
+      const cancelButton = document.createElement('button');
+      cancelButton.textContent = 'Annuler';
+      cancelButton.className = 'btn btn-secondary';
+      form.appendChild(cancelButton);
+      cancelButton.addEventListener('click', () => {
+        createCompanyButton.hidden = !createCompanyButton.hidden;
+        form.remove();
+      });
 
       colDiv2.appendChild(form);
       containerDiv.appendChild(rowDiv);
@@ -257,7 +271,7 @@ async function createSubmit(e) {
       'Content-Type': 'application/json', 'Authorization': getToken(),
     },
   };
-  const response = await fetch('http://localhost:3000/companies/', options);
+  const response = await fetch('http://localhost:3000/companies', options);
   if (response.status === 200) {
       Navigate('/contact');
   } else {
@@ -295,7 +309,7 @@ async function onSubmit(e) {
     },
   };
 
-  const response = await fetch('http://localhost:3000/contacts/', options);
+  const response = await fetch('http://localhost:3000/contacts', options);
   if (response.status === 200) {
     Navigate('/contact');
 

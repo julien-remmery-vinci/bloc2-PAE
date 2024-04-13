@@ -4,6 +4,7 @@ import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.company.CompanyUCC;
 import be.vinci.pae.business.contact.ContactDTO;
 import be.vinci.pae.business.contact.ContactUCC;
+import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.presentation.filters.Authorize;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,6 +42,7 @@ public class CompanyRessource {
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(roles = {Role.STUDENT, Role.TEACHER})
   public List<CompanyDTO> getAll() {
     return companyUCC.getAll();
   }
@@ -57,7 +59,7 @@ public class CompanyRessource {
   @Path("/{id}/blacklist")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  // TODO : add Authorize filter for teachers
+  @Authorize(roles = {Role.TEACHER})
   public ObjectNode blacklistCompany(@PathParam("id") int id,
       JsonNode json) {
     if (id <= 0) {
@@ -87,7 +89,7 @@ public class CompanyRessource {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
+  @Authorize(roles = {Role.STUDENT})
   public CompanyDTO addCompany(CompanyDTO company) {
     if (company.getTradeName() == null || company.getAddress() == null) {
       throw new BadRequestException("Name or adress is missing");
@@ -104,6 +106,7 @@ public class CompanyRessource {
   @GET
   @Path("/contacts")
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(roles = {Role.TEACHER})
   public ArrayNode getAllWithContacts() {
     List<CompanyDTO> companies = companyUCC.getAll();
     List<ContactDTO> contacts = contactUCC.getAllContacts();
