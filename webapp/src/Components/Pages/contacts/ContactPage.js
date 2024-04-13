@@ -64,10 +64,19 @@ async function buildPage() {
       Navigate(url);
     });
     companyCell.appendChild(companyLink);
+    row.appendChild(companyCell);
 
     // Colonne état
     const stateCell = document.createElement('td');
     stateCell.textContent = contact.state;
+    row.appendChild(stateCell);
+
+    //Colonne lieu de rencontre
+     if (contact.state === 'pris') {
+    const meetPlaceCell = document.createElement('td');
+    meetPlaceCell.textContent = contact.meetPlace;
+    row.appendChild(meetPlaceCell);
+  }
 
     // Colonne Ne plus suivre
     const notFollowCell = document.createElement('td');
@@ -79,6 +88,7 @@ async function buildPage() {
       notFollowButton.textContent = 'Ne plus suivre';
     }
     notFollowCell.appendChild(notFollowButton);
+    row.appendChild(notFollowCell);
 
     notFollowButton.addEventListener('click', async () => {
       console.log("enter_fetch", contact.idContact);
@@ -99,10 +109,6 @@ async function buildPage() {
         stateCell.textContent = data.state;
       }
     });
-
-    row.appendChild(companyCell);
-    row.appendChild(stateCell);
-    row.appendChild(notFollowCell);
     tableBody.appendChild(row);
   });
   table.appendChild(tableBody);
