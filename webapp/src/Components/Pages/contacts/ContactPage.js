@@ -96,9 +96,12 @@ async function buildPage() {
     if (contact.state === 'refusé') {
       meetPlaceCell.textContent = contact.meetPlace;
       refusalCell.textContent = contact.refusalReason;
-    } else {
+    } else if (hasRefused) {
       refusalCell.textContent = '/';
+    } else {
+      refusalCell.textContent = '';
     }
+
     row.appendChild(refusalCell);
 
     // row unfollow
