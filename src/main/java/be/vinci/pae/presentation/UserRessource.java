@@ -9,6 +9,7 @@ import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.exceptions.BadRequestException;
+import be.vinci.pae.exceptions.FatalException;
 import be.vinci.pae.exceptions.UnauthorizedException;
 import be.vinci.pae.presentation.filters.Authorize;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,14 +18,19 @@ import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.glassfish.jersey.server.ContainerRequest;
 
 /**
@@ -82,6 +88,41 @@ public class UserRessource {
   }
 
   /**
+   * Update user information.
+   *
+   * @param json    json containing the new user information
+   * @param request the request's context
+   * @return the updated user
+   */
+  @PUT
+  @Path("/update")
+  @Authorize(roles = {Role.ADMIN, Role.STUDENT, Role.TEACHER})
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public UserDTO updateUser(JsonNode json, @Context ContainerRequest request) {
+    final UserDTO authenticatedUser = (UserDTO) request.getProperty("user");
+    String firstName = json.get("firstname").asText();
+    String lastName = json.get("lastname").asText();
+    String email = json.get("email").asText();
+    String telephone = json.get("phoneNumber").asText();
+
+    if (firstName == null || lastName == null || email == null || telephone == null) {
+      throw new BadRequestException("All fields are required");
+    }
+
+    if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || telephone.isEmpty()) {
+      throw new BadRequestException("All fields are required");
+    }
+
+    if (!email.matches(
+        "^[a-zA-Z0-9._%+-]+\\.[a-zA-Z0-9._%+-]+@(vinci\\.be|student\\.vinci\\.be)$")) {
+      throw new BadRequestException("email is not valid");
+    }
+
+    return userUCC.updateUser(authenticatedUser, firstName, lastName, email, telephone);
+  }
+
+  /**
    * Handles HTTP GET requests to fetch all users. This method uses the injected UserUCC instance to
    * fetch all users and returns them as a list of UserDTO objects. The list is automatically
    * converted to JSON by the JAX-RS runtime.
@@ -95,19 +136,77 @@ public class UserRessource {
     return userUCC.getAllUsers();
   }
 
+  /**
+   * Get a user by its id.
+   *
+   * @param id the id of the user
+   * @return the user
+   */
   @GET
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(roles = {Role.ADMIN, Role.TEACHER})
   public UserDTO getUserById(@PathParam("id") int id) {
     return userUCC.getUser(id);
   }
 
+  /**
+   * Get all students.
+   *
+   * @return the list of all students
+   */
   @GET
   @Path("/students")
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize(roles = {Role.ADMIN, Role.TEACHER})
   public List<UserDTO> getStudents() {
     return userUCC.getStudents();
+  }
+
+  /**
+   * Modify the profile picture of a user.
+   *
+   * @param request the request's context
+   * @param file    the picture to upload
+   * @return the updated user
+   */
+  @POST
+  @Path("/picture/modify")
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(roles = {Role.STUDENT, Role.TEACHER, Role.ADMIN})
+  public UserDTO modifyPicture(@Context ContainerRequest request,
+      @FormDataParam("file") InputStream file) {
+    try {
+      String encoded = Base64.getEncoder()
+          .encodeToString(file.readAllBytes());
+      UserDTO user = (UserDTO) request.getProperty("user");
+      user.setProfilePicture(encoded);
+      userUCC.modifyProfilePicture(user);
+      return user;
+    } catch (IOException e) {
+      throw new FatalException(e);
+    }
+  }
+
+  /**
+   * Remove the profile picture of a user.
+   *
+   * @param request the request's context
+   * @return the updated user
+   */
+  @POST
+  @Path("/picture/remove")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(roles = {Role.STUDENT, Role.TEACHER, Role.ADMIN})
+  public UserDTO removePicture(@Context ContainerRequest request) {
+    UserDTO user = (UserDTO) request.getProperty("user");
+
+    user.setProfilePicture(null);
+
+    userUCC.removeProfilePicture(user);
+
+    return user;
   }
 
 }

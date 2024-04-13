@@ -42,6 +42,7 @@ public class CompanyRessource {
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(roles = {Role.STUDENT, Role.TEACHER})
   public List<CompanyDTO> getAll() {
     return companyUCC.getAll();
   }
@@ -105,6 +106,7 @@ public class CompanyRessource {
   @GET
   @Path("/contacts")
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(roles = {Role.TEACHER})
   public ArrayNode getAllWithContacts() {
     List<CompanyDTO> companies = companyUCC.getAll();
     List<ContactDTO> contacts = contactUCC.getAllContacts();

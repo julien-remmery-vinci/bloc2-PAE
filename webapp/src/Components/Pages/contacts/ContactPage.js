@@ -1,17 +1,18 @@
-import {clearPage} from "../../../utils/render";
+import {clearPage, renderBreadcrumb} from "../../../utils/render";
 import {
   getToken,
   isAuthenticated
 } from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
-const ContactPage = () => {
+const ContactPage = async () => {
   if (!isAuthenticated()) {
     Navigate('/login');
   } else {
     clearPage();
     document.title = "Contacts";
-    buildPage();
+    renderBreadcrumb({"Accueil": "/", "Contacts": "/contacts"})
+    await buildPage();
   }
 }
 
@@ -31,7 +32,7 @@ async function buildPage() {
   const headings = ['Entreprise', 'État', ''];
   const contacts = await getContacts();
 
-  // Ajouter les entêtes de colonne
+
   headings.forEach(headingText => {
     const th = document.createElement('th');
     th.textContent = headingText;
@@ -46,7 +47,7 @@ async function buildPage() {
   contacts.forEach(contact => {
     const row = document.createElement('tr');
 
-    // Colonne entreprise
+    // row company
     const companyCell = document.createElement('td');
     const companyLink = document.createElement('a');
     companyLink.textContent = contact.company.tradeName;
@@ -63,12 +64,21 @@ async function buildPage() {
       Navigate(url);
     });
     companyCell.appendChild(companyLink);
+    row.appendChild(companyCell);
 
-    // Colonne état
+    // row state
     const stateCell = document.createElement('td');
     stateCell.textContent = contact.state;
+    row.appendChild(stateCell);
 
-    // Colonne Ne plus suivre
+    // row meetPlace
+     if (contact.state === 'pris') {
+    const meetPlaceCell = document.createElement('td');
+    meetPlaceCell.textContent = contact.meetPlace;
+    row.appendChild(meetPlaceCell);
+  }
+
+    // row unfollow
     const notFollowCell = document.createElement('td');
     const notFollowButton = document.createElement('button');
     notFollowButton.classList.add('btn', 'btn-primary');
@@ -78,6 +88,7 @@ async function buildPage() {
       notFollowButton.textContent = 'Ne plus suivre';
     }
     notFollowCell.appendChild(notFollowButton);
+    row.appendChild(notFollowCell);
 
     notFollowButton.addEventListener('click', async () => {
       console.log("enter_fetch", contact.idContact);
@@ -98,10 +109,6 @@ async function buildPage() {
         stateCell.textContent = data.state;
       }
     });
-
-    row.appendChild(companyCell);
-    row.appendChild(stateCell);
-    row.appendChild(notFollowCell);
     tableBody.appendChild(row);
   });
   table.appendChild(tableBody);
