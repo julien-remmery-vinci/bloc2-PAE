@@ -32,7 +32,7 @@ async function buildPage() {
   const headings = ['Entreprise', 'État', ''];
   const contacts = await getContacts();
 
-  // Ajouter les entêtes de colonne
+
   headings.forEach(headingText => {
     const th = document.createElement('th');
     th.textContent = headingText;
@@ -47,7 +47,7 @@ async function buildPage() {
   contacts.forEach(contact => {
     const row = document.createElement('tr');
 
-    // Colonne entreprise
+    // row company
     const companyCell = document.createElement('td');
     const companyLink = document.createElement('a');
     companyLink.textContent = contact.company.tradeName;
@@ -66,19 +66,19 @@ async function buildPage() {
     companyCell.appendChild(companyLink);
     row.appendChild(companyCell);
 
-    // Colonne état
+    // row state
     const stateCell = document.createElement('td');
     stateCell.textContent = contact.state;
     row.appendChild(stateCell);
 
-    //Colonne lieu de rencontre
+    // row meetPlace
      if (contact.state === 'pris') {
     const meetPlaceCell = document.createElement('td');
     meetPlaceCell.textContent = contact.meetPlace;
     row.appendChild(meetPlaceCell);
   }
 
-    // Colonne Ne plus suivre
+    // row unfollow
     const notFollowCell = document.createElement('td');
     const notFollowButton = document.createElement('button');
     notFollowButton.classList.add('btn', 'btn-primary');
