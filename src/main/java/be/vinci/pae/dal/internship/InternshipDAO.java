@@ -31,4 +31,12 @@ public interface InternshipDAO {
    * @return the internship or null if no internship was found
    */
   InternshipDTO getInternshipByStudentId(int id);
+
+  /**
+   * Update the subject of an internship.
+   *
+   * @param internship the internship to update
+   * @return the internship updated
+   */
+  InternshipDAO updateInternshipSubject(InternshipDTO internship);
 }

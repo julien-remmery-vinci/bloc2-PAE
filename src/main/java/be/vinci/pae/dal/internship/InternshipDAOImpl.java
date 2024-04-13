@@ -104,4 +104,22 @@ public class InternshipDAOImpl implements InternshipDAO {
     }
     return null;
   }
+
+  @Override
+  public InternshipDTO updateInternshipSubject(InternshipDTO internship) {
+    try (PreparedStatement ps = dalServices.getPS(
+        "UPDATE pae.internships SET internship_internshipproject = ? WHERE internship_idInternship = ? RETURNING *;")) {
+      ps.setString(1, internship.getInternshipProject());
+      ps.setInt(2, internship.getIdInternship());
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          String prefix = "internship";
+          return (InternshipDTO) daoServices.getDataFromRs(rs, prefix);
+        }
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return null;
+  }
 }

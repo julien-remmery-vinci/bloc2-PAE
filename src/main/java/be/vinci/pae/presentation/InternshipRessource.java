@@ -12,6 +12,7 @@ import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
@@ -88,6 +89,17 @@ public class InternshipRessource {
     }
     internship.setIdStudent(((UserDTO) request.getProperty("user")).getIdUser());
     return internshipUCC.addInternship(internship);
+  }
+
+  @PUT
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(roles = {Role.STUDENT})
+  public InternshipDTO updateInternshipSubject(@Context ContainerRequest request, InternshipDTO internship) {
+    if (internship.getInternshipProject() == null || internship.getInternshipProject().isEmpty()) {
+      throw new BadRequestException("Invalid Subject");
+    }
+    return internshipUCC.updateInternshipSubject(internship);
   }
 }
 
