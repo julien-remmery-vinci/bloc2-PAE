@@ -21,7 +21,6 @@ const renderBreadcrumb = (path) => {
   const breadcrumb = document.createElement('div');
   const list = document.createElement('ol');
   list.className = 'breadcrumb';
-  breadcrumb.style.maxHeight = '5vh'
   breadcrumb.style.overflow = 'auto';
   breadcrumb.style.margin = '10px';
   Object.entries(path).forEach(([name, url]) => {
