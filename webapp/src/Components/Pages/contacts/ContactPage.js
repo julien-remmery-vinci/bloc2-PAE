@@ -31,15 +31,16 @@ async function buildPage() {
   const tableHeadRow = document.createElement('tr');
   const headings = ['Entreprise', 'État', ''];
   const contacts = await getContacts();
-    const hasPrisOrAccepted = contacts.some(contact => contact.state === 'pris' || contact.state === 'accepté');
-    const hasRefused = contacts.some(contact => contact.state === 'refusé');
+  const hasPrisOrAccepted = contacts.some(
+      contact => contact.state === 'pris' || contact.state === 'accepté');
+  const hasRefused = contacts.some(contact => contact.state === 'refusé');
 
   if (hasPrisOrAccepted) {
     headings.splice(2, 0, 'Lieu de rencontre');
   }
 
-  if (hasRefused) {
-    headings.splice(3, 0, 'Raison du refus');
+  if (hasRefused && (!hasPrisOrAccepted || hasPrisOrAccepted)) {
+    headings.splice(3, 0, 'Raison de refus');
   }
 
   headings.forEach(headingText => {
@@ -68,7 +69,8 @@ async function buildPage() {
       event.preventDefault();
       let url = window.location.href;
       url += contact.state === 'initié' ?
-          `/meet?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}` :
+          `/meet?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}`
+          :
           `/refusal?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}&meetplace=${contact.meetPlace}&companyid=${contact.company.idCompany}&userid=${contact.idStudent}`;
       Navigate(url);
     });
@@ -84,10 +86,20 @@ async function buildPage() {
     const meetPlaceCell = document.createElement('td');
     if (contact.state === 'pris' || contact.state === 'accepté') {
       meetPlaceCell.textContent = contact.meetPlace;
-    }else{
-      meetPlaceCell.textContent = '';
+    } else {
+      meetPlaceCell.textContent = '/';
     }
     row.appendChild(meetPlaceCell);
+
+    // row refusal
+    const refusalCell = document.createElement('td');
+    if (contact.state === 'refusé') {
+      meetPlaceCell.textContent = contact.meetPlace;
+      refusalCell.textContent = contact.refusalReason;
+    } else {
+      refusalCell.textContent = '/';
+    }
+    row.appendChild(refusalCell);
 
     // row unfollow
     const notFollowCell = document.createElement('td');
