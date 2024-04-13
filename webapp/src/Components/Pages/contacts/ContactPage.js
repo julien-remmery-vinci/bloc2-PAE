@@ -30,8 +30,17 @@ async function buildPage() {
   const tableHeadRow = document.createElement('tr');
   const headings = ['Entreprise', 'État', ''];
   const contacts = await getContacts();
+    const hasPrisOrAccepted = contacts.some(contact => contact.state === 'pris' || contact.state === 'accepté');
+    const hasRefused = contacts.some(contact => contact.state === 'refusé');
 
-  // Ajouter les entêtes de colonne
+  if (hasPrisOrAccepted) {
+    headings.splice(2, 0, 'Lieu de rencontre');
+  }
+
+  if (hasRefused) {
+    headings.splice(3, 0, 'Raison du refus');
+  }
+
   headings.forEach(headingText => {
     const th = document.createElement('th');
     th.textContent = headingText;
@@ -46,7 +55,7 @@ async function buildPage() {
   contacts.forEach(contact => {
     const row = document.createElement('tr');
 
-    // Colonne entreprise
+    // row company
     const companyCell = document.createElement('td');
     const companyLink = document.createElement('a');
     companyLink.textContent = contact.company.tradeName;
@@ -64,19 +73,21 @@ async function buildPage() {
     companyCell.appendChild(companyLink);
     row.appendChild(companyCell);
 
-    // Colonne état
+    // row state
     const stateCell = document.createElement('td');
     stateCell.textContent = contact.state;
     row.appendChild(stateCell);
 
-    //Colonne lieu de rencontre
-     if (contact.state === 'pris') {
+    // row meetPlace
     const meetPlaceCell = document.createElement('td');
-    meetPlaceCell.textContent = contact.meetPlace;
+    if (contact.state === 'pris' || contact.state === 'accepté') {
+      meetPlaceCell.textContent = contact.meetPlace;
+    }else{
+      meetPlaceCell.textContent = '';
+    }
     row.appendChild(meetPlaceCell);
-  }
 
-    // Colonne Ne plus suivre
+    // row unfollow
     const notFollowCell = document.createElement('td');
     const notFollowButton = document.createElement('button');
     notFollowButton.classList.add('btn', 'btn-primary');
