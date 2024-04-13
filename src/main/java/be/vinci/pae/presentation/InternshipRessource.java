@@ -73,7 +73,6 @@ public class InternshipRessource {
     if (internship.getIdStudent() < 0) {
       throw new BadRequestException("Invalid Student id");
     }
-    System.out.println(internship.getSignatureDate());
     if (internship.getSignatureDate() == null) {
       throw new BadRequestException("Invalid Start Date");
     }
@@ -97,7 +96,8 @@ public class InternshipRessource {
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize(roles = {Role.STUDENT})
   public InternshipDTO updateInternshipSubject(JsonNode json, @Context ContainerRequest request) {
-    InternshipDTO internship = internshipUCC.getInternshipById((UserDTO) request.getProperty("user"));
+    InternshipDTO internship = internshipUCC.getInternshipById(
+        (UserDTO) request.getProperty("user"));
     if (internship == null) {
       throw new NotFoundException("Internship not found");
     }
