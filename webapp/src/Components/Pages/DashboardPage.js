@@ -24,11 +24,11 @@ async function buildPage() {
   mainDiv.style.display = 'flex';
 
   const statsDiv = document.createElement('div');
-  statsDiv.style.width = '40%';
+  statsDiv.style.width = '30%';
   statsDiv.id = 'stats';
 
   const rightDiv = document.createElement('div');
-  rightDiv.style.width = '60%';
+  rightDiv.style.width = '70%';
   rightDiv.id = 'rightDiv';
 
   const companiesDiv = document.createElement('div');
@@ -46,16 +46,10 @@ async function buildPage() {
   main.appendChild(mainDiv);
 
   companies = await getCompanies();
-  companies.sort((a, b) => {
-    const tradeNameComparison = a.tradeName.localeCompare(b.tradeName);
-    if(tradeNameComparison === 0) return a.designation ? a.designation.localeCompare(b.designation) : 0;
-    return tradeNameComparison;
-  });
-  lastOrder.tradeName = 'asc';
 
   renderStats();
   await renderGraph(getCurrentAcademicYear());
-  renderCompanies(getCurrentAcademicYear());
+  renderCompanies();
   renderSearch();
 }
 
@@ -84,7 +78,7 @@ function renderStats() {
   option.textContent = 'Toutes les années';
   select.appendChild(option);
   select.addEventListener('change', async (e) => {
-    renderCompanies(e.target.value);
+    renderCompanies();
     await renderGraph(e.target.value);
   });
   div.appendChild(select);
@@ -178,7 +172,41 @@ function getAcademicYearFromRegisterDate(registerDate) {
   return `${year - 1}-${year}`;
 }
 
-function renderCompanies(academicYear, filteredCompanies) {
+function fillTable(filteredCompanies) {
+  const tbody = document.querySelector('tbody');
+  tbody.innerHTML = '';
+  const academicYear = document.querySelector('select').value;
+  filteredCompanies.forEach(company => {
+    const trow = document.createElement('tr');
+    const td1 = document.createElement('td');
+    const td2 = document.createElement('td');
+    const td3 = document.createElement('td');
+    const td4 = document.createElement('td');
+    const td5 = document.createElement('td');
+    const td6 = document.createElement('td');
+    td1.textContent = company.tradeName;
+    td2.textContent = company.designation;
+    td3.textContent = company.phoneNumber;
+    td4.textContent = company.city;
+    td5.textContent = getNbStudentsWithIntershipForCompany(company.idCompany,
+        academicYear);
+    td6.textContent = company.blacklisted ? "oui" : "non";
+    trow.appendChild(td1);
+    trow.appendChild(td2);
+    trow.appendChild(td3);
+    trow.appendChild(td4);
+    trow.appendChild(td5);
+    trow.appendChild(td6);
+    tbody.appendChild(trow);
+    trow.style.cursor = 'pointer';
+    trow.addEventListener('click', () => {
+      Navigate(`/company`, company);
+    });
+  });
+}
+
+function renderCompanies(filteredCompanies) {
+  console.log(filteredCompanies)
   const div = document.getElementById('companies');
   div.style.overflow = 'auto';
   div.style.height = '80vh';
@@ -199,25 +227,30 @@ function renderCompanies(academicYear, filteredCompanies) {
   const th3 = document.createElement('th');
   const th4 = document.createElement('th');
   const th5 = document.createElement('th');
-  th1.textContent = 'Nom';
+  const th6 = document.createElement('th');
+  th1.textContent = 'Nom ▼';
   th1.style.cursor = 'pointer';
   th1.addEventListener('click', orderByTradename);
-  th2.textContent = 'Appellation';
+  th2.textContent = 'Appellation ▼';
   th2.style.cursor = 'pointer';
   th2.addEventListener('click', orderByDesignation);
   th3.textContent = 'Téléphone';
-  th4.textContent = 'Nombre d\'étudiants';
+  th4.textContent = 'Ville';
   th4.style.cursor = 'pointer';
-  th4.addEventListener('click', orderByAcceptedStudents);
-  th5.textContent = 'Black-listée';
+  th4.addEventListener('click', orderByCity);
+  th5.textContent = 'Nombre d\'étudiants';
   th5.style.cursor = 'pointer';
-  th5.addEventListener('click', orderByBlacklisted);
+  th5.addEventListener('click', orderByAcceptedStudents);
+  th6.textContent = 'Black-listée';
+  th6.style.cursor = 'pointer';
+  th6.addEventListener('click', orderByBlacklisted);
   thead.appendChild(tr);
   tr.appendChild(th1);
   tr.appendChild(th2);
   tr.appendChild(th3);
   tr.appendChild(th4);
   tr.appendChild(th5);
+  tr.appendChild(th6);
   table.appendChild(thead);
   table.appendChild(tbody);
   div.appendChild(table);
@@ -240,56 +273,16 @@ function renderCompanies(academicYear, filteredCompanies) {
     error.hidden = false;
   }
   else if(filteredCompanies) {
-    filteredCompanies.forEach(company => {
-      const trow = document.createElement('tr');
-      const td1 = document.createElement('td');
-      const td2 = document.createElement('td');
-      const td3 = document.createElement('td');
-      const td4 = document.createElement('td');
-      const td5 = document.createElement('td');
-      td1.textContent = company.tradeName;
-      td2.textContent = company.designation;
-      td3.textContent = company.phoneNumber;
-      td4.textContent = getNbStudentsWithIntershipForCompany(company.idCompany,
-          academicYear);
-      td5.textContent = company.blacklisted ? "oui" : "non";
-      trow.appendChild(td1);
-      trow.appendChild(td2);
-      trow.appendChild(td3);
-      trow.appendChild(td4);
-      trow.appendChild(td5);
-      tbody.appendChild(trow);
-      trow.style.cursor = 'pointer';
-      trow.addEventListener('click', () => {
-        Navigate(`/company`, company);
-      });
-    });
+    fillTable(filteredCompanies);
   }
   else {
-    companies.forEach(company => {
-      const trow = document.createElement('tr');
-      const td1 = document.createElement('td');
-      const td2 = document.createElement('td');
-      const td3 = document.createElement('td');
-      const td4 = document.createElement('td');
-      const td5 = document.createElement('td');
-      td1.textContent = company.tradeName;
-      td2.textContent = company.designation;
-      td3.textContent = company.phoneNumber;
-      td4.textContent = getNbStudentsWithIntershipForCompany(company.idCompany,
-          academicYear);
-      td5.textContent = company.blacklisted ? "oui" : "non";
-      trow.appendChild(td1);
-      trow.appendChild(td2);
-      trow.appendChild(td3);
-      trow.appendChild(td4);
-      trow.appendChild(td5);
-      tbody.appendChild(trow);
-      trow.style.cursor = 'pointer';
-      trow.addEventListener('click', () => {
-        Navigate(`/company`, company);
-      });
+    companies.sort((a, b) => {
+      const tradeNameComparison = a.tradeName.localeCompare(b.tradeName);
+      if(tradeNameComparison === 0) return a.designation ? a.designation.localeCompare(b.designation) : 0;
+      return tradeNameComparison;
     });
+    lastOrder.tradeName = 'asc';
+    fillTable(companies);
   }
 }
 
@@ -310,7 +303,7 @@ function renderSearch() {
   div.appendChild(search);
   search.addEventListener('input', () => {
     const filteredCompanies = companies.filter(company => company.tradeName.toLowerCase().includes(search.value.toLowerCase()));
-    renderCompanies(undefined, filteredCompanies);
+    renderCompanies(filteredCompanies);
   });
 
   const reset = document.createElement('button');
@@ -409,24 +402,27 @@ function getCurrentAcademicYear() {
   return `${year - 1}-${year}`;
 }
 
-function orderByTradename() {
+function orderByTradename(e) {
   if(lastOrder.tradeName === 'asc') {
     lastOrder.tradeName = 'desc';
+    e.target.textContent = 'Nom ▼';
   } else {
     lastOrder.tradeName = 'asc';
+    e.target.textContent = 'Nom ▲';
   }
-  console.log(lastOrder.tradeName)
   const orderedCompanies = lastOrder.tradeName === 'asc'
       ? companies.sort((a, b) => b.tradeName.localeCompare(a.tradeName))
       : companies.sort((a, b) => a.tradeName.localeCompare(b.tradeName));
-  renderCompanies(undefined, orderedCompanies);
+  fillTable(orderedCompanies);
 }
 
-function orderByDesignation() {
+function orderByDesignation(e) {
   if (lastOrder.designation === 'asc') {
     lastOrder.designation = 'desc';
+    e.target.textContent = 'Appellation ▲';
   } else {
     lastOrder.designation = 'asc';
+    e.target.textContent = 'Appellation ▼';
   }
   const orderedCompanies = lastOrder.designation === 'asc'
       ? companies.sort((a, b) => {
@@ -439,14 +435,38 @@ function orderByDesignation() {
         if(b.designation === null) return 1;
         return b.designation.localeCompare(a.designation);
       });
-  renderCompanies(undefined, orderedCompanies);
+  fillTable(orderedCompanies);
 }
 
-function orderByAcceptedStudents() {
+function orderByCity(e) {
+  if (lastOrder.city === 'asc') {
+    lastOrder.city = 'desc';
+    e.target.textContent = 'Ville ▼';
+  } else {
+    lastOrder.city = 'asc';
+    e.target.textContent = 'Ville ▲';
+  }
+  const orderedCompanies = lastOrder.city === 'asc'
+      ? companies.sort((a, b) => {
+        if(a.city === null) return 1;
+        if(b.city === null) return -1;
+        return a.city.localeCompare(b.city);
+      })
+      : companies.sort((a, b) => {
+        if(a.city === null) return -1;
+        if(b.city === null) return 1;
+        return b.city.localeCompare(a.city);
+      });
+  fillTable(orderedCompanies);
+}
+
+function orderByAcceptedStudents(e) {
   if (lastOrder.students === 'asc') {
     lastOrder.students = 'desc';
+    e.target.textContent = 'Nombre d\'étudiants ▲';
   } else {
     lastOrder.students = 'asc';
+    e.target.textContent = 'Nombre d\'étudiants ▼';
   }
   const orderedCompanies = lastOrder.students === 'asc'
       ? companies.sort((a, b) => {
@@ -459,19 +479,21 @@ function orderByAcceptedStudents() {
         const bStudents = b.contacts.filter(contact => contact.state === 'accepté');
         return aStudents.length - bStudents.length;
       });
-  renderCompanies(undefined, orderedCompanies);
+  fillTable(orderedCompanies);
 }
 
-function orderByBlacklisted() {
+function orderByBlacklisted(e) {
   if (lastOrder.blacklisted === 'asc') {
     lastOrder.blacklisted = 'desc';
+    e.target.textContent = 'Black-listée ▼';
   } else {
     lastOrder.blacklisted = 'asc';
+    e.target.textContent = 'Black-listée ▲';
   }
   const orderedCompanies = lastOrder.blacklisted === 'asc'
       ? companies.sort((a, b) => a.blacklisted - b.blacklisted)
       : companies.sort((a, b) => b.blacklisted - a.blacklisted);
-  renderCompanies(undefined, orderedCompanies);
+  fillTable(orderedCompanies);
 }
 
 export default DashboardPage;
