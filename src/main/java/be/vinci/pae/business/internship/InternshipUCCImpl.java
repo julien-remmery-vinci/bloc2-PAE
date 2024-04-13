@@ -83,10 +83,10 @@ public class InternshipUCCImpl implements InternshipUCC {
   }
 
   @Override
-  public InternshipDTO updateInternshipSubject(InternshipDTO internship) {
+  public InternshipDTO updateInternshipSubject(InternshipDTO internship, String subject) {
     try {
       dalServices.open();
-      InternshipDTO result = internshipDAO.updateInternshipSubject(internship);
+      InternshipDTO result = internshipDAO.updateInternship(internship, subject);
       if (result == null) {
         throw new NotFoundException("Internship not found");
       }

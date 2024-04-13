@@ -29,5 +29,5 @@ public interface InternshipUCC {
    * @param internship the internship to update
    * @return the internship updated
    */
-  InternshipDTO updateInternshipSubject(InternshipDTO internship);
+  InternshipDTO updateInternshipSubject(InternshipDTO internship, String subject);
 }

@@ -7,6 +7,7 @@ import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.exceptions.BadRequestException;
 import be.vinci.pae.exceptions.NotFoundException;
 import be.vinci.pae.presentation.filters.Authorize;
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
@@ -95,11 +96,18 @@ public class InternshipRessource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize(roles = {Role.STUDENT})
-  public InternshipDTO updateInternshipSubject(@Context ContainerRequest request, InternshipDTO internship) {
-    if (internship.getInternshipProject() == null || internship.getInternshipProject().isEmpty()) {
-      throw new BadRequestException("Invalid Subject");
+  public InternshipDTO updateInternshipSubject(JsonNode json, @Context ContainerRequest request) {
+    InternshipDTO internship = internshipUCC.getInternshipById((UserDTO) request.getProperty("user"));
+    if (internship == null) {
+      throw new NotFoundException("Internship not found");
     }
-    return internshipUCC.updateInternshipSubject(internship);
+
+    String subject = json.get("subject").asText();
+
+    if (subject == null || subject.isEmpty()) {
+      throw new BadRequestException("Empty Subject");
+    }
+    return internshipUCC.updateInternshipSubject(internship, subject);
   }
 }
 

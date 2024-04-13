@@ -14,6 +14,14 @@ public interface InternshipDAO {
    * @param id the id
    * @return the internship
    */
+  InternshipDTO getOneById(int id);
+
+  /**
+   * Get an internship by its id.
+   *
+   * @param id the id
+   * @return the internship
+   */
   List<InternshipDTO> getInternshipById(int id);
 
   /**
@@ -33,10 +41,10 @@ public interface InternshipDAO {
   InternshipDTO getInternshipByStudentId(int id);
 
   /**
-   * Update the subject of an internship.
+   * Update an internship.
    *
    * @param internship the internship to update
-   * @return the internship updated
+   * @return the updated internship
    */
-  InternshipDAO updateInternshipSubject(InternshipDTO internship);
+  InternshipDTO updateInternship(InternshipDTO internship, String subject);
 }
