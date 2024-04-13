@@ -1,44 +1,62 @@
 import Chart from 'chart.js/auto';
-import {isAuthenticated} from "../../utils/auths";
+import {getToken, isAuthenticated} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
-import {clearPage} from "../../utils/render";
+import {clearPage, renderBreadcrumb} from "../../utils/render";
 
-let companies;
+let companies = [];
+const lastOrder = {};
 
-const DashboardPage = () => {
+const DashboardPage = async () => {
   if (!isAuthenticated()) {
     Navigate('/login');
   } else {
     clearPage();
     document.title = "Statistiques";
-    buildPage();
+    renderBreadcrumb({"Accueil": "/", "Statistiques": "/dashboard"});
+    await buildPage();
   }
 }
 
 async function buildPage() {
   const main = document.querySelector('main');
+
+  const mainDiv = document.createElement('div');
+  mainDiv.style.display = 'flex';
+
   const statsDiv = document.createElement('div');
-  const companiesDiv = document.createElement('div');
-  main.appendChild(statsDiv);
-  main.appendChild(companiesDiv);
-  main.style.display = 'flex';
-  // statsDiv.style.border = '1px solid red';
-  // companiesDiv.style.border = '1px solid blue';
   statsDiv.style.width = '40%';
-  companiesDiv.style.width = '60%';
-  statsDiv.style.height = '90vh';
-  companiesDiv.style.height = '90vh';
   statsDiv.id = 'stats';
+
+  const rightDiv = document.createElement('div');
+  rightDiv.style.width = '60%';
+  rightDiv.id = 'rightDiv';
+
+  const companiesDiv = document.createElement('div');
   companiesDiv.id = 'companies';
+  companiesDiv.style.maxHeight = '70vh';
+
+  const searchDiv = document.createElement('div');
+  searchDiv.id = 'searchDiv';
+  searchDiv.style.display = 'flex';
+
+  rightDiv.appendChild(companiesDiv);
+  rightDiv.appendChild(searchDiv);
+  mainDiv.appendChild(statsDiv);
+  mainDiv.appendChild(rightDiv);
+  main.appendChild(mainDiv);
+
   companies = await getCompanies();
   companies.sort((a, b) => {
     const tradeNameComparison = a.tradeName.localeCompare(b.tradeName);
     if(tradeNameComparison === 0) return a.designation ? a.designation.localeCompare(b.designation) : 0;
     return tradeNameComparison;
   });
+  lastOrder.tradeName = 'asc';
+
   renderStats();
-  renderGraph(getCurrentAcademicYear());
+  await renderGraph(getCurrentAcademicYear());
   renderCompanies(getCurrentAcademicYear());
+  renderSearch();
 }
 
 function renderStats() {
@@ -65,9 +83,9 @@ function renderStats() {
   option.value = 'all';
   option.textContent = 'Toutes les années';
   select.appendChild(option);
-  select.addEventListener('change', (e) => {
+  select.addEventListener('change', async (e) => {
     renderCompanies(e.target.value);
-    renderGraph(e.target.value);
+    await renderGraph(e.target.value);
   });
   div.appendChild(select);
 }
@@ -82,7 +100,12 @@ async function renderGraph(academicYear) {
   graphDiv.id = 'graph';
 
   // nb of students by academic year
-  const response = await fetch('http://localhost:3000/users/students');
+  const response = await fetch('http://localhost:3000/users/students', {
+    method: 'GET',
+    headers: {
+      Authorization: getToken(),
+    }
+  });
   const result = await response.json();
 
   // nb of students for all academic years or for a specific academic year
@@ -106,10 +129,6 @@ async function renderGraph(academicYear) {
     )
     nbStudents = years[academicYear] || stillSearching.length;
   }
-
-  // problem : a student has not found an internship in its registration year
-  // he has to find one in the next year, but he is not counted in the total number of students for that year
-  // trying to solve here
 
   const nbStudentsWithInternship = getNbStudentsWithIntership(academicYear);
   const nbStudentsWithoutInternship = nbStudents - nbStudentsWithInternship;
@@ -146,7 +165,7 @@ async function renderGraph(academicYear) {
     div.appendChild(graphDiv);
   }
 
-  showGraph();
+  await showGraph();
 }
 
 function getAcademicYearFromRegisterDate(registerDate) {
@@ -159,21 +178,12 @@ function getAcademicYearFromRegisterDate(registerDate) {
   return `${year - 1}-${year}`;
 }
 
-function renderCompanies(academicYear) {
+function renderCompanies(academicYear, filteredCompanies) {
   const div = document.getElementById('companies');
   div.style.overflow = 'auto';
-  div.style.height = '85vh';
+  div.style.height = '80vh';
   div.style.scrollBehavior = 'smooth'
   div.innerHTML = '';
-  const title = document.createElement('h3');
-  title.textContent = 'Liste des entreprises';
-  title.style.textAlign = 'center';
-  div.appendChild(title);
-  const error = document.createElement('p');
-  error.textContent = 'Erreur lors de la récupération des entreprises';
-  error.hidden = true;
-  error.className = 'alert alert-danger';
-  error.id = 'companies-error';
 
   const table = document.createElement('table');
   table.className = 'table';
@@ -190,10 +200,18 @@ function renderCompanies(academicYear) {
   const th4 = document.createElement('th');
   const th5 = document.createElement('th');
   th1.textContent = 'Nom';
+  th1.style.cursor = 'pointer';
+  th1.addEventListener('click', orderByTradename);
   th2.textContent = 'Appellation';
+  th2.style.cursor = 'pointer';
+  th2.addEventListener('click', orderByDesignation);
   th3.textContent = 'Téléphone';
   th4.textContent = 'Nombre d\'étudiants';
+  th4.style.cursor = 'pointer';
+  th4.addEventListener('click', orderByAcceptedStudents);
   th5.textContent = 'Black-listée';
+  th5.style.cursor = 'pointer';
+  th5.addEventListener('click', orderByBlacklisted);
   thead.appendChild(tr);
   tr.appendChild(th1);
   tr.appendChild(th2);
@@ -203,36 +221,126 @@ function renderCompanies(academicYear) {
   table.appendChild(thead);
   table.appendChild(tbody);
   div.appendChild(table);
-  companies.forEach(company => {
-    const trow = document.createElement('tr');
-    const td1 = document.createElement('td');
-    const td2 = document.createElement('td');
-    const td3 = document.createElement('td');
-    const td4 = document.createElement('td');
-    const td5 = document.createElement('td');
-    td1.textContent = company.tradeName;
-    td2.textContent = company.designation;
-    td3.textContent = company.phoneNumber;
-    td4.textContent = getNbStudentsWithIntershipForCompany(company.idCompany, academicYear)
-    td5.textContent = company.blacklisted ? "oui" : "non";
-    trow.appendChild(td1);
-    trow.appendChild(td2);
-    trow.appendChild(td3);
-    trow.appendChild(td4);
-    trow.appendChild(td5);
-    tbody.appendChild(trow);
-    trow.style.cursor = 'pointer';
-    trow.addEventListener('click', () => {
-      Navigate(`/company`, company);
+  const error = document.createElement('p');
+  error.textContent = 'Aucune entreprise trouvée';
+  error.hidden = true;
+  error.className = 'alert alert-danger';
+  error.id = 'companies-error';
+  error.style.textAlign = 'center';
+  error.style.width = '30%';
+  error.style.height = '7%';
+  error.style.margin = '10px auto';
+  error.style.display = 'block';
+  error.style.fontSize = '1.2em';
+  error.style.borderRadius = '5px';
+  error.style.padding = '5px';
+  div.appendChild(error);
+
+  if(filteredCompanies !== undefined && filteredCompanies.length === 0 || companies.length === 0) {
+    error.hidden = false;
+  }
+  else if(filteredCompanies) {
+    filteredCompanies.forEach(company => {
+      const trow = document.createElement('tr');
+      const td1 = document.createElement('td');
+      const td2 = document.createElement('td');
+      const td3 = document.createElement('td');
+      const td4 = document.createElement('td');
+      const td5 = document.createElement('td');
+      td1.textContent = company.tradeName;
+      td2.textContent = company.designation;
+      td3.textContent = company.phoneNumber;
+      td4.textContent = getNbStudentsWithIntershipForCompany(company.idCompany,
+          academicYear);
+      td5.textContent = company.blacklisted ? "oui" : "non";
+      trow.appendChild(td1);
+      trow.appendChild(td2);
+      trow.appendChild(td3);
+      trow.appendChild(td4);
+      trow.appendChild(td5);
+      tbody.appendChild(trow);
+      trow.style.cursor = 'pointer';
+      trow.addEventListener('click', () => {
+        Navigate(`/company`, company);
+      });
     });
+  }
+  else {
+    companies.forEach(company => {
+      const trow = document.createElement('tr');
+      const td1 = document.createElement('td');
+      const td2 = document.createElement('td');
+      const td3 = document.createElement('td');
+      const td4 = document.createElement('td');
+      const td5 = document.createElement('td');
+      td1.textContent = company.tradeName;
+      td2.textContent = company.designation;
+      td3.textContent = company.phoneNumber;
+      td4.textContent = getNbStudentsWithIntershipForCompany(company.idCompany,
+          academicYear);
+      td5.textContent = company.blacklisted ? "oui" : "non";
+      trow.appendChild(td1);
+      trow.appendChild(td2);
+      trow.appendChild(td3);
+      trow.appendChild(td4);
+      trow.appendChild(td5);
+      tbody.appendChild(trow);
+      trow.style.cursor = 'pointer';
+      trow.addEventListener('click', () => {
+        Navigate(`/company`, company);
+      });
+    });
+  }
+}
+
+function renderSearch() {
+  const div = document.querySelector('#searchDiv');
+  const search = document.createElement('input');
+  search.type = 'text';
+  search.placeholder = 'Rechercher une entreprise';
+  search.className = 'form-control';
+  search.style.width = '45%';
+  search.style.margin = '10px auto';
+  search.style.display = 'block';
+  search.style.fontSize = '1.2em';
+  search.style.borderRadius = '5px';
+  search.style.padding = '5px';
+  search.style.cursor = 'pointer';
+  search.style.textAlign = 'center';
+  div.appendChild(search);
+  search.addEventListener('input', () => {
+    const filteredCompanies = companies.filter(company => company.tradeName.toLowerCase().includes(search.value.toLowerCase()));
+    renderCompanies(undefined, filteredCompanies);
+  });
+
+  const reset = document.createElement('button');
+  reset.textContent = 'Réinitialiser';
+  reset.className = 'btn btn-warning';
+  reset.style.width = '15%';
+  reset.style.margin = '10px auto';
+  reset.style.display = 'block';
+  reset.style.fontSize = '1.2em';
+  reset.style.borderRadius = '5px';
+  reset.style.padding = '5px';
+  reset.style.cursor = 'pointer';
+  reset.style.textAlign = 'center';
+  div.appendChild(reset);
+  reset.addEventListener('click', () => {
+    search.value = '';
+    renderCompanies();
   });
 }
 
 async function getCompanies() {
   // fetch companies
-  const response = await fetch('http://localhost:3000/companies/contacts');
+  const response = await fetch('http://localhost:3000/companies/contacts', {
+    method: 'GET',
+    headers: {
+      Authorization: getToken(),
+    }
+  });
   if(response.status !== 200) {
-    document.getElementById('companies-error').querySelector('p').hidden = false;
+    // TODO handle error
   }
   return response.json();
 }
@@ -256,28 +364,6 @@ function getNbStudentsWithIntershipForCompany(companyId, academicYear) {
   });
   return nbStudents;
 }
-
-// function getNbStudents(academicYear) {
-//   const students = [];
-//   if (academicYear === undefined || academicYear === 'all') {
-//     companies.forEach(company => {
-//       company.contacts.forEach(contact => {
-//         if(!students.includes(contact.idStudent)) {
-//           students.push(contact.idStudent);
-//         }
-//       });
-//     });
-//     return students.length;
-//   }
-//   companies.forEach(company => {
-//     company.contacts.forEach(contact => {
-//       if(contact.academicYear === academicYear && !students.includes(contact.idStudent)) {
-//         students.push(contact.idStudent);
-//       }
-//     });
-//   });
-//   return students.length;
-// }
 
 function getNbStudentsWithIntership(academicYear) {
   const students = [];
@@ -321,6 +407,71 @@ function getCurrentAcademicYear() {
     return `${year}-${year + 1}`;
   }
   return `${year - 1}-${year}`;
+}
+
+function orderByTradename() {
+  if(lastOrder.tradeName === 'asc') {
+    lastOrder.tradeName = 'desc';
+  } else {
+    lastOrder.tradeName = 'asc';
+  }
+  console.log(lastOrder.tradeName)
+  const orderedCompanies = lastOrder.tradeName === 'asc'
+      ? companies.sort((a, b) => b.tradeName.localeCompare(a.tradeName))
+      : companies.sort((a, b) => a.tradeName.localeCompare(b.tradeName));
+  renderCompanies(undefined, orderedCompanies);
+}
+
+function orderByDesignation() {
+  if (lastOrder.designation === 'asc') {
+    lastOrder.designation = 'desc';
+  } else {
+    lastOrder.designation = 'asc';
+  }
+  const orderedCompanies = lastOrder.designation === 'asc'
+      ? companies.sort((a, b) => {
+        if(a.designation === null) return 1;
+        if(b.designation === null) return -1;
+        return a.designation.localeCompare(b.designation);
+      })
+      : companies.sort((a, b) => {
+        if(a.designation === null) return -1;
+        if(b.designation === null) return 1;
+        return b.designation.localeCompare(a.designation);
+      });
+  renderCompanies(undefined, orderedCompanies);
+}
+
+function orderByAcceptedStudents() {
+  if (lastOrder.students === 'asc') {
+    lastOrder.students = 'desc';
+  } else {
+    lastOrder.students = 'asc';
+  }
+  const orderedCompanies = lastOrder.students === 'asc'
+      ? companies.sort((a, b) => {
+        const aStudents = a.contacts.filter(contact => contact.state === 'accepté');
+        const bStudents = b.contacts.filter(contact => contact.state === 'accepté');
+        return bStudents.length - aStudents.length;
+      })
+      : companies.sort((a, b) => {
+        const aStudents = a.contacts.filter(contact => contact.state === 'accepté');
+        const bStudents = b.contacts.filter(contact => contact.state === 'accepté');
+        return aStudents.length - bStudents.length;
+      });
+  renderCompanies(undefined, orderedCompanies);
+}
+
+function orderByBlacklisted() {
+  if (lastOrder.blacklisted === 'asc') {
+    lastOrder.blacklisted = 'desc';
+  } else {
+    lastOrder.blacklisted = 'asc';
+  }
+  const orderedCompanies = lastOrder.blacklisted === 'asc'
+      ? companies.sort((a, b) => a.blacklisted - b.blacklisted)
+      : companies.sort((a, b) => b.blacklisted - a.blacklisted);
+  renderCompanies(undefined, orderedCompanies);
 }
 
 export default DashboardPage;

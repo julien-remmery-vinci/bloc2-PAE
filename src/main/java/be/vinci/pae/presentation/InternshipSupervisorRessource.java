@@ -2,6 +2,7 @@ package be.vinci.pae.presentation;
 
 import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorDTO;
 import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorUCC;
+import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.exceptions.BadRequestException;
 import be.vinci.pae.presentation.filters.Authorize;
 import jakarta.inject.Inject;
@@ -35,6 +36,7 @@ public class InternshipSupervisorRessource {
   @GET
   @Path("/company/{id}")
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(roles = {Role.STUDENT, Role.TEACHER})
   public List<InternshipSupervisorDTO> getSupervisorsByCompanyID(@PathParam("id") int idCompany) {
     if (idCompany < 0) {
       throw new BadRequestException("Invalid id");
@@ -51,7 +53,7 @@ public class InternshipSupervisorRessource {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
+  @Authorize(roles = {Role.STUDENT})
   public InternshipSupervisorDTO addInternshipSupervisor(
       InternshipSupervisorDTO internshipSupervisor) {
     if (internshipSupervisor.getIdCompany() < 0) {

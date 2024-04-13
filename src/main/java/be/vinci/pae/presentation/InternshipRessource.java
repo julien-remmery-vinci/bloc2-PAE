@@ -58,7 +58,7 @@ public class InternshipRessource {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
+  @Authorize(roles = {Role.STUDENT})
   public InternshipDTO addInternship(@Context ContainerRequest request, InternshipDTO internship) {
     if (internship.getIdCompany() < 0) {
       throw new BadRequestException("Invalid Company id");

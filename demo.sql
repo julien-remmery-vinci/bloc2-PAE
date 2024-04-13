@@ -12,6 +12,7 @@ CREATE TABLE pae.users
     user_registerDate date    NOT NULL,
     user_role         TEXT    NOT NULL,
     user_academicYear TEXT    NULL,
+    user_profilePicture TEXT NULL,
     user_version      INTEGER NOT NULL
 );
 

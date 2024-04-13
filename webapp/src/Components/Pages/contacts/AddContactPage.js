@@ -1,16 +1,17 @@
-import {clearPage} from "../../../utils/render";
+import {clearPage, renderBreadcrumb} from "../../../utils/render";
 import {
   getToken, isAuthenticated
 } from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
-const AddContactPage = () => {
+const AddContactPage = async () => {
   if (!isAuthenticated()) {
     Navigate('/login');
   } else {
     clearPage();
     document.title = "Ajouter un contact";
-    buildPage();
+    renderBreadcrumb({"Accueil": "/", "Contacts": "/contact", "Ajouter un contact": "/contact/add"})
+    await buildPage();
   }
 }
 
@@ -270,7 +271,7 @@ async function createSubmit(e) {
       'Content-Type': 'application/json', 'Authorization': getToken(),
     },
   };
-  const response = await fetch('http://localhost:3000/companies/', options);
+  const response = await fetch('http://localhost:3000/companies', options);
   if (response.status === 200) {
       Navigate('/contact');
   } else {
@@ -308,7 +309,7 @@ async function onSubmit(e) {
     },
   };
 
-  const response = await fetch('http://localhost:3000/contacts/', options);
+  const response = await fetch('http://localhost:3000/contacts', options);
   if (response.status === 200) {
     Navigate('/contact');
 
