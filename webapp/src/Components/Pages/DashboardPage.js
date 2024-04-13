@@ -4,6 +4,7 @@ import Navigate from "../Router/Navigate";
 import {clearPage, renderBreadcrumb} from "../../utils/render";
 
 let companies = [];
+const lastOrder = {};
 
 const DashboardPage = async () => {
   if (!isAuthenticated()) {
@@ -18,34 +19,40 @@ const DashboardPage = async () => {
 
 async function buildPage() {
   const main = document.querySelector('main');
+
   const mainDiv = document.createElement('div');
-  const statsDiv = document.createElement('div');
-  const rightDiv = document.createElement('div');
-  const companiesDiv = document.createElement('div');
-  mainDiv.appendChild(statsDiv);
-  mainDiv.appendChild(companiesDiv);
-  main.appendChild(mainDiv);
   mainDiv.style.display = 'flex';
-  // statsDiv.style.border = '1px solid red';
-  // companiesDiv.style.border = '1px solid blue';
+
+  const statsDiv = document.createElement('div');
+  statsDiv.style.width = '40%';
+  statsDiv.id = 'stats';
+
+  const rightDiv = document.createElement('div');
+  rightDiv.style.width = '60%';
+  rightDiv.id = 'rightDiv';
+
+  const companiesDiv = document.createElement('div');
+  companiesDiv.id = 'companies';
+  companiesDiv.style.maxHeight = '70vh';
+
   const searchDiv = document.createElement('div');
+  searchDiv.id = 'searchDiv';
+  searchDiv.style.display = 'flex';
+
   rightDiv.appendChild(companiesDiv);
   rightDiv.appendChild(searchDiv);
   mainDiv.appendChild(statsDiv);
   mainDiv.appendChild(rightDiv);
-  statsDiv.style.width = '40%';
-  rightDiv.style.width = '60%';
-  searchDiv.id = 'searchDiv';
-  searchDiv.style.display = 'flex';
-  rightDiv.id = 'rightDiv';
-  statsDiv.id = 'stats';
-  companiesDiv.id = 'companies';
+  main.appendChild(mainDiv);
+
   companies = await getCompanies();
   companies.sort((a, b) => {
     const tradeNameComparison = a.tradeName.localeCompare(b.tradeName);
     if(tradeNameComparison === 0) return a.designation ? a.designation.localeCompare(b.designation) : 0;
     return tradeNameComparison;
   });
+  lastOrder.tradeName = 'asc';
+
   renderStats();
   await renderGraph(getCurrentAcademicYear());
   renderCompanies(getCurrentAcademicYear());
@@ -123,10 +130,6 @@ async function renderGraph(academicYear) {
     nbStudents = years[academicYear] || stillSearching.length;
   }
 
-  // problem : a student has not found an internship in its registration year
-  // he has to find one in the next year, but he is not counted in the total number of students for that year
-  // trying to solve here
-
   const nbStudentsWithInternship = getNbStudentsWithIntership(academicYear);
   const nbStudentsWithoutInternship = nbStudents - nbStudentsWithInternship;
   console.log(nbStudents, nbStudentsWithInternship, nbStudentsWithoutInternship)
@@ -162,7 +165,7 @@ async function renderGraph(academicYear) {
     div.appendChild(graphDiv);
   }
 
-  showGraph();
+  await showGraph();
 }
 
 function getAcademicYearFromRegisterDate(registerDate) {
@@ -197,10 +200,18 @@ function renderCompanies(academicYear, filteredCompanies) {
   const th4 = document.createElement('th');
   const th5 = document.createElement('th');
   th1.textContent = 'Nom';
+  th1.style.cursor = 'pointer';
+  th1.addEventListener('click', orderByTradename);
   th2.textContent = 'Appellation';
+  th2.style.cursor = 'pointer';
+  th2.addEventListener('click', orderByDesignation);
   th3.textContent = 'Téléphone';
   th4.textContent = 'Nombre d\'étudiants';
+  th4.style.cursor = 'pointer';
+  th4.addEventListener('click', orderByAcceptedStudents);
   th5.textContent = 'Black-listée';
+  th5.style.cursor = 'pointer';
+  th5.addEventListener('click', orderByBlacklisted);
   thead.appendChild(tr);
   tr.appendChild(th1);
   tr.appendChild(th2);
@@ -396,6 +407,71 @@ function getCurrentAcademicYear() {
     return `${year}-${year + 1}`;
   }
   return `${year - 1}-${year}`;
+}
+
+function orderByTradename() {
+  if(lastOrder.tradeName === 'asc') {
+    lastOrder.tradeName = 'desc';
+  } else {
+    lastOrder.tradeName = 'asc';
+  }
+  console.log(lastOrder.tradeName)
+  const orderedCompanies = lastOrder.tradeName === 'asc'
+      ? companies.sort((a, b) => b.tradeName.localeCompare(a.tradeName))
+      : companies.sort((a, b) => a.tradeName.localeCompare(b.tradeName));
+  renderCompanies(undefined, orderedCompanies);
+}
+
+function orderByDesignation() {
+  if (lastOrder.designation === 'asc') {
+    lastOrder.designation = 'desc';
+  } else {
+    lastOrder.designation = 'asc';
+  }
+  const orderedCompanies = lastOrder.designation === 'asc'
+      ? companies.sort((a, b) => {
+        if(a.designation === null) return 1;
+        if(b.designation === null) return -1;
+        return a.designation.localeCompare(b.designation);
+      })
+      : companies.sort((a, b) => {
+        if(a.designation === null) return -1;
+        if(b.designation === null) return 1;
+        return b.designation.localeCompare(a.designation);
+      });
+  renderCompanies(undefined, orderedCompanies);
+}
+
+function orderByAcceptedStudents() {
+  if (lastOrder.students === 'asc') {
+    lastOrder.students = 'desc';
+  } else {
+    lastOrder.students = 'asc';
+  }
+  const orderedCompanies = lastOrder.students === 'asc'
+      ? companies.sort((a, b) => {
+        const aStudents = a.contacts.filter(contact => contact.state === 'accepté');
+        const bStudents = b.contacts.filter(contact => contact.state === 'accepté');
+        return bStudents.length - aStudents.length;
+      })
+      : companies.sort((a, b) => {
+        const aStudents = a.contacts.filter(contact => contact.state === 'accepté');
+        const bStudents = b.contacts.filter(contact => contact.state === 'accepté');
+        return aStudents.length - bStudents.length;
+      });
+  renderCompanies(undefined, orderedCompanies);
+}
+
+function orderByBlacklisted() {
+  if (lastOrder.blacklisted === 'asc') {
+    lastOrder.blacklisted = 'desc';
+  } else {
+    lastOrder.blacklisted = 'asc';
+  }
+  const orderedCompanies = lastOrder.blacklisted === 'asc'
+      ? companies.sort((a, b) => a.blacklisted - b.blacklisted)
+      : companies.sort((a, b) => b.blacklisted - a.blacklisted);
+  renderCompanies(undefined, orderedCompanies);
 }
 
 export default DashboardPage;
