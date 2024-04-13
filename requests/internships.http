@@ -30,3 +30,12 @@ Content-Type: application/json
   "idInternshipSupervisor": 3,
   "signatureDate": "2024-02-22"
 }
+
+### change internship subject
+PUT {{baseUrl}}/internships
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "subject": "test"
+}
