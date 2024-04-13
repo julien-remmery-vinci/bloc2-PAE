@@ -5,7 +5,6 @@ import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
 import be.vinci.pae.exceptions.ConflictException;
 import be.vinci.pae.exceptions.FatalException;
-import be.vinci.pae.exceptions.NotFoundException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -128,13 +127,15 @@ public class InternshipDAOImpl implements InternshipDAO {
   public InternshipDTO updateInternship(InternshipDTO internship, String subject) {
     try (PreparedStatement updateInternship = dalServices.getPS(
             "UPDATE pae.internships SET internship_internshipproject = subject, "
-                    + "internship_version = internship_version + 1 WHERE internship_idInternship = ? "
+                    + "internship_version = internship_version + 1 " +
+                    "WHERE internship_idInternship = ? "
                     + "AND internship_version = ? RETURNING internship_idInternship;")) {
       updateInternship.setString(1, internship.getInternshipProject());
       updateInternship.setInt(2, internship.getIdInternship());
       updateInternship.setInt(3, internship.getVersion());
       try (ResultSet rs = updateInternship.executeQuery()) {
-        if (!rs.next() && getOneById(internship.getIdInternship()).getVersion() != internship.getVersion()) {
+        if (!rs.next() && getOneById(internship.getIdInternship()).getVersion()
+                != internship.getVersion()) {
           throw new ConflictException("Version mismatch");
         }
         return internship;
