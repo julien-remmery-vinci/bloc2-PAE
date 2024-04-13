@@ -247,8 +247,8 @@ function renderProfilPage() {
     cancelButton.textContent = 'Annuler';
     cancelButton.className = 'btn btn-secondary ms-2';
     cancelButton.addEventListener('click', () => {
-      passwordDiv.remove();  // Supprime le formulaire de modification de mot de passe
-      changePasswordButton.style.display = 'block';  // Affiche à nouveau le bouton "Modifier mot de passe"
+      passwordDiv.remove();
+      changePasswordButton.style.display = 'block';
     });
     passwordDiv.appendChild(cancelButton);
 
@@ -294,10 +294,10 @@ async function onSaveProfile(e) {
 
 async function onSavePassword(e) {
   e.preventDefault();
-  const oldPassword = document.querySelector('#oldPasswordField').value;
-  const newPassword = document.querySelector('#passwordField').value;
+  const oldPassword = document.querySelector('#oldPassword').value;
+  const newPassword = document.querySelector('#newPassword').value;
   const confirmationPassword = document.querySelector(
-      '#confirmPasswordField').value;
+      '#confirmPassword').value;
 
   const options = {
     method: 'POST',
