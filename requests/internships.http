@@ -32,7 +32,7 @@ Content-Type: application/json
 }
 
 ### change internship subject
-PUT {{baseUrl}}/internships/1
+PUT {{baseUrl}}/internships
 Content-Type: application/json
 Authorization: {{token}}
 

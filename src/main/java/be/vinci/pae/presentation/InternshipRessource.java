@@ -95,7 +95,6 @@ public class InternshipRessource {
   @PUT
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("/{id}")
   @Authorize(roles = {Role.STUDENT})
   public InternshipDTO updateInternshipSubject(JsonNode json, @Context ContainerRequest request) {
     InternshipDTO internship = internshipUCC.getInternshipById((UserDTO) request.getProperty("user"));
