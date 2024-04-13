@@ -88,4 +88,19 @@ public class InternshipUCCTest {
     assertEquals(internshipThisYear.getSignatureDate(), result.getSignatureDate(),
         "Internship of the current year should be returned");
   }
+
+  @Test
+  @DisplayName("Test to modify an internship subject")
+  void testModifyInternshipSubject() {
+    Mockito.when(internshipDAO.updateInternship(internship, "hi")).thenReturn(internship);
+    assertNotNull(internshipUCC.updateInternshipSubject(internship, "hi"));
+  }
+
+  @Test
+  @DisplayName("Test to modify an internship subject when the internship doesn't exist")
+  void testModifyInternshipSubjectNotFound() {
+    Mockito.when(internshipDAO.updateInternship(internship, "hi")).thenReturn(null);
+    assertThrows(NotFoundException.class, () -> internshipUCC.updateInternshipSubject(internship, "hi"));
+  }
+
 }
