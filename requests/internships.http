@@ -7,7 +7,7 @@ Content-Type: application/json
 
 {
   "email": "hadjera.emroska@student.vinci.be",
-  "password": "12345678"
+  "password": "1"
 }
 
 > {%
@@ -32,7 +32,7 @@ Content-Type: application/json
 }
 
 ### change internship subject
-PUT {{baseUrl}}/internships
+PUT {{contactUrl}}
 Content-Type: application/json
 Authorization: {{token}}
 

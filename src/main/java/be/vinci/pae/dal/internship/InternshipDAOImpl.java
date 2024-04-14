@@ -126,11 +126,11 @@ public class InternshipDAOImpl implements InternshipDAO {
   @Override
   public InternshipDTO updateInternship(InternshipDTO internship, String subject) {
     try (PreparedStatement updateInternship = dalServices.getPS(
-            "UPDATE pae.internships SET internship_internshipproject = subject, "
+            "UPDATE pae.internships SET internship_internshipproject = ?, "
                     + "internship_version = internship_version + 1 " +
                     "WHERE internship_idInternship = ? "
                     + "AND internship_version = ? RETURNING internship_idInternship;")) {
-      updateInternship.setString(1, internship.getInternshipProject());
+      updateInternship.setString(1, subject);
       updateInternship.setInt(2, internship.getIdInternship());
       updateInternship.setInt(3, internship.getVersion());
       try (ResultSet rs = updateInternship.executeQuery()) {
