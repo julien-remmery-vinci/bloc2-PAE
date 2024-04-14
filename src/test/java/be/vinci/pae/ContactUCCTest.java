@@ -315,6 +315,28 @@ public class ContactUCCTest {
         () -> assertEquals(State.ACCEPTED, contact.getState())
     );
   }
+
+  @Test
+  @DisplayName("Test acceptContact method with multiple contacts")
+  void testAcceptContactMultipleContacts() {
+    contact.setState(State.ADMITTED);
+    ContactDTO anotherContact = factory.getContact();
+    anotherContact.setIdContact(2);
+    anotherContact.setIdStudent(idUser);
+    anotherContact.setState(State.ADMITTED);
+    List<ContactDTO> contacts = new ArrayList<>();
+    contacts.add(contact);
+    contacts.add(anotherContact);
+    Mockito.when(contactDAO.getContactsByStudentId(idUser)).thenReturn(contacts);
+
+    ContactDTO acceptedContact = contactUCC.acceptContact(idContact, idUser);
+
+    assertAll(
+        () -> assertEquals(contact.getIdContact(), acceptedContact.getIdContact()),
+        () -> assertEquals(State.ACCEPTED, acceptedContact.getState()),
+        () -> assertEquals(State.ON_HOLD, anotherContact.getState())
+    );
+  }
 }
 
 
