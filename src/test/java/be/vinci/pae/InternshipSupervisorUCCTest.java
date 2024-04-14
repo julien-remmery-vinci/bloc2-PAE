@@ -43,6 +43,7 @@ public class InternshipSupervisorUCCTest {
   void setUp() {
     internshipSupervisor = (InternshipSupervisor) factory.getInternshipSupervisor();
     internshipSupervisor.setIdInternshipSupervisor(1);
+    internshipSupervisor.setIdCompany(1);
     company = (Company) factory.getCompany();
     company.setIdCompany(1);
   }
@@ -60,6 +61,23 @@ public class InternshipSupervisorUCCTest {
   void testGetSupervisorsByCompanyID() {
     Mockito.when(companyDAO.getCompanyById(1)).thenReturn(company);
     assertNotNull(internshipSupervisorUCC.getSupervisorsByCompanyID(1));
+  }
+
+  @Test
+  @DisplayName("Test add internship supervisor when company not found")
+  void testAddInternshipSupervisorCompanyNotFound() {
+    Mockito.when(companyDAO.getCompanyById(1)).thenReturn(null);
+    assertThrows(NotFoundException.class,
+        () -> internshipSupervisorUCC.addInternshipSupervisor(internshipSupervisor));
+  }
+
+  @Test
+  @DisplayName("Test add internship supervisor")
+  void testAddInternshipSupervisor() {
+    Mockito.when(companyDAO.getCompanyById(1)).thenReturn(company);
+    Mockito.when(internshipSupervisorDAO.addInternshipSupervisor(internshipSupervisor))
+        .thenReturn(internshipSupervisor);
+    assertNotNull(internshipSupervisorUCC.addInternshipSupervisor(internshipSupervisor));
   }
 
 }
