@@ -47,19 +47,19 @@ async function renderInternshipPage() {
       <button type="submit" class="btn btn-primary mt-3">Sauver</button>
   </form>
 `;
+    const button = stageSection.querySelector('button');
+    button.addEventListener('click', async (e) => {
+      e.preventDefault();
+      await saveInternship();
+    });
   }
 
   main.appendChild(stageSection);
-  const button = document.querySelector('button');
-  button.addEventListener('click', async (e) => {
-      e.preventDefault();
-      await saveInternship();
-  });
-
 }
 
 async function saveInternship() {
   const subject = document.getElementById('subject').value;
+  console.log(subject);
 
   const response = await fetch('http://localhost:3000/internships', {
     method: 'PUT',
@@ -68,13 +68,14 @@ async function saveInternship() {
       'Authorization': getToken()
     },
     body: JSON.stringify({
-      internshipProject: subject
+      subject
     })
   });
 
+  console.log(response);
   if (response.status === 200) {
     alert('Stage enregistré');
-    Navigate('/');
+    Navigate('/stage');
   } else {
     alert('Erreur lors de l\'enregistrement du stage');
   }
