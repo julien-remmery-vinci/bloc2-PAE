@@ -59,7 +59,6 @@ async function renderInternshipPage() {
 
 async function saveInternship() {
   const subject = document.getElementById('subject').value;
-  console.log(subject);
 
   const response = await fetch('http://localhost:3000/internships', {
     method: 'PUT',
@@ -72,7 +71,6 @@ async function saveInternship() {
     })
   });
 
-  console.log(response);
   if (response.status === 200) {
     alert('Stage enregistré');
     Navigate('/stage');
