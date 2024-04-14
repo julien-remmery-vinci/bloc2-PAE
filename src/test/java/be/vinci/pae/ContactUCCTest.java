@@ -281,6 +281,40 @@ public class ContactUCCTest {
     Mockito.when(companyDAO.getCompanyById(idCompany)).thenReturn(null);
     assertThrows(NotFoundException.class, () -> contactUCC.blacklistContacts(idCompany));
   }
+
+  @Test
+  @DisplayName("test acceptContact method with contact in wrong state")
+  void testAcceptContactWrongState() {
+    contact.setState(State.STARTED);
+    assertThrows(PreconditionFailedException.class,
+        () -> contactUCC.acceptContact(idContact, idUser));
+  }
+
+  @Test
+  @DisplayName("test acceptContact method with contact not found")
+  void testAcceptContactNotFound() {
+    Mockito.when(contactDAO.getOneById(1)).thenReturn(null);
+    assertThrows(NotFoundException.class, () -> contactUCC.acceptContact(idContact, idUser));
+  }
+
+  @Test
+  @DisplayName("test acceptContact method with non-matching user id")
+  void testAcceptContactNonMatchingUserId() {
+    int nonMatchingIdUser = 2;
+    assertThrows(NotFoundException.class,
+        () -> contactUCC.acceptContact(idContact, nonMatchingIdUser));
+  }
+
+  @Test
+  @DisplayName("test acceptContact method with existing contact in right state")
+  void testAcceptContact() {
+    contact.setState(State.ADMITTED);
+    assertAll(
+        () -> assertEquals(contact.getIdContact(),
+            contactUCC.acceptContact(idContact, idUser).getIdContact()),
+        () -> assertEquals(State.ACCEPTED, contact.getState())
+    );
+  }
 }
 
 
