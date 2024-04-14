@@ -32,7 +32,7 @@ async function buildPage() {
   const headings = ['Entreprise', 'État', ''];
   const contacts = await getContacts();
   const hasPrisOrAccepted = contacts.some(
-      contact => contact.state === 'pris' || contact.state === 'accepté');
+      contact => contact.state === 'pris' || contact.state === 'accepté' || contact.state === 'refusé');
   const hasRefused = contacts.some(contact => contact.state === 'refusé');
 
   if (hasPrisOrAccepted) {
@@ -40,7 +40,7 @@ async function buildPage() {
   }
 
   if (hasRefused && (!hasPrisOrAccepted || hasPrisOrAccepted)) {
-    headings.splice(3, 0, 'Raison de refus');
+    headings.splice(3, 0, 'Raison du refus');
   }
 
   headings.forEach(headingText => {
@@ -86,8 +86,10 @@ async function buildPage() {
     const meetPlaceCell = document.createElement('td');
     if (contact.state === 'pris' || contact.state === 'accepté') {
       meetPlaceCell.textContent = contact.meetPlace;
-    } else {
+    } else if (hasPrisOrAccepted) {
       meetPlaceCell.textContent = '/';
+    } else {
+      meetPlaceCell.textContent = '';
     }
     row.appendChild(meetPlaceCell);
 
