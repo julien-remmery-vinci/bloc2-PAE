@@ -94,8 +94,8 @@ function displayImageInput() {
 
   const imageInputError = document.createElement('p');
   imageInputError.className = 'alert alert-danger';
-  imageInputError.textContent = 'Image trop grande, max 5Mb !';
   imageInputError.hidden = true;
+  imageInputError.id = 'imageInputError';
 
   const img = document.querySelector('#profilePic');
 
@@ -106,6 +106,7 @@ function displayImageInput() {
       const maxAllowedSize = 5 * 1024 * 1024;
       if (target.files[0].size > maxAllowedSize) {
         imageInputError.hidden = false;
+        imageInputError.textContent = 'Image trop grande, max 5Mb !';
       } else {
         imageInputError.hidden = true;
         const reader = new FileReader();
@@ -153,6 +154,12 @@ function displayImageInput() {
 async function modifyProfilePicture() {
   console.log('modify pic')
   const file = document.querySelector('#profilePicInput').files[0];
+  if(!file) {
+    const error = document.querySelector('#imageInputError');
+    error.hidden = false;
+    error.textContent = 'Veuillez sélectionner une image';
+    return;
+  }
   const formData = new FormData();
   formData.append('file', file);
   const response = await fetch('http://localhost:3000/users/picture/modify', {
