@@ -167,7 +167,9 @@ function addNewSupervisor() {
     addSupervisorButton.className = 'btn btn-primary';
     addSupervisorButton.style.width = '50%';
     addSupervisorButton.addEventListener('click', () => {
+        if (document.querySelector('#addSupervisorForm') === null){
         addNewSupervisorForm();
+        }
     });
     addSupervisorDiv.appendChild(addSupervisorButton);
     return addSupervisorDiv;
@@ -177,6 +179,7 @@ function addNewSupervisorForm() {
     const main = document.querySelector('main');
     const form = document.createElement('form');
     form.className = 'p-5';
+    form.id = 'addSupervisorForm';
     const firstNameLabel = document.createElement('label');
     firstNameLabel.textContent = 'Prénom';
     form.appendChild(firstNameLabel);
