@@ -63,6 +63,24 @@ function renderSearchPage() {
     </table>
     </div>
 `;
+
+  // search the users
+  const search = document.querySelector('.search-bar input');
+  search.addEventListener('input', () => {
+    const table = document.querySelector('table');
+    const tbody = table.querySelector('tbody');
+    const rows = tbody.querySelectorAll('tr');
+    rows.forEach((row) => {
+      const cells = row.querySelectorAll('td');
+      const searchValue = search.value.toLowerCase();
+      if (cells[0].textContent.toLowerCase().includes(searchValue) ||
+        cells[1].textContent.toLowerCase().includes(searchValue)) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  });
   // filter the users to only show the students
   const filter = document.querySelector('.filter-container input');
   filter.addEventListener('change', () => {
