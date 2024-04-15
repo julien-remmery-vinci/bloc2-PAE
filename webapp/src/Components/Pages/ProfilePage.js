@@ -1,7 +1,7 @@
 import {clearPage, renderBreadcrumb} from "../../utils/render";
 import {getAuthenticatedUser, isAuthenticated, getToken, setAuthenticatedUser} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
-import defaultImage from "../../img/default-user-image.jpg";
+import defaultImage from "../../img/default-user-image.png";
 
 const ProfilePage = async () => {
   if (!isAuthenticated()) {
@@ -17,16 +17,14 @@ const ProfilePage = async () => {
 function buildPage() {
   const main = document.querySelector('main');
   const mainDiv = document.createElement('div');
-  mainDiv.style.maxWidth = '80vw';
-  mainDiv.style.maxHeight = '90vh';
   mainDiv.style.display = 'flex';
+  mainDiv.style.justifyContent = 'center';
+  mainDiv.id = 'mainDiv';
   const leftDiv = document.createElement('div');
   leftDiv.id = 'leftDiv';
-  leftDiv.style.width = '50%';
-  leftDiv.style.border = '1px solid black'
   const rightDiv = document.createElement('div');
   rightDiv.id = 'rightDiv';
-  rightDiv.style.width = '100%'
+  rightDiv.style.marginLeft = '20px';
   mainDiv.appendChild(leftDiv);
   mainDiv.appendChild(rightDiv);
   main.appendChild(mainDiv);
@@ -37,53 +35,69 @@ function buildPage() {
 function renderPictureInfos() {
   const div = document.querySelector('#leftDiv');
   div.innerHTML = '';
-  const img = document.createElement('img');
 
   const user = getAuthenticatedUser();
 
-  console.log(user)
-
+  const img = document.createElement('img');
   img.src = user.profilePicture ? `data:image/png;base64, ${user.profilePicture}` : `${defaultImage}`;
   img.alt = 'image de profil';
-  img.className = 'img-thumbnail';
   img.id = 'profilePic';
+  img.className = 'img-thumbnail';
+  img.style.width = '240px';
+  div.className = 'form-control bg-light rounded shadow';
   div.appendChild(img);
-
-  const buttonDiv = document.createElement('div');
+  div.style.width = '200px';
 
   const modifyButton = document.createElement('button');
   modifyButton.textContent = 'Modifer';
   modifyButton.addEventListener('click', displayImageInput);
-  modifyButton.className = 'btn btn-primary mt-2';
+  modifyButton.className = 'btn btn-success mt-2';
   modifyButton.id = 'modifyPic';
-  buttonDiv.appendChild(modifyButton);
 
   const removeButton = document.createElement('button');
   removeButton.textContent = 'Supprimer';
   removeButton.addEventListener('click', removeProfilePicture);
-  buttonDiv.appendChild(removeButton);
-  removeButton.className = 'btn btn-primary mt-2';
+  removeButton.className = 'btn btn-danger mt-2';
   removeButton.id = 'removePic';
-  div.appendChild(buttonDiv);
+
+  img.addEventListener('mouseover', () => {
+    img.style.cursor = 'pointer';
+    img.style.opacity = '0.5';
+    img.style.transition = 'opacity 0.5s';
+  });
+  img.addEventListener('mouseout', () => {
+    img.style.opacity = '1';
+  });
+  img.addEventListener('click', () => {
+    if(!document.querySelector('#profilePicInput')) {
+      const options = document.createElement('div');
+      options.id = 'options';
+      options.className = 'btn-group';
+      options.style.display = 'flex';
+      options.appendChild(modifyButton);
+      options.appendChild(removeButton);
+      div.appendChild(options);
+      div.style.width = '300px';
+    }
+  });
 }
-
 function displayImageInput() {
-  const modifyButton = document.querySelector('#modifyPic');
-  modifyButton.hidden = !modifyButton.hidden;
-  const removeButton = document.querySelector('#removePic');
-  removeButton.hidden = !removeButton.hidden;
-
   const div = document.querySelector('#leftDiv');
+  const options = document.querySelector('#options')
+  div.removeChild(options);
 
   const imageInput = document.createElement('input');
   imageInput.type = 'file'
   imageInput.accept = '.png, .jpg, .jpeg';
   imageInput.id = 'profilePicInput';
+  imageInput.className = 'form-control mt-2';
 
   const imageInputError = document.createElement('p');
   imageInputError.className = 'alert alert-danger';
   imageInputError.textContent = 'Image trop grande, max 5Mb !';
   imageInputError.hidden = true;
+
+  const img = document.querySelector('#profilePic');
 
   imageInput.addEventListener('input',(event) => {
     const {target} = event
@@ -92,18 +106,48 @@ function displayImageInput() {
       const maxAllowedSize = 5 * 1024 * 1024;
       if (target.files[0].size > maxAllowedSize) {
         imageInputError.hidden = false;
+      } else {
+        imageInputError.hidden = true;
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+          img.src = reader.result;
+        }
+
+        if (target.files[0]) {
+          reader.readAsDataURL(target.files[0]);
+        } else {
+          img.src = "";
+        }
       }
     }
   });
+
   div.appendChild(imageInput);
   div.appendChild(imageInputError);
 
   const saveButton = document.createElement('button');
   saveButton.textContent = 'Enregistrer';
-  saveButton.className = 'btn btn-success  mt-2';
+  saveButton.className = 'btn btn-success';
   saveButton.addEventListener('click', modifyProfilePicture);
   saveButton.id = 'savePic';
-  div.appendChild(saveButton);
+  saveButton.style.marginTop = '10px';
+  document.querySelector('#leftDiv').appendChild(saveButton);
+
+  const cancelButton = document.createElement('button');
+  cancelButton.textContent = 'Annuler';
+  cancelButton.className = 'btn btn-secondary ms-2';
+  cancelButton.style.marginTop = '10px';
+  document.querySelector('#leftDiv').appendChild(cancelButton);
+  cancelButton.addEventListener('click', () => {
+    div.removeChild(imageInput);
+    div.removeChild(imageInputError);
+    div.removeChild(saveButton);
+    div.removeChild(cancelButton);
+    div.style.width = '200px';
+    const user = getAuthenticatedUser();
+    img.src = user.profilePicture ? `data:image/png;base64, ${user.profilePicture}` : `${defaultImage}`;;
+  });
 }
 
 async function modifyProfilePicture() {
@@ -149,8 +193,7 @@ function renderProfilPage() {
   const rightDiv = document.querySelector('#rightDiv');
   const form = document.createElement('form');
   const authenticatedUser = getAuthenticatedUser();
-  form.className = 'p-5 bg-light rounded shadow';
-  form.className = 'p-5 position-relative bg-light rounded shadow';
+  form.className = 'form-control bg-light rounded shadow';
   const fields = ['lastname', 'firstname', 'email', 'phoneNumber'];
   const labels = ['Lastname', 'Firstname', 'Email', 'Numéro de téléphone'];
 
@@ -175,7 +218,7 @@ function renderProfilPage() {
         const sauver = document.createElement('button');
         sauver.textContent = 'Sauver';
         sauver.id = 'sauver';
-        sauver.className = 'btn btn-success mt-2';
+        sauver.className = 'btn btn-success';
         sauver.addEventListener('click', onSaveProfile);
         form.appendChild(sauver);
       }
@@ -186,7 +229,7 @@ function renderProfilPage() {
 
   const changePasswordButton = document.createElement('button');
   changePasswordButton.textContent = 'Modifier mot de passe';
-  changePasswordButton.className = 'position-absolute bottom-10 start-50 translate-middle-x btn btn-primary';
+  changePasswordButton.className = 'btn btn-primary';
   form.appendChild(changePasswordButton);
   rightDiv.appendChild(form);
 
@@ -195,11 +238,14 @@ function renderProfilPage() {
 
     changePasswordButton.style.display = 'none';
     const passwordDiv = document.createElement('div');
-    form.appendChild(passwordDiv);
+    document.querySelector('#mainDiv').appendChild(passwordDiv);
     const passwordLabel = document.createElement('label');
     passwordLabel.textContent = 'Modification du mot de passe';
     passwordLabel.className = 'fw-bold mb-1';
     passwordDiv.appendChild(passwordLabel);
+    passwordDiv.className = 'form-control bg-light rounded shadow';
+    passwordDiv.style.width = '400px';
+    passwordDiv.style.marginLeft = '20px';
 
     const passwordFields = {
       oldPassword: "Ancien mot de passe",
