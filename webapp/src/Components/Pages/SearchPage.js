@@ -13,12 +13,14 @@ if (response.status === 200) {
   } 
   return undefined;
 }
-
+let users;
 
 const SearchPage = async () => {
+  
   if (!isAuthenticated()) {
     Navigate('/login');
   } else {
+    users = await fetchUsers();
     renderPageTitle('Recherche');
     document.title = 'Recherche';
     clearPage();
@@ -39,6 +41,12 @@ function renderSearchPage() {
     <label>
       <input type="checkbox" name="filter" value="etudiant">
       Que les étudiants
+    </label>
+    <br>
+    <label>
+      Année académique
+      <select>
+      </select>
     </label>
   </div>
 
@@ -80,6 +88,54 @@ function renderSearchPage() {
       }
     });
   });
+
+  // filter the users by academic year
+  const select = document.querySelector('.filter-container select');
+  
+  const years = users.map((userMap) => userMap.user.academicYear);
+  const uniqueYears = [...new Set(years)];
+  uniqueYears.forEach((year) => {
+    
+    const currentYear= new Date().getFullYear();
+    const currentMonth = new Date().getMonth();
+    let academicYear;
+    if (currentMonth >= 9) {
+    academicYear = `${currentYear}-${currentYear+1}`;
+    }
+    else {
+      academicYear = `${currentYear-1}-${currentYear}`;
+    }
+    if (year === academicYear) {
+      const option = document.createElement('option');
+      option.value = year;
+      option.textContent = year;
+      option.selected = true;
+      select.appendChild(option);
+    }
+    else {
+      const option = document.createElement('option');
+      option.value = year;
+      option.textContent = year;
+      select.appendChild(option);
+    }
+  });
+  select.addEventListener('change', () => {
+    const table = document.querySelector('table');
+    const tbody = table.querySelector('tbody');
+    const rows = tbody.querySelectorAll('tr');
+    rows.forEach((row) => {
+      const cells = row.querySelectorAll('td');
+      const selectedYear = select.value;
+      if (cells[3].textContent === selectedYear) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  }
+  );
+
+
   // filter the users to only show the students
   const filter = document.querySelector('.filter-container input');
   filter.addEventListener('change', () => {
@@ -104,8 +160,11 @@ function renderSearchPage() {
 async function renderUsers() {
   const table = document.querySelector('table');
   const tbody = document.createElement('tbody');
-  const users = await fetchUsers();
-  users.forEach((userMap) => {
+  const selectElement = document.querySelector('.filter-container select');
+  const selectedYear = selectElement.options[selectElement.selectedIndex].value;
+  const selectedYearUsers = users.filter(user => user.user.academicYear === selectedYear);
+  console.log(selectedYearUsers);
+  selectedYearUsers.forEach((userMap) => {
     const { user, accepted_contact: acceptedContact } = userMap;
     const tr = document.createElement('tr');
     if (user.role === 'étudiant') {
