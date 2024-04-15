@@ -31,5 +31,5 @@ Authorization: {{token}}
 }
 
 ### Get list of intership supervisors
-GET {{intershipsupervisors}}/all
+GET {{intershipsupervisors}}
 Authorization: {{token}}

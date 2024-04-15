@@ -77,7 +77,6 @@ public class InternshipSupervisorRessource {
    * @return the list of all supervisors
    */
   @GET
-  @Path("/all")
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize(roles = {Role.ADMIN, Role.TEACHER})
   public List<InternshipSupervisorDTO> getAllSupervisors() {
