@@ -44,7 +44,7 @@ function renderSearchPage() {
   </div>
 
   <div class="search-bar">
-    <input class="form-control border-end-0 border rounded-pill" type="search" value="Rechercher">
+    <input class="form-control border-end-0 border rounded-pill" type="search" placeholder="Rechercher">
   </div>
 </div>
 <br>
