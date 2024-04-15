@@ -145,7 +145,8 @@ function displayImageInput() {
     div.removeChild(saveButton);
     div.removeChild(cancelButton);
     div.style.width = '200px';
-    img.src = defaultImage;
+    const user = getAuthenticatedUser();
+    img.src = user.profilePicture ? `data:image/png;base64, ${user.profilePicture}` : `${defaultImage}`;;
   });
 }
 
