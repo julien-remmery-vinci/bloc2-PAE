@@ -63,6 +63,25 @@ function renderSearchPage() {
     </table>
     </div>
 `;
+  // filter the users to only show the students
+  const filter = document.querySelector('.filter-container input');
+  filter.addEventListener('change', () => {
+    const table = document.querySelector('table');
+    const tbody = table.querySelector('tbody');
+    const rows = tbody.querySelectorAll('tr');
+    rows.forEach((row) => {
+      const cells = row.querySelectorAll('td');
+      if (filter.checked) {
+        if (cells[2].textContent !== 'étudiant') {
+          row.style.display = 'none';
+        } else {
+          row.style.display = '';
+        }
+      } else {
+        row.style.display = '';
+      }
+    });
+  });
 }
 
 function renderUsers(users) {
