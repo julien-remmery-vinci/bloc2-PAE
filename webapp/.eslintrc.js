@@ -12,5 +12,6 @@ module.exports = {
     'linebreak-style': 0,
     'no-use-before-define': ['error', 'nofunc'],
     "no-new": 0,
+    'no-param-reassign': 0,
   },
 };
