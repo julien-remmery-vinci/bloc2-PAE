@@ -2,20 +2,18 @@ import {getToken, isAuthenticated} from '../../utils/auths';
 import {clearPage, renderBreadcrumb, renderPageTitle} from '../../utils/render';
 import Navigate from '../Router/Navigate';
 
-const fetchUsers = async () => {
-  fetch('http://localhost:3000/users', {
-    method: 'GET',
-    headers: {
-      Authorization: getToken(),
+async function fetchUsers() {
+  const response = await fetch('http://localhost:3000/users', {
+    method: 'GET', headers: {
+      'Content-Type': 'application/json', 'Authorization': getToken(),
     },
+  });
+if (response.status === 200) {
+  return response.json();
+  } 
+  return undefined;
+}
 
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      renderUsers(data);
-    })
-    .catch((error) => console.error(error));
-};
 
 const SearchPage = async () => {
   if (!isAuthenticated()) {
@@ -26,8 +24,9 @@ const SearchPage = async () => {
     clearPage();
     renderBreadcrumb(
         {"Accueil": "/", "Liste des utilisateurs": "/search"});
-    await fetchUsers();
     renderSearchPage();
+    await renderUsers();
+    
   }
 };
 
@@ -102,9 +101,10 @@ function renderSearchPage() {
   });
 }
 
-function renderUsers(users) {
+async function renderUsers() {
   const table = document.querySelector('table');
   const tbody = document.createElement('tbody');
+  const users = await fetchUsers();
   users.forEach((userMap) => {
     const { user, accepted_contact: acceptedContact } = userMap;
     const tr = document.createElement('tr');
