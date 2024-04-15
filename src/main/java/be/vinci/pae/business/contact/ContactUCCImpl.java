@@ -139,7 +139,7 @@ public class ContactUCCImpl implements ContactUCC {
       }
       if (!contact.updateState(State.UNSUPERVISED)) {
         throw new PreconditionFailedException(
-            "The contact must be either in the state 'started' or 'admitted' to be unsupervised");
+            "Le contact doit être dans l'état 'pris' ou 'initié' pour être non suivi");
       }
       contact.setState(State.UNSUPERVISED);
       contactDAO.updateContact(contact);
