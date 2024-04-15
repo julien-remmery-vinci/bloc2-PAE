@@ -22,4 +22,11 @@ public interface InternshipSupervisorUCC {
    * @return the internship supervisor added
    */
   InternshipSupervisorDTO addInternshipSupervisor(InternshipSupervisorDTO internshipSupervisor);
+
+  /**
+   * Get all supervisors.
+   *
+   * @return the list of all supervisors
+   */
+  List<InternshipSupervisorDTO> getAllSupervisors();
 }

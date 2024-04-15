@@ -29,14 +29,7 @@ public class InternshipSupervisorDAOImpl implements InternshipSupervisorDAO {
             + "internshipsupervisor_idCompany = company_idCompany AND "
             + "internshipsupervisor_idCompany=?;")) {
       ps.setInt(1, idCompany);
-      try (ResultSet rs = ps.executeQuery()) {
-        List<InternshipSupervisorDTO> list = new ArrayList<>();
-        while (rs.next()) {
-          String prefix = "internshipSupervisor";
-          list.add((InternshipSupervisorDTO) daoServices.getDataFromRs(rs, prefix));
-        }
-        return list;
-      }
+      return getInternshipSupervisorDTOS(ps);
     } catch (SQLException e) {
       throw new FatalException(e);
     }
@@ -86,5 +79,28 @@ public class InternshipSupervisorDAOImpl implements InternshipSupervisorDAO {
       throw new FatalException(e);
     }
     return null;
+  }
+
+  @Override
+  public List<InternshipSupervisorDTO> getAllSupervisors() {
+    try (PreparedStatement ps = dalServices.getPS(
+        "SELECT * FROM pae.internshipSupervisors, pae.companies WHERE "
+            + "internshipsupervisor_idCompany = company_idCompany")) {
+      return getInternshipSupervisorDTOS(ps);
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+  }
+
+  private List<InternshipSupervisorDTO> getInternshipSupervisorDTOS(PreparedStatement ps)
+      throws SQLException {
+    try (ResultSet rs = ps.executeQuery()) {
+      List<InternshipSupervisorDTO> list = new ArrayList<>();
+      while (rs.next()) {
+        String prefix = "internshipSupervisor";
+        list.add((InternshipSupervisorDTO) daoServices.getDataFromRs(rs, prefix));
+      }
+      return list;
+    }
   }
 }
