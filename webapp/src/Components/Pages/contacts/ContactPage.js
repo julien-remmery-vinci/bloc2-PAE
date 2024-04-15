@@ -68,10 +68,15 @@ async function buildPage() {
     companyLink.addEventListener('click', (event) => {
       event.preventDefault();
       let url = window.location.href;
-      url += contact.state === 'initié' ?
-          `/meet?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}`
-          :
-          `/refusal?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}&meetplace=${contact.meetPlace}&companyid=${contact.company.idCompany}&userid=${contact.idStudent}`;
+      if (contact.state === 'initié') {
+        url += `/meet?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}`;
+      }
+      else if (contact.state === 'pris') {
+        url += `/refusal?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}&meetplace=${contact.meetPlace}&companyid=${contact.company.idCompany}&userid=${contact.idStudent};`
+      }
+      else if (contact.state === 'accepté') {
+        url = '/stage';
+      }
       Navigate(url);
     });
     companyCell.appendChild(companyLink);
@@ -135,6 +140,9 @@ async function buildPage() {
           notFollowButton.textContent = 'Suivre';
         }
         stateCell.textContent = data.state;
+      }
+      else {
+        alert(await response.text());
       }
     });
     tableBody.appendChild(row);
