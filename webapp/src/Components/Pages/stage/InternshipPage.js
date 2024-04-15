@@ -20,6 +20,8 @@ async function renderInternshipPage() {
   div.className = 'd-flex flex-row justify-content-around align-items-center vh-90';
   main.appendChild(div);
 
+  const existingSection = document.querySelector('section');
+  if(existingSection !== null) main.removeChild(existingSection)
   const stageSection = document.createElement('section');
   stageSection.className = 'text-center';
 
