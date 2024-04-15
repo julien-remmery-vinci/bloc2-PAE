@@ -141,6 +141,9 @@ async function buildPage() {
         }
         stateCell.textContent = data.state;
       }
+      else {
+        alert(await response.text());
+      }
     });
     tableBody.appendChild(row);
   });
