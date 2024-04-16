@@ -44,7 +44,7 @@ public class InternshipUCCImpl implements InternshipUCC {
    * @return the internship
    */
   @Override
-  public InternshipDTO getInternshipById(UserDTO user) {
+  public InternshipDTO getInternshipByUser(UserDTO user) {
     try {
       dalServices.open();
       InternshipDTO result = internshipDAO.getInternshipById(user.getIdUser()).stream()

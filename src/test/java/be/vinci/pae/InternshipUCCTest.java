@@ -83,7 +83,7 @@ public class InternshipUCCTest {
   @DisplayName("Test get internship by id method when the internship don't exists")
   void testGetInternshipNoInternships() {
     Mockito.when(internshipDAO.getInternshipById(user.getIdUser())).thenReturn(new ArrayList<>());
-    assertThrows(NotFoundException.class, () -> internshipUCC.getInternshipById(user));
+    assertThrows(NotFoundException.class, () -> internshipUCC.getInternshipByUser(user));
   }
 
   @Test
@@ -94,7 +94,7 @@ public class InternshipUCCTest {
     List<InternshipDTO> internships = new ArrayList<>();
     internships.add(internship);
     Mockito.when(internshipDAO.getInternshipById(user.getIdUser())).thenReturn(internships);
-    assertNotNull(internshipUCC.getInternshipById(user), "Internship should not be null");
+    assertNotNull(internshipUCC.getInternshipByUser(user), "Internship should not be null");
   }
 
   @Test
@@ -110,7 +110,7 @@ public class InternshipUCCTest {
 
     Mockito.when(internshipDAO.getInternshipById(user.getIdUser())).thenReturn(internships);
 
-    InternshipDTO result = internshipUCC.getInternshipById(user);
+    InternshipDTO result = internshipUCC.getInternshipByUser(user);
     assertNotNull(result, "Internship should not be null");
     assertEquals(internshipThisYear.getSignatureDate(), result.getSignatureDate(),
         "Internship of the current year should be returned");

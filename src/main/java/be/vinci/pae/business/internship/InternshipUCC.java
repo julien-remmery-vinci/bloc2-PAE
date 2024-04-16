@@ -13,7 +13,7 @@ public interface InternshipUCC {
    * @param user the user
    * @return the internship
    */
-  InternshipDTO getInternshipById(UserDTO user);
+  InternshipDTO getInternshipByUser(UserDTO user);
 
   /**
    * Add an internship.
