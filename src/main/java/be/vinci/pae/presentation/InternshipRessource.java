@@ -34,7 +34,7 @@ public class InternshipRessource {
   private InternshipUCC internshipUCC;
 
   /**
-   * Get an internship by its id.
+   * Get an internship by its user.
    *
    * @param request the request's context
    * @return the internship
@@ -50,6 +50,12 @@ public class InternshipRessource {
     return internshipUCC.getInternshipByUser(user);
   }
 
+  /**
+   * Get an internship by its id.
+   *
+   * @param id the id of the internship
+   * @return the internship
+   */
   @GET
   @Path("/{id}")
   @Authorize(roles = {Role.ADMIN, Role.TEACHER})
