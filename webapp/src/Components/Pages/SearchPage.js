@@ -46,6 +46,7 @@ function renderSearchPage() {
     <label>
       Année académique
       <select>
+        <option value="all">Toutes les années</option>
       </select>
     </label>
   </div>
@@ -123,9 +124,12 @@ function renderSearchPage() {
     const table = document.querySelector('table');
     const tbody = table.querySelector('tbody');
     const rows = tbody.querySelectorAll('tr');
+    const selectedYear = select.value;
+    if (selectedYear === 'all') {
+      renderUsers();
+    }
     rows.forEach((row) => {
       const cells = row.querySelectorAll('td');
-      const selectedYear = select.value;
       if (cells[3].textContent === selectedYear) {
         row.style.display = '';
       } else {
@@ -161,9 +165,39 @@ async function renderUsers() {
   const table = document.querySelector('table');
   const tbody = document.createElement('tbody');
   const selectElement = document.querySelector('.filter-container select');
+  if (selectElement.value === 'all') {
+    users.forEach((userMap) => {
+      const { user, accepted_contact: acceptedContact } = userMap;
+      const tr = document.createElement('tr');
+      if (user.role === 'étudiant') {
+        tr.innerHTML = `
+        <td>${user.lastname}</td>
+        <td>${user.firstname}</td>
+        <td>${user.role}</td>
+        <td>${user.academicYear}</td>
+        <td>${acceptedContact ? 'Oui' : 'Non'}</td>
+      `;
+      } else {
+        tr.innerHTML = `
+          <td>${user.lastname}</td>
+          <td>${user.firstname}</td>
+          <td>${user.role}</td>
+          <td class="table-secondary">N/A</td>
+          <td class="table-secondary">N/A</td>
+        `;
+      }
+      tr.addEventListener('click', () => {
+        if (user.role === 'étudiant') {
+          Navigate(`/student-info?id=${user.idUser}`);
+        }
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+  }
+  else {
   const selectedYear = selectElement.options[selectElement.selectedIndex].value;
   const selectedYearUsers = users.filter(user => user.user.academicYear === selectedYear);
-  console.log(selectedYearUsers);
   selectedYearUsers.forEach((userMap) => {
     const { user, accepted_contact: acceptedContact } = userMap;
     const tr = document.createElement('tr');
@@ -194,6 +228,7 @@ async function renderUsers() {
     tbody.appendChild(tr);
   });
   table.appendChild(tbody);
+}
 }
 
 export default SearchPage;
