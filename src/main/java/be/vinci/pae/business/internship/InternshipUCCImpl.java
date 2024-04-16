@@ -13,6 +13,7 @@ import be.vinci.pae.dal.internshipsupervisor.InternshipSupervisorDAO;
 import be.vinci.pae.exceptions.NotFoundException;
 import jakarta.inject.Inject;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Implementation of InternshipUCC.
@@ -44,7 +45,7 @@ public class InternshipUCCImpl implements InternshipUCC {
    * @return the internship
    */
   @Override
-  public InternshipDTO getInternshipById(UserDTO user) {
+  public InternshipDTO getInternshipByUser(UserDTO user) {
     try {
       dalServices.open();
       InternshipDTO result = internshipDAO.getInternshipById(user.getIdUser()).stream()
@@ -56,7 +57,20 @@ public class InternshipUCCImpl implements InternshipUCC {
     } finally {
       dalServices.close();
     }
+  }
 
+  @Override
+  public InternshipDTO getInternshipById(int id) {
+    try {
+      dalServices.open();
+      List<InternshipDTO> internships = internshipDAO.getInternshipById(id);
+      if (internships.isEmpty()) {
+        return null;
+      }
+      return internships.get(0);
+    } finally {
+      dalServices.close();
+    }
   }
 
   @Override

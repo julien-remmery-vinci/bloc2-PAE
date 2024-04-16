@@ -202,6 +202,7 @@ async function renderUsers() {
     const { user, accepted_contact: acceptedContact } = userMap;
     const tr = document.createElement('tr');
     if (user.role === 'étudiant') {
+      tr.classList.add('clickable-row');
       tr.innerHTML = `
       <td>${user.lastname}</td>
       <td>${user.firstname}</td>

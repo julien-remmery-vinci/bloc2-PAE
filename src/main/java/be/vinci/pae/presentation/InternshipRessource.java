@@ -15,6 +15,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -33,7 +34,7 @@ public class InternshipRessource {
   private InternshipUCC internshipUCC;
 
   /**
-   * Get an internship by its id.
+   * Get an internship by its user.
    *
    * @param request the request's context
    * @return the internship
@@ -41,12 +42,29 @@ public class InternshipRessource {
   @GET
   @Authorize(roles = {Role.ADMIN, Role.STUDENT, Role.TEACHER})
   @Produces(MediaType.APPLICATION_JSON)
-  public InternshipDTO getInternshipById(@Context ContainerRequest request) {
+  public InternshipDTO getInternshipByUser(@Context ContainerRequest request) {
     UserDTO user = (UserDTO) request.getProperty("user");
     if (user == null) {
       throw new NotFoundException("User not found");
     }
-    return internshipUCC.getInternshipById(user);
+    return internshipUCC.getInternshipByUser(user);
+  }
+
+  /**
+   * Get an internship by its id.
+   *
+   * @param id the id of the internship
+   * @return the internship
+   */
+  @GET
+  @Path("/{id}")
+  @Authorize(roles = {Role.ADMIN, Role.TEACHER})
+  @Produces(MediaType.APPLICATION_JSON)
+  public InternshipDTO getInternshipById(@PathParam("id") int id) {
+    if (id < 0) {
+      throw new BadRequestException("Invalid id");
+    }
+    return internshipUCC.getInternshipById(id);
   }
 
   /**
@@ -96,7 +114,7 @@ public class InternshipRessource {
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize(roles = {Role.STUDENT})
   public InternshipDTO updateInternshipSubject(JsonNode json, @Context ContainerRequest request) {
-    InternshipDTO internship = internshipUCC.getInternshipById(
+    InternshipDTO internship = internshipUCC.getInternshipByUser(
         (UserDTO) request.getProperty("user"));
     if (internship == null) {
       throw new NotFoundException("Internship not found");
