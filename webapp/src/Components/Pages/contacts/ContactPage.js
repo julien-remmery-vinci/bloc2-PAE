@@ -1,17 +1,18 @@
-import {clearPage} from "../../../utils/render";
+import {clearPage, renderBreadcrumb} from "../../../utils/render";
 import {
   getToken,
   isAuthenticated
 } from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
-const ContactPage = () => {
+const ContactPage = async () => {
   if (!isAuthenticated()) {
     Navigate('/login');
   } else {
     clearPage();
     document.title = "Contacts";
-    buildPage();
+    renderBreadcrumb({"Accueil": "/", "Contacts": "/contacts"})
+    await buildPage();
   }
 }
 
@@ -30,8 +31,18 @@ async function buildPage() {
   const tableHeadRow = document.createElement('tr');
   const headings = ['Entreprise', 'État', ''];
   const contacts = await getContacts();
+  const hasPrisOrAccepted = contacts.some(
+      contact => contact.state === 'pris' || contact.state === 'accepté' || contact.state === 'refusé');
+  const hasRefused = contacts.some(contact => contact.state === 'refusé');
 
-  // Ajouter les entêtes de colonne
+  if (hasPrisOrAccepted) {
+    headings.splice(2, 0, 'Lieu de rencontre');
+  }
+
+  if (hasRefused && (!hasPrisOrAccepted || hasPrisOrAccepted)) {
+    headings.splice(3, 0, 'Raison du refus');
+  }
+
   headings.forEach(headingText => {
     const th = document.createElement('th');
     th.textContent = headingText;
@@ -46,7 +57,7 @@ async function buildPage() {
   contacts.forEach(contact => {
     const row = document.createElement('tr');
 
-    // Colonne entreprise
+    // row company
     const companyCell = document.createElement('td');
     const companyLink = document.createElement('a');
     companyLink.textContent = contact.company.tradeName;
@@ -57,18 +68,50 @@ async function buildPage() {
     companyLink.addEventListener('click', (event) => {
       event.preventDefault();
       let url = window.location.href;
-      url += contact.state === 'initié' ?
-          `/meet?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}` :
-          `/refusal?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}&meetplace=${contact.meetPlace}&companyid=${contact.company.idCompany}&userid=${contact.idStudent}`;
+      if (contact.state === 'initié') {
+        url += `/meet?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}`;
+      }
+      else if (contact.state === 'pris') {
+        url += `/refusal?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}&meetplace=${contact.meetPlace}&companyid=${contact.company.idCompany}&userid=${contact.idStudent};`
+      }
+      else if (contact.state === 'accepté') {
+        url = '/stage';
+      }
       Navigate(url);
     });
     companyCell.appendChild(companyLink);
+    row.appendChild(companyCell);
 
-    // Colonne état
+    // row state
     const stateCell = document.createElement('td');
     stateCell.textContent = contact.state;
+    row.appendChild(stateCell);
 
-    // Colonne Ne plus suivre
+    // row meetPlace
+    const meetPlaceCell = document.createElement('td');
+    if (contact.state === 'pris' || contact.state === 'accepté') {
+      meetPlaceCell.textContent = contact.meetPlace;
+    } else if (hasPrisOrAccepted) {
+      meetPlaceCell.textContent = '/';
+    } else {
+      meetPlaceCell.textContent = '';
+    }
+    row.appendChild(meetPlaceCell);
+
+    // row refusal
+    const refusalCell = document.createElement('td');
+    if (contact.state === 'refusé') {
+      meetPlaceCell.textContent = contact.meetPlace;
+      refusalCell.textContent = contact.refusalReason;
+    } else if (hasRefused) {
+      refusalCell.textContent = '/';
+    } else {
+      refusalCell.textContent = '';
+    }
+
+    row.appendChild(refusalCell);
+
+    // row unfollow
     const notFollowCell = document.createElement('td');
     const notFollowButton = document.createElement('button');
     notFollowButton.classList.add('btn', 'btn-primary');
@@ -78,6 +121,7 @@ async function buildPage() {
       notFollowButton.textContent = 'Ne plus suivre';
     }
     notFollowCell.appendChild(notFollowButton);
+    row.appendChild(notFollowCell);
 
     notFollowButton.addEventListener('click', async () => {
       console.log("enter_fetch", contact.idContact);
@@ -97,11 +141,10 @@ async function buildPage() {
         }
         stateCell.textContent = data.state;
       }
+      else {
+        alert(await response.text());
+      }
     });
-
-    row.appendChild(companyCell);
-    row.appendChild(stateCell);
-    row.appendChild(notFollowCell);
     tableBody.appendChild(row);
   });
   table.appendChild(tableBody);

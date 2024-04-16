@@ -1,6 +1,6 @@
 import {getToken, isAuthenticated} from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
-import {clearPage} from "../../../utils/render";
+import {clearPage, renderBreadcrumb} from "../../../utils/render";
 
 const CompanyPage = (data) => {
   if (!isAuthenticated()) {
@@ -11,6 +11,7 @@ const CompanyPage = (data) => {
     clearPage();
     document.title = `${data.tradeName}`;
     document.title += data.designation ? ` - ${data.designation}` : '';
+    renderBreadcrumb({"Accueil": "/", "Statistiques": "/dashboard", [data.designation ? `${data.tradeName} - ${data.designation}` : `${data.tradeName}`]: "/company"})
     buildPage(data);
   }
 }

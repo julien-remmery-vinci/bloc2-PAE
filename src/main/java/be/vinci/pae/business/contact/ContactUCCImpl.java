@@ -139,7 +139,7 @@ public class ContactUCCImpl implements ContactUCC {
       }
       if (!contact.updateState(State.UNSUPERVISED)) {
         throw new PreconditionFailedException(
-            "The contact must be either in the state 'started' or 'admitted' to be unsupervised");
+            "Le contact doit être dans l'état 'pris' ou 'initié' pour être non suivi");
       }
       contact.setState(State.UNSUPERVISED);
       contactDAO.updateContact(contact);
@@ -210,7 +210,7 @@ public class ContactUCCImpl implements ContactUCC {
         throw new NotFoundException("Contact not found");
       }
       if (contact.getIdStudent() != idUser) {
-        throw new PreconditionFailedException("You don't have a contact with this id");
+        throw new NotFoundException("You don't have a contact with this id");
       }
       if (!((Contact) contact).updateState(State.ACCEPTED)) {
         throw new PreconditionFailedException(

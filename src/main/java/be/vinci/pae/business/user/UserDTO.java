@@ -136,6 +136,10 @@ public interface UserDTO {
    */
   void setRegisterDate(Date registerDate);
 
+  String getProfilePicture();
+
+  void setProfilePicture(String profilePicture);
+
   /**
    * Get the role of the user.
    *

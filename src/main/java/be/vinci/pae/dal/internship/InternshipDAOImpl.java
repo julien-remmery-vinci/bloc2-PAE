@@ -3,6 +3,7 @@ package be.vinci.pae.dal.internship;
 import be.vinci.pae.business.internship.InternshipDTO;
 import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
+import be.vinci.pae.exceptions.ConflictException;
 import be.vinci.pae.exceptions.FatalException;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -20,6 +21,23 @@ public class InternshipDAOImpl implements InternshipDAO {
   private DALBackServices dalServices;
   @Inject
   private DAOServices daoServices;
+
+  @Override
+  public InternshipDTO getOneById(int id) {
+    try (PreparedStatement ps = dalServices.getPS(
+        "SELECT * FROM pae.internships WHERE internship_idInternship = ?")) {
+      ps.setInt(1, id);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          String prefix = "internship";
+          return (InternshipDTO) daoServices.getDataFromRs(rs, prefix);
+        }
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return null;
+  }
 
   /**
    * Get an internship by its id.
@@ -103,5 +121,27 @@ public class InternshipDAOImpl implements InternshipDAO {
       throw new FatalException(e);
     }
     return null;
+  }
+
+  @Override
+  public InternshipDTO updateInternship(InternshipDTO internship, String subject) {
+    try (PreparedStatement updateInternship = dalServices.getPS(
+            "UPDATE pae.internships SET internship_internshipproject = ?, "
+                    + "internship_version = internship_version + 1 " +
+                    "WHERE internship_idInternship = ? "
+                    + "AND internship_version = ? RETURNING internship_idInternship;")) {
+      updateInternship.setString(1, subject);
+      updateInternship.setInt(2, internship.getIdInternship());
+      updateInternship.setInt(3, internship.getVersion());
+      try (ResultSet rs = updateInternship.executeQuery()) {
+        if (!rs.next() && getOneById(internship.getIdInternship()).getVersion()
+                != internship.getVersion()) {
+          throw new ConflictException("Version mismatch");
+        }
+        return internship;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

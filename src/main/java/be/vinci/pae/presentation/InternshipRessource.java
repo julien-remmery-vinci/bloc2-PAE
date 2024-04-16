@@ -7,11 +7,13 @@ import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.exceptions.BadRequestException;
 import be.vinci.pae.exceptions.NotFoundException;
 import be.vinci.pae.presentation.filters.Authorize;
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
@@ -57,7 +59,7 @@ public class InternshipRessource {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
+  @Authorize(roles = {Role.STUDENT})
   public InternshipDTO addInternship(@Context ContainerRequest request, InternshipDTO internship) {
     if (internship.getIdCompany() < 0) {
       throw new BadRequestException("Invalid Company id");
@@ -71,7 +73,6 @@ public class InternshipRessource {
     if (internship.getIdStudent() < 0) {
       throw new BadRequestException("Invalid Student id");
     }
-    System.out.println(internship.getSignatureDate());
     if (internship.getSignatureDate() == null) {
       throw new BadRequestException("Invalid Start Date");
     }
@@ -88,6 +89,25 @@ public class InternshipRessource {
     }
     internship.setIdStudent(((UserDTO) request.getProperty("user")).getIdUser());
     return internshipUCC.addInternship(internship);
+  }
+
+  @PUT
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(roles = {Role.STUDENT})
+  public InternshipDTO updateInternshipSubject(JsonNode json, @Context ContainerRequest request) {
+    InternshipDTO internship = internshipUCC.getInternshipById(
+        (UserDTO) request.getProperty("user"));
+    if (internship == null) {
+      throw new NotFoundException("Internship not found");
+    }
+
+    String subject = json.get("subject").asText();
+
+    if (subject == null || subject.isEmpty()) {
+      throw new BadRequestException("Empty Subject");
+    }
+    return internshipUCC.updateInternshipSubject(internship, subject);
   }
 }
 
