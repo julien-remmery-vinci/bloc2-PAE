@@ -34,6 +34,23 @@ const fetchContacts = async (id) => {
   .catch((error) => console.error(error));
 };
 
+const fetchIntershipByStudentId = async (id) => {
+  const response = await fetch(`http://localhost:3000/internships/${id}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': getToken(),
+    },
+  });
+  if (response.status === 200) {
+    const data = await response.json();
+    if (data === null || data.length === 0) {
+      return 404;
+    }
+    return data;
+  }
+  return 404;
+};
+
 const StudentInfoPage = () => {
   if (!isAuthenticated()) {
     Navigate('/login');
@@ -45,6 +62,9 @@ const StudentInfoPage = () => {
     const id = urlParams.get('id');
     fetchUserById(id);
     fetchContacts(id);
+    fetchIntershipByStudentId().then((internship) => {
+      renderInternship(internship);
+    });
     renderUser();
     renderContacts();
   }
@@ -102,6 +122,43 @@ function renderContacts(contacts) {
     `;
     tbody.appendChild(tr);
   });
+}
+
+async function renderInternship(internship) {
+  const main = document.querySelector('main');
+  const div = document.createElement('div');
+  div.className = 'd-flex flex-row justify-content-around align-items-center vh-90';
+  main.appendChild(div);
+
+  const existingSection = document.querySelector('section');
+  if (existingSection !== null) main.removeChild(existingSection);
+  const stageSection = document.createElement('section');
+  stageSection.className = 'text-center';
+
+  if (internship === 404) {
+    stageSection.innerHTML = `
+    <h2>Stage de l'étudiant</h2>
+    <p>L'étudiant n'a pas encore de stage pour cette année</p>
+    `;
+  } else {
+    let subjectValue = internship.internshipProject;
+    if (!subjectValue) {
+      subjectValue = "Pas de sujet de stage défini...";
+    }
+    stageSection.innerHTML = `
+    <h2>Mon stage</h2>
+    <div class="p-5 w-150 bg-light rounded shadow col-md-8" style="max-width: 80%;">
+      <p class="fw-bold mb-1">Sujet du stage:</p>
+      <p class="form-control mb-3">${subjectValue}</p>
+      <p class="fw-bold mb-1">Date de signature:</p>
+      <p class="form-control mb-3">${new Date(internship.signatureDate).toLocaleDateString()}</p>
+      <p class="fw-bold mb-1">Responsable:</p>
+      <p class="form-control mb-3">${internship.internshipSupervisor.firstName} ${internship.internshipSupervisor.lastName}</p>
+    </div>
+    `;
+  }
+
+  main.appendChild(stageSection);
 }
 
 export default StudentInfoPage;
