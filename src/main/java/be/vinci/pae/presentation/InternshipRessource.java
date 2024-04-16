@@ -41,12 +41,12 @@ public class InternshipRessource {
   @GET
   @Authorize(roles = {Role.ADMIN, Role.STUDENT, Role.TEACHER})
   @Produces(MediaType.APPLICATION_JSON)
-  public InternshipDTO getInternshipById(@Context ContainerRequest request) {
+  public InternshipDTO getInternshipByUser(@Context ContainerRequest request) {
     UserDTO user = (UserDTO) request.getProperty("user");
     if (user == null) {
       throw new NotFoundException("User not found");
     }
-    return internshipUCC.getInternshipById(user);
+    return internshipUCC.getInternshipByUser(user);
   }
 
   /**
@@ -96,7 +96,7 @@ public class InternshipRessource {
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize(roles = {Role.STUDENT})
   public InternshipDTO updateInternshipSubject(JsonNode json, @Context ContainerRequest request) {
-    InternshipDTO internship = internshipUCC.getInternshipById(
+    InternshipDTO internship = internshipUCC.getInternshipByUser(
         (UserDTO) request.getProperty("user"));
     if (internship == null) {
       throw new NotFoundException("Internship not found");
