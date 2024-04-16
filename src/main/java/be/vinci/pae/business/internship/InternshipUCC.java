@@ -16,6 +16,14 @@ public interface InternshipUCC {
   InternshipDTO getInternshipByUser(UserDTO user);
 
   /**
+   * Get an internship by its id.
+   *
+   * @param id the id of the internship
+   * @return the internship
+   */
+  InternshipDTO getInternshipById(int id);
+
+  /**
    * Add an internship.
    *
    * @param internship the internship to add
