@@ -15,6 +15,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -47,6 +48,17 @@ public class InternshipRessource {
       throw new NotFoundException("User not found");
     }
     return internshipUCC.getInternshipByUser(user);
+  }
+
+  @GET
+  @Path("/{id}")
+  @Authorize(roles = {Role.ADMIN, Role.TEACHER})
+  @Produces(MediaType.APPLICATION_JSON)
+  public InternshipDTO getInternshipById(@PathParam("id") int id) {
+    if (id < 0) {
+      throw new BadRequestException("Invalid id");
+    }
+    return internshipUCC.getInternshipById(id);
   }
 
   /**

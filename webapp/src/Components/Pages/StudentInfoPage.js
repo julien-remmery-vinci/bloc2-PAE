@@ -3,21 +3,17 @@ import Navigate from '../Router/Navigate';
 import { isAuthenticated, getToken } from '../../utils/auths';
 
 const fetchUserById = async (id) => {
-  try {
-    fetch(`http://localhost:3000/users/${id}`, {
-      method: 'GET',
-      headers: {
-        Authorization: getToken(),
-      },
+  fetch(`http://localhost:3000/users/${id}`, {
+    method: 'GET',
+    headers: {
+      Authorization: getToken(),
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      renderUser(data);
     })
-      .then((response) => response.json())
-      .then((data) => {
-        renderUser(data);
-      })
-      .catch((error) => console.error(error));
-  } catch (error) {
-    console.error(error);
-  }
+    .catch((error) => console.error(error));
 };
 
 const fetchContacts = async (id) => {
@@ -27,28 +23,26 @@ const fetchContacts = async (id) => {
       Authorization: getToken(),
     },
   })
-  .then(response => response.json())
-  .then(data => {
-    renderContacts(data);
-  })
-  .catch((error) => console.error(error));
+    .then((response) => response.json())
+    .then((data) => {
+      renderContacts(data);
+    })
+    .catch((error) => console.error(error));
 };
 
-const fetchIntershipByStudentId = async (id) => {
-  const response = await fetch(`http://localhost:3000/internships/${id}`, {
+const fetchInternshipByStudentId = async (id) => {
+  fetch(`http://localhost:3000/internships/${id}`, {
     method: 'GET',
     headers: {
-      'Authorization': getToken(),
+      'Content-Type': 'application/json',
+      Authorization: getToken(),
     },
-  });
-  if (response.status === 200) {
-    const data = await response.json();
-    if (data === null || data.length === 0) {
-      return 404;
-    }
-    return data;
-  }
-  return 404;
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      renderInternship(data);
+    })
+    .catch((error) => console.error(error));
 };
 
 const StudentInfoPage = () => {
@@ -62,11 +56,10 @@ const StudentInfoPage = () => {
     const id = urlParams.get('id');
     fetchUserById(id);
     fetchContacts(id);
-    fetchIntershipByStudentId().then((internship) => {
-      renderInternship(internship);
-    });
+    fetchInternshipByStudentId(id);
     renderUser();
     renderContacts();
+    renderInternship();
   }
 };
 
@@ -124,10 +117,13 @@ function renderContacts(contacts) {
   });
 }
 
-async function renderInternship(internship) {
+function renderInternship(internship) {
   const main = document.querySelector('main');
+  const row = document.createElement('div');
+  row.className = 'row';
   const div = document.createElement('div');
   div.className = 'd-flex flex-row justify-content-around align-items-center vh-90';
+  div.appendChild(row);
   main.appendChild(div);
 
   const existingSection = document.querySelector('section');
@@ -135,16 +131,13 @@ async function renderInternship(internship) {
   const stageSection = document.createElement('section');
   stageSection.className = 'text-center';
 
-  if (internship === 404) {
+  if (!internship || internship === 404) {
     stageSection.innerHTML = `
     <h2>Stage de l'étudiant</h2>
     <p>L'étudiant n'a pas encore de stage pour cette année</p>
     `;
   } else {
-    let subjectValue = internship.internshipProject;
-    if (!subjectValue) {
-      subjectValue = "Pas de sujet de stage défini...";
-    }
+    const subjectValue = internship && internship.internshipProject ? internship.internshipProject : 'Pas de sujet';
     stageSection.innerHTML = `
     <h2>Mon stage</h2>
     <div class="p-5 w-150 bg-light rounded shadow col-md-8" style="max-width: 80%;">
@@ -153,7 +146,9 @@ async function renderInternship(internship) {
       <p class="fw-bold mb-1">Date de signature:</p>
       <p class="form-control mb-3">${new Date(internship.signatureDate).toLocaleDateString()}</p>
       <p class="fw-bold mb-1">Responsable:</p>
-      <p class="form-control mb-3">${internship.internshipSupervisor.firstName} ${internship.internshipSupervisor.lastName}</p>
+      <p class="form-control mb-3">${internship.internshipSupervisor.firstName} ${
+      internship.internshipSupervisor.lastName
+    }</p>
     </div>
     `;
   }
