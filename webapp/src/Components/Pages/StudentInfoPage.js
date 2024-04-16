@@ -131,7 +131,7 @@ function renderInternship(internship) {
   const stageSection = document.createElement('section');
   stageSection.className = 'text-center';
 
-  if (!internship || internship === 404) {
+  if (internship === null || internship === undefined || internship === '' || !internship) {
     stageSection.innerHTML = `
     <h2>Stage de l'étudiant</h2>
     <p>L'étudiant n'a pas encore de stage pour cette année</p>
@@ -139,7 +139,7 @@ function renderInternship(internship) {
   } else {
     const subjectValue = internship && internship.internshipProject ? internship.internshipProject : 'Pas de sujet';
     stageSection.innerHTML = `
-    <h2>Mon stage</h2>
+    <h2>Stage de l'étudiant</h2>
     <div class="p-5 w-150 bg-light rounded shadow col-md-8" style="max-width: 80%;">
       <p class="fw-bold mb-1">Sujet du stage:</p>
       <p class="form-control mb-3">${subjectValue}</p>
