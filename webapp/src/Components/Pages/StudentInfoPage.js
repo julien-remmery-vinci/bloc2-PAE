@@ -1,4 +1,4 @@
-import { clearPage, renderPageTitle } from '../../utils/render';
+import { clearPage, renderPageTitle, displayToast } from '../../utils/render';
 import Navigate from '../Router/Navigate';
 import { isAuthenticated, getToken } from '../../utils/auths';
 
@@ -89,6 +89,25 @@ function renderUser(user) {
     </div>
   </div>
   `;
+  const lastname = document.getElementById('lastname');
+  lastname.addEventListener('click', () => {
+    displayToast('Vous ne pouvez pas modifier ce champ', 'danger');
+  });
+
+  const firstname = document.getElementById('firstname');
+  firstname.addEventListener('click', () => {
+    displayToast('Vous ne pouvez pas modifier ce champ', 'danger');
+  });
+
+  const email = document.getElementById('email');
+  email.addEventListener('click', () => {
+    displayToast('Vous ne pouvez pas modifier ce champ', 'danger');
+  });
+
+   const phoneNumber = document.getElementById('phoneNumber');
+  phoneNumber.addEventListener('click', () => {
+    displayToast('Vous ne pouvez pas modifier ce champ', 'danger');
+  });
 }
 
 function renderContacts(contacts) {
