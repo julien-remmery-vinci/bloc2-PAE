@@ -1,3 +1,4 @@
+import Toast from 'bootstrap/js/dist/toast';
 import Navigate from "../Components/Router/Navigate";
 
 const clearPage = () => {
@@ -39,10 +40,38 @@ const renderBreadcrumb = (path) => {
   breadcrumb.appendChild(list);
   main.prepend(breadcrumb);
 }
+
+function displayToast(message, type = 'danger') {
+  const toast = document.createElement('div');
+  toast.className = `toast align-items-center text-white bg-${type} border-0`;
+  toast.role = 'alert';
+  toast.ariaLive = 'assertive';
+  toast.ariaAtomic = 'true';
+
+  toast.style.position = 'fixed';
+  toast.style.bottom = '20px';
+  toast.style.right = '20px';
+
+  const toastBody = document.createElement('div');
+  toastBody.className = 'toast-body';
+  toastBody.innerText = message;
+
+  toast.appendChild(toastBody);
+  document.body.appendChild(toast);
+
+  const toastInstance = new Toast(toast);
+
+  toastInstance.show();
+
+  toast.addEventListener('hidden.bs.toast', () => {
+    document.body.removeChild(toast);
+  });
+}
   
 export {
   clearPage,
   renderPageTitle,
-  renderBreadcrumb
+  renderBreadcrumb,
+  displayToast
 };
   
