@@ -64,7 +64,11 @@ public class InternshipRessource {
     if (id < 0) {
       throw new BadRequestException("Invalid id");
     }
-    return internshipUCC.getInternshipById(id);
+    InternshipDTO internship = internshipUCC.getInternshipById(id);
+    if (internship == null) {
+      throw new NotFoundException("Internship not found");
+    }
+    return internship;
   }
 
   /**

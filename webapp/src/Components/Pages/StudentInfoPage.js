@@ -1,4 +1,4 @@
-import { clearPage, renderPageTitle } from '../../utils/render';
+import { clearPage, renderPageTitle, renderBreadcrumb } from '../../utils/render';
 import Navigate from '../Router/Navigate';
 import { isAuthenticated, getToken } from '../../utils/auths';
 
@@ -13,7 +13,6 @@ const fetchUserById = async (id) => {
     .then((data) => {
       renderUser(data);
     })
-    .catch((error) => console.error(error));
 };
 
 const fetchContacts = async (id) => {
@@ -27,7 +26,6 @@ const fetchContacts = async (id) => {
     .then((data) => {
       renderContacts(data);
     })
-    .catch((error) => console.error(error));
 };
 
 const fetchInternshipByStudentId = async (id) => {
@@ -38,11 +36,13 @@ const fetchInternshipByStudentId = async (id) => {
       Authorization: getToken(),
     },
   })
-    .then((response) => response.json())
+    .then((response) => {
+      if (response.status === 404) return renderInternship(null);
+      return response.json();
+    })
     .then((data) => {
       renderInternship(data);
     })
-    .catch((error) => console.error(error));
 };
 
 const StudentInfoPage = () => {
@@ -52,6 +52,11 @@ const StudentInfoPage = () => {
     renderPageTitle("Informations de l'étudiant");
     document.title = "Informations de l'étudiant";
     clearPage();
+    renderBreadcrumb({
+      'Accueil': '/',
+      'Liste des étudiants': '/students',
+      "Informations de l'étudiant": "/student-info",
+    });
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
     fetchUserById(id);
@@ -131,13 +136,14 @@ function renderInternship(internship) {
   const stageSection = document.createElement('section');
   stageSection.className = 'text-center';
 
-  if (internship === null || internship === undefined || internship === '' || !internship) {
+  if (!internship) {
     stageSection.innerHTML = `
     <h2>Stage de l'étudiant</h2>
     <p>L'étudiant n'a pas encore de stage pour cette année</p>
     `;
   } else {
-    const subjectValue = internship && internship.internshipProject ? internship.internshipProject : 'Pas de sujet';
+    const subjectValue =
+      internship && internship.internshipProject ? internship.internshipProject : 'Pas de sujet';
     stageSection.innerHTML = `
     <h2>Stage de l'étudiant</h2>
     <div class="p-5 w-150 bg-light rounded shadow col-md-8" style="max-width: 80%;">
@@ -152,7 +158,6 @@ function renderInternship(internship) {
     </div>
     `;
   }
-
   main.appendChild(stageSection);
 }
 
