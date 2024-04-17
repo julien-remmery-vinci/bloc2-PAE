@@ -3,21 +3,16 @@ import Navigate from '../Router/Navigate';
 import { isAuthenticated, getToken } from '../../utils/auths';
 
 const fetchUserById = async (id) => {
-  try {
-    fetch(`http://localhost:3000/users/${id}`, {
-      method: 'GET',
-      headers: {
-        Authorization: getToken(),
-      },
+  fetch(`http://localhost:3000/users/${id}`, {
+    method: 'GET',
+    headers: {
+      Authorization: getToken(),
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      renderUser(data);
     })
-      .then((response) => response.json())
-      .then((data) => {
-        renderUser(data);
-      })
-      .catch((error) => console.error(error));
-  } catch (error) {
-    console.error(error);
-  }
 };
 
 const fetchContacts = async (id) => {
@@ -27,11 +22,27 @@ const fetchContacts = async (id) => {
       Authorization: getToken(),
     },
   })
-  .then(response => response.json())
-  .then(data => {
-    renderContacts(data);
+    .then((response) => response.json())
+    .then((data) => {
+      renderContacts(data);
+    })
+};
+
+const fetchInternshipByStudentId = async (id) => {
+  fetch(`http://localhost:3000/internships/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: getToken(),
+    },
   })
-  .catch((error) => console.error(error));
+    .then((response) => {
+      if (response.status === 404) return renderInternship(null);
+      return response.json();
+    })
+    .then((data) => {
+      renderInternship(data);
+    })
 };
 
 const StudentInfoPage = () => {
@@ -41,12 +52,19 @@ const StudentInfoPage = () => {
     renderPageTitle("Informations de l'étudiant");
     document.title = "Informations de l'étudiant";
     clearPage();
+    renderBreadcrumb({
+      'Accueil': '/',
+      'Liste des étudiants': '/students',
+      "Informations de l'étudiant": "/student-info",
+    });
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
     fetchUserById(id);
     fetchContacts(id);
+    fetchInternshipByStudentId(id);
     renderUser();
     renderContacts();
+    renderInternship();
   }
 };
 
@@ -121,6 +139,45 @@ function renderContacts(contacts) {
     `;
     tbody.appendChild(tr);
   });
+}
+
+function renderInternship(internship) {
+  const main = document.querySelector('main');
+  const row = document.createElement('div');
+  row.className = 'row';
+  const div = document.createElement('div');
+  div.className = 'd-flex flex-row justify-content-around align-items-center vh-90';
+  div.appendChild(row);
+  main.appendChild(div);
+
+  const existingSection = document.querySelector('section');
+  if (existingSection !== null) main.removeChild(existingSection);
+  const stageSection = document.createElement('section');
+  stageSection.className = 'text-center';
+
+  if (!internship) {
+    stageSection.innerHTML = `
+    <h2>Stage de l'étudiant</h2>
+    <p>L'étudiant n'a pas encore de stage pour cette année</p>
+    `;
+  } else {
+    const subjectValue =
+      internship && internship.internshipProject ? internship.internshipProject : 'Pas de sujet';
+    stageSection.innerHTML = `
+    <h2>Stage de l'étudiant</h2>
+    <div class="p-5 w-150 bg-light rounded shadow col-md-8" style="max-width: 80%;">
+      <p class="fw-bold mb-1">Sujet du stage:</p>
+      <p class="form-control mb-3">${subjectValue}</p>
+      <p class="fw-bold mb-1">Date de signature:</p>
+      <p class="form-control mb-3">${new Date(internship.signatureDate).toLocaleDateString()}</p>
+      <p class="fw-bold mb-1">Responsable:</p>
+      <p class="form-control mb-3">${internship.internshipSupervisor.firstName} ${
+      internship.internshipSupervisor.lastName
+    }</p>
+    </div>
+    `;
+  }
+  main.appendChild(stageSection);
 }
 
 export default StudentInfoPage;
