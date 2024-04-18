@@ -11,7 +11,7 @@ const ContactPage = async () => {
   } else {
     clearPage();
     document.title = "Contacts";
-    renderBreadcrumb({"Accueil": "/", "Contacts": "/contacts"})
+    renderBreadcrumb({"Accueil": "/", "Contacts": "/contact"})
     await buildPage();
   }
 }
