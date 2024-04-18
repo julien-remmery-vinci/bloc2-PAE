@@ -108,32 +108,37 @@ function teacherHomePage() {
     students.style.width = '18rem';
     main.appendChild(students);
     students.addEventListener('click', () => {
-        Navigate('/student-info');
+        Navigate('/search');
     });
 }
 
+/**
+ * Function to display the admin home page with buttons to see students
+ */
 function adminHomePage() {
     const main = document.querySelector('main');
-    main.innerHTML += `
-    <div class="search-container d-flex justify-content-between">
-    <div class="filter-container">
-        <h3>Filtres</h3>
-        <label>
-            <input type="checkbox" name="filter" value="etudiant">
-            Que les étudiants
-        </label>
-        <br>
-        <label>
-            Année académique
-            <select>
-                <option value="all">Toutes les années</option>
-            </select>
-        </label>
-    </div>
+    const title = document.createElement('h1');
+    title.innerText = "Bienvenue sur votre espace administratif";
+    title.className = "text-center";
+    main.appendChild(title);
 
-    <div class="search-bar">
-        <input class="form-control border-end-0 border rounded-pill" type="search" placeholder="Rechercher">
-    </div>`;
+    const students = document.createElement('div');
+    students.className = 'card';
+    students.style.marginLeft = '700px';
+    students.style.marginTop = '100px';
+    const text = document.createElement('div');
+    text.className = 'card-body';
+    text.textContent = 'Vous voulez consulter les utilisateurs ?';
+    students.appendChild(text);
+    const button = document.createElement('button');
+    button.className = 'btn btn-primary';
+    button.textContent = 'Accéder aux recherches';
+    students.appendChild(button);
+    students.style.width = '18rem';
+    main.appendChild(students);
+    students.addEventListener('click', () => {
+        Navigate('/search');
+    });
 }
 
 export default HomePage;
