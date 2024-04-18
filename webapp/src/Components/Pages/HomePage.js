@@ -32,6 +32,8 @@ function studentHomePage() {
 
     const internship = document.createElement('div');
     internship.className = 'card';
+    internship.style.marginLeft = '700px';
+    internship.style.marginTop = '100px';
     const text = document.createElement('div');
     text.className = 'card-body';
     text.textContent = 'Vous voulez consulter votre stage ?';
@@ -44,6 +46,24 @@ function studentHomePage() {
     main.appendChild(internship);
     internship.addEventListener('click', () => {
         Navigate('/stage');
+    });
+
+    const contacts = document.createElement('div');
+    contacts.className = 'card';
+    contacts.style.marginLeft = '700px';
+    contacts.style.marginTop = '100px';
+    const text2 = document.createElement('div');
+    text2.className = 'card-body';
+    text2.textContent = 'Vous voulez consulter vos contacts ?';
+    contacts.appendChild(text2);
+    const button2 = document.createElement('button');
+    button2.className = 'btn btn-primary';
+    button2.textContent = 'Accéder à vos contacts';
+    contacts.appendChild(button2);
+    contacts.style.width = '18rem';
+    main.appendChild(contacts);
+    contacts.addEventListener('click', () => {
+        Navigate('/contact');
     });
 
 }
