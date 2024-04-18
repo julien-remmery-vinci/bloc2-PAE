@@ -32,6 +32,10 @@ function studentHomePage() {
 
     const internship = document.createElement('div');
     internship.className = 'card';
+    const text = document.createElement('div');
+    text.className = 'card-body';
+    text.textContent = 'Vous voulez consulter votre stage ?';
+    internship.appendChild(text);
     const button = document.createElement('button');
     button.className = 'btn btn-primary';
     button.textContent = 'Accéder à votre stage';
