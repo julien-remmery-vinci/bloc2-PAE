@@ -42,32 +42,49 @@ const renderBreadcrumb = (path) => {
 }
 
 function displayToast(message, type = 'danger') {
+  let toastContainer = document.querySelector('.toast-container');
+  if (!toastContainer) {
+    toastContainer = document.createElement('div');
+    toastContainer.className = 'toast-container position-absolute p-3 bottom-0 end-0';
+    document.body.appendChild(toastContainer);
+  }
+
   const toast = document.createElement('div');
   toast.className = `toast align-items-center text-white bg-${type} border-0`;
   toast.role = 'alert';
   toast.ariaLive = 'assertive';
   toast.ariaAtomic = 'true';
 
-  toast.style.position = 'fixed';
-  toast.style.bottom = '20px';
-  toast.style.right = '20px';
+  const closeButton = document.createElement('button');
+  closeButton.type = 'button';
+  closeButton.className = 'btn-close';
+  closeButton.setAttribute('data-bs-dismiss', 'toast');
+  closeButton.setAttribute('aria-label', 'Close');
+  closeButton.addEventListener('click', () => {
+    if (toast.parentNode) {
+      toast.parentNode.removeChild(toast);
+    }
+  });
 
   const toastBody = document.createElement('div');
-  toastBody.className = 'toast-body';
+  toastBody.className = 'toast-body d-flex justify-content-between align-items-center';
   toastBody.innerText = message;
 
+  toastBody.appendChild(closeButton);
   toast.appendChild(toastBody);
-  document.body.appendChild(toast);
+  toastContainer.appendChild(toast);
 
   const toastInstance = new Toast(toast);
 
   toastInstance.show();
 
   toast.addEventListener('hidden.bs.toast', () => {
-    document.body.removeChild(toast);
+    if (toast.parentNode) {
+      toast.parentNode.removeChild(toast);
+    }
   });
 }
-  
+
 export {
   clearPage,
   renderPageTitle,

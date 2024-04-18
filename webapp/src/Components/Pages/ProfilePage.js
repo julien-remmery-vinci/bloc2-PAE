@@ -313,7 +313,7 @@ function renderProfilPage() {
   });
 
 }
-//change data
+// change data
 async function onSaveProfile(e) {
   e.preventDefault();
   const firstname = document.querySelector('#firstname').value;
