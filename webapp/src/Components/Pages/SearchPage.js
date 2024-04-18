@@ -36,45 +36,50 @@ const SearchPage = async () => {
 function renderSearchPage() {
   const main = document.querySelector('main');
   main.innerHTML += `
-  <div class="search-container d-flex justify-content-between">
-  <div class="filter-container">
-    <h3>Filtres</h3>
-    <label>
-      <input type="checkbox" name="filter" value="etudiant">
-      Que les étudiants
-    </label>
-    <br>
-    <label>
-      Année académique
-      <select>
-        <option value="all">Toutes les années</option>
-      </select>
-    </label>
-  </div>
-
-  <div class="search-bar">
-    <input class="form-control border-end-0 border rounded-pill" type="search" placeholder="Rechercher">
-  </div>
-</div>
-<br>
-    <div class="table-responsive d-flex justify-content-center align-items-center">
-    <table class="table table-bordered table-hover caption-top">
-    <caption>Liste des utilisateurs</caption>
-    <thead class="table-light">
-        <tr>
-            <th>Nom</th>
-            <th>Prénom</th>
-            <th>Rôle</th>
-            <th>Année académique</th>
-            <th>Stage accepté</th>
-        </tr>
-    </thead>
-    </table>
+    <div class="search-container justify-content-around d-flex">
+      <div class="input-group mb-3" style="width: 350px">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="inputGroupSelect01">Année académique</label>
+        </div>
+        <select class="custom-select form-select">
+          <option value="all">Toutes les années</option>
+        </select>
+      </div>
+      
+      <div class="input-group mb-3" style="width: 200px" hidden="hidden" id="checkboxDiv">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">Que les étudiants</span>
+        </div>
+        <div class="input-group-text">
+          <input type="checkbox" name="filter" value="etudiant" id="showStudents" checked>
+        </div>
+      </div>
+      
+      <div class="input-group mb-3" style="width: 500px">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">Rechercher</span>
+        </div>
+        <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" id="search">
+      </div>
     </div>
-`;
-
+    <div class="d-flex overflow-auto" style="max-height: 70vh">
+      <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+              <th>Nom</th>
+              <th>Prénom</th>
+              <th>Rôle</th>
+              <th>Année académique</th>
+              <th>Stage accepté</th>
+            </tr>
+        </thead>
+      </table>
+    </div>
+  `;
+  document.querySelector('thead').style.position = 'sticky';
+  document.querySelector('thead').style.top = '0';
   // search the users
-  const search = document.querySelector('.search-bar input');
+  const search = document.querySelector('#search');
   search.addEventListener('input', () => {
     const table = document.querySelector('table');
     const tbody = table.querySelector('tbody');
@@ -92,17 +97,17 @@ function renderSearchPage() {
   });
 
   // filter the users by academic year
-  const select = document.querySelector('.filter-container select');
+  const select = document.querySelector('select');
   
   const years = users.map((userMap) => userMap.user.academicYear);
-  const uniqueYears = [...new Set(years)];
+  const uniqueYears = [...new Set(years)].filter((year) => year !== null && year !== undefined);
   uniqueYears.forEach((year) => {
     
     const currentYear= new Date().getFullYear();
     const currentMonth = new Date().getMonth();
     let academicYear;
     if (currentMonth >= 9) {
-    academicYear = `${currentYear}-${currentYear+1}`;
+      academicYear = `${currentYear}-${currentYear+1}`;
     }
     else {
       academicYear = `${currentYear-1}-${currentYear}`;
@@ -127,30 +132,33 @@ function renderSearchPage() {
     const rows = tbody.querySelectorAll('tr');
     const selectedYear = select.value;
     if (selectedYear === 'all') {
+      document.querySelector('#checkboxDiv').hidden = false;
       renderUsers();
+    } else {
+      document.querySelector('#checkboxDiv').hidden = true;
     }
     rows.forEach((row) => {
       const cells = row.querySelectorAll('td');
-      if (cells[3].textContent === selectedYear) {
-        row.style.display = '';
-      } else {
+      if (cells.length > 0 && cells[3].textContent !== selectedYear) {
         row.style.display = 'none';
+      } else {
+        row.style.display = '';
       }
     });
-  }
-  );
+  });
 
 
   // filter the users to only show the students
-  const filter = document.querySelector('.filter-container input');
+  const filter = document.querySelector('#showStudents');
   filter.addEventListener('change', () => {
     const table = document.querySelector('table');
     const tbody = table.querySelector('tbody');
     const rows = tbody.querySelectorAll('tr');
     rows.forEach((row) => {
       const cells = row.querySelectorAll('td');
+      console.log(cells)
       if (filter.checked) {
-        if (cells[2].textContent !== 'étudiant') {
+        if (cells.length > 0 && cells[2].textContent !== 'étudiant') {
           row.style.display = 'none';
         } else {
           row.style.display = '';
@@ -162,75 +170,49 @@ function renderSearchPage() {
   });
 }
 
-async function renderUsers() {
+function renderUsers() {
   const table = document.querySelector('table');
-  const tbody = document.createElement('tbody');
-  const selectElement = document.querySelector('.filter-container select');
-  if (selectElement.value === 'all') {
-    users.forEach((userMap) => {
-      const { user, accepted_contact: acceptedContact } = userMap;
-      const tr = document.createElement('tr');
-      if (user.role === 'étudiant') {
-        tr.innerHTML = `
-        <td>${user.lastname}</td>
-        <td>${user.firstname}</td>
-        <td>${user.role}</td>
-        <td>${user.academicYear}</td>
-        <td>${acceptedContact ? 'Oui' : 'Non'}</td>
-      `;
-      } else {
-        tr.innerHTML = `
-          <td>${user.lastname}</td>
-          <td>${user.firstname}</td>
-          <td>${user.role}</td>
-          <td class="table-secondary">N/A</td>
-          <td class="table-secondary">N/A</td>
-        `;
-      }
-      tr.addEventListener('click', () => {
-        if (user.role === 'étudiant') {
-          Navigate(`/student-info?id=${user.idUser}`);
-        }
-      });
-      tbody.appendChild(tr);
-    });
-    table.appendChild(tbody);
+  if(document.querySelector('tbody') !== null) {
+    document.querySelector('tbody').remove();
   }
-  else {
-  const selectedYear = selectElement.options[selectElement.selectedIndex].value;
-  const selectedYearUsers = users.filter(user => user.user.academicYear === selectedYear);
-  selectedYearUsers.forEach((userMap) => {
-    const { user, accepted_contact: acceptedContact } = userMap;
+  const tbody = document.createElement('tbody');
+
+  users.forEach(u => {
     const tr = document.createElement('tr');
-    if (user.role === 'étudiant') {
-      tr.classList.add('clickable-row');
-      tr.innerHTML = `
+    const { user, accepted_contact: acceptedContact } = u;
+    tr.innerHTML = `
       <td>${user.lastname}</td>
       <td>${user.firstname}</td>
       <td>${user.role}</td>
-      <td>${user.academicYear}</td>
-      <td>${acceptedContact ? 'Oui' : 'Non'}</td>
+      <td>${user.role === 'étudiant' ? user.academicYear : "N/A"}</td>
+      <td>${user.role === 'étudiant' ? acceptedContact ? 'Oui' : 'Non' : "N/A"}</td>
     `;
-    } else {
-      tr.innerHTML = `
-        <td>${user.lastname}</td>
-        <td>${user.firstname}</td>
-        <td>${user.role}</td>
-        <td class="table-secondary">N/A</td>
-        <td class="table-secondary">N/A</td>
-      `;
-    }
-
-    tr.addEventListener('click', () => {
-      if (user.role === 'étudiant') {
+    if(user.role === 'étudiant') {
+      tr.classList.add('clickable-row');
+      tr.addEventListener('click', () => {
         Navigate(`/student-info?id=${user.idUser}`);
-      }
-    });
-
+      });
+    }
+    const selectElement = document.querySelector('select');
+    if(selectElement.value !== 'all' && user.academicYear !== selectElement.value) tr.style.display = 'none';
+    const filter = document.querySelector('#showStudents');
+    if(filter.checked && user.role !== 'étudiant') tr.style.display = 'none';
     tbody.appendChild(tr);
+    if(user.role === 'étudiant') {
+      const tdList = tr.querySelectorAll('td');
+      tr.addEventListener('mouseover', () => {
+        tdList.forEach((td) => {
+          td.style.backgroundColor = 'lightgray'
+        });
+      });
+      tr.addEventListener('mouseout', () => {
+        tdList.forEach((td) => {
+          td.style.backgroundColor = ''
+        });
+      });
+    }
   });
   table.appendChild(tbody);
-}
 }
 
 export default SearchPage;
