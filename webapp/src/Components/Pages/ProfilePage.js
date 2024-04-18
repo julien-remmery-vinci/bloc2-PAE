@@ -1,5 +1,10 @@
 import {clearPage, renderBreadcrumb} from "../../utils/render";
-import {getAuthenticatedUser, isAuthenticated, getToken, setAuthenticatedUser} from "../../utils/auths";
+import {
+  getAuthenticatedUser,
+  isAuthenticated,
+  getToken,
+  setAuthenticatedUser
+} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
 import defaultImage from "../../img/default-user-image.png";
 
@@ -39,7 +44,8 @@ function renderPictureInfos() {
   const user = getAuthenticatedUser();
 
   const img = document.createElement('img');
-  img.src = user.profilePicture ? `data:image/png;base64, ${user.profilePicture}` : `${defaultImage}`;
+  img.src = user.profilePicture
+      ? `data:image/png;base64, ${user.profilePicture}` : `${defaultImage}`;
   img.alt = 'image de profil';
   img.id = 'profilePic';
   img.className = 'img-thumbnail';
@@ -69,7 +75,7 @@ function renderPictureInfos() {
     img.style.opacity = '1';
   });
   img.addEventListener('click', () => {
-    if(!document.querySelector('#profilePicInput')) {
+    if (!document.querySelector('#profilePicInput')) {
       const options = document.createElement('div');
       options.id = 'options';
       options.className = 'btn-group';
@@ -81,6 +87,7 @@ function renderPictureInfos() {
     }
   });
 }
+
 function displayImageInput() {
   const div = document.querySelector('#leftDiv');
   const options = document.querySelector('#options')
@@ -99,7 +106,7 @@ function displayImageInput() {
 
   const img = document.querySelector('#profilePic');
 
-  imageInput.addEventListener('input',(event) => {
+  imageInput.addEventListener('input', (event) => {
     const {target} = event
     if (target.files && target.files[0]) {
       // TODO set max size in pixels
@@ -147,14 +154,16 @@ function displayImageInput() {
     div.removeChild(cancelButton);
     div.style.width = '200px';
     const user = getAuthenticatedUser();
-    img.src = user.profilePicture ? `data:image/png;base64, ${user.profilePicture}` : `${defaultImage}`;;
+    img.src = user.profilePicture
+        ? `data:image/png;base64, ${user.profilePicture}` : `${defaultImage}`;
+    ;
   });
 }
 
 async function modifyProfilePicture() {
   console.log('modify pic')
   const file = document.querySelector('#profilePicInput').files[0];
-  if(!file) {
+  if (!file) {
     const error = document.querySelector('#imageInputError');
     error.hidden = false;
     error.textContent = 'Veuillez sélectionner une image';
@@ -169,7 +178,7 @@ async function modifyProfilePicture() {
     },
     body: formData
   });
-  if(response.status !== 200) {
+  if (response.status !== 200) {
     // TODO
   } else {
     const data = await response.json();
@@ -186,7 +195,7 @@ async function removeProfilePicture() {
       Authorization: getToken()
     }
   });
-  if(response.status !== 200) {
+  if (response.status !== 200) {
     // TODO
   } else {
     const data = await response.json();
@@ -194,7 +203,6 @@ async function removeProfilePicture() {
     renderPictureInfos();
   }
 }
-
 
 function renderProfilPage() {
   const rightDiv = document.querySelector('#rightDiv');
@@ -237,6 +245,7 @@ function renderProfilPage() {
   const changePasswordButton = document.createElement('button');
   changePasswordButton.textContent = 'Modifier mot de passe';
   changePasswordButton.className = 'btn btn-primary';
+  changePasswordButton.id = 'changePasswordButton';
   form.appendChild(changePasswordButton);
   rightDiv.appendChild(form);
 
@@ -245,6 +254,7 @@ function renderProfilPage() {
 
     changePasswordButton.style.display = 'none';
     const passwordDiv = document.createElement('div');
+    passwordDiv.id = 'passwordDiv';
     document.querySelector('#mainDiv').appendChild(passwordDiv);
     const passwordLabel = document.createElement('label');
     passwordLabel.textContent = 'Modification du mot de passe';
@@ -293,6 +303,7 @@ function renderProfilPage() {
     const submitButton = document.createElement('button');
     submitButton.textContent = 'Sauver';
     submitButton.className = 'btn btn-primary';
+    submitButton.id = 'submitPassword';
     submitButton.addEventListener('click', onSavePassword);
     passwordDiv.appendChild(submitButton);
 
@@ -313,7 +324,7 @@ function renderProfilPage() {
   });
 
 }
-// change data
+
 async function onSaveProfile(e) {
   e.preventDefault();
   const firstname = document.querySelector('#firstname').value;
@@ -343,6 +354,9 @@ async function onSaveProfile(e) {
     error.textContent = 'Erreur lors de la modification du profil';
     error.hidden = false;
   }
+
+  const sauver = document.querySelector('#sauver');
+  sauver.style.display = 'none';
 }
 
 async function onSavePassword(e) {
@@ -380,6 +394,13 @@ async function onSavePassword(e) {
     setTimeout(() => {
       popup.style.display = 'none';
     }, 10000);
+
+    const passwordDiv = document.querySelector('#passwordDiv');
+    passwordDiv.style.display = 'none';
+    // Show the change password button
+    const changePasswordButton = document.querySelector(
+        '#changePasswordButton');
+    changePasswordButton.style.display = 'block';
   }
 }
 
