@@ -67,7 +67,7 @@ function displayToast(message, type = 'danger') {
   });
 
   const toastBody = document.createElement('div');
-  toastBody.className = 'toast-body';
+  toastBody.className = 'toast-body d-flex justify-content-between align-items-center';
   toastBody.innerText = message;
 
   toastBody.appendChild(closeButton);
