@@ -110,6 +110,7 @@ function teacherHomePage() {
     students.addEventListener('click', () => {
         Navigate('/search');
     });
+
 }
 
 /**
