@@ -23,13 +23,13 @@ async function buildPage() {
   title.textContent = 'Contacts';
   title.style.textAlign = 'center';
   const table = document.createElement('table');
-  table.classList.add('table', 'mx-auto');
+  table.className = 'table table-bordered';
   table.style.width = '80%';
   table.style.tableLayout = 'auto';
   const tableHead = document.createElement('thead');
   tableHead.classList.add('thead-dark');
   const tableHeadRow = document.createElement('tr');
-  const headings = ['Entreprise', 'État', ''];
+  const headings = ['Entreprise', 'État', 'Raison de refus'];
   const contacts = await getContacts();
   const hasPrisOrAccepted = contacts.some(
       contact => contact.state === 'pris' || contact.state === 'accepté' || contact.state === 'refusé');
@@ -103,10 +103,8 @@ async function buildPage() {
     if (contact.state === 'refusé') {
       meetPlaceCell.textContent = contact.meetPlace;
       refusalCell.textContent = contact.refusalReason;
-    } else if (hasRefused) {
-      refusalCell.textContent = '/';
     } else {
-      refusalCell.textContent = '';
+      refusalCell.textContent = '/';
     }
 
     row.appendChild(refusalCell);
