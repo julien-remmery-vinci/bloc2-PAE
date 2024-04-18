@@ -29,7 +29,7 @@ async function renderInternshipSupervisorPage() {
   // Create table header
   const thead = document.createElement('thead');
   const headerRow = document.createElement('tr');
-  ['Nom', 'Prénom', 'Email', 'Numéro de téléphone', 'Nom de l\'entreprise'].forEach((text, index) => {
+  ['Nom ▼', 'Prénom ▼', 'Email', 'Numéro de téléphone', 'Nom de l\'entreprise ▼'].forEach((text, index) => {
     const th = document.createElement('th');
     th.textContent = text;
     th.addEventListener('click', () => {
