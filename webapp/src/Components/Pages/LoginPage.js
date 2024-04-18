@@ -26,14 +26,17 @@ function renderLoginForm() {
   const username = document.createElement('input');
   username.type = 'text';
   username.id = 'username';
-  username.required = true;
   username.className = 'form-control mb-3';
+  const emailError = document.createElement('p');
+  emailError.id = 'emailError';
+  emailError.className = 'text-danger';
+  emailError.hidden = true;
   const titlePassword = document.createElement('h6');
   titlePassword.textContent = 'Mot de passe';
   const passwordDiv = document.createElement('div');
   const passwordHtml = `
     <div class="input-group">
-      <input id="password" type="password" class="form-control mb-3" name="password" required>
+      <input id="password" type="password" class="form-control mb-3" name="password">
       <button class="btn btn-outline-secondary mb-3" type="button" id="hidePassword">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash" viewBox="0 0 16 16">
           <path
@@ -48,6 +51,10 @@ function renderLoginForm() {
   `;
   passwordDiv.appendChild(titlePassword);
   passwordDiv.innerHTML += passwordHtml;
+  const passwordError = document.createElement('p');
+  passwordError.id = 'passwordError';
+  passwordError.className = 'text-danger';
+  passwordError.hidden = true;
   const submit = document.createElement('input');
   submit.value = 'Se connecter';
   submit.type = 'submit';
@@ -81,7 +88,9 @@ function renderLoginForm() {
 
   form.appendChild(titleEmail);
   form.appendChild(username);
+  form.appendChild(emailError);
   form.appendChild(passwordDiv);
+  form.appendChild(passwordError);
   form.appendChild(formCheckWrapper);
   form.appendChild(submit);
   main.appendChild(form);
@@ -111,6 +120,21 @@ async function onLogin(e) {
   const email = document.querySelector('#username').value;
   const password = document.querySelector('#password').value;
 
+  const emailError = document.querySelector('#emailError');
+  const passwordError = document.querySelector('#passwordError');
+  if(email.length === 0) {
+    emailError.textContent = 'Email requis';
+    emailError.hidden = false;
+  } else {
+    emailError.hidden = true;
+  }
+  if(password.length === 0) {
+    passwordError.textContent = 'Mot de passe requis';
+    passwordError.hidden = false;
+  } else {
+    passwordError.hidden = true;
+  }
+  if(passwordError.hidden && emailError.hidden) {
   const options = {
     method: 'POST',
     body: JSON.stringify({
@@ -173,6 +197,7 @@ async function onLogin(e) {
   } else {
     Navigate('/login');
   }
-};
+}
+}
 
 export default LoginPage;
