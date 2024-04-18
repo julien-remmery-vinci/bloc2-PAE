@@ -135,69 +135,67 @@ async function onLogin(e) {
     passwordError.hidden = true;
   }
   if(passwordError.hidden && emailError.hidden) {
-  const options = {
-    method: 'POST',
-    body: JSON.stringify({
-      email,
-      password,
-    }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
 
-  // verify if email is valid
-  const emailRegex = /^[a-zA-Z0-9._%+-]+\.[a-zA-Z0-9._%+-]+@(vinci\.be|student\.vinci\.be)$/;
-  if (!emailRegex.test(email)) {
-    // clear the last error message
-    const form1 = document.querySelector('form');
-    const lastError = form1.querySelector('.text-danger');
-    if (lastError) {
-      form1.removeChild(lastError);
+    // verify if email is valid
+    const emailRegex = /^[a-zA-Z0-9._%+-]+\.[a-zA-Z0-9._%+-]+@(vinci\.be|student\.vinci\.be)$/;
+    if (!emailRegex.test(email)) {
+      // clear the last error message
+      const form1 = document.querySelector('form');
+      const lastError = form1.querySelector('#error');
+      if (lastError) {
+        form1.removeChild(lastError);
+      }
+      emailError.textContent = 'Email invalide';
+      emailError.hidden = false;
+      return;
     }
-    const erreur = document.createElement('p');
-    erreur.textContent = 'Email invalide';
-    erreur.className = 'text-danger';
-    const form = document.querySelector('form');
-    form.appendChild(erreur);
-    return;
-  }
 
-  const response = await fetch(`http://localhost:3000/auths/login`, options);
+    const response = await fetch(`http://localhost:3000/auths/login`, options);
 
-  if (response.status === 401) {
-    // clear the last error message
-    const form1 = document.querySelector('form');
-    const lastError = form1.querySelector('.text-danger');
-    if (lastError) {
-      form1.removeChild(lastError);
+    if (response.status === 401) {
+      // clear the last error message
+      const form1 = document.querySelector('form');
+      const lastError = form1.querySelector('#error');
+      if (lastError) {
+        form1.removeChild(lastError);
+      }
+      const erreur = document.createElement('p');
+      erreur.id = 'error';
+      erreur.textContent = 'Email ou mot de passe invalide';
+      erreur.className = 'text-danger';
+      const form = document.querySelector('form');
+      form.appendChild(erreur);
+      return;
     }
-    const erreur = document.createElement('p');
-    erreur.textContent = 'Email ou mot de passe invalide';
-    erreur.className = 'text-danger';
-    const form = document.querySelector('form');
-    form.appendChild(erreur);
-    return;
+
+    if (!response.ok) throw new Error(`fetch error : ${response.status} : ${response.statusText} `);
+
+    // Get the authenticated user
+    const authenticatedUser = await response.json();
+
+    console.log('Authenticated user : ', authenticatedUser);
+
+    setToken(authenticatedUser.token);
+    setAuthenticatedUser(authenticatedUser.user);
+
+    // Navigate to the home page if the user is authenticated, otherwise navigate to the login page
+    if (authenticatedUser) {
+      Navbar();
+      Navigate('/');
+    } else {
+      Navigate('/login');
+    }
   }
-
-  if (!response.ok) throw new Error(`fetch error : ${response.status} : ${response.statusText} `);
-
-  // Get the authenticated user
-  const authenticatedUser = await response.json();
-
-  console.log('Authenticated user : ', authenticatedUser);
-
-  setToken(authenticatedUser.token);
-  setAuthenticatedUser(authenticatedUser.user);
-
-  // Navigate to the home page if the user is authenticated, otherwise navigate to the login page
-  if (authenticatedUser) {
-    Navbar();
-    Navigate('/');
-  } else {
-    Navigate('/login');
-  }
-}
 }
 
 export default LoginPage;
