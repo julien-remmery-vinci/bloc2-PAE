@@ -27,10 +27,12 @@ function buildPage(data) {
   companyInfos.id = 'companyInfos';
   companyInfos.className = 'card';
   companyInfos.style.width = '40%';
+  companyInfos.style.border = '2px solid black';
   const blacklisted = document.createElement('div');
   blacklisted.id = 'blacklisted';
   blacklisted.className = 'card';
   blacklisted.style.width = '40%';
+  blacklisted.style.border = '2px solid black';
   infosDiv.appendChild(companyInfos);
   infosDiv.appendChild(blacklisted);
   const contactsDiv = document.createElement('div');
