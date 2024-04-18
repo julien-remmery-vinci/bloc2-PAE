@@ -1,6 +1,6 @@
 import {getToken, isAuthenticated} from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
-import {clearPage, renderBreadcrumb} from "../../../utils/render";
+import {clearPage, renderBreadcrumb, displayToast} from "../../../utils/render";
 
 const CompanyPage = (data) => {
   if (!isAuthenticated()) {
@@ -152,12 +152,6 @@ function displayCompanyInfos(company) {
     saveButton.addEventListener('click', () => {
       blacklistCompany(company.idCompany);
     });
-    const error = document.createElement('p');
-    error.textContent = 'Erreur lors du blacklist de l\'entreprise';
-    error.hidden = true;
-    error.className = 'alert alert-danger';
-    error.id = 'error';
-    document.getElementById('companyInfos').appendChild(error);
   }
 }
 
@@ -223,14 +217,13 @@ async function blacklistCompany(idCompany) {
   });
 
   if(response.status !== 200) {
-    document.getElementById('error').hidden = false;
+    displayToast('Erreur lors du blacklist de l\'entreprise', 'danger');
     document.getElementById('motivation').hidden = true;
     document.getElementById('blacklist').addEventListener('click', () => {
       const motivation = document.getElementById('motivation');
       motivation.hidden = !motivation.hidden;
     });
   } else {
-    document.getElementById('error').hidden = true;
     document.getElementById('motivation').hidden = true;
     document.getElementById('blacklist').hidden = true;
     document.getElementById('saveButton').hidden = true;

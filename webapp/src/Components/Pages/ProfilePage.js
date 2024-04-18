@@ -1,4 +1,4 @@
-import {clearPage, renderBreadcrumb} from "../../utils/render";
+import {clearPage, renderBreadcrumb, displayToast} from "../../utils/render";
 import {getAuthenticatedUser, isAuthenticated, getToken, setAuthenticatedUser} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
 import defaultImage from "../../img/default-user-image.png";
@@ -170,7 +170,7 @@ async function modifyProfilePicture() {
     body: formData
   });
   if(response.status !== 200) {
-    // TODO
+    displayToast('Erreur lors de la modification de l\'image', 'danger')
   } else {
     const data = await response.json();
     setAuthenticatedUser(data);
@@ -187,7 +187,7 @@ async function removeProfilePicture() {
     }
   });
   if(response.status !== 200) {
-    // TODO
+    displayToast('Erreur lors de la suppression de l\'image', 'danger')
   } else {
     const data = await response.json();
     setAuthenticatedUser(data);
@@ -304,12 +304,6 @@ function renderProfilPage() {
       changePasswordButton.style.display = 'block';
     });
     passwordDiv.appendChild(cancelButton);
-
-    const error = document.createElement('div');
-    error.id = 'error';
-    error.style.color = 'red';
-    error.hidden = true;
-    passwordDiv.appendChild(error);
   });
 
 }
@@ -339,9 +333,7 @@ async function onSaveProfile(e) {
   const response = await fetch('http://localhost:3000/users/update', options);
 
   if (response.status !== 200) {
-    const error = document.querySelector('#error');
-    error.textContent = 'Erreur lors de la modification du profil';
-    error.hidden = false;
+    displayToast('Erreur lors de la modification des informations', 'danger');
   }
 }
 
@@ -369,17 +361,10 @@ async function onSavePassword(e) {
       options);
 
   if (response.status !== 204) {
-    const error = document.querySelector('#error');
-    error.textContent = 'Erreur lors du changement de mot de passe';
-    error.hidden = false;
+    displayToast('Erreur lors de la modification du mot de passe', 'danger');
   }
   if (response.status === 204) {
-    const popup = document.querySelector('#popup');
-    popup.textContent = 'Mot de passe modifié avec succès';
-    popup.style.display = 'block';
-    setTimeout(() => {
-      popup.style.display = 'none';
-    }, 10000);
+    displayToast('Mot de passe modifié avec succès', 'success');
   }
 }
 
