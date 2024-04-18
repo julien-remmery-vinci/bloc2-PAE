@@ -101,7 +101,7 @@ public class ContactDAOImpl implements ContactDAO {
         "SELECT * FROM pae.contacts, pae.users, pae.companies WHERE contact_idCompany = "
             + "company_idCompany AND contact_idStudent = user_idUser AND "
             + "contact_idStudent = ? AND "
-            + "contact_state = 'accepté';")) {
+            + "contact_state = 'ACCEPTED';")) {
       ps.setInt(1, idUser);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
