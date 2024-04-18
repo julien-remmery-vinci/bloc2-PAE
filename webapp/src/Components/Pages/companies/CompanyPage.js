@@ -21,101 +21,79 @@ function buildPage(data) {
   const mainDiv = document.createElement('div');
   mainDiv.style.width = '100%';
   const infosDiv = document.createElement('div');
+  infosDiv.style.display = 'flex';
+  infosDiv.style.justifyContent = 'center';
+  const companyInfos = document.createElement('div');
+  companyInfos.id = 'companyInfos';
+  companyInfos.className = 'card';
+  companyInfos.style.width = '40%';
+  const blacklisted = document.createElement('div');
+  blacklisted.id = 'blacklisted';
+  blacklisted.className = 'card';
+  blacklisted.style.width = '40%';
+  infosDiv.appendChild(companyInfos);
+  infosDiv.appendChild(blacklisted);
   const contactsDiv = document.createElement('div');
-  infosDiv.id = 'companyInfos';
+  infosDiv.id = 'infosDiv';
   contactsDiv.id = 'contacts';
   mainDiv.appendChild(infosDiv);
   mainDiv.appendChild(contactsDiv);
-  mainDiv.style.height = '90vh';
+  mainDiv.style.height = '80vh';
   main.appendChild(mainDiv);
   displayCompanyInfos(data);
   displayContacts(data.contacts);
 }
 
 function displayCompanyInfos(company) {
-  document.getElementById('companyInfos').innerHTML = '';
-  const table = document.createElement('table');
-  table.className = 'table table-bordered';
-  table.style.alignContent = 'center';
-  const thead = document.createElement('thead');
-  const tbody = document.createElement('tbody');
-  const tr = document.createElement('tr');
-  thead.appendChild(tr);
-  const th1 = document.createElement('th');
-  th1.textContent = 'Nom';
-  tr.appendChild(th1);
-  if(company.designation) {
-    const th2 = document.createElement('th');
-    th2.textContent = 'Appellation';
-    tr.appendChild(th2);
-  }
-  const th3 = document.createElement('th');
-  th3.textContent = 'Téléphone';
-  tr.appendChild(th3);
-  const th4 = document.createElement('th');
-  th4.textContent = 'email';
-  tr.appendChild(th4);
-  const th5 = document.createElement('th');
-  th5.textContent = 'Adresse';
-  tr.appendChild(th5);
-  const th6 = document.createElement('th');
-  th6.textContent = 'Ville';
-  tr.appendChild(th6);
-  table.appendChild(thead);
-  table.appendChild(tbody);
-  const trow = document.createElement('tr');
-  const td1 = document.createElement('td');
-  td1.textContent = company.tradeName;
-  trow.appendChild(td1);
-  if(company.designation) {
-    const td2 = document.createElement('td');
-    td2.textContent = company.designation;
-    trow.appendChild(td2);
-  }
-  const td3 = document.createElement('td');
-  td3.textContent = company.phoneNumber;
-  const td4 = document.createElement('td');
-  td4.textContent = company.email;
-  const td5 = document.createElement('td');
-  td5.textContent = company.address;
-  const td6 = document.createElement('td');
-  td6.textContent = company.city;
-  trow.appendChild(td3);
-  trow.appendChild(td4);
-  trow.appendChild(td5);
-  trow.appendChild(td6);
-  tbody.appendChild(trow);
-  table.style.width = '80%';
-  table.style.margin = 'auto';
-  table.style.marginTop = '20px';
-  document.getElementById('companyInfos').appendChild(table);
+  const companyDiv = document.getElementById('companyInfos');
+  companyDiv.innerHTML = '';
+
+  const tradeName = document.createElement('h2');
+  tradeName.textContent = company.tradeName;
+  tradeName.style.textAlign = 'center';
+  companyDiv.appendChild(tradeName);
+
+  const designation = document.createElement('h3');
+  designation.textContent = company.designation;
+  designation.style.textAlign = 'center';
+  companyDiv.appendChild(designation);
+
+  const email = document.createElement('p');
+  email.textContent = company.email;
+  email.style.textAlign = 'center';
+  companyDiv.appendChild(email);
+
+  const phone = document.createElement('p');
+  phone.textContent = company.phoneNumber;
+  phone.style.textAlign = 'center';
+  companyDiv.appendChild(phone);
+
+  const address = document.createElement('p');
+  address.textContent = company.address;
+  address.style.textAlign = 'center';
+  companyDiv.appendChild(address);
+
+  const city = document.createElement('p');
+  city.textContent = company.city;
+  city.style.textAlign = 'center';
+  companyDiv.appendChild(city);
+
+  const blacklistedDiv = document.getElementById('blacklisted');
+  blacklistedDiv.innerHTML = '';
   if(company.blacklisted) {
-    const table2 = document.createElement('table');
-    table2.className = 'table';
-    table2.style.width = '80%';
-    table2.style.alignContent = 'center';
-    const thead2 = document.createElement('thead');
-    const tbody2 = document.createElement('tbody');
-    const tr2 = document.createElement('tr');
-    const th7 = document.createElement('th');
-    th7.textContent = 'Black-listée';
-    const th8 = document.createElement('th');
-    th8.textContent = 'Raison du black-list';
-    thead2.appendChild(tr2);
-    tr2.appendChild(th7);
-    tr2.appendChild(th8);
-    table2.appendChild(thead2);
-    const trow2 = document.createElement('tr');
-    const td7 = document.createElement('td');
-    td7.textContent = "oui";
-    const td8 = document.createElement('td');
-    td8.textContent = company.blacklistMotivation;
-    trow2.appendChild(td7);
-    trow2.appendChild(td8);
-    tbody2.appendChild(trow2);
-    table2.appendChild(tbody2);
-    document.getElementById('companyInfos').appendChild(table2);
+    const h2 = document.createElement('h2');
+    h2.textContent = 'Entreprise black-listée';
+    h2.style.textAlign = 'center';
+    blacklistedDiv.appendChild(h2);
+    const reason = document.createElement('p');
+    reason.textContent = company.blacklistMotivation;
+    reason.style.textAlign = 'center';
+    blacklistedDiv.appendChild(reason);
   } else {
+    const h2 = document.createElement('h2');
+    h2.textContent = 'Black-lister cette entreprise';
+    h2.style.textAlign = 'center';
+    blacklistedDiv.appendChild(h2);
     const button = document.createElement('button');
     button.className = 'btn btn-primary';
     button.id = 'blacklist';
@@ -123,43 +101,65 @@ function displayCompanyInfos(company) {
     button.style.margin = 'auto';
     button.style.display = 'block';
     button.style.marginTop = '20px';
-    document.getElementById('companyInfos').appendChild(button);
+    blacklistedDiv.appendChild(button);
     const motivation = document.createElement('textarea');
     motivation.className = 'form-control';
     motivation.id = 'motivation';
     motivation.placeholder = 'Motivation';
     motivation.style.margin = 'auto';
     motivation.style.display = 'block';
-    motivation.style.marginTop = '20px';
-    motivation.style.width = '30%';
+    motivation.style.marginTop = '10px';
+    motivation.style.width = '70%';
     motivation.style.height = '100px';
     motivation.hidden = true;
-    document.getElementById('companyInfos').appendChild(motivation);
+    blacklistedDiv.appendChild(motivation);
+
     const saveButton = document.createElement('button');
     saveButton.className = 'btn btn-primary';
     saveButton.id = 'saveButton';
     saveButton.textContent = 'Sauvegarder';
     saveButton.style.margin = 'auto';
-    saveButton.style.display = 'block';
-    saveButton.style.marginTop = '20px';
     saveButton.hidden = true;
-    document.getElementById('companyInfos').appendChild(saveButton);
+
+    const cancelButton = document.createElement('button');
+    cancelButton.className = 'btn btn-secondary';
+    cancelButton.textContent = 'Annuler';
+    cancelButton.style.margin = 'auto';
+    cancelButton.id = 'cancelButton';
+    cancelButton.hidden = true;
+
+    const buttonDiv = document.createElement('div');
+    buttonDiv.style.display = 'flex';
+    buttonDiv.style.marginTop = '10px';
+    buttonDiv.style.marginBottom = '10px';
+    blacklistedDiv.appendChild(buttonDiv);
+    buttonDiv.appendChild(saveButton);
+    buttonDiv.appendChild(cancelButton);
+
     button.addEventListener('click', () => {
       motivation.hidden = !motivation.hidden;
       button.hidden = !button.hidden;
       saveButton.hidden = !saveButton.hidden;
-    })
+      cancelButton.hidden = !cancelButton.hidden;
+    });
     saveButton.addEventListener('click', () => {
       blacklistCompany(company.idCompany);
+    });
+    cancelButton.addEventListener('click', () => {
+      motivation.hidden = !motivation.hidden;
+      button.hidden = !button.hidden;
+      saveButton.hidden = !saveButton.hidden;
+      cancelButton.hidden = !cancelButton.hidden;
     });
   }
 }
 
 function displayContacts(contacts) {
   const div = document.getElementById('contacts');
+  div.style.marginTop = '20px';
   div.innerHTML = '';
   div.style.overflow = 'auto';
-  div.style.height = '60vh';
+  div.style.height = '50vh';
   div.style.scrollBehavior = 'smooth';
   const table = document.createElement('table');
   table.className = 'table table-bordered';
@@ -227,6 +227,7 @@ async function blacklistCompany(idCompany) {
     document.getElementById('motivation').hidden = true;
     document.getElementById('blacklist').hidden = true;
     document.getElementById('saveButton').hidden = true;
+    document.getElementById('cancelButton').hidden = true;
     const data = await response.json();
     displayCompanyInfos(data.company)
     displayContacts(data.contacts)
