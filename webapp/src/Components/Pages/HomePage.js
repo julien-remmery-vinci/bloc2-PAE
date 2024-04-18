@@ -2,13 +2,17 @@ import {clearPage, renderBreadcrumb} from "../../utils/render";
 import {getAuthenticatedUser, isAuthenticated} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
 
+let user;
+
 const HomePage = () => {
     if (!isAuthenticated()) {
         Navigate('/login');
     } else {
         clearPage();
         document.title = "Home";
-        renderBreadcrumb({"Accueil": "/"})
+        console.log(getAuthenticatedUser());
+        renderBreadcrumb({"Accueil": "/"});
+        user = getAuthenticatedUser();
         if (getAuthenticatedUser().role === 'étudiant') {
             studentHomePage();
         } else if (getAuthenticatedUser().role === 'professeur') {
@@ -23,7 +27,7 @@ function studentHomePage() {
     const main = document.querySelector('main');
 
     const title = document.createElement('h1');
-    title.innerText = "Bienvenue sur votre espace étudiant";
+    title.innerText = `Bienvenue sur votre espace étudiant, ${user.firstname} !`;
     title.className = "text-center";
     main.appendChild(title);
 
@@ -101,7 +105,7 @@ function studentHomePage() {
 function teacherHomePage() {
     const main = document.querySelector('main');
     const title = document.createElement('h1');
-    title.innerText = "Bienvenue sur votre espace professeur";
+    title.innerText = `Bienvenue sur votre espace professeur, ${user.firstname} !`;
     title.className = "text-center";
     main.appendChild(title);
 
@@ -179,7 +183,7 @@ function teacherHomePage() {
 function adminHomePage() {
     const main = document.querySelector('main');
     const title = document.createElement('h1');
-    title.innerText = "Bienvenue sur votre espace administratif";
+    title.innerText = `Bienvenue sur votre espace administratif, ${user.firstname} !`;
     title.className = "text-center";
     main.appendChild(title);
 

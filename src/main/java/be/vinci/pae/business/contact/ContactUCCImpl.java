@@ -191,6 +191,7 @@ public class ContactUCCImpl implements ContactUCC {
     }
   }
 
+  //Tester la méthode getContactsByStudentIdBis
   @Override
   public List<ContactDTO> getContactsByStudentIdBis(int idStudent) {
     try {
