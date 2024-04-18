@@ -1,19 +1,7 @@
-import autoComplete from "@tarekraafat/autocomplete.js";
-
 import {getToken, isAuthenticated} from '../../utils/auths';
 import {clearPage, renderBreadcrumb, renderPageTitle} from '../../utils/render';
 import Navigate from '../Router/Navigate';
 
-
-const autoCompleteJS = new autoComplete({ 
-  placeHolder: "Rechercher",
-  data: {
-    src :["test1","test2","test3"]
-  },
-  resultItem: {
-    highlight: true,
-  },
- });
 
 async function fetchUsers() {
   const response = await fetch('http://localhost:3000/users', {
@@ -65,7 +53,7 @@ function renderSearchPage() {
   </div>
 
   <div class="search-bar">
-    <input id="autoComplete" class="form-control border-end-0 border rounded-pill" type="search" placeholder="Rechercher">
+    <input class="form-control border-end-0 border rounded-pill" type="search" placeholder="Rechercher">
   </div>
 </div>
 <br>
