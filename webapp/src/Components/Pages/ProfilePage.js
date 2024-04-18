@@ -374,6 +374,12 @@ async function onSavePassword(e) {
   }
   if (response.status === 204) {
     displayToast('Mot de passe modifié avec succès', 'success');
+    const passwordDiv = document.querySelector('#passwordDiv');
+    passwordDiv.style.display = 'none';
+    // Show the change password button
+    const changePasswordButton = document.querySelector(
+        '#changePasswordButton');
+    changePasswordButton.style.display = 'block';
   }
 }
 
