@@ -1,4 +1,4 @@
-import { clearPage, renderPageTitle, displayToast } from '../../utils/render';
+import { clearPage, renderPageTitle, displayToast, renderBreadcrumb } from '../../utils/render';
 import Navigate from '../Router/Navigate';
 import { isAuthenticated, getToken } from '../../utils/auths';
 
