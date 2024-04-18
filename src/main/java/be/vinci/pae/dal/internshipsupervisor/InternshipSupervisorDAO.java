@@ -28,4 +28,11 @@ public interface InternshipSupervisorDAO {
    * Get an internship supervisor by its id.
    */
   InternshipSupervisorDTO getInternshipSupervisorById(int id);
+
+  /**
+   * Get all supervisors.
+   *
+   * @return the list of all supervisors
+   */
+  List<InternshipSupervisorDTO> getAllSupervisors();
 }

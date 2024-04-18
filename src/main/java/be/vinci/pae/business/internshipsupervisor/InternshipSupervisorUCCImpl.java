@@ -52,4 +52,14 @@ public class InternshipSupervisorUCCImpl implements InternshipSupervisorUCC {
       dalServices.close();
     }
   }
+
+  @Override
+  public List<InternshipSupervisorDTO> getAllSupervisors() {
+    try {
+      dalServices.open();
+      return internshipSupervisorDAO.getAllSupervisors();
+    } finally {
+      dalServices.close();
+    }
+  }
 }
