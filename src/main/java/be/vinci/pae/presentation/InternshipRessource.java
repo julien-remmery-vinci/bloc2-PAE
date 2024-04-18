@@ -7,12 +7,15 @@ import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.exceptions.BadRequestException;
 import be.vinci.pae.exceptions.NotFoundException;
 import be.vinci.pae.presentation.filters.Authorize;
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -31,7 +34,7 @@ public class InternshipRessource {
   private InternshipUCC internshipUCC;
 
   /**
-   * Get an internship by its id.
+   * Get an internship by its user.
    *
    * @param request the request's context
    * @return the internship
@@ -39,12 +42,33 @@ public class InternshipRessource {
   @GET
   @Authorize(roles = {Role.ADMIN, Role.STUDENT, Role.TEACHER})
   @Produces(MediaType.APPLICATION_JSON)
-  public InternshipDTO getInternshipById(@Context ContainerRequest request) {
+  public InternshipDTO getInternshipByUser(@Context ContainerRequest request) {
     UserDTO user = (UserDTO) request.getProperty("user");
     if (user == null) {
       throw new NotFoundException("User not found");
     }
-    return internshipUCC.getInternshipById(user);
+    return internshipUCC.getInternshipByUser(user);
+  }
+
+  /**
+   * Get an internship by its id.
+   *
+   * @param id the id of the internship
+   * @return the internship
+   */
+  @GET
+  @Path("/{id}")
+  @Authorize(roles = {Role.ADMIN, Role.TEACHER})
+  @Produces(MediaType.APPLICATION_JSON)
+  public InternshipDTO getInternshipById(@PathParam("id") int id) {
+    if (id < 0) {
+      throw new BadRequestException("Invalid id");
+    }
+    InternshipDTO internship = internshipUCC.getInternshipById(id);
+    if (internship == null) {
+      throw new NotFoundException("Internship not found");
+    }
+    return internship;
   }
 
   /**
@@ -71,7 +95,6 @@ public class InternshipRessource {
     if (internship.getIdStudent() < 0) {
       throw new BadRequestException("Invalid Student id");
     }
-    System.out.println(internship.getSignatureDate());
     if (internship.getSignatureDate() == null) {
       throw new BadRequestException("Invalid Start Date");
     }
@@ -88,6 +111,25 @@ public class InternshipRessource {
     }
     internship.setIdStudent(((UserDTO) request.getProperty("user")).getIdUser());
     return internshipUCC.addInternship(internship);
+  }
+
+  @PUT
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(roles = {Role.STUDENT})
+  public InternshipDTO updateInternshipSubject(JsonNode json, @Context ContainerRequest request) {
+    InternshipDTO internship = internshipUCC.getInternshipByUser(
+        (UserDTO) request.getProperty("user"));
+    if (internship == null) {
+      throw new NotFoundException("Internship not found");
+    }
+
+    String subject = json.get("subject").asText();
+
+    if (subject == null || subject.isEmpty()) {
+      throw new BadRequestException("Empty Subject");
+    }
+    return internshipUCC.updateInternshipSubject(internship, subject);
   }
 }
 

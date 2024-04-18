@@ -29,3 +29,7 @@ Authorization: {{token}}
   "phoneNumber": "123456789",
   "idCompany": 2
 }
+
+### Get list of intership supervisors
+GET {{intershipsupervisors}}
+Authorization: {{token}}

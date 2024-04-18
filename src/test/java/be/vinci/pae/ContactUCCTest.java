@@ -281,6 +281,62 @@ public class ContactUCCTest {
     Mockito.when(companyDAO.getCompanyById(idCompany)).thenReturn(null);
     assertThrows(NotFoundException.class, () -> contactUCC.blacklistContacts(idCompany));
   }
+
+  @Test
+  @DisplayName("test acceptContact method with contact in wrong state")
+  void testAcceptContactWrongState() {
+    contact.setState(State.STARTED);
+    assertThrows(PreconditionFailedException.class,
+        () -> contactUCC.acceptContact(idContact, idUser));
+  }
+
+  @Test
+  @DisplayName("test acceptContact method with contact not found")
+  void testAcceptContactNotFound() {
+    Mockito.when(contactDAO.getOneById(1)).thenReturn(null);
+    assertThrows(NotFoundException.class, () -> contactUCC.acceptContact(idContact, idUser));
+  }
+
+  @Test
+  @DisplayName("test acceptContact method with non-matching user id")
+  void testAcceptContactNonMatchingUserId() {
+    int nonMatchingIdUser = 2;
+    assertThrows(NotFoundException.class,
+        () -> contactUCC.acceptContact(idContact, nonMatchingIdUser));
+  }
+
+  @Test
+  @DisplayName("test acceptContact method with existing contact in right state")
+  void testAcceptContact() {
+    contact.setState(State.ADMITTED);
+    assertAll(
+        () -> assertEquals(contact.getIdContact(),
+            contactUCC.acceptContact(idContact, idUser).getIdContact()),
+        () -> assertEquals(State.ACCEPTED, contact.getState())
+    );
+  }
+
+  @Test
+  @DisplayName("Test acceptContact method with multiple contacts")
+  void testAcceptContactMultipleContacts() {
+    contact.setState(State.ADMITTED);
+    ContactDTO anotherContact = factory.getContact();
+    anotherContact.setIdContact(2);
+    anotherContact.setIdStudent(idUser);
+    anotherContact.setState(State.ADMITTED);
+    List<ContactDTO> contacts = new ArrayList<>();
+    contacts.add(contact);
+    contacts.add(anotherContact);
+    Mockito.when(contactDAO.getContactsByStudentId(idUser)).thenReturn(contacts);
+
+    ContactDTO acceptedContact = contactUCC.acceptContact(idContact, idUser);
+
+    assertAll(
+        () -> assertEquals(contact.getIdContact(), acceptedContact.getIdContact()),
+        () -> assertEquals(State.ACCEPTED, acceptedContact.getState()),
+        () -> assertEquals(State.ON_HOLD, anotherContact.getState())
+    );
+  }
 }
 
 

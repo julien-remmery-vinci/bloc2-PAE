@@ -33,12 +33,23 @@ async function renderInternshipPage() {
     alert.style.width = '40%';  
     alert.hidden = true;
     rightDiv.appendChild(alert);
+    const date = document.createElement('label');
+    date.textContent = 'Date de signature';
+    date.style.marginTop = '5%';
+    rightDiv.appendChild(date);
+    const dateInput = document.createElement('input');
+    dateInput.type = 'date';
+    dateInput.className = 'form-control';
+    dateInput.style.width = '50%';
+    dateInput.required = true;
+    rightDiv.appendChild(dateInput);
     const subjectDiv = document.createElement('div');
     subjectDiv.style.marginTop = '5%';
     const subjectLabel = document.createElement('label');
     subjectLabel.textContent = 'Sujet du stage (s’il est déjà mentionné dans le document de modalités)';
     subjectDiv.appendChild(subjectLabel);
     const subjectInput = document.createElement('input');
+    subjectInput.id = 'subject';
     subjectInput.type = 'text';
     subjectInput.className = 'form-control';
     subjectInput.required = false;
@@ -53,13 +64,18 @@ async function renderInternshipPage() {
     submitButton.addEventListener('click', (e) => {
         e.preventDefault();
         const queryParams = new URLSearchParams(window.location.search);
+        let subjectInternship = document.querySelector('#subject').value;
+        if(subjectInternship === ''){ 
+            subjectInternship = null;
+        }
         const internship = {
             idCompany: queryParams.get('idCompany'),
             idContact: queryParams.get('idContact'),
-            internshipProject: subjectInput.value,
+            internshipProject: subjectInternship,
             idInternshipSupervisor: document.querySelector('select').value,
-            
+            signatureDate: dateInput.value,
         };
+        console.log(internship);
         addInternship(internship);
     });
     rightDiv.appendChild(submitButton);
@@ -151,7 +167,9 @@ function addNewSupervisor() {
     addSupervisorButton.className = 'btn btn-primary';
     addSupervisorButton.style.width = '50%';
     addSupervisorButton.addEventListener('click', () => {
+        if (document.querySelector('#addSupervisorForm') === null){
         addNewSupervisorForm();
+        }
     });
     addSupervisorDiv.appendChild(addSupervisorButton);
     return addSupervisorDiv;
@@ -161,6 +179,7 @@ function addNewSupervisorForm() {
     const main = document.querySelector('main');
     const form = document.createElement('form');
     form.className = 'p-5';
+    form.id = 'addSupervisorForm';
     const firstNameLabel = document.createElement('label');
     firstNameLabel.textContent = 'Prénom';
     form.appendChild(firstNameLabel);

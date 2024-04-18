@@ -4,6 +4,7 @@ import Navigate from "../Router/Navigate";
 import {clearPage, renderBreadcrumb} from "../../utils/render";
 
 let companies = [];
+let filteredCompanies;
 const lastOrder = {};
 
 const DashboardPage = async () => {
@@ -172,11 +173,12 @@ function getAcademicYearFromRegisterDate(registerDate) {
   return `${year - 1}-${year}`;
 }
 
-function fillTable(filteredCompanies) {
+function fillTable() {
   const tbody = document.querySelector('tbody');
   tbody.innerHTML = '';
   const academicYear = document.querySelector('select').value;
-  filteredCompanies.forEach(company => {
+  const tableContent = filteredCompanies !== undefined ? filteredCompanies : companies;
+  tableContent.forEach(company => {
     const trow = document.createElement('tr');
     const td1 = document.createElement('td');
     const td2 = document.createElement('td');
@@ -205,8 +207,7 @@ function fillTable(filteredCompanies) {
   });
 }
 
-function renderCompanies(filteredCompanies) {
-  console.log(filteredCompanies)
+function renderCompanies() {
   const div = document.getElementById('companies');
   div.style.overflow = 'auto';
   div.style.height = '80vh';
@@ -217,10 +218,10 @@ function renderCompanies(filteredCompanies) {
   table.className = 'table';
   table.style.width = '80%';
   table.style.maxHeight = '40vh';
+
   const thead = document.createElement('thead');
   thead.style.position = 'sticky';
   thead.style.top = '0';
-  const tbody = document.createElement('tbody');
   const tr = document.createElement('tr');
   const th1 = document.createElement('th');
   const th2 = document.createElement('th');
@@ -252,6 +253,8 @@ function renderCompanies(filteredCompanies) {
   tr.appendChild(th5);
   tr.appendChild(th6);
   table.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
   table.appendChild(tbody);
   div.appendChild(table);
   const error = document.createElement('p');
@@ -302,8 +305,11 @@ function renderSearch() {
   search.style.textAlign = 'center';
   div.appendChild(search);
   search.addEventListener('input', () => {
-    const filteredCompanies = companies.filter(company => company.tradeName.toLowerCase().includes(search.value.toLowerCase()));
-    renderCompanies(filteredCompanies);
+    if(search.value === '')
+      filteredCompanies = undefined;
+    else
+      filteredCompanies = companies.filter(company => company.tradeName.toLowerCase().includes(search.value.toLowerCase()));
+    fillTable();
   });
 
   const reset = document.createElement('button');
@@ -402,7 +408,14 @@ function getCurrentAcademicYear() {
   return `${year - 1}-${year}`;
 }
 
+function resetColumNames() {
+  document.querySelectorAll('th').forEach(th => {
+    th.textContent = th.textContent.replace(' ▲', '').replace(' ▼', '');
+  });
+}
+
 function orderByTradename(e) {
+  resetColumNames();
   if(lastOrder.tradeName === 'asc') {
     lastOrder.tradeName = 'desc';
     e.target.textContent = 'Nom ▼';
@@ -410,13 +423,21 @@ function orderByTradename(e) {
     lastOrder.tradeName = 'asc';
     e.target.textContent = 'Nom ▲';
   }
-  const orderedCompanies = lastOrder.tradeName === 'asc'
-      ? companies.sort((a, b) => b.tradeName.localeCompare(a.tradeName))
-      : companies.sort((a, b) => a.tradeName.localeCompare(b.tradeName));
-  fillTable(orderedCompanies);
+
+  function orderTable(tableContent) {
+    return lastOrder.tradeName === 'asc'
+        ? tableContent.sort((a, b) => b.tradeName.localeCompare(a.tradeName))
+        : tableContent.sort((a, b) => a.tradeName.localeCompare(b.tradeName));
+  }
+
+  filteredCompanies = filteredCompanies !== undefined
+      ? orderTable(filteredCompanies)
+      : orderTable(companies);
+  fillTable();
 }
 
 function orderByDesignation(e) {
+  resetColumNames();
   if (lastOrder.designation === 'asc') {
     lastOrder.designation = 'desc';
     e.target.textContent = 'Appellation ▲';
@@ -424,21 +445,37 @@ function orderByDesignation(e) {
     lastOrder.designation = 'asc';
     e.target.textContent = 'Appellation ▼';
   }
-  const orderedCompanies = lastOrder.designation === 'asc'
-      ? companies.sort((a, b) => {
-        if(a.designation === null) return 1;
-        if(b.designation === null) return -1;
-        return a.designation.localeCompare(b.designation);
-      })
-      : companies.sort((a, b) => {
-        if(a.designation === null) return -1;
-        if(b.designation === null) return 1;
-        return b.designation.localeCompare(a.designation);
-      });
-  fillTable(orderedCompanies);
+
+  function orderTable(tableContent) {
+    return lastOrder.designation === 'asc'
+        ? tableContent.sort((a, b) => {
+          if (a.designation === null) {
+            return 1;
+          }
+          if (b.designation === null) {
+            return -1;
+          }
+          return a.designation.localeCompare(b.designation);
+        })
+        : tableContent.sort((a, b) => {
+          if (a.designation === null) {
+            return -1;
+          }
+          if (b.designation === null) {
+            return 1;
+          }
+          return b.designation.localeCompare(a.designation);
+        });
+  }
+
+  filteredCompanies = filteredCompanies !== undefined
+      ? orderTable(filteredCompanies)
+      : orderTable(companies);
+  fillTable();
 }
 
 function orderByCity(e) {
+  resetColumNames();
   if (lastOrder.city === 'asc') {
     lastOrder.city = 'desc';
     e.target.textContent = 'Ville ▼';
@@ -446,21 +483,37 @@ function orderByCity(e) {
     lastOrder.city = 'asc';
     e.target.textContent = 'Ville ▲';
   }
-  const orderedCompanies = lastOrder.city === 'asc'
-      ? companies.sort((a, b) => {
-        if(a.city === null) return 1;
-        if(b.city === null) return -1;
-        return a.city.localeCompare(b.city);
-      })
-      : companies.sort((a, b) => {
-        if(a.city === null) return -1;
-        if(b.city === null) return 1;
-        return b.city.localeCompare(a.city);
-      });
-  fillTable(orderedCompanies);
+
+  function orderTable(tableContent) {
+    return lastOrder.city === 'asc'
+        ? tableContent.sort((a, b) => {
+          if (a.city === null) {
+            return 1;
+          }
+          if (b.city === null) {
+            return -1;
+          }
+          return a.city.localeCompare(b.city);
+        })
+        : tableContent.sort((a, b) => {
+          if (a.city === null) {
+            return -1;
+          }
+          if (b.city === null) {
+            return 1;
+          }
+          return b.city.localeCompare(a.city);
+        });
+  }
+
+  filteredCompanies = filteredCompanies !== undefined
+      ? orderTable(filteredCompanies)
+      : orderTable(companies);
+  fillTable();
 }
 
 function orderByAcceptedStudents(e) {
+  resetColumNames();
   if (lastOrder.students === 'asc') {
     lastOrder.students = 'desc';
     e.target.textContent = 'Nombre d\'étudiants ▲';
@@ -468,21 +521,33 @@ function orderByAcceptedStudents(e) {
     lastOrder.students = 'asc';
     e.target.textContent = 'Nombre d\'étudiants ▼';
   }
-  const orderedCompanies = lastOrder.students === 'asc'
-      ? companies.sort((a, b) => {
-        const aStudents = a.contacts.filter(contact => contact.state === 'accepté');
-        const bStudents = b.contacts.filter(contact => contact.state === 'accepté');
-        return bStudents.length - aStudents.length;
-      })
-      : companies.sort((a, b) => {
-        const aStudents = a.contacts.filter(contact => contact.state === 'accepté');
-        const bStudents = b.contacts.filter(contact => contact.state === 'accepté');
-        return aStudents.length - bStudents.length;
-      });
-  fillTable(orderedCompanies);
+
+  function orderTable(tableContent) {
+    return lastOrder.students === 'asc'
+        ? tableContent.sort((a, b) => {
+          const aStudents = a.contacts.filter(
+              contact => contact.state === 'accepté');
+          const bStudents = b.contacts.filter(
+              contact => contact.state === 'accepté');
+          return bStudents.length - aStudents.length;
+        })
+        : tableContent.sort((a, b) => {
+          const aStudents = a.contacts.filter(
+              contact => contact.state === 'accepté');
+          const bStudents = b.contacts.filter(
+              contact => contact.state === 'accepté');
+          return aStudents.length - bStudents.length;
+        });
+  }
+
+  filteredCompanies = filteredCompanies !== undefined
+      ? orderTable(filteredCompanies)
+      : orderTable(companies);
+  fillTable();
 }
 
 function orderByBlacklisted(e) {
+  resetColumNames();
   if (lastOrder.blacklisted === 'asc') {
     lastOrder.blacklisted = 'desc';
     e.target.textContent = 'Black-listée ▼';
@@ -490,10 +555,17 @@ function orderByBlacklisted(e) {
     lastOrder.blacklisted = 'asc';
     e.target.textContent = 'Black-listée ▲';
   }
-  const orderedCompanies = lastOrder.blacklisted === 'asc'
-      ? companies.sort((a, b) => a.blacklisted - b.blacklisted)
-      : companies.sort((a, b) => b.blacklisted - a.blacklisted);
-  fillTable(orderedCompanies);
+
+  function orderTable(tableContent) {
+    return lastOrder.blacklisted === 'asc'
+        ? tableContent.sort((a, b) => a.blacklisted - b.blacklisted)
+        : tableContent.sort((a, b) => b.blacklisted - a.blacklisted);
+  }
+
+  filteredCompanies = filteredCompanies !== undefined
+      ? orderTable(filteredCompanies)
+      : orderTable(companies);
+  fillTable();
 }
 
 export default DashboardPage;

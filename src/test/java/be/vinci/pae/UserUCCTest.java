@@ -160,4 +160,18 @@ public class UserUCCTest {
     assertThrows(BadRequestException.class, () -> userUCC.updateUser(user, "test", "test"));
   }
 
+  @Test
+  @DisplayName("Test for the updateUser")
+  void updateUserTest() {
+    user.setFirstname("newFistname");
+    user.setLastname("newLastname");
+    user.setEmail("new.email@student.vinci.be");
+    user.setPhoneNumber("123456789");
+
+    Mockito.when(userDAO.updateUser(user)).thenReturn(user);
+    assertNotNull(
+        userUCC.updateUser(user, "newFistname", "newLastname", "new.email@student.vinci.be",
+            "123456789"));
+
+  }
 }

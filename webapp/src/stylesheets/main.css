@@ -49,3 +49,11 @@
   text-align: center;
   z-index: 1000;
 }
+
+.grey-text {
+  color: grey;
+}
+
+.clickable-row {
+  cursor: pointer;
+}
