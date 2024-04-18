@@ -119,17 +119,17 @@ function displayCompanyInfos(company) {
     saveButton.id = 'saveButton';
     saveButton.textContent = 'Sauvegarder';
     saveButton.style.margin = 'auto';
+    saveButton.style.marginLeft = '15%'
     saveButton.hidden = true;
 
     const cancelButton = document.createElement('button');
-    cancelButton.className = 'btn btn-secondary';
+    cancelButton.className = 'btn btn-secondary ms-2';
     cancelButton.textContent = 'Annuler';
     cancelButton.style.margin = 'auto';
     cancelButton.id = 'cancelButton';
     cancelButton.hidden = true;
 
     const buttonDiv = document.createElement('div');
-    buttonDiv.style.display = 'flex';
     buttonDiv.style.marginTop = '10px';
     buttonDiv.style.marginBottom = '10px';
     blacklistedDiv.appendChild(buttonDiv);
