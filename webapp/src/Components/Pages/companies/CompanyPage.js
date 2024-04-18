@@ -35,7 +35,7 @@ function buildPage(data) {
 function displayCompanyInfos(company) {
   document.getElementById('companyInfos').innerHTML = '';
   const table = document.createElement('table');
-  table.className = 'table';
+  table.className = 'table table-bordered';
   table.style.alignContent = 'center';
   const thead = document.createElement('thead');
   const tbody = document.createElement('tbody');
@@ -168,7 +168,7 @@ function displayContacts(contacts) {
   div.style.height = '60vh';
   div.style.scrollBehavior = 'smooth';
   const table = document.createElement('table');
-  table.className = 'table';
+  table.className = 'table table-bordered';
   table.style.width = '80%';
   table.style.margin = 'auto';
   const thead = document.createElement('thead');
