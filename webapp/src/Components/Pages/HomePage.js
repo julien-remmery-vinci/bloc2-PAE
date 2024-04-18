@@ -19,9 +19,6 @@ const HomePage = () => {
     }
 };
 
-/**
- * Render the student home page which contains buttons to access to the internship page or the contacts page
- */
 function studentHomePage() {
     const main = document.querySelector('main');
 
@@ -68,28 +65,51 @@ function studentHomePage() {
 
 }
 
+/**
+ * Function to display the teacher home page with buttons to see stats and students
+ */
 function teacherHomePage() {
     const main = document.querySelector('main');
-    main.innerHTML += `
-    <div class="search-container d-flex justify-content-between">
-    <div class="filter-container">
-        <h3>Filtres</h3>
-        <label>
-            <input type="checkbox" name="filter" value="etudiant">
-            Que les étudiants
-        </label>
-        <br>
-        <label>
-            Année académique
-            <select>
-                <option value="all">Toutes les années</option>
-            </select>
-        </label>
-    </div>
+    const title = document.createElement('h1');
+    title.innerText = "Bienvenue sur votre espace professeur";
+    title.className = "text-center";
+    main.appendChild(title);
 
-    <div class="search-bar">
-        <input class="form-control border-end-0 border rounded-pill" type="search" placeholder="Rechercher">
-    </div>`;
+    const stats = document.createElement('div');
+    stats.className = 'card';
+    stats.style.marginLeft = '700px';
+    stats.style.marginTop = '100px';
+    const text = document.createElement('div');
+    text.className = 'card-body';
+    text.textContent = 'Vous voulez consulter les statistiques ?';
+    stats.appendChild(text);
+    const button = document.createElement('button');
+    button.className = 'btn btn-primary';
+    button.textContent = 'Accéder aux statistiques';
+    stats.appendChild(button);
+    stats.style.width = '18rem';
+    main.appendChild(stats);
+    stats.addEventListener('click', () => {
+        Navigate('/dashboard');
+    });
+
+    const students = document.createElement('div');
+    students.className = 'card';
+    students.style.marginLeft = '700px';
+    students.style.marginTop = '100px';
+    const text2 = document.createElement('div');
+    text2.className = 'card-body';
+    text2.textContent = 'Vous voulez consulter les étudiants ?';
+    students.appendChild(text2);
+    const button2 = document.createElement('button');
+    button2.className = 'btn btn-primary';
+    button2.textContent = 'Accéder aux étudiants';
+    students.appendChild(button2);
+    students.style.width = '18rem';
+    main.appendChild(students);
+    students.addEventListener('click', () => {
+        Navigate('/student-info');
+    });
 }
 
 function adminHomePage() {
