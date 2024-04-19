@@ -174,4 +174,17 @@ public class UserUCCTest {
             "123456789"));
 
   }
+
+  @Test
+  @DisplayName("Test to get all students")
+  void getAllStudentsTest() {
+    assertNotNull(userUCC.getStudents());
+  }
+
+  @Test
+  @DisplayName("Test to get all students with an exception")
+    void getAllStudentsTestException() {
+        Mockito.when(userDAO.getStudents()).thenThrow(new RuntimeException());
+        assertThrows(RuntimeException.class, () -> userUCC.getStudents());
+    }
 }
