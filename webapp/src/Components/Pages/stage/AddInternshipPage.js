@@ -268,7 +268,7 @@ async function addInternship(internship) {
     if (response.status === 200) {
         Navigate('/stage');
     } else {
-        displayToast('Erreur lors de l\'ajout du stage', 'danger');
+        displayToast(await response.text(), 'danger');
     }
 }
 
