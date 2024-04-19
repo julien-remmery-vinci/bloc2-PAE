@@ -174,4 +174,32 @@ public class UserUCCTest {
             "123456789"));
 
   }
+
+  @Test
+  @DisplayName("Test to get all students")
+  void getAllStudentsTest() {
+    assertNotNull(userUCC.getStudents());
+  }
+
+  @Test
+  @DisplayName("Test to get all students with an exception")
+  void getAllStudentsTestException() {
+    Mockito.when(userDAO.getStudents()).thenThrow(new RuntimeException());
+    assertThrows(RuntimeException.class, () -> userUCC.getStudents());
+  }
+
+  @Test
+  @DisplayName("Test to modify the profile picture")
+  void modifyProfilePictureTest() {
+    Mockito.when(userDAO.updateUser(user)).thenReturn(user);
+    userUCC.modifyProfilePicture(user);
+  }
+
+  @Test
+  @DisplayName("Test to remove the profile picture")
+  void removeProfilePictureTest() {
+    user.setProfilePicture("test");
+    Mockito.when(userDAO.updateUser(user)).thenReturn(user);
+    userUCC.removeProfilePicture(user);
+  }
 }
