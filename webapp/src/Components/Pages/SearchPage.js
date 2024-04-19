@@ -180,17 +180,27 @@ function renderUsers() {
   users.forEach(u => {
     const tr = document.createElement('tr');
     const { user, accepted_contact: acceptedContact } = u;
+
+    let academicYearDisplay = "N/A";
+    let acceptedContactDisplay = "N/A";
+
+    if (user.role === 'étudiant') {
+      academicYearDisplay = user.academicYear;
+      acceptedContactDisplay = acceptedContact ? 'Oui' : 'Non';
+    }
+
     tr.innerHTML = `
       <td>${user.lastname}</td>
       <td>${user.firstname}</td>
       <td>${user.role}</td>
-      <td>${user.role === 'étudiant' ? user.academicYear : "N/A"}</td>
-      <td>${user.role === 'étudiant' ? acceptedContact ? 'Oui' : 'Non' : "N/A"}</td>
+      <td>${academicYearDisplay}</td>
+      <td>${acceptedContactDisplay}</td>
     `;
+    
     if(user.role === 'étudiant') {
       tr.classList.add('clickable-row');
       tr.addEventListener('click', () => {
-        Navigate(`/student-info?id=${user.idUser}`);
+        Navigate(`/student-info`, user);
       });
     }
     const selectElement = document.querySelector('select');

@@ -1,4 +1,4 @@
-import {clearPage, renderBreadcrumb} from "../../../utils/render";
+import {clearPage, displayToast, renderBreadcrumb} from "../../../utils/render";
 import {getToken, isAuthenticated} from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
@@ -74,10 +74,10 @@ async function saveInternship() {
   });
 
   if (response.status === 200) {
-    alert('Stage enregistré');
+    displayToast('Stage enregistré avec succès', 'success');
     Navigate('/stage');
   } else {
-    alert('Erreur lors de l\'enregistrement du stage');
+    displayToast('Erreur lors de l\'enregistrement du stage', 'danger');
   }
 }
 

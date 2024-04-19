@@ -4,13 +4,17 @@ import {clearPage, renderBreadcrumb} from "../../utils/render";
 import {getAuthenticatedUser, isAuthenticated} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
 
+let user;
+
 const HomePage = () => {
     if (!isAuthenticated()) {
         Navigate('/login');
     } else {
         clearPage();
         document.title = "Home";
-        renderBreadcrumb({"Accueil": "/"})
+        console.log(getAuthenticatedUser());
+        renderBreadcrumb({"Accueil": "/"});
+        user = getAuthenticatedUser();
         if (getAuthenticatedUser().role === 'étudiant') {
             studentHomePage();
         } else if (getAuthenticatedUser().role === 'professeur') {
@@ -25,14 +29,40 @@ function studentHomePage() {
     const main = document.querySelector('main');
 
     const title = document.createElement('h1');
-    title.innerText = "Bienvenue sur votre espace étudiant";
+    title.innerText = `Bienvenue sur votre espace étudiant, ${user.firstname} !`;
     title.className = "text-center";
     main.appendChild(title);
 
+    const diiv = document.createElement('div');
+    diiv.style.display = 'flex';
+    diiv.style.justifyContent = 'space-around';
+    diiv.style.marginTop = '5%';
+
+    const profile = document.createElement('div');
+    profile.className = 'card';
+    profile.style.marginTop = '5%';
+    profile.style.cursor = 'pointer';
+    profile.style.width = '15rem'
+    profile.style.width = 'auto';
+    profile.style.display = 'flex';
+    profile.style.alignItems = 'center';
+    profile.style.justifyContent = 'center';
+    profile.style.border = 'none';
+    const text3 = document.createElement('div');
+    text3.className = 'card-body';
+    profile.innerHTML += `<svg xmlns="http://www.w3.org/2000/svg" width="50" height="40" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/>
+</svg> `;
+    profile.innerHTML += 'Vous voulez consulter votre profil ? Cliquez ici !';
+    profile.appendChild(text3);
+    diiv.appendChild(profile);
+    profile.addEventListener('click', () => {
+        Navigate('/profile');
+    });
+
+    const div = document.createElement('div');
     const internship = document.createElement('div');
     internship.className = 'card';
-    internship.style.marginLeft = '700px';
-    internship.style.marginTop = '100px';
     const text = document.createElement('div');
     text.className = 'card-body';
     text.textContent = 'Vous voulez consulter votre stage ?';
@@ -42,15 +72,15 @@ function studentHomePage() {
     button.textContent = 'Accéder à votre stage';
     internship.appendChild(button);
     internship.style.width = '18rem';
-    main.appendChild(internship);
     internship.addEventListener('click', () => {
         Navigate('/stage');
     });
 
+    div.appendChild(internship);
+
     const contacts = document.createElement('div');
     contacts.className = 'card';
-    contacts.style.marginLeft = '700px';
-    contacts.style.marginTop = '100px';
+    contacts.style.marginTop = '10%';
     const text2 = document.createElement('div');
     text2.className = 'card-body';
     text2.textContent = 'Vous voulez consulter vos contacts ?';
@@ -65,6 +95,10 @@ function studentHomePage() {
         Navigate('/contact');
     });
 
+    div.appendChild(contacts);
+    diiv.appendChild(div);
+    main.appendChild(diiv);
+
 }
 
 /**
@@ -73,14 +107,42 @@ function studentHomePage() {
 function teacherHomePage() {
     const main = document.querySelector('main');
     const title = document.createElement('h1');
-    title.innerText = "Bienvenue sur votre espace professeur";
+    title.innerText = `Bienvenue sur votre espace professeur, ${user.firstname} !`;
     title.className = "text-center";
     main.appendChild(title);
 
+    const diiv = document.createElement('div');
+    diiv.style.display = 'flex';
+    diiv.style.justifyContent = 'space-around';
+    diiv.style.marginTop = '5%';
+
+    const profile = document.createElement('div');
+    profile.className = 'card';
+    profile.style.marginTop = '5%';
+    profile.style.cursor = 'pointer';
+    profile.style.width = '15rem'
+    profile.style.width = 'auto';
+    profile.style.display = 'flex';
+    profile.style.alignItems = 'center';
+    profile.style.justifyContent = 'center';
+    profile.style.border = 'none';
+    const text3 = document.createElement('div');
+    text3.className = 'card-body';
+    profile.innerHTML += `<svg xmlns="http://www.w3.org/2000/svg" width="50" height="40" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/>
+</svg> `;
+    profile.innerHTML += 'Vous voulez consulter votre profil ? Cliquez ici !';
+    profile.appendChild(text3);
+    diiv.appendChild(profile);
+    profile.addEventListener('click', () => {
+        Navigate('/profile');
+    });
+
+    const div = document.createElement('div');
+    div.style.display = 'flex-column';
+
     const stats = document.createElement('div');
     stats.className = 'card';
-    stats.style.marginLeft = '700px';
-    stats.style.marginTop = '100px';
     const text = document.createElement('div');
     text.className = 'card-body';
     text.textContent = 'Vous voulez consulter les statistiques ?';
@@ -90,28 +152,31 @@ function teacherHomePage() {
     button.textContent = 'Accéder aux statistiques';
     stats.appendChild(button);
     stats.style.width = '18rem';
-    main.appendChild(stats);
     stats.addEventListener('click', () => {
         Navigate('/dashboard');
     });
 
+    div.appendChild(stats);
+
     const students = document.createElement('div');
     students.className = 'card';
-    students.style.marginLeft = '700px';
-    students.style.marginTop = '100px';
+    students.style.marginTop = '10%';
     const text2 = document.createElement('div');
     text2.className = 'card-body';
     text2.textContent = 'Vous voulez consulter les étudiants ?';
     students.appendChild(text2);
     const button2 = document.createElement('button');
     button2.className = 'btn btn-primary';
-    button2.textContent = 'Accéder aux étudiants';
+    button2.textContent = 'Accéder aux utilisateurs';
     students.appendChild(button2);
     students.style.width = '18rem';
-    main.appendChild(students);
     students.addEventListener('click', () => {
         Navigate('/search');
     });
+
+    div.appendChild(students);
+    diiv.appendChild(div);
+    main.appendChild(diiv);
 }
 
 /**
@@ -120,27 +185,56 @@ function teacherHomePage() {
 function adminHomePage() {
     const main = document.querySelector('main');
     const title = document.createElement('h1');
-    title.innerText = "Bienvenue sur votre espace administratif";
+    title.innerText = `Bienvenue sur votre espace administratif, ${user.firstname} !`;
     title.className = "text-center";
     main.appendChild(title);
 
+    const diiv = document.createElement('div');
+    diiv.style.display = 'flex';
+    diiv.style.justifyContent = 'space-around';
+    diiv.style.marginTop = '5%';
+
+    const profile = document.createElement('div');
+    profile.className = 'card';
+    profile.style.marginTop = '7%';
+    profile.style.marginLeft = '5%';
+    profile.style.cursor = 'pointer';
+    profile.style.width = '15rem'
+    profile.style.width = 'auto';
+    profile.style.display = 'flex';
+    profile.style.alignItems = 'center';
+    profile.style.justifyContent = 'center';
+    profile.style.border = 'none';
+    const text3 = document.createElement('div');
+    text3.className = 'card-body';
+    profile.innerHTML += `<svg xmlns="http://www.w3.org/2000/svg" width="50" height="40" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/>
+</svg> `;
+    profile.innerHTML += 'Vous voulez consulter votre profil ? Cliquez ici !';
+    profile.appendChild(text3);
+    diiv.appendChild(profile);
+    profile.addEventListener('click', () => {
+        Navigate('/profile');
+    });
+
     const students = document.createElement('div');
     students.className = 'card';
-    students.style.marginLeft = '700px';
-    students.style.marginTop = '100px';
-    const text = document.createElement('div');
-    text.className = 'card-body';
-    text.textContent = 'Vous voulez consulter les utilisateurs ?';
-    students.appendChild(text);
-    const button = document.createElement('button');
-    button.className = 'btn btn-primary';
-    button.textContent = 'Accéder aux recherches';
-    students.appendChild(button);
+    students.style.marginTop = '5%';
+    const text2 = document.createElement('div');
+    text2.className = 'card-body';
+    text2.textContent = 'Vous voulez consulter les étudiants ?';
+    students.appendChild(text2);
+    const button2 = document.createElement('button');
+    button2.className = 'btn btn-primary';
+    button2.textContent = 'Accéder aux utilisateurs';
+    students.appendChild(button2);
     students.style.width = '18rem';
-    main.appendChild(students);
     students.addEventListener('click', () => {
         Navigate('/search');
     });
+
+    diiv.appendChild(students);
+    main.appendChild(diiv);
 }
 
 export default HomePage;

@@ -1,4 +1,4 @@
-import {clearPage, renderBreadcrumb} from "../../../utils/render";
+import {clearPage, renderBreadcrumb, displayToast} from "../../../utils/render";
 import {
     getToken,
     isAuthenticated
@@ -26,11 +26,6 @@ function buildPage() {
     const rightDiv = document.createElement('div');
     rightDiv.style.width = '50%';
     rightDiv.appendChild(getForm());
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'alert alert-danger';
-    errorDiv.hidden = true;
-    errorDiv.textContent = 'Erreur lors de la sauvegarde';
-    rightDiv.appendChild(errorDiv);
     mainDiv.appendChild(leftDiv);
     mainDiv.appendChild(rightDiv);
     main.appendChild(mainDiv);
@@ -144,7 +139,7 @@ async function onSubmit(event) {
         fetch(`http://localhost:3000/contacts/${queryParams.get('id')}/refuse`, options)
         .then(request => {
             if(request.status === 401) {
-                document.querySelector('.alert-danger').hidden = false;
+                displayToast('Vous n\'êtes pas autorisé à effectuer cette action', 'danger');
             } else {
                 Navigate('/contact');
             }

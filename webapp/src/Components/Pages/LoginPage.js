@@ -26,14 +26,17 @@ function renderLoginForm() {
   const username = document.createElement('input');
   username.type = 'text';
   username.id = 'username';
-  username.required = true;
   username.className = 'form-control mb-3';
+  const emailError = document.createElement('p');
+  emailError.id = 'emailError';
+  emailError.className = 'text-danger';
+  emailError.hidden = true;
   const titlePassword = document.createElement('h6');
   titlePassword.textContent = 'Mot de passe';
   const passwordDiv = document.createElement('div');
   const passwordHtml = `
     <div class="input-group">
-      <input id="password" type="password" class="form-control mb-3" name="password" required>
+      <input id="password" type="password" class="form-control mb-3" name="password">
       <button class="btn btn-outline-secondary mb-3" type="button" id="hidePassword">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash" viewBox="0 0 16 16">
           <path
@@ -48,6 +51,10 @@ function renderLoginForm() {
   `;
   passwordDiv.appendChild(titlePassword);
   passwordDiv.innerHTML += passwordHtml;
+  const passwordError = document.createElement('p');
+  passwordError.id = 'passwordError';
+  passwordError.className = 'text-danger';
+  passwordError.hidden = true;
   const submit = document.createElement('input');
   submit.value = 'Se connecter';
   submit.type = 'submit';
@@ -81,7 +88,9 @@ function renderLoginForm() {
 
   form.appendChild(titleEmail);
   form.appendChild(username);
+  form.appendChild(emailError);
   form.appendChild(passwordDiv);
+  form.appendChild(passwordError);
   form.appendChild(formCheckWrapper);
   form.appendChild(submit);
   main.appendChild(form);
@@ -111,68 +120,82 @@ async function onLogin(e) {
   const email = document.querySelector('#username').value;
   const password = document.querySelector('#password').value;
 
-  const options = {
-    method: 'POST',
-    body: JSON.stringify({
-      email,
-      password,
-    }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
-
-  // verify if email is valid
-  const emailRegex = /^[a-zA-Z0-9._%+-]+\.[a-zA-Z0-9._%+-]+@(vinci\.be|student\.vinci\.be)$/;
-  if (!emailRegex.test(email)) {
-    // clear the last error message
-    const form1 = document.querySelector('form');
-    const lastError = form1.querySelector('.text-danger');
-    if (lastError) {
-      form1.removeChild(lastError);
-    }
-    const erreur = document.createElement('p');
-    erreur.textContent = 'Email invalide';
-    erreur.className = 'text-danger';
-    const form = document.querySelector('form');
-    form.appendChild(erreur);
-    return;
-  }
-
-  const response = await fetch(`http://localhost:3000/auths/login`, options);
-
-  if (response.status === 401) {
-    // clear the last error message
-    const form1 = document.querySelector('form');
-    const lastError = form1.querySelector('.text-danger');
-    if (lastError) {
-      form1.removeChild(lastError);
-    }
-    const erreur = document.createElement('p');
-    erreur.textContent = 'Email ou mot de passe invalide';
-    erreur.className = 'text-danger';
-    const form = document.querySelector('form');
-    form.appendChild(erreur);
-    return;
-  }
-
-  if (!response.ok) throw new Error(`fetch error : ${response.status} : ${response.statusText} `);
-
-  // Get the authenticated user
-  const authenticatedUser = await response.json();
-
-  console.log('Authenticated user : ', authenticatedUser);
-
-  setToken(authenticatedUser.token);
-  setAuthenticatedUser(authenticatedUser.user);
-
-  // Navigate to the home page if the user is authenticated, otherwise navigate to the login page
-  if (authenticatedUser) {
-    Navbar();
-    Navigate('/');
+  const emailError = document.querySelector('#emailError');
+  const passwordError = document.querySelector('#passwordError');
+  if(email.length === 0) {
+    emailError.textContent = 'Email requis';
+    emailError.hidden = false;
   } else {
-    Navigate('/login');
+    emailError.hidden = true;
   }
-};
+  if(password.length === 0) {
+    passwordError.textContent = 'Mot de passe requis';
+    passwordError.hidden = false;
+  } else {
+    passwordError.hidden = true;
+  }
+  if(passwordError.hidden && emailError.hidden) {
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    // verify if email is valid
+    const emailRegex = /^[a-zA-Z0-9._%+-]+\.[a-zA-Z0-9._%+-]+@(vinci\.be|student\.vinci\.be)$/;
+    if (!emailRegex.test(email)) {
+      // clear the last error message
+      const form1 = document.querySelector('form');
+      const lastError = form1.querySelector('#error');
+      if (lastError) {
+        form1.removeChild(lastError);
+      }
+      emailError.textContent = 'Email invalide';
+      emailError.hidden = false;
+      return;
+    }
+
+    const response = await fetch(`http://localhost:3000/auths/login`, options);
+
+    if (response.status === 401) {
+      // clear the last error message
+      const form1 = document.querySelector('form');
+      const lastError = form1.querySelector('#error');
+      if (lastError) {
+        form1.removeChild(lastError);
+      }
+      const erreur = document.createElement('p');
+      erreur.id = 'error';
+      erreur.textContent = 'Email ou mot de passe invalide';
+      erreur.className = 'text-danger';
+      const form = document.querySelector('form');
+      form.appendChild(erreur);
+      return;
+    }
+
+    if (!response.ok) throw new Error(`fetch error : ${response.status} : ${response.statusText} `);
+
+    // Get the authenticated user
+    const authenticatedUser = await response.json();
+
+    console.log('Authenticated user : ', authenticatedUser);
+
+    setToken(authenticatedUser.token);
+    setAuthenticatedUser(authenticatedUser.user);
+
+    // Navigate to the home page if the user is authenticated, otherwise navigate to the login page
+    if (authenticatedUser) {
+      Navbar();
+      Navigate('/');
+    } else {
+      Navigate('/login');
+    }
+  }
+}
 
 export default LoginPage;
