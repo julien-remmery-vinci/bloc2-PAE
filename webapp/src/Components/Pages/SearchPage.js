@@ -200,7 +200,7 @@ function renderUsers() {
     if(user.role === 'étudiant') {
       tr.classList.add('clickable-row');
       tr.addEventListener('click', () => {
-        Navigate(`/student-info?id=${user.idUser}`);
+        Navigate(`/student-info`, user);
       });
     }
     const selectElement = document.querySelector('select');

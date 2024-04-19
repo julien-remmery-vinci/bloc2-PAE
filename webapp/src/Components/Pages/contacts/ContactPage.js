@@ -110,39 +110,41 @@ async function buildPage() {
     row.appendChild(refusalCell);
 
     // row unfollow
-    const notFollowCell = document.createElement('td');
-    const notFollowButton = document.createElement('button');
-    notFollowButton.classList.add('btn', 'btn-primary');
-    if (contact.state === 'non suivi') {
-      notFollowButton.textContent = 'Suivre';
-    } else {
-      notFollowButton.textContent = 'Ne plus suivre';
-    }
-    notFollowCell.appendChild(notFollowButton);
-    row.appendChild(notFollowCell);
+    if(contacts.find(c => c.state === 'accepté') === undefined) {
+      const notFollowCell = document.createElement('td');
+      const notFollowButton = document.createElement('button');
+      notFollowButton.classList.add('btn', 'btn-primary');
+      if (contact.state === 'non suivi') {
+        notFollowButton.textContent = 'Suivre';
+      } else {
+        notFollowButton.textContent = 'Ne plus suivre';
+      }
+      notFollowCell.appendChild(notFollowButton);
+      row.appendChild(notFollowCell);
 
-    notFollowButton.addEventListener('click', async () => {
-      console.log("enter_fetch", contact.idContact);
-      const response = await fetch(
-          `http://localhost:3000/contacts/${contact.idContact}/unfollow`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': getToken()
-            }
-          });
-      if (response.status === 200) {
-        const data = await response.json();
-        if (notFollowButton.textContent === 'Ne plus suivre' && contact.state
-            !== 'non suivi') {
-          notFollowButton.textContent = 'Suivre';
+      notFollowButton.addEventListener('click', async () => {
+        console.log("enter_fetch", contact.idContact);
+        const response = await fetch(
+            `http://localhost:3000/contacts/${contact.idContact}/unfollow`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': getToken()
+              }
+            });
+        if (response.status === 200) {
+          const data = await response.json();
+          if (notFollowButton.textContent === 'Ne plus suivre' && contact.state
+              !== 'non suivi') {
+            notFollowButton.textContent = 'Suivre';
+          }
+          stateCell.textContent = data.state;
         }
-        stateCell.textContent = data.state;
-      }
-      else {
-        alert(await response.text());
-      }
-    });
+        else {
+          alert(await response.text());
+        }
+      });
+    }
     tableBody.appendChild(row);
   });
   table.appendChild(tableBody);
@@ -153,6 +155,14 @@ async function buildPage() {
   addContactButton.style.marginLeft = '10%';
   addContactButton.style.marginBottom = '2%';
   addContactButton.style.width = '25%';
+  if(contacts.find(contact => contact.state === 'accepté') !== undefined) {
+    addContactButton.disabled = true;
+    addContactButton.innerHTML += `
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16">
+      <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2M5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1"/>
+    </svg>
+    `;
+  }
   addContactButton.addEventListener('click', () => {
     Navigate('/contact/add');
   });

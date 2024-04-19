@@ -27,10 +27,12 @@ function buildPage(data) {
   companyInfos.id = 'companyInfos';
   companyInfos.className = 'card';
   companyInfos.style.width = '40%';
+  companyInfos.style.border = '2px solid black';
   const blacklisted = document.createElement('div');
   blacklisted.id = 'blacklisted';
   blacklisted.className = 'card';
   blacklisted.style.width = '40%';
+  blacklisted.style.border = '2px solid black';
   infosDiv.appendChild(companyInfos);
   infosDiv.appendChild(blacklisted);
   const contactsDiv = document.createElement('div');
@@ -48,12 +50,17 @@ function displayCompanyInfos(company) {
   const companyDiv = document.getElementById('companyInfos');
   companyDiv.innerHTML = '';
 
-  const tradeName = document.createElement('h2');
+  const title = document.createElement('h3');
+  title.textContent = 'Informations de l\'entreprise';
+  title.style.textAlign = 'center';
+  companyDiv.appendChild(title);
+
+  const tradeName = document.createElement('h5');
   tradeName.textContent = company.tradeName;
   tradeName.style.textAlign = 'center';
   companyDiv.appendChild(tradeName);
 
-  const designation = document.createElement('h3');
+  const designation = document.createElement('h5');
   designation.textContent = company.designation;
   designation.style.textAlign = 'center';
   companyDiv.appendChild(designation);
@@ -81,7 +88,7 @@ function displayCompanyInfos(company) {
   const blacklistedDiv = document.getElementById('blacklisted');
   blacklistedDiv.innerHTML = '';
   if(company.blacklisted) {
-    const h2 = document.createElement('h2');
+    const h2 = document.createElement('h3');
     h2.textContent = 'Entreprise black-listée';
     h2.style.textAlign = 'center';
     blacklistedDiv.appendChild(h2);
@@ -90,7 +97,7 @@ function displayCompanyInfos(company) {
     reason.style.textAlign = 'center';
     blacklistedDiv.appendChild(reason);
   } else {
-    const h2 = document.createElement('h2');
+    const h2 = document.createElement('h3');
     h2.textContent = 'Black-lister cette entreprise';
     h2.style.textAlign = 'center';
     blacklistedDiv.appendChild(h2);
@@ -119,17 +126,17 @@ function displayCompanyInfos(company) {
     saveButton.id = 'saveButton';
     saveButton.textContent = 'Sauvegarder';
     saveButton.style.margin = 'auto';
+    saveButton.style.marginLeft = '15%'
     saveButton.hidden = true;
 
     const cancelButton = document.createElement('button');
-    cancelButton.className = 'btn btn-secondary';
+    cancelButton.className = 'btn btn-secondary ms-2';
     cancelButton.textContent = 'Annuler';
     cancelButton.style.margin = 'auto';
     cancelButton.id = 'cancelButton';
     cancelButton.hidden = true;
 
     const buttonDiv = document.createElement('div');
-    buttonDiv.style.display = 'flex';
     buttonDiv.style.marginTop = '10px';
     buttonDiv.style.marginBottom = '10px';
     blacklistedDiv.appendChild(buttonDiv);
