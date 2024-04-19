@@ -183,8 +183,15 @@ public class UserUCCTest {
 
   @Test
   @DisplayName("Test to get all students with an exception")
-    void getAllStudentsTestException() {
-        Mockito.when(userDAO.getStudents()).thenThrow(new RuntimeException());
-        assertThrows(RuntimeException.class, () -> userUCC.getStudents());
-    }
+  void getAllStudentsTestException() {
+    Mockito.when(userDAO.getStudents()).thenThrow(new RuntimeException());
+    assertThrows(RuntimeException.class, () -> userUCC.getStudents());
+  }
+
+  @Test
+  @DisplayName("Test to modify the profile picture")
+  void modifyProfilePictureTest() {
+    Mockito.when(userDAO.updateUser(user)).thenReturn(user);
+    userUCC.modifyProfilePicture(user);
+  }
 }
