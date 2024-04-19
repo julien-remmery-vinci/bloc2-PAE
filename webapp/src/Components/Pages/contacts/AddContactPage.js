@@ -4,6 +4,8 @@ import {
 } from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
+let companyList = [];
+
 const AddContactPage = async () => {
   if (!isAuthenticated()) {
     Navigate('/login');
@@ -16,7 +18,7 @@ const AddContactPage = async () => {
 }
 
 async function buildPage() {
-  const companyList = await getCompanies();
+  companyList = await getCompanies();
   const main = document.querySelector('main');
   const containerDiv = document.createElement('div');
   containerDiv.className = 'container';
@@ -53,6 +55,7 @@ async function buildPage() {
     const option = document.createElement('option');
     option.value = name;
     option.text = name;
+    option.style.color = companyList.find(c => c.tradeName === name).blacklisted ? 'red' : 'black';
     companies.appendChild(option);
   });
 
@@ -83,6 +86,11 @@ async function buildPage() {
 
     const selectedCompany = companyList.find(
         (c) => c.tradeName === e.target.value);
+    if(selectedCompany.blacklisted) {
+      alert.hidden = false;
+      alert.textContent = 'Cette entreprise est blacklistée';
+      return;
+    }
 
     if (e.target.value === 'default') {
       const defaultOptionDesignation = document.createElement('option');
@@ -110,7 +118,7 @@ async function buildPage() {
   alert.id = 'alert';
   alert.className = 'alert alert-danger';
   alert.style.marginLeft = '15%';
-  alert.style.width = '40%';
+  alert.style.width = '50%';
   alert.hidden = true;
   colDiv1.appendChild(alert);
 
@@ -285,19 +293,24 @@ async function onSubmit(e) {
   const company = document.querySelector('select').value;
   const designation = document.querySelectorAll('select')[1].value;
   const alert = document.querySelector('#alert');
+  if(companyList.find(c => c.tradeName === company).blacklisted) {
+    alert.hidden = false;
+    alert.textContent = 'Cette entreprise est blacklistée';
+    return;
+  }
   if (company === 'default' || designation === 'default') {
     alert.hidden = false;
     alert.textContent = 'Veuillez sélectionner une entreprise et une appellation';
     return;
   }
   // trying to get the company id
-  const companyList = await getCompanies();
+  const companies = await getCompanies();
   let companyFound = 0;
   if (designation === 'Aucune appellation') {
-    companyFound = companyList.find(
+    companyFound = companies.find(
         (c) => c.tradeName === company && c.designation === null);
   } else {
-    companyFound = companyList.find(
+    companyFound = companies.find(
         (c) => c.tradeName === company && c.designation === designation);
   }
 

@@ -4,6 +4,7 @@ import {
 } from '../../../utils/auths';
 import {
   clearPage,
+  displayToast,
   renderBreadcrumb,
   renderPageTitle
 } from '../../../utils/render';
@@ -74,8 +75,7 @@ async function submitFunc (event) {
     if (response.status === 200) {
       Navigate('/contact');
     } else {
-      const error = await response.json();
-      console.error(error);
+      displayToast('Erreur lors de la rencontre du contact', 'danger');
     }
   } catch (error) {
     console.error(error);

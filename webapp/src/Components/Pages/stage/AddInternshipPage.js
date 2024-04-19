@@ -1,4 +1,4 @@
-import {clearPage} from "../../../utils/render";
+import {clearPage, displayToast} from "../../../utils/render";
 import {isAuthenticated, getToken} from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
@@ -27,12 +27,6 @@ async function renderInternshipPage() {
     rightDiv.style.width = '50%';
     rightDiv.appendChild(await getSupervisorInfos());
     rightDiv.appendChild(addNewSupervisor());
-    const alert = document.createElement('p');
-    alert.id = 'alert';
-    alert.className = 'alert alert-danger';
-    alert.style.width = '40%';  
-    alert.hidden = true;
-    rightDiv.appendChild(alert);
     const date = document.createElement('label');
     date.textContent = 'Date de signature';
     date.style.marginTop = '5%';
@@ -216,12 +210,6 @@ function addNewSupervisorForm() {
     submitButton.className = 'btn btn-primary';
     submitButton.style.width = '50%';
     submitButton.style.marginTop = '5%';
-    const alert = document.createElement('p');
-    alert.id = 'alert';
-    alert.className = 'alert alert-danger';
-    alert.style.width = '40%';  
-    alert.hidden = true;
-    form.appendChild(alert);
 
     submitButton.addEventListener('click', (e) => {
         e.preventDefault();
@@ -254,10 +242,7 @@ async function addSupervisor(supervisor) {
     if (response.status === 200) {
         InternshipPage();
     } else {
-        const alert = document.querySelector('#alert');
-        alert.hidden = false;
-        alert.textContent = await response.text();
-
+        displayToast('Erreur lors de l\'ajout du responsable de stage', 'danger');
     }
 }
 
@@ -273,9 +258,7 @@ async function addInternship(internship) {
     if (response.status === 200) {
         Navigate('/stage');
     } else {
-        const alert = document.querySelector('#alert');
-        alert.hidden = false;
-        alert.textContent = await response.text();
+        displayToast('Erreur lors de l\'ajout du stage', 'danger');
     }
 }
 

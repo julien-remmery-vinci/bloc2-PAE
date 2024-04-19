@@ -59,6 +59,7 @@ public class InternshipUCCImpl implements InternshipUCC {
     }
   }
 
+  //Tester la méthode getInternshipById
   @Override
   public InternshipDTO getInternshipById(int id) {
     try {

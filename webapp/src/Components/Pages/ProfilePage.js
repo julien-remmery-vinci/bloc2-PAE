@@ -1,4 +1,4 @@
-import {clearPage, renderBreadcrumb} from "../../utils/render";
+import {clearPage, renderBreadcrumb, displayToast} from "../../utils/render";
 import {getAuthenticatedUser, isAuthenticated, getToken, setAuthenticatedUser} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
 import defaultImage from "../../img/default-user-image.png";
@@ -39,7 +39,8 @@ function renderPictureInfos() {
   const user = getAuthenticatedUser();
 
   const img = document.createElement('img');
-  img.src = user.profilePicture ? `data:image/png;base64, ${user.profilePicture}` : `${defaultImage}`;
+  img.src = user.profilePicture
+      ? `data:image/png;base64, ${user.profilePicture}` : `${defaultImage}`;
   img.alt = 'image de profil';
   img.id = 'profilePic';
   img.className = 'img-thumbnail';
@@ -69,7 +70,7 @@ function renderPictureInfos() {
     img.style.opacity = '1';
   });
   img.addEventListener('click', () => {
-    if(!document.querySelector('#profilePicInput')) {
+    if (!document.querySelector('#profilePicInput')) {
       const options = document.createElement('div');
       options.id = 'options';
       options.className = 'btn-group';
@@ -81,6 +82,7 @@ function renderPictureInfos() {
     }
   });
 }
+
 function displayImageInput() {
   const div = document.querySelector('#leftDiv');
   const options = document.querySelector('#options')
@@ -99,7 +101,7 @@ function displayImageInput() {
 
   const img = document.querySelector('#profilePic');
 
-  imageInput.addEventListener('input',(event) => {
+  imageInput.addEventListener('input', (event) => {
     const {target} = event
     if (target.files && target.files[0]) {
       // TODO set max size in pixels
@@ -147,14 +149,16 @@ function displayImageInput() {
     div.removeChild(cancelButton);
     div.style.width = '200px';
     const user = getAuthenticatedUser();
-    img.src = user.profilePicture ? `data:image/png;base64, ${user.profilePicture}` : `${defaultImage}`;;
+    img.src = user.profilePicture
+        ? `data:image/png;base64, ${user.profilePicture}` : `${defaultImage}`;
+    ;
   });
 }
 
 async function modifyProfilePicture() {
   console.log('modify pic')
   const file = document.querySelector('#profilePicInput').files[0];
-  if(!file) {
+  if (!file) {
     const error = document.querySelector('#imageInputError');
     error.hidden = false;
     error.textContent = 'Veuillez sélectionner une image';
@@ -170,7 +174,7 @@ async function modifyProfilePicture() {
     body: formData
   });
   if(response.status !== 200) {
-    // TODO
+    displayToast('Erreur lors de la modification de l\'image', 'danger')
   } else {
     const data = await response.json();
     setAuthenticatedUser(data);
@@ -187,14 +191,13 @@ async function removeProfilePicture() {
     }
   });
   if(response.status !== 200) {
-    // TODO
+    displayToast('Erreur lors de la suppression de l\'image', 'danger')
   } else {
     const data = await response.json();
     setAuthenticatedUser(data);
     renderPictureInfos();
   }
 }
-
 
 function renderProfilPage() {
   const rightDiv = document.querySelector('#rightDiv');
@@ -237,6 +240,7 @@ function renderProfilPage() {
   const changePasswordButton = document.createElement('button');
   changePasswordButton.textContent = 'Modifier mot de passe';
   changePasswordButton.className = 'btn btn-primary';
+  changePasswordButton.id = 'changePasswordButton';
   form.appendChild(changePasswordButton);
   rightDiv.appendChild(form);
 
@@ -245,6 +249,7 @@ function renderProfilPage() {
 
     changePasswordButton.style.display = 'none';
     const passwordDiv = document.createElement('div');
+    passwordDiv.id = 'passwordDiv';
     document.querySelector('#mainDiv').appendChild(passwordDiv);
     const passwordLabel = document.createElement('label');
     passwordLabel.textContent = 'Modification du mot de passe';
@@ -293,6 +298,7 @@ function renderProfilPage() {
     const submitButton = document.createElement('button');
     submitButton.textContent = 'Sauver';
     submitButton.className = 'btn btn-primary';
+    submitButton.id = 'submitPassword';
     submitButton.addEventListener('click', onSavePassword);
     passwordDiv.appendChild(submitButton);
 
@@ -300,16 +306,10 @@ function renderProfilPage() {
     cancelButton.textContent = 'Annuler';
     cancelButton.className = 'btn btn-secondary ms-2';
     cancelButton.addEventListener('click', () => {
-      passwordDiv.remove();  // Supprime le formulaire de modification de mot de passe
-      changePasswordButton.style.display = 'block';  // Affiche à nouveau le bouton "Modifier mot de passe"
+      passwordDiv.remove();
+      changePasswordButton.style.display = 'block';
     });
     passwordDiv.appendChild(cancelButton);
-
-    const error = document.createElement('div');
-    error.id = 'error';
-    error.style.color = 'red';
-    error.hidden = true;
-    passwordDiv.appendChild(error);
   });
 
 }
@@ -339,18 +339,19 @@ async function onSaveProfile(e) {
   const response = await fetch('http://localhost:3000/users/update', options);
 
   if (response.status !== 200) {
-    const error = document.querySelector('#error');
-    error.textContent = 'Erreur lors de la modification du profil';
-    error.hidden = false;
+    displayToast('Erreur lors de la modification des informations', 'danger');
   }
+
+  const sauver = document.querySelector('#sauver');
+  sauver.style.display = 'none';
 }
 
 async function onSavePassword(e) {
   e.preventDefault();
-  const oldPassword = document.querySelector('#oldPasswordField').value;
-  const newPassword = document.querySelector('#passwordField').value;
+  const oldPassword = document.querySelector('#oldPassword').value;
+  const newPassword = document.querySelector('#newPassword').value;
   const confirmationPassword = document.querySelector(
-      '#confirmPasswordField').value;
+      '#confirmPassword').value;
 
   const options = {
     method: 'POST',
@@ -369,17 +370,16 @@ async function onSavePassword(e) {
       options);
 
   if (response.status !== 204) {
-    const error = document.querySelector('#error');
-    error.textContent = 'Erreur lors du changement de mot de passe';
-    error.hidden = false;
+    displayToast('Erreur lors de la modification du mot de passe', 'danger');
   }
   if (response.status === 204) {
-    const popup = document.querySelector('#popup');
-    popup.textContent = 'Mot de passe modifié avec succès';
-    popup.style.display = 'block';
-    setTimeout(() => {
-      popup.style.display = 'none';
-    }, 10000);
+    displayToast('Mot de passe modifié avec succès', 'success');
+    const passwordDiv = document.querySelector('#passwordDiv');
+    passwordDiv.style.display = 'none';
+    // Show the change password button
+    const changePasswordButton = document.querySelector(
+        '#changePasswordButton');
+    changePasswordButton.style.display = 'block';
   }
 }
 

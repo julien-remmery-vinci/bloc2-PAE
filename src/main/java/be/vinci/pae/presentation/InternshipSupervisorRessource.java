@@ -71,4 +71,15 @@ public class InternshipSupervisorRessource {
     return internshipSupervisorUCC.addInternshipSupervisor(internshipSupervisor);
   }
 
+  /**
+   * Get all supervisors.
+   *
+   * @return the list of all supervisors
+   */
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(roles = {Role.ADMIN, Role.TEACHER})
+  public List<InternshipSupervisorDTO> getAllSupervisors() {
+    return internshipSupervisorUCC.getAllSupervisors();
+  }
 }

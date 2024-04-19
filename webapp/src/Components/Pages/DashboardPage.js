@@ -215,7 +215,7 @@ function renderCompanies() {
   div.innerHTML = '';
 
   const table = document.createElement('table');
-  table.className = 'table';
+  table.className = 'table table-bordered table-hover';
   table.style.width = '80%';
   table.style.maxHeight = '40vh';
 
