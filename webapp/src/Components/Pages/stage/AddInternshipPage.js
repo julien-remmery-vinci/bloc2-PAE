@@ -208,8 +208,9 @@ function addNewSupervisorForm() {
     const submitButton = document.createElement('button');
     submitButton.textContent = 'Enregistrer';
     submitButton.className = 'btn btn-primary';
-    submitButton.style.width = '50%';
+    submitButton.style.width = '45%';
     submitButton.style.marginTop = '5%';
+    submitButton.style.marginRight = '5%';
 
     submitButton.addEventListener('click', (e) => {
         e.preventDefault();
@@ -227,6 +228,15 @@ function addNewSupervisorForm() {
         addSupervisor(supervisor);
     });
     form.appendChild(submitButton);
+    const cancelButton = document.createElement('button');
+    cancelButton.textContent = 'Annuler';
+    cancelButton.className = 'btn btn-secondary';
+    cancelButton.style.width = '45%';
+    cancelButton.style.marginTop = '5%';
+    cancelButton.addEventListener('click', () => {
+        leftDiv.removeChild(form);
+    });
+    form.appendChild(cancelButton);
     leftDiv.appendChild(form);
 }
 
