@@ -59,7 +59,7 @@ function renderSearchPage() {
         <div class="input-group-prepend">
           <span class="input-group-text" id="basic-addon1">Rechercher</span>
         </div>
-        <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" id="search">
+        <input type="text" class="form-control" placeholder="Nom Prenom" aria-label="Username" aria-describedby="basic-addon1" id="search">
       </div>
     </div>
     <div class="d-flex overflow-auto" style="max-height: 70vh">
