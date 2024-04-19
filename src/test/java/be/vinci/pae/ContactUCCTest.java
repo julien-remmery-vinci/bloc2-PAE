@@ -337,6 +337,14 @@ public class ContactUCCTest {
         () -> assertEquals(State.ON_HOLD, anotherContact.getState())
     );
   }
+
+  @Test
+  @DisplayName("Test to get all contacts")
+  void testGetAllContacts() {
+    List<ContactDTO> contacts = new ArrayList<>();
+    Mockito.when(contactDAO.getAllContacts()).thenReturn(contacts);
+    assertNotNull(contactUCC.getAllContacts());
+  }
 }
 
 
