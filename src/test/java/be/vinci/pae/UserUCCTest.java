@@ -194,4 +194,12 @@ public class UserUCCTest {
     Mockito.when(userDAO.updateUser(user)).thenReturn(user);
     userUCC.modifyProfilePicture(user);
   }
+
+  @Test
+  @DisplayName("Test to remove the profile picture")
+  void removeProfilePictureTest() {
+    user.setProfilePicture("test");
+    Mockito.when(userDAO.updateUser(user)).thenReturn(user);
+    userUCC.removeProfilePicture(user);
+  }
 }
