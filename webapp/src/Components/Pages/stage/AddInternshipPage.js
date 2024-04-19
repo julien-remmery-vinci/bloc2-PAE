@@ -21,6 +21,7 @@ async function renderInternshipPage() {
     const mainDiv = document.createElement('div');
     mainDiv.style.display = 'flex';
     const leftDiv = document.createElement('div');
+    leftDiv.id = 'leftDiv';
     leftDiv.style.width = '50%';
     leftDiv.appendChild(getInternshipInfos());
     const rightDiv = document.createElement('div');
@@ -69,7 +70,6 @@ async function renderInternshipPage() {
             idInternshipSupervisor: document.querySelector('select').value,
             signatureDate: dateInput.value,
         };
-        console.log(internship);
         addInternship(internship);
     });
     rightDiv.appendChild(submitButton);
@@ -170,7 +170,7 @@ function addNewSupervisor() {
 }
 
 function addNewSupervisorForm() {
-    const main = document.querySelector('main');
+    const leftDiv = document.querySelector('#leftDiv');
     const form = document.createElement('form');
     form.className = 'p-5';
     form.id = 'addSupervisorForm';
@@ -227,7 +227,7 @@ function addNewSupervisorForm() {
         addSupervisor(supervisor);
     });
     form.appendChild(submitButton);
-    main.appendChild(form);
+    leftDiv.appendChild(form);
 }
 
 async function addSupervisor(supervisor) {
