@@ -72,7 +72,7 @@ async function renderNavbar() {
                         <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/profile">Profil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/search">Recherche</a>
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/search">Recherches</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/intership-supervisor">Responsables</a>
@@ -102,7 +102,7 @@ async function renderNavbar() {
                         <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/profile">Profil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/search">Recherche</a>
+                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/search">Recherches</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/logout">Déconnexion</a>
