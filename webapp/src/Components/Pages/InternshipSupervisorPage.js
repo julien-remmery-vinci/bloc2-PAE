@@ -21,7 +21,7 @@ async function renderInternshipSupervisorPage() {
 
   // Create table
   const table = document.createElement('table');
-  table.className = 'table';
+  table.className = 'table table-bordered';
 
   // Create table body
   const tbody = document.createElement('tbody');
