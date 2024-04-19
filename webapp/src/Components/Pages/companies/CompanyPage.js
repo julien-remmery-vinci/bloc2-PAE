@@ -27,10 +27,12 @@ function buildPage(data) {
   companyInfos.id = 'companyInfos';
   companyInfos.className = 'card';
   companyInfos.style.width = '40%';
+  companyInfos.style.border = '2px solid black';
   const blacklisted = document.createElement('div');
   blacklisted.id = 'blacklisted';
   blacklisted.className = 'card';
   blacklisted.style.width = '40%';
+  blacklisted.style.border = '2px solid black';
   infosDiv.appendChild(companyInfos);
   infosDiv.appendChild(blacklisted);
   const contactsDiv = document.createElement('div');
@@ -119,17 +121,17 @@ function displayCompanyInfos(company) {
     saveButton.id = 'saveButton';
     saveButton.textContent = 'Sauvegarder';
     saveButton.style.margin = 'auto';
+    saveButton.style.marginLeft = '15%'
     saveButton.hidden = true;
 
     const cancelButton = document.createElement('button');
-    cancelButton.className = 'btn btn-secondary';
+    cancelButton.className = 'btn btn-secondary ms-2';
     cancelButton.textContent = 'Annuler';
     cancelButton.style.margin = 'auto';
     cancelButton.id = 'cancelButton';
     cancelButton.hidden = true;
 
     const buttonDiv = document.createElement('div');
-    buttonDiv.style.display = 'flex';
     buttonDiv.style.marginTop = '10px';
     buttonDiv.style.marginBottom = '10px';
     blacklistedDiv.appendChild(buttonDiv);

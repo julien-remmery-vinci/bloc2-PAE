@@ -44,6 +44,7 @@ async function buildPage() {
   companies.className = 'form-control';
   companies.style.width = '50%';
   companies.style.marginLeft = '15%';
+  companies.id = 'companySelect';
 
   const defaultOption = document.createElement('option');
   defaultOption.text = 'Choisissez votre entreprise';
@@ -139,6 +140,7 @@ async function buildPage() {
   const createCompanyButton = document.createElement('button');
   createCompanyButton.textContent = 'Ajouter une entreprise non répertoriée';
   createCompanyButton.className = 'btn btn-secondary';
+  createCompanyButton.id = 'createCompanyButton';
   colDiv2.style.marginBottom = '50%';
   colDiv2.appendChild(createCompanyButton);
   rowDiv.appendChild(colDiv2);
@@ -281,7 +283,27 @@ async function createSubmit(e) {
   };
   const response = await fetch('http://localhost:3000/companies', options);
   if (response.status === 200) {
-      Navigate('/contact');
+    const option = document.createElement('option');
+    option.value = tradeName;
+    option.text = tradeName;
+    document.querySelector('#companySelect').appendChild(option);
+    document.querySelector('#companySelect').value = tradeName;
+
+    const optionDesignation = document.createElement('option');
+    if(designation !== null) {
+      optionDesignation.value = designation;
+      optionDesignation.text = designation;
+      document.querySelector('#designation').value = designation;
+    } else {
+      optionDesignation.value = 'Aucune appellation';
+      optionDesignation.text = 'Aucune appellation';
+      document.querySelector('#designation').value = 'Aucune appellation';
+    }
+    document.querySelector('#designation').appendChild(optionDesignation);
+    document.querySelector('form').remove();
+    document.querySelector('#createCompanyButton').hidden = !document.querySelector('#createCompanyButton').hidden;
+    alert.hidden = true;
+    companyList.push(await response.json());
   } else {
     alert.hidden = false;
     alert.textContent = await response.text();
@@ -307,12 +329,18 @@ async function onSubmit(e) {
   const companies = await getCompanies();
   let companyFound = 0;
   if (designation === 'Aucune appellation') {
+    console.log('Aucune appellation')
     companyFound = companies.find(
         (c) => c.tradeName === company && c.designation === null);
   } else {
+    console.log('Appellation')
     companyFound = companies.find(
         (c) => c.tradeName === company && c.designation === designation);
   }
+  console.log(company)
+  console.log(designation)
+  console.log(companies)
+  console.log(companyFound)
 
   const options = {
     method: 'POST', body: JSON.stringify({
