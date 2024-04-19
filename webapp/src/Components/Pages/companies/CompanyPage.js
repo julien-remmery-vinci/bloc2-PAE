@@ -48,12 +48,17 @@ function displayCompanyInfos(company) {
   const companyDiv = document.getElementById('companyInfos');
   companyDiv.innerHTML = '';
 
-  const tradeName = document.createElement('h2');
+  const title = document.createElement('h3');
+  title.textContent = 'Informations de l\'entreprise';
+  title.style.textAlign = 'center';
+  companyDiv.appendChild(title);
+
+  const tradeName = document.createElement('h5');
   tradeName.textContent = company.tradeName;
   tradeName.style.textAlign = 'center';
   companyDiv.appendChild(tradeName);
 
-  const designation = document.createElement('h3');
+  const designation = document.createElement('h5');
   designation.textContent = company.designation;
   designation.style.textAlign = 'center';
   companyDiv.appendChild(designation);
@@ -81,7 +86,7 @@ function displayCompanyInfos(company) {
   const blacklistedDiv = document.getElementById('blacklisted');
   blacklistedDiv.innerHTML = '';
   if(company.blacklisted) {
-    const h2 = document.createElement('h2');
+    const h2 = document.createElement('h3');
     h2.textContent = 'Entreprise black-listée';
     h2.style.textAlign = 'center';
     blacklistedDiv.appendChild(h2);
@@ -90,7 +95,7 @@ function displayCompanyInfos(company) {
     reason.style.textAlign = 'center';
     blacklistedDiv.appendChild(reason);
   } else {
-    const h2 = document.createElement('h2');
+    const h2 = document.createElement('h3');
     h2.textContent = 'Black-lister cette entreprise';
     h2.style.textAlign = 'center';
     blacklistedDiv.appendChild(h2);
