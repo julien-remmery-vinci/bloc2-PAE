@@ -1,4 +1,4 @@
-import {clearPage, renderBreadcrumb} from "../../../utils/render";
+import {clearPage, displayToast, renderBreadcrumb} from "../../../utils/render";
 import {
   getToken,
   isAuthenticated
@@ -141,7 +141,7 @@ async function buildPage() {
           stateCell.textContent = data.state;
         }
         else {
-          alert(await response.text());
+          displayToast('Erreur lors de la modification du contact', 'danger');
         }
       });
     }

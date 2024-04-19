@@ -1,4 +1,4 @@
-import { clearPage, renderPageTitle } from '../../utils/render';
+import {clearPage, displayToast, renderPageTitle} from '../../utils/render';
 import Navigate from '../Router/Navigate';
 import {isAuthenticated, setAuthenticatedUser, setToken} from "../../utils/auths";
 import Navbar from "../Navbar/Navbar";
@@ -248,20 +248,26 @@ async function onRegister(e) {
         options);
 
     if (response.status !== 200) {
-      const error = document.querySelector('#error');
-      error.textContent = 'Erreur lors de l\'inscription';
-      error.hidden = false;
-      return;
+      if (response.status === 409) {
+        displayToast('Cet email est déjà utilisé', 'danger');
+        return;
+      }
+      if (response.status === 400) {
+        displayToast('Cet email n\'est pas valide', 'danger');
+        return;
+      }
+      displayToast('Erreur lors de l\'inscription', 'danger');
+    } else {
+      const authenticatedUser = await response.json();
+      setToken(authenticatedUser.token);
+      setAuthenticatedUser(authenticatedUser.user);
+
+      console.log('Newly registered & authenticated user : ', authenticatedUser);
+
+      Navbar();
+      Navigate('/');
     }
 
-    const authenticatedUser = await response.json();
-    setToken(authenticatedUser.token);
-    setAuthenticatedUser(authenticatedUser.user);
-
-    console.log('Newly registered & authenticated user : ', authenticatedUser);
-
-    Navbar();
-    Navigate('/');
   }
 }
 
