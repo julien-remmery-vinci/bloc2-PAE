@@ -37,7 +37,7 @@ function renderSearchPage() {
   const main = document.querySelector('main');
   main.innerHTML += `
     <div class="search-container justify-content-around d-flex">
-      <div class="input-group mb-3" style="width: 350px">
+      <div class="input-group mb-3" style="width: 25%">
         <div class="input-group-prepend">
           <label class="input-group-text" for="inputGroupSelect01">Année académique</label>
         </div>
@@ -46,7 +46,7 @@ function renderSearchPage() {
         </select>
       </div>
       
-      <div class="input-group mb-3" style="width: 200px" hidden="hidden" id="checkboxDiv">
+      <div class="input-group mb-3" style="width: 15%" hidden="hidden" id="checkboxDiv">
         <div class="input-group-prepend">
           <span class="input-group-text" id="basic-addon1">Que les étudiants</span>
         </div>
@@ -55,11 +55,11 @@ function renderSearchPage() {
         </div>
       </div>
       
-      <div class="input-group mb-3" style="width: 500px">
+      <div class="input-group mb-3" style="width: 30%">
         <div class="input-group-prepend">
           <span class="input-group-text" id="basic-addon1">Rechercher</span>
         </div>
-        <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" id="search">
+        <input type="text" class="form-control" placeholder="Nom Prenom" aria-label="Username" aria-describedby="basic-addon1" id="search">
       </div>
     </div>
     <div class="d-flex overflow-auto" style="max-height: 70vh">

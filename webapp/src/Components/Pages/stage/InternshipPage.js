@@ -31,17 +31,13 @@ async function renderInternshipPage() {
     <p>Vous n'avez pas encore de stage pour cette année</p>
     `;
   } else {
-    let subjectValue = stage.internshipProject;
-    let subjectClass = "";
-    if (!subjectValue) {
-      subjectValue = "Entrez le sujet de votre stage ici...";
-      subjectClass = "grey-text"
-    }
+    const subjectValue = stage.internshipProject ? stage.internshipProject : '';
+    const placeholderText = stage.internshipProject ? '' : 'Entrez le sujet de votre stage ici...';
     stageSection.innerHTML = `
     <h2>Mon stage</h2>
-     <form class="p-5 w-150 bg-light rounded shadow col-md-8" style="max-width: 80%;">
+     <form class="p-5 w-150 bg-light rounded shadow col-md-8" style="max-width: 70%;">
       <label for="subject" class="fw-bold mb-1">Sujet du stage:</label><br>
-      <textarea id="subject" name="subject" class="form-control mb-3 ${subjectClass}" rows="2">${subjectValue}</textarea><br>
+      <textarea id="subject" name="subject" class="form-control mb-3" rows="2" placeholder="${placeholderText}">${subjectValue}</textarea><br>
       <label for="date" class="fw-bold mb-1">Date de signature:</label><br>
       <input type="date" id="date" name="date" value="${stage.signatureDate}" class="form-control mb-3" readonly >
       <label for="supervisor" class="fw-bold mb-1">Responsable</label><br>

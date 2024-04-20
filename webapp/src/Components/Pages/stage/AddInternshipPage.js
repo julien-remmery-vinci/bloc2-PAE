@@ -21,6 +21,7 @@ async function renderInternshipPage() {
     const mainDiv = document.createElement('div');
     mainDiv.style.display = 'flex';
     const leftDiv = document.createElement('div');
+    leftDiv.id = 'leftDiv';
     leftDiv.style.width = '50%';
     leftDiv.appendChild(getInternshipInfos());
     const rightDiv = document.createElement('div');
@@ -69,7 +70,6 @@ async function renderInternshipPage() {
             idInternshipSupervisor: document.querySelector('select').value,
             signatureDate: dateInput.value,
         };
-        console.log(internship);
         addInternship(internship);
     });
     rightDiv.appendChild(submitButton);
@@ -170,7 +170,7 @@ function addNewSupervisor() {
 }
 
 function addNewSupervisorForm() {
-    const main = document.querySelector('main');
+    const leftDiv = document.querySelector('#leftDiv');
     const form = document.createElement('form');
     form.className = 'p-5';
     form.id = 'addSupervisorForm';
@@ -208,8 +208,9 @@ function addNewSupervisorForm() {
     const submitButton = document.createElement('button');
     submitButton.textContent = 'Enregistrer';
     submitButton.className = 'btn btn-primary';
-    submitButton.style.width = '50%';
+    submitButton.style.width = '45%';
     submitButton.style.marginTop = '5%';
+    submitButton.style.marginRight = '5%';
 
     submitButton.addEventListener('click', (e) => {
         e.preventDefault();
@@ -227,7 +228,16 @@ function addNewSupervisorForm() {
         addSupervisor(supervisor);
     });
     form.appendChild(submitButton);
-    main.appendChild(form);
+    const cancelButton = document.createElement('button');
+    cancelButton.textContent = 'Annuler';
+    cancelButton.className = 'btn btn-secondary';
+    cancelButton.style.width = '45%';
+    cancelButton.style.marginTop = '5%';
+    cancelButton.addEventListener('click', () => {
+        leftDiv.removeChild(form);
+    });
+    form.appendChild(cancelButton);
+    leftDiv.appendChild(form);
 }
 
 async function addSupervisor(supervisor) {
@@ -258,7 +268,7 @@ async function addInternship(internship) {
     if (response.status === 200) {
         Navigate('/stage');
     } else {
-        displayToast('Erreur lors de l\'ajout du stage', 'danger');
+        displayToast(await response.text(), 'danger');
     }
 }
 

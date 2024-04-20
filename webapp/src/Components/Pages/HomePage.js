@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
+import anime from 'animejs';
 import {clearPage, renderBreadcrumb} from "../../utils/render";
 import {getAuthenticatedUser, isAuthenticated} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
@@ -28,9 +30,14 @@ function studentHomePage() {
 
     const title = document.createElement('h1');
     title.innerText = `Bienvenue sur votre espace étudiant, ${user.firstname} !`;
-    title.className = "text-center";
+    title.id = 'title';
     main.appendChild(title);
 
+    anime({
+        targets: '#title',
+        translateX: 250,
+        duration: 3000
+    });
     const diiv = document.createElement('div');
     diiv.style.display = 'flex';
     diiv.style.justifyContent = 'space-around';
@@ -106,8 +113,14 @@ function teacherHomePage() {
     const main = document.querySelector('main');
     const title = document.createElement('h1');
     title.innerText = `Bienvenue sur votre espace professeur, ${user.firstname} !`;
-    title.className = "text-center";
+    title.id = 'title';
     main.appendChild(title);
+
+    anime({
+        targets: '#title',
+        translateX: 250,
+        duration: 3000
+    });
 
     const diiv = document.createElement('div');
     diiv.style.display = 'flex';
@@ -184,8 +197,14 @@ function adminHomePage() {
     const main = document.querySelector('main');
     const title = document.createElement('h1');
     title.innerText = `Bienvenue sur votre espace administratif, ${user.firstname} !`;
-    title.className = "text-center";
+    title.id = 'title';
     main.appendChild(title);
+
+    anime({
+        targets: '#title',
+        translateX: 250,
+        duration: 3000
+    });
 
     const diiv = document.createElement('div');
     diiv.style.display = 'flex';
