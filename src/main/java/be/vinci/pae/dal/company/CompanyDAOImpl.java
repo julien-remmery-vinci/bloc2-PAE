@@ -1,7 +1,6 @@
 package be.vinci.pae.dal.company;
 
 import be.vinci.pae.business.company.CompanyDTO;
-import be.vinci.pae.business.company.CompanyUCC;
 import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
 import be.vinci.pae.exceptions.ConflictException;
