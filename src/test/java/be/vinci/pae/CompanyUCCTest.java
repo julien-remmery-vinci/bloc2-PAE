@@ -103,6 +103,7 @@ public class CompanyUCCTest {
   @DisplayName("test to add a company")
   void testAddCompany() {
     company.setIdCompany(4);
+    company.setTradeName("Test2");
     Mockito.when(companyDAO.getCompanyById(company.getIdCompany())).thenReturn(null);
     Mockito.when(companyDAO.addCompany(company)).thenReturn(company);
     assertNotNull(companyUCC.addCompany(company));
