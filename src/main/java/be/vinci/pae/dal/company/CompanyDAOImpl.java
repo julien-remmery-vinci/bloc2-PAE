@@ -61,7 +61,8 @@ public class CompanyDAOImpl implements CompanyDAO {
   public CompanyDTO getCompanyByNameAndDesignation(String name, String designation) {
     if (designation == null) {
       try (PreparedStatement ps = dalServices.getPS(
-          "SELECT * FROM pae.companies WHERE company_tradename = ? AND company_designation IS NULL")) {
+          "SELECT * FROM pae.companies WHERE company_tradename = ? " +
+                  "AND company_designation IS NULL")) {
         ps.setString(1, name);
         try (ResultSet rs = ps.executeQuery()) {
           if (rs.next()) {
