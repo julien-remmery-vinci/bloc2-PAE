@@ -1,6 +1,7 @@
 package be.vinci.pae.dal.company;
 
 import be.vinci.pae.business.company.CompanyDTO;
+import be.vinci.pae.business.company.CompanyUCC;
 import be.vinci.pae.dal.DALBackServices;
 import be.vinci.pae.dal.utils.DAOServices;
 import be.vinci.pae.exceptions.ConflictException;
@@ -45,6 +46,23 @@ public class CompanyDAOImpl implements CompanyDAO {
     try (PreparedStatement ps = dalServices.getPS(
         "SELECT * FROM pae.companies WHERE company_idCompany = ?")) {
       ps.setInt(1, id);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          String prefix = "company";
+          return (CompanyDTO) daoServices.getDataFromRs(rs, prefix);
+        }
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return null;
+  }
+
+  @Override
+  public CompanyDTO getCompanyByName(String name) {
+    try (PreparedStatement ps = dalServices.getPS(
+        "SELECT * FROM pae.companies WHERE company_tradeName = ?")) {
+      ps.setString(1, name);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           String prefix = "company";

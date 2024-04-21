@@ -97,7 +97,6 @@ public class CompanyRessource {
     return companyUCC.addCompany(company);
   }
 
-
   /**
    * Get all companies with their contacts.
    *
