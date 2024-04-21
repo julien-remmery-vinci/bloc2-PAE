@@ -44,8 +44,10 @@ public class CompanyUCCTest {
   void setUp() {
     company = factory.getCompany();
     company.setIdCompany(1);
+    company.setTradeName("Test");
     company.setBlacklisted(false);
     Mockito.when(companyDAO.getCompanyById(1)).thenReturn(company);
+    Mockito.when(companyDAO.getCompanyByName("Test")).thenReturn(company);
   }
 
   @Test
