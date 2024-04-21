@@ -39,7 +39,7 @@ const StudentInfoPage = (user) => {
     clearPage();
     renderBreadcrumb({
       'Accueil': '/',
-      'Liste des étudiants': '/students',
+      'Liste des étudiants': '/search',
       'Informations de l\'étudiant': "/student-info",
     });
     buildPage(user);
