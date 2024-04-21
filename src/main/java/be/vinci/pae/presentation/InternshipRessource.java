@@ -114,6 +114,13 @@ public class InternshipRessource {
     return internshipUCC.addInternship(internship);
   }
 
+  /**
+   * Update the subject of an internship.
+   *
+   * @param json    the json containing the new subject
+   * @param request the request's context
+   * @return the updated internship
+   */
   @PUT
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)

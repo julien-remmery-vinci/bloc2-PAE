@@ -1,6 +1,5 @@
 package be.vinci.pae.business.contact;
 
-import be.vinci.pae.business.user.UserDTO;
 import jakarta.ws.rs.WebApplicationException;
 import java.util.List;
 
@@ -8,6 +7,14 @@ import java.util.List;
  * Interface of ContactUCCImpl.
  */
 public interface ContactUCC {
+
+  /**
+   * This method is used to get all contacts by a student id.
+   *
+   * @param idStudent the id of the student
+   * @return the list of contacts
+   */
+  List<ContactDTO> getContactsByStudentId(int idStudent);
 
   /**
    * This method is used to get a contact by its id.
@@ -41,21 +48,6 @@ public interface ContactUCC {
    */
   ContactDTO meetContact(int id, String meetPlace, int idUser);
 
-  /**
-   * Get the contact.
-   *
-   * @param user the user
-   * @return the contact
-   */
-  List<ContactDTO> getContacts(UserDTO user);
-
-  /**
-   * Get list of contact.
-   *
-   * @param user the user
-   * @return a list of contact
-   */
-  List<ContactDTO> getContactsByStudentId(UserDTO user);
 
   /**
    * This method is used to unfollow a contact. It first retrieves the contact by its id.
@@ -90,14 +82,6 @@ public interface ContactUCC {
    * @return the list of all contacts
    */
   List<ContactDTO> getAllContacts();
-
-  /**
-   * This method is used to get all contacts by student id.
-   *
-   * @param idStudent the id of the student
-   * @return the list of all contacts by student id
-   */
-  List<ContactDTO> getContactsByStudentIdBis(int idStudent);
 
   /**
    * This method is used to accept a contact.

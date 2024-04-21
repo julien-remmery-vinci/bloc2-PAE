@@ -3,7 +3,6 @@ package be.vinci.pae.business.contact;
 import be.vinci.pae.business.academicyear.AcademicYear;
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.contact.ContactDTO.State;
-import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
@@ -27,26 +26,10 @@ public class ContactUCCImpl implements ContactUCC {
   private AcademicYear academicYear;
 
   @Override
-  public List<ContactDTO> getContacts(UserDTO user) {
+  public List<ContactDTO> getContactsByStudentId(int idStudent) {
     try {
       dalServices.open();
-      if (user == null) {
-        throw new NotFoundException("User not found");
-      }
-      return contactDAO.getAllContacts();
-    } finally {
-      dalServices.close();
-    }
-  }
-
-  @Override
-  public List<ContactDTO> getContactsByStudentId(UserDTO user) {
-    try {
-      dalServices.open();
-      if (user == null) {
-        throw new NotFoundException("User not found");
-      }
-      return contactDAO.getContactsByStudentId(user.getIdUser());
+      return contactDAO.getContactsByStudentId(idStudent);
     } finally {
       dalServices.close();
     }
@@ -186,17 +169,6 @@ public class ContactUCCImpl implements ContactUCC {
   public List<ContactDTO> getAllContacts() {
     try {
       return contactDAO.getAllContacts();
-    } finally {
-      dalServices.close();
-    }
-  }
-
-  //Tester la méthode getContactsByStudentIdBis
-  @Override
-  public List<ContactDTO> getContactsByStudentIdBis(int idStudent) {
-    try {
-      dalServices.open();
-      return contactDAO.getContactsByStudentId(idStudent);
     } finally {
       dalServices.close();
     }
