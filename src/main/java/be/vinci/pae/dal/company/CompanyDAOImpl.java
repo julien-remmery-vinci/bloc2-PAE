@@ -58,7 +58,7 @@ public class CompanyDAOImpl implements CompanyDAO {
   }
 
   @Override
-  public List<CompanyDTO> getCompanyByName(String name) {
+  public List<CompanyDTO> getCompaniesByName(String name) {
     List<CompanyDTO> companies = new ArrayList<>();
     try (PreparedStatement ps = dalServices.getPS(
         "SELECT * FROM pae.companies WHERE company_tradename = ?")) {

@@ -29,7 +29,7 @@ public interface CompanyDAO {
    * @param name the name of the company
    * @return the list of companies
    */
-  List<CompanyDTO> getCompanyByName(String name);
+  List<CompanyDTO> getCompaniesByName(String name);
 
   /**
    * Update a company.
