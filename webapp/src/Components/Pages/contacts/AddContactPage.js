@@ -329,18 +329,12 @@ async function onSubmit(e) {
   const companies = await getCompanies();
   let companyFound = 0;
   if (designation === 'Aucune appellation') {
-    console.log('Aucune appellation')
     companyFound = companies.find(
         (c) => c.tradeName === company && c.designation === null);
   } else {
-    console.log('Appellation')
     companyFound = companies.find(
         (c) => c.tradeName === company && c.designation === designation);
   }
-  console.log(company)
-  console.log(designation)
-  console.log(companies)
-  console.log(companyFound)
 
   const options = {
     method: 'POST', body: JSON.stringify({
