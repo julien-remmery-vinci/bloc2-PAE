@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.company.CompanyUCC;
-import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.exceptions.ConflictException;
 import be.vinci.pae.exceptions.NotFoundException;
@@ -26,7 +25,6 @@ public class CompanyUCCTest {
 
   static ServiceLocator locator;
   private static CompanyUCC companyUCC;
-  private static ContactUCC contactUCC;
   private static CompanyDAO companyDAO;
   private static Factory factory;
   CompanyDTO company;
@@ -35,7 +33,6 @@ public class CompanyUCCTest {
   static void beforeAll() {
     locator = ServiceLocatorUtilities.bind(new ApplicationBinderTest());
     companyUCC = locator.getService(CompanyUCC.class);
-    contactUCC = locator.getService(ContactUCC.class);
     factory = locator.getService(Factory.class);
     companyDAO = locator.getService(CompanyDAO.class);
   }
@@ -46,6 +43,7 @@ public class CompanyUCCTest {
     company.setIdCompany(1);
     company.setTradeName("Test");
     company.setBlacklisted(false);
+    Mockito.when(companyDAO.getCompanyById(1)).thenReturn(company);
     Mockito.when(companyDAO.getCompanyByNameAndDesignation("Test", null)).thenReturn(company);
   }
 
