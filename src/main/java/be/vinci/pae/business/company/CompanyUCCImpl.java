@@ -78,8 +78,8 @@ public class CompanyUCCImpl implements CompanyUCC {
         throw new ConflictException("L'entreprise existe déjà");
       }
       if (companyDAO.getCompanyByName(company.getTradeName()) != null
-              && company.getDesignation().equals(companyDAO.getCompanyByName
-                      (company.getTradeName()).getDesignation())) {
+              && company.getDesignation().equals(companyDAO.getCompanyByName(
+                      company.getTradeName()).getDesignation())) {
         throw new ConflictException("L'appellation pour cette entreprise existe déjà");
       }
       company = companyDAO.addCompany(company);
