@@ -46,10 +46,7 @@ public class ContactRessource {
     if (user == null) {
       throw new NotFoundException("User not found");
     }
-    if (user.getRole() == UserDTO.Role.STUDENT) {
-      return contactUCC.getContactsByStudentId(user);
-    }
-    return contactUCC.getContacts(user);
+    return contactUCC.getContactsByStudentId(user.getIdUser());
   }
 
   /**
@@ -194,7 +191,7 @@ public class ContactRessource {
     if (idStudent < 0) {
       throw new BadRequestException("Invalid id");
     }
-    return contactUCC.getContactsByStudentIdBis(idStudent);
+    return contactUCC.getContactsByStudentId(idStudent);
   }
 
 }

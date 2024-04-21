@@ -3,7 +3,6 @@ package be.vinci.pae.business.contact;
 import be.vinci.pae.business.academicyear.AcademicYear;
 import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.business.contact.ContactDTO.State;
-import be.vinci.pae.business.user.UserDTO;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
@@ -25,32 +24,6 @@ public class ContactUCCImpl implements ContactUCC {
   private CompanyDAO companyDAO;
   @Inject
   private AcademicYear academicYear;
-
-  @Override
-  public List<ContactDTO> getContacts(UserDTO user) {
-    try {
-      dalServices.open();
-      if (user == null) {
-        throw new NotFoundException("User not found");
-      }
-      return contactDAO.getAllContacts();
-    } finally {
-      dalServices.close();
-    }
-  }
-
-  @Override
-  public List<ContactDTO> getContactsByStudentId(UserDTO user) {
-    try {
-      dalServices.open();
-      if (user == null) {
-        throw new NotFoundException("User not found");
-      }
-      return contactDAO.getContactsByStudentId(user.getIdUser());
-    } finally {
-      dalServices.close();
-    }
-  }
 
   @Override
   public ContactDTO refuseContact(int idContact, String refusalReason, int idUser) {
@@ -193,7 +166,7 @@ public class ContactUCCImpl implements ContactUCC {
 
   //Tester la méthode getContactsByStudentIdBis
   @Override
-  public List<ContactDTO> getContactsByStudentIdBis(int idStudent) {
+  public List<ContactDTO> getContactsByStudentId(int idStudent) {
     try {
       dalServices.open();
       return contactDAO.getContactsByStudentId(idStudent);

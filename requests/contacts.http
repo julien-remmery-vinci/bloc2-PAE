@@ -6,8 +6,8 @@ POST {{authsUrl}}/login
 Content-Type: application/json
 
 {
-  "email": "hadjera.emroska@student.vinci.be",
-  "password": "12345678"
+  "email": "didia.fechado@student.vinci.be",
+  "password": "didia2"
 }
 
 > {%
