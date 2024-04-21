@@ -158,7 +158,6 @@ public class ContactRessource {
     return contactUCC.addContact(contact);
   }
 
-
   /**
    * Get all contacts by company.
    *
@@ -176,4 +175,20 @@ public class ContactRessource {
     return contactUCC.getContactsByCompany(idCompany);
   }
 
+  /**
+   * Get all contacts by student.
+   *
+   * @param idStudent the id of the student
+   * @return the list of contacts
+   */
+  @GET
+  @Path("/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(roles = {Role.TEACHER})
+  public List<ContactDTO> getContactsByStudentId(@PathParam("id") int idStudent) {
+    if (idStudent < 0) {
+      throw new BadRequestException("Invalid id");
+    }
+    return contactUCC.getContactsByStudentId(idStudent);
+  }
 }
