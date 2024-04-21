@@ -46,10 +46,7 @@ public class CompanyUCCTest {
     company.setIdCompany(1);
     company.setTradeName("Test");
     company.setBlacklisted(false);
-    Mockito.when(companyDAO.getCompanyById(1)).thenReturn(company);
-    ArrayList<CompanyDTO> companies = new ArrayList<>();
-    companies.add(company);
-    Mockito.when(companyDAO.getCompaniesByName("Test")).thenReturn(companies);
+    Mockito.when(companyDAO.getCompanyByNameAndDesignation("Test", null)).thenReturn(company);
   }
 
   @Test

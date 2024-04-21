@@ -58,21 +58,21 @@ public class CompanyDAOImpl implements CompanyDAO {
   }
 
   @Override
-  public List<CompanyDTO> getCompaniesByName(String name) {
-    List<CompanyDTO> companies = new ArrayList<>();
+  public CompanyDTO getCompanyByNameAndDesignation(String name, String designation) {
     try (PreparedStatement ps = dalServices.getPS(
-        "SELECT * FROM pae.companies WHERE company_tradename = ?")) {
+        "SELECT * FROM pae.companies WHERE company_tradename = ? AND company_designation = ?")) {
       ps.setString(1, name);
+      ps.setString(2, designation);
       try (ResultSet rs = ps.executeQuery()) {
-        while (rs.next()) {
+        if (rs.next()) {
           String prefix = "company";
-          companies.add((CompanyDTO) daoServices.getDataFromRs(rs, prefix));
+          return (CompanyDTO) daoServices.getDataFromRs(rs, prefix);
         }
-        return companies;
       }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+    return null;
   }
 
   @Override
