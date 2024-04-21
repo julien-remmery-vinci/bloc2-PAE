@@ -178,7 +178,7 @@ function teacherHomePage() {
     students.appendChild(text2);
     const button2 = document.createElement('button');
     button2.className = 'btn btn-primary';
-    button2.textContent = 'Accéder aux utilisateurs';
+    button2.textContent = 'Rechercher un utilisateur';
     students.appendChild(button2);
     students.style.width = '18rem';
     students.addEventListener('click', () => {
