@@ -318,6 +318,14 @@ public class ContactUCCTest {
     Mockito.when(contactDAO.getAllContacts()).thenReturn(contacts);
     assertNotNull(contactUCC.getAllContacts());
   }
+
+  @Test
+  @DisplayName("Test get contact by student id")
+  void testGetContactByStudentId() {
+    List<ContactDTO> contacts = new ArrayList<>();
+    Mockito.when(contactDAO.getContactsByStudentId(idUser)).thenReturn(contacts);
+    assertNotNull(contactUCC.getContactsByStudentId(idUser));
+  }
 }
 
 
