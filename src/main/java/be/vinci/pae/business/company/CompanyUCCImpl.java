@@ -73,12 +73,13 @@ public class CompanyUCCImpl implements CompanyUCC {
   public CompanyDTO addCompany(CompanyDTO company) {
     try {
       dalServices.open();
-      CompanyDTO existingCompany = companyDAO.getCompanyByNameAndDesignation(company.getTradeName(), company.getDesignation());
-      if (existingCompany.getDesignation().equals(company.getDesignation())) {
-        throw new ConflictException("L'appellation pour cette entreprise existe déjà");
-      }
-      if (existingCompany.getTradeName().equals(company.getTradeName())
-              && company.getDesignation() == null) {
+      CompanyDTO existingCompany = companyDAO.getCompanyByNameAndDesignation(company.getTradeName(),
+          company.getDesignation());
+      if (existingCompany != null) {
+        if (existingCompany.getDesignation() != null && existingCompany.getDesignation()
+            .equals(company.getDesignation())) {
+          throw new ConflictException("L'appellation existe déjà pour cette entreprise");
+        }
         throw new ConflictException("L'entreprise existe déjà");
       }
       company = companyDAO.addCompany(company);
