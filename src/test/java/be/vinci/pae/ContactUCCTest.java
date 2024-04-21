@@ -15,7 +15,6 @@ import be.vinci.pae.business.contact.ContactDTO.State;
 import be.vinci.pae.business.contact.ContactUCC;
 import be.vinci.pae.business.user.User;
 import be.vinci.pae.business.user.UserDTO;
-import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.contact.ContactDAO;
 import be.vinci.pae.exceptions.NotFoundException;
@@ -187,32 +186,6 @@ public class ContactUCCTest {
   }
 
   @Test
-  @DisplayName("Test get list of contacts")
-  void testGetStudentaddContacts() {
-    assertNotNull(contactUCC.getContacts(user));
-  }
-
-  @Test
-  @DisplayName("Test get list of contacts with a null user")
-  void testGetContactsNullUser() {
-    assertThrows(NotFoundException.class, () -> contactUCC.getContacts(null));
-  }
-
-  @Test
-  @DisplayName("Test get list of contacts with a professor user")
-  void testGetContactsProfessorUser() {
-    user.setRole(Role.TEACHER);
-    assertNotNull(contactUCC.getContacts(user));
-  }
-
-  @Test
-  @DisplayName("Test get list of contacts with a admin user")
-  void testGetContactsAdminUser() {
-    user.setRole(Role.ADMIN);
-    assertNotNull(contactUCC.getContacts(user));
-  }
-
-  @Test
   @DisplayName("Test unfollow contact with contact not found")
   void testUnfollowContactNotFound() {
     Mockito.when(contactDAO.getOneById(1)).thenReturn(null);
@@ -344,6 +317,14 @@ public class ContactUCCTest {
     List<ContactDTO> contacts = new ArrayList<>();
     Mockito.when(contactDAO.getAllContacts()).thenReturn(contacts);
     assertNotNull(contactUCC.getAllContacts());
+  }
+
+  @Test
+  @DisplayName("Test get contact by student id")
+  void testGetContactByStudentId() {
+    List<ContactDTO> contacts = new ArrayList<>();
+    Mockito.when(contactDAO.getContactsByStudentId(idUser)).thenReturn(contacts);
+    assertNotNull(contactUCC.getContactsByStudentId(idUser));
   }
 }
 

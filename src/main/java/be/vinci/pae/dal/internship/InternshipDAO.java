@@ -44,6 +44,7 @@ public interface InternshipDAO {
    * Update an internship.
    *
    * @param internship the internship to update
+   * @param subject    the subject of the internship
    * @return the updated internship
    */
   InternshipDTO updateInternship(InternshipDTO internship, String subject);

@@ -136,8 +136,18 @@ public interface UserDTO {
    */
   void setRegisterDate(Date registerDate);
 
+  /**
+   * Get the profile picture of the user.
+   *
+   * @return the profile picture of the user
+   */
   String getProfilePicture();
-
+  
+  /**
+   * Set the profile picture of the user.
+   *
+   * @param profilePicture the profile picture of the user
+   */
   void setProfilePicture(String profilePicture);
 
   /**
