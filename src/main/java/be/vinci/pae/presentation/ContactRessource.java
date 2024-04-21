@@ -40,13 +40,16 @@ public class ContactRessource {
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize(roles = {Role.STUDENT})
+  @Authorize(roles = {Role.STUDENT, Role.TEACHER})
   public List<ContactDTO> getContacts(@Context ContainerRequest request) {
     UserDTO user = (UserDTO) request.getProperty("user");
     if (user == null) {
       throw new NotFoundException("User not found");
     }
-    return contactUCC.getContactsByStudentId(user.getIdUser());
+    if (user.getRole() == UserDTO.Role.STUDENT) {
+      return contactUCC.getContactsByStudentId(user.getIdUser());
+    }
+    return contactUCC.getAllContacts();
   }
 
   /**
