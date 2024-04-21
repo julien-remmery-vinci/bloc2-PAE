@@ -43,9 +43,6 @@ public class ContactRessource {
   @Authorize(roles = {Role.STUDENT, Role.TEACHER})
   public List<ContactDTO> getContacts(@Context ContainerRequest request) {
     UserDTO user = (UserDTO) request.getProperty("user");
-    if (user == null) {
-      throw new NotFoundException("User not found");
-    }
     if (user.getRole() == UserDTO.Role.STUDENT) {
       return contactUCC.getContactsByStudentId(user.getIdUser());
     }
@@ -177,24 +174,6 @@ public class ContactRessource {
       throw new BadRequestException("Invalid id");
     }
     return contactUCC.getContactsByCompany(idCompany);
-  }
-
-
-  /**
-   * Get all contacts by student.
-   *
-   * @param idStudent the id of the student
-   * @return the list of contacts
-   */
-  @GET
-  @Path("/{id}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @Authorize(roles = {Role.TEACHER})
-  public List<ContactDTO> getContactsByStudentId(@PathParam("id") int idStudent) {
-    if (idStudent < 0) {
-      throw new BadRequestException("Invalid id");
-    }
-    return contactUCC.getContactsByStudentId(idStudent);
   }
 
 }

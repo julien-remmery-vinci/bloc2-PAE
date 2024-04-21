@@ -26,6 +26,16 @@ public class ContactUCCImpl implements ContactUCC {
   private AcademicYear academicYear;
 
   @Override
+  public List<ContactDTO> getContactsByStudentId(int idStudent) {
+    try {
+      dalServices.open();
+      return contactDAO.getContactsByStudentId(idStudent);
+    } finally {
+      dalServices.close();
+    }
+  }
+
+  @Override
   public ContactDTO refuseContact(int idContact, String refusalReason, int idUser) {
     try {
       dalServices.open();

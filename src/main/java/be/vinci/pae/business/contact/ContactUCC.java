@@ -9,6 +9,14 @@ import java.util.List;
 public interface ContactUCC {
 
   /**
+   * This method is used to get all contacts by a student id.
+   *
+   * @param idStudent the id of the student
+   * @return the list of contacts
+   */
+  List<ContactDTO> getContactsByStudentId(int idStudent);
+
+  /**
    * This method is used to get a contact by its id.
    *
    * @param id            the id of the contact

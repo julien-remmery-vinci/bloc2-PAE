@@ -6,6 +6,19 @@ POST {{authsUrl}}/login
 Content-Type: application/json
 
 {
+  "email": "raphael.baroni@vinci.be",
+  "password": "Prof24,z"
+}
+
+> {%
+  client.global.set("token", response.body.token);
+%}
+
+### Try to login user
+POST {{authsUrl}}/login
+Content-Type: application/json
+
+{
   "email": "didia.fechado@student.vinci.be",
   "password": "didia2"
 }
