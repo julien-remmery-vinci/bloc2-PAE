@@ -13,12 +13,30 @@ const AddContactPage = async () => {
     clearPage();
     document.title = "Ajouter un contact";
     renderBreadcrumb({"Accueil": "/", "Contacts": "/contact", "Ajouter un contact": "/contact/add"})
-    await buildPage();
+    companyList = await getCompanies();
+    buildPage();
   }
 }
 
-async function buildPage() {
-  companyList = await getCompanies();
+function addCompaniesOptions() {
+  const companies = document.querySelector('#companySelect');
+  const defaultOption = document.createElement('option');
+  defaultOption.text = 'Choisissez votre entreprise';
+  defaultOption.value = 'default';
+  companies.appendChild(defaultOption);
+
+  const companyNames = [...new Set(companyList.map(e => e.tradeName))]; // Suppression des doublons
+  companyNames.forEach(name => {
+    const option = document.createElement('option');
+    option.value = name;
+    option.text = name;
+    option.style.color = companyList.find(c => c.tradeName === name).blacklisted
+        ? 'red' : 'black';
+    companies.appendChild(option);
+  });
+}
+
+function buildPage() {
   const main = document.querySelector('main');
   const containerDiv = document.createElement('div');
   containerDiv.className = 'container';
@@ -28,6 +46,10 @@ async function buildPage() {
   colDiv1.className = 'col-6';
   const colDiv2 = document.createElement('div');
   colDiv2.className = 'col-6';
+
+  rowDiv.appendChild(colDiv1);
+  containerDiv.appendChild(rowDiv);
+  main.appendChild(containerDiv);
 
   const title = document.createElement('h3');
   title.textContent = 'Ajouter un nouveau contact';
@@ -39,28 +61,16 @@ async function buildPage() {
   company.textContent = 'Entreprise';
   company.style.marginLeft = '15%';
   colDiv1.appendChild(company);
-  const companies = document.createElement('select');
 
+  const companies = document.createElement('select');
   companies.className = 'form-control';
   companies.style.width = '50%';
   companies.style.marginLeft = '15%';
   companies.id = 'companySelect';
 
-  const defaultOption = document.createElement('option');
-  defaultOption.text = 'Choisissez votre entreprise';
-  defaultOption.value = 'default';
-  companies.appendChild(defaultOption);
-
-  const companyNames = [...new Set(companyList.map(e => e.tradeName))]; // Suppression des doublons
-  companyNames.forEach(name => {
-    const option = document.createElement('option');
-    option.value = name;
-    option.text = name;
-    option.style.color = companyList.find(c => c.tradeName === name).blacklisted ? 'red' : 'black';
-    companies.appendChild(option);
-  });
-
   colDiv1.appendChild(companies);
+
+  addCompaniesOptions();
 
   const designation = document.createElement('label');
   designation.textContent = 'Appellation';
@@ -131,9 +141,6 @@ async function buildPage() {
   submit.style.marginLeft = '15%';
   submit.style.width = '50%';
   colDiv1.appendChild(submit);
-  rowDiv.appendChild(colDiv1);
-  containerDiv.appendChild(rowDiv);
-  main.appendChild(containerDiv);
 
   submit.addEventListener('click', onSubmit);
 
@@ -243,6 +250,7 @@ async function getCompanies() {
   }
   return undefined;
 }
+
 async function createSubmit(e) {
   e.preventDefault();
   const tradeName = document.querySelector('input[type="text"]').value;
@@ -270,23 +278,23 @@ async function createSubmit(e) {
     email = null;
   }
   const options = {
-    method: 'POST', body: JSON.stringify({
+    method: 'POST',
+    body: JSON.stringify({
           tradeName,
           designation,
           address,
           city,
           phoneNumber,
           email
-    }), headers: {
+    }),
+    headers: {
       'Content-Type': 'application/json', 'Authorization': getToken(),
     },
   };
   const response = await fetch('http://localhost:3000/companies', options);
   if (response.status === 200) {
-    const option = document.createElement('option');
-    option.value = tradeName;
-    option.text = tradeName;
-    document.querySelector('#companySelect').appendChild(option);
+    companyList.push(await response.json());
+    addCompaniesOptions();
     document.querySelector('#companySelect').value = tradeName;
 
     const optionDesignation = document.createElement('option');
@@ -303,7 +311,6 @@ async function createSubmit(e) {
     document.querySelector('form').remove();
     document.querySelector('#createCompanyButton').hidden = !document.querySelector('#createCompanyButton').hidden;
     alert.hidden = true;
-    companyList.push(await response.json());
   } else {
     alert.hidden = false;
     alert.textContent = await response.text();
