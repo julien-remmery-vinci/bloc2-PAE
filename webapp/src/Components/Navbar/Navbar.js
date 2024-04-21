@@ -2,6 +2,7 @@ import {
   getAuthenticatedUser, isAuthenticated,
 } from "../../utils/auths";
 import logo2 from "../../img/logo2.png";
+import Navigate from "../Router/Navigate";
 
 const Navbar = () => {
   renderNavbar();
@@ -66,9 +67,6 @@ async function renderNavbar() {
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/">Home</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/profile">Profil</a>
                     </li>
                     <li class="nav-item">
@@ -124,6 +122,9 @@ async function renderNavbar() {
 
     const logo = document.querySelector('#logo');
     logo.innerHTML = `<img src="${logo2}" alt="logo" width=30% height=30%>`;
+    logo.addEventListener('click', () => {
+      Navigate('/');
+    })
 }
 
 export default Navbar;
