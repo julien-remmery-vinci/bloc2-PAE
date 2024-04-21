@@ -108,21 +108,22 @@ function buildPage() {
       defaultOptionDesignation.text = "Choisissez d'abord votre entreprise";
       defaultOptionDesignation.value = 'default';
       designations.appendChild(defaultOptionDesignation);
-    } else if (selectedCompany && selectedCompany.designation !== null) {
-      const designationList = companyList.filter(
-          (c) => c.tradeName === e.target.value);
+    } else {
+      const designationList = companyList.filter((c) => c.tradeName === e.target.value).sort((a, b) => a.designation.localeCompare(b.designation));
       designationList.forEach(name => {
+        if (name.designation === null) {
+          const option = document.createElement('option');
+          option.value = 'Aucune appellation'
+          option.text = 'Aucune appellation';
+          designations.appendChild(option);
+          return;
+        }
         const option = document.createElement('option');
         option.value = name.designation;
         option.text = name.designation;
         designations.appendChild(option);
       });
-    } else if (selectedCompany.designation === null) {
-      const noDesignation = document.createElement('option');
-      noDesignation.textContent = 'Aucune appellation';
-      designations.appendChild(noDesignation);
     }
-
   });
 
   const alert = document.createElement('p');
@@ -319,8 +320,8 @@ async function createSubmit(e) {
 // function to submit the form
 async function onSubmit(e) {
   e.preventDefault();
-  const company = document.querySelector('select').value;
-  const designation = document.querySelectorAll('select')[1].value;
+  const company = document.querySelector('#companySelect').value;
+  const designation = document.querySelector('#designation').value;
   const alert = document.querySelector('#alert');
   if(companyList.find(c => c.tradeName === company).blacklisted) {
     alert.hidden = false;
@@ -332,28 +333,27 @@ async function onSubmit(e) {
     alert.textContent = 'Veuillez sélectionner une entreprise et une appellation';
     return;
   }
-  // trying to get the company id
-  const companies = await getCompanies();
-  let companyFound = 0;
-  if (designation === 'Aucune appellation') {
-    console.log('Aucune appellation')
-    companyFound = companies.find(
-        (c) => c.tradeName === company && c.designation === null);
-  } else {
-    console.log('Appellation')
-    companyFound = companies.find(
-        (c) => c.tradeName === company && c.designation === designation);
+
+  const companyFound = designation === 'Aucune appellation'
+      ? companyList.find((c) => c.tradeName === company && c.designation === null)
+      : companyList.find((c) => c.tradeName === company && c.designation === designation);
+
+  if(!companyFound) {
+    alert.hidden = false;
+    alert.textContent = 'Entreprise ou appellation introuvable';
+    return;
   }
-  console.log(company)
-  console.log(designation)
-  console.log(companies)
-  console.log(companyFound)
+
+  alert.hidden = true;
 
   const options = {
-    method: 'POST', body: JSON.stringify({
+    method: 'POST',
+    body: JSON.stringify({
       idCompany: companyFound.idCompany
-    }), headers: {
-      'Content-Type': 'application/json', 'Authorization': getToken(),
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': getToken(),
     },
   };
 
