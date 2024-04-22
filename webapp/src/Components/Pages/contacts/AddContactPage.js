@@ -20,6 +20,7 @@ const AddContactPage = async () => {
 
 function addCompaniesOptions() {
   const companies = document.querySelector('#companySelect');
+  companies.innerHTML = '';
   const defaultOption = document.createElement('option');
   defaultOption.text = 'Choisissez votre entreprise';
   defaultOption.value = 'default';
