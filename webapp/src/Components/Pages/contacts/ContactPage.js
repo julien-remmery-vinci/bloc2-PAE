@@ -109,6 +109,43 @@ async function buildPage() {
 
     row.appendChild(refusalCell);
 
+    // row follow
+    if(contacts.find(c => c.state === 'accepté') === undefined) {
+      const followCell = document.createElement('td');
+      const followButton = document.createElement('button');
+      followButton.classList.add('btn', 'btn-primary');
+      if (contact.state === 'non suivi') {
+        followButton.textContent = 'Suivre';
+      } else {
+        followButton.textContent = 'Ne plus suivre';
+      }
+      followCell.appendChild(followButton);
+      row.appendChild(followCell);
+
+      followButton.addEventListener('click', async () => {
+        console.log("enter_fetch", contact.idContact);
+        const response = await fetch(
+            `http://localhost:3000/contacts/${contact.idContact}/follow`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': getToken()
+              }
+            });
+        if (response.status === 200) {
+          const data = await response.json();
+          if (followButton.textContent === 'Ne plus suivre' && contact.state
+              !== 'non suivi') {
+            followButton.textContent = 'Suivre';
+          }
+          stateCell.textContent = data.state;
+        }
+        else {
+          displayToast('Erreur lors de la modification du contact', 'danger');
+        }
+      });
+    }
+
     // row unfollow
     if(contacts.find(c => c.state === 'accepté') === undefined) {
       const notFollowCell = document.createElement('td');
