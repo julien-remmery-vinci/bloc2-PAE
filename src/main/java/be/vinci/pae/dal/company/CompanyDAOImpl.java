@@ -58,6 +58,39 @@ public class CompanyDAOImpl implements CompanyDAO {
   }
 
   @Override
+  public CompanyDTO getCompanyByNameAndDesignation(String name, String designation) {
+    if (designation == null) {
+      try (PreparedStatement ps = dalServices.getPS(
+          "SELECT * FROM pae.companies WHERE company_tradename = ? "
+                  + "AND company_designation IS NULL")) {
+        ps.setString(1, name);
+        try (ResultSet rs = ps.executeQuery()) {
+          if (rs.next()) {
+            String prefix = "company";
+            return (CompanyDTO) daoServices.getDataFromRs(rs, prefix);
+          }
+        }
+      } catch (SQLException e) {
+        throw new FatalException(e);
+      }
+    }
+    try (PreparedStatement ps = dalServices.getPS(
+        "SELECT * FROM pae.companies WHERE company_tradename = ? AND company_designation = ?")) {
+      ps.setString(1, name);
+      ps.setObject(2, designation);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          String prefix = "company";
+          return (CompanyDTO) daoServices.getDataFromRs(rs, prefix);
+        }
+      }
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    return null;
+  }
+
+  @Override
   public CompanyDTO addCompany(CompanyDTO company) {
     try (PreparedStatement ps = dalServices.getPS(
         "INSERT INTO pae.companies (company_tradeName, "
