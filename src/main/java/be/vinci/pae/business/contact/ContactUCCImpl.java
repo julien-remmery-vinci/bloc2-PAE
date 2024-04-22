@@ -138,7 +138,7 @@ public ContactDTO followContact(int id, int idUser) {
       dalServices.open();
       Contact contact = (Contact) contactDAO.getOneById(id);
       if (contact == null) {
-        return null;
+        throw new NotFoundException("Contact not found");
       }
       if (contact.getIdStudent() != idUser) {
         throw new NotFoundException("You don't have a contact with this id");
