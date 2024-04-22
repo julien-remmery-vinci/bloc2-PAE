@@ -133,6 +133,29 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
+public ContactDTO followContact(int id, int idUser) {
+    try {
+      dalServices.open();
+      Contact contact = (Contact) contactDAO.getOneById(id);
+      if (contact == null) {
+        throw new NotFoundException("Contact not found");
+      }
+      if (contact.getIdStudent() != idUser) {
+        throw new NotFoundException("You don't have a contact with this id");
+      }
+      if (!contact.updateState(State.STARTED)) {
+        throw new PreconditionFailedException(
+            "Le contact doit être dans l'état 'non suivi' pour être suivi");
+      }
+      contact.setState(State.STARTED);
+      contactDAO.updateContact(contact);
+      return contact;
+    } finally {
+      dalServices.close();
+    }
+  }
+
+  @Override
   public List<ContactDTO> getContactsByCompany(int idCompany) {
     try {
       dalServices.open();

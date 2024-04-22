@@ -16,6 +16,48 @@ const ContactPage = async () => {
   }
 }
 
+function followContact(contact, stateCell) {
+  return async () => {
+    console.log("enter_fetch", contact.idContact);
+    const response = await fetch(
+        `http://localhost:3000/contacts/${contact.idContact}/follow`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': getToken()
+          }
+        });
+    if (response.status === 200) {
+      document.getElementById(`followButton${contact.idContact}`).hidden = true;
+      document.getElementById(`unfollowButton${contact.idContact}`).hidden = false;
+      stateCell.textContent = 'initié';
+    } else {
+      displayToast('Erreur lors de la modification du contact', 'danger');
+    }
+  };
+}
+
+function unfollowContact(contact, stateCell) {
+  return async () => {
+    console.log("enter_fetch", contact.idContact);
+    const response = await fetch(
+        `http://localhost:3000/contacts/${contact.idContact}/unfollow`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': getToken()
+          }
+        });
+    if (response.status === 200) {
+      document.getElementById(`followButton${contact.idContact}`).hidden = false;
+      document.getElementById(`unfollowButton${contact.idContact}`).hidden = true;
+      stateCell.textContent = 'non suivi';
+    } else {
+      displayToast('Erreur lors de la modification du contact', 'danger');
+    }
+  };
+}
+
 async function buildPage() {
   const main = document.querySelector('main');
   const title = document.createElement('h3');
@@ -109,42 +151,31 @@ async function buildPage() {
 
     row.appendChild(refusalCell);
 
-    // row unfollow
+    // row follow/unfollow
     if(contacts.find(c => c.state === 'accepté') === undefined) {
-      const notFollowCell = document.createElement('td');
-      const notFollowButton = document.createElement('button');
-      notFollowButton.classList.add('btn', 'btn-primary');
+      const followCell = document.createElement('td');
+      const followButton = document.createElement('button');
+      const unfollowButton = document.createElement('button');
+      followButton.classList.add('btn', 'btn-primary');
+      followButton.textContent = 'Suivre';
+      followButton.id = `followButton${contact.idContact}`;
+      followButton.addEventListener('click', followContact(contact, stateCell));
+      unfollowButton.classList.add('btn', 'btn-primary');
+      unfollowButton.textContent = 'Ne plus suivre';
+      unfollowButton.id = `unfollowButton${contact.idContact}`;
+      unfollowButton.addEventListener('click', unfollowContact(contact, stateCell));
       if (contact.state === 'non suivi') {
-        notFollowButton.textContent = 'Suivre';
+        followButton.hidden = false;
+        unfollowButton.hidden = true;
       } else {
-        notFollowButton.textContent = 'Ne plus suivre';
+        followButton.hidden = true;
+        unfollowButton.hidden = false;
       }
-      notFollowCell.appendChild(notFollowButton);
-      row.appendChild(notFollowCell);
-
-      notFollowButton.addEventListener('click', async () => {
-        console.log("enter_fetch", contact.idContact);
-        const response = await fetch(
-            `http://localhost:3000/contacts/${contact.idContact}/unfollow`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': getToken()
-              }
-            });
-        if (response.status === 200) {
-          const data = await response.json();
-          if (notFollowButton.textContent === 'Ne plus suivre' && contact.state
-              !== 'non suivi') {
-            notFollowButton.textContent = 'Suivre';
-          }
-          stateCell.textContent = data.state;
-        }
-        else {
-          displayToast('Erreur lors de la modification du contact', 'danger');
-        }
-      });
+      followCell.appendChild(followButton);
+      followCell.appendChild(unfollowButton);
+      row.appendChild(followCell);
     }
+
     tableBody.appendChild(row);
   });
   table.appendChild(tableBody);
