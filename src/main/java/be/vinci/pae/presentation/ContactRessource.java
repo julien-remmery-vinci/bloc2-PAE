@@ -138,6 +138,24 @@ public class ContactRessource {
     return contact;
   }
 
+  @POST
+  @Path("/{id}/follow")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(roles = {Role.STUDENT})
+  public ContactDTO followContact(@Context ContainerRequest request,
+      @PathParam("id") int idContact) {
+    if (idContact < 0) {
+      throw new BadRequestException("Invalid id");
+    }
+    ContactDTO contact = contactUCC.followContact(idContact,
+        ((UserDTO) request.getProperty("user")).getIdUser());
+    if (contact == null) {
+      throw new NotFoundException("Contact not found");
+    }
+    return contact;
+  }
+
   /**
    * Add a contact.
    *
