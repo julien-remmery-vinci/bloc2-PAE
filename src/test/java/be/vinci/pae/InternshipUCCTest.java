@@ -2,7 +2,9 @@ package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.company.Company;
@@ -20,6 +22,8 @@ import be.vinci.pae.exceptions.NotFoundException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
@@ -205,4 +209,23 @@ public class InternshipUCCTest {
     Mockito.when(contactDAO.getOneById(internship.getIdContact())).thenReturn(contact);
     assertNotNull(internshipUCC.addInternship(internship));
   }
+
+  @Test
+  @DisplayName("Test to get an internship by student id with non-existing id")
+  public void testGetInternshipByIdNonExistingId() {
+    when(internshipDAO.getInternshipById(1)).thenReturn(Collections.emptyList());
+    InternshipDTO result = internshipUCC.getInternshipById(1);
+    assertNull(result, "Returned internship should be null for non-existing id");
+  }
+
+  @Test
+  @DisplayName("Test to get an internship by student id with existing id")
+  public void testGetInternshipById_ExistingId() {
+    InternshipDTO internship = factory.getInternship();
+    internship.setIdInternship(1);
+    when(internshipDAO.getInternshipById(1)).thenReturn(Arrays.asList(internship));
+    InternshipDTO result = internshipUCC.getInternshipById(1);
+    assertEquals(internship, result, "Returned internship should match the expected one");
+  }
+
 }
