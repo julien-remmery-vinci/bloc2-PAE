@@ -24,6 +24,14 @@ public interface CompanyDAO {
   CompanyDTO getCompanyById(int id);
 
   /**
+   * Get a list of companies by their name.
+   *
+   * @param name the name of the company
+   * @return the list of companies
+   */
+  CompanyDTO getCompanyByNameAndDesignation(String name, String designation);
+
+  /**
    * Update a company.
    *
    * @param company the company to update

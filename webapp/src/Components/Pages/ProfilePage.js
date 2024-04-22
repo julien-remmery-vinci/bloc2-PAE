@@ -50,7 +50,7 @@ function renderPictureInfos() {
   div.style.width = '200px';
 
   const modifyButton = document.createElement('button');
-  modifyButton.textContent = 'Modifer';
+  modifyButton.textContent = 'Modifier';
   modifyButton.addEventListener('click', displayImageInput);
   modifyButton.className = 'btn btn-success mt-2';
   modifyButton.id = 'modifyPic';
@@ -205,7 +205,7 @@ function renderProfilPage() {
   const authenticatedUser = getAuthenticatedUser();
   form.className = 'form-control bg-light rounded shadow';
   const fields = ['lastname', 'firstname', 'email', 'phoneNumber'];
-  const labels = ['Lastname', 'Firstname', 'Email', 'Numéro de téléphone'];
+  const labels = ['Nom', 'Prénom', 'Email', 'Numéro de téléphone'];
 
   fields.forEach((field, index) => {
     const title = document.createElement('h6');
@@ -238,7 +238,7 @@ function renderProfilPage() {
   });
 
   const changePasswordButton = document.createElement('button');
-  changePasswordButton.textContent = 'Modifier mot de passe';
+  changePasswordButton.textContent = 'Modifier votre mot de passe';
   changePasswordButton.className = 'btn btn-primary';
   changePasswordButton.id = 'changePasswordButton';
   form.appendChild(changePasswordButton);

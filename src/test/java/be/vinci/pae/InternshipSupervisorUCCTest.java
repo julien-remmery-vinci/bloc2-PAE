@@ -6,10 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import be.vinci.pae.business.Factory;
 import be.vinci.pae.business.company.Company;
 import be.vinci.pae.business.internshipsupervisor.InternshipSupervisor;
+import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorDTO;
 import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorUCC;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.internshipsupervisor.InternshipSupervisorDAO;
 import be.vinci.pae.exceptions.NotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeAll;
@@ -78,6 +81,15 @@ public class InternshipSupervisorUCCTest {
     Mockito.when(internshipSupervisorDAO.addInternshipSupervisor(internshipSupervisor))
         .thenReturn(internshipSupervisor);
     assertNotNull(internshipSupervisorUCC.addInternshipSupervisor(internshipSupervisor));
+  }
+
+  @Test
+  @DisplayName("Test get all internship supervisors")
+  void testGetAllInternshipSupervisors() {
+    List<InternshipSupervisorDTO> supervisors = new ArrayList<>();
+    supervisors.add(internshipSupervisor);
+    Mockito.when(internshipSupervisorDAO.getAllSupervisors()).thenReturn(supervisors);
+    assertNotNull(internshipSupervisorUCC.getAllSupervisors());
   }
 
 }

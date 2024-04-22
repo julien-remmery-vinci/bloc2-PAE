@@ -22,10 +22,12 @@ function onNavBarClick() {
     const uri = navBarItemClicked?.dataset?.uri;
     if (uri) {
       const componentToRender = routes[uri];
-      if (!componentToRender) throw Error(`The ${uri} resource does not exist.`);
-
-      componentToRender();
-      window.history.pushState({}, '', uri);
+      if (!componentToRender)
+        Navigate('/error');
+      else {
+        componentToRender();
+        window.history.pushState({}, '', uri);
+      }
     }
   });
 }
@@ -44,14 +46,14 @@ function onFrontendLoad() {
   window.addEventListener('load', async () => {
     const uri = window.location.pathname;
     const componentToRender = routes[uri];
-    if (!componentToRender) throw Error(`The ${uri} ressource does not exist.`);
-
+    if (!componentToRender)
+      return Navigate('/error');
     if (!await verifyToken()){
       Navbar();
       Navigate('/login');
     }
     Navbar();
-    componentToRender();
+    return componentToRender();
   });
 }
 

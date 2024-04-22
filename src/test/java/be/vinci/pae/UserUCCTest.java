@@ -13,6 +13,7 @@ import be.vinci.pae.business.user.UserDTO.Role;
 import be.vinci.pae.business.user.UserUCC;
 import be.vinci.pae.dal.user.UserDAO;
 import be.vinci.pae.exceptions.BadRequestException;
+import be.vinci.pae.exceptions.ConflictException;
 import jakarta.ws.rs.WebApplicationException;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
@@ -127,7 +128,7 @@ public class UserUCCTest {
     user.setRole(Role.ADMIN);
     Mockito.when(userDAO.getOneByEmail("invalid.test@student.vinci.be")).thenReturn(user);
     Mockito.when(userDAO.addUser(user)).thenReturn(user);
-    assertNull(userUCC.register(user));
+    assertThrows(ConflictException.class, () -> userUCC.register(user));
   }
 
   @Test
@@ -173,5 +174,33 @@ public class UserUCCTest {
         userUCC.updateUser(user, "newFistname", "newLastname", "new.email@student.vinci.be",
             "123456789"));
 
+  }
+
+  @Test
+  @DisplayName("Test to get all students")
+  void getAllStudentsTest() {
+    assertNotNull(userUCC.getStudents());
+  }
+
+  @Test
+  @DisplayName("Test to get all students with an exception")
+  void getAllStudentsTestException() {
+    Mockito.when(userDAO.getStudents()).thenThrow(new RuntimeException());
+    assertThrows(RuntimeException.class, () -> userUCC.getStudents());
+  }
+
+  @Test
+  @DisplayName("Test to modify the profile picture")
+  void modifyProfilePictureTest() {
+    Mockito.when(userDAO.updateUser(user)).thenReturn(user);
+    userUCC.modifyProfilePicture(user);
+  }
+
+  @Test
+  @DisplayName("Test to remove the profile picture")
+  void removeProfilePictureTest() {
+    user.setProfilePicture("test");
+    Mockito.when(userDAO.updateUser(user)).thenReturn(user);
+    userUCC.removeProfilePicture(user);
   }
 }

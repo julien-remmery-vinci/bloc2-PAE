@@ -96,7 +96,7 @@ public class InternshipRessource {
       throw new BadRequestException("Invalid Student id");
     }
     if (internship.getSignatureDate() == null) {
-      throw new BadRequestException("Invalid Start Date");
+      throw new BadRequestException("Date de signature invalide");
     }
     Date date = Date.valueOf(LocalDate.now());
     Date startAcademicYear;
@@ -105,14 +105,22 @@ public class InternshipRessource {
     } else {
       startAcademicYear = Date.valueOf(LocalDate.of(LocalDate.now().getYear() - 1, 9, 1));
     }
+    date.setTime(date.getTime() + 86400000);
     if (internship.getSignatureDate().after(date) || internship.getSignatureDate()
         .before(startAcademicYear)) {
-      throw new BadRequestException("Invalid Start Date");
+      throw new BadRequestException("Date de signature invalide");
     }
     internship.setIdStudent(((UserDTO) request.getProperty("user")).getIdUser());
     return internshipUCC.addInternship(internship);
   }
 
+  /**
+   * Update the subject of an internship.
+   *
+   * @param json    the json containing the new subject
+   * @param request the request's context
+   * @return the updated internship
+   */
   @PUT
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)

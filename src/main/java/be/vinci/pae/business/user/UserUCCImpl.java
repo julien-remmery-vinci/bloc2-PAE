@@ -4,6 +4,7 @@ import be.vinci.pae.business.academicyear.AcademicYear;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.user.UserDAO;
 import be.vinci.pae.exceptions.BadRequestException;
+import be.vinci.pae.exceptions.ConflictException;
 import jakarta.inject.Inject;
 import java.sql.Date;
 import java.util.List;
@@ -68,7 +69,7 @@ public class UserUCCImpl implements UserUCC {
     UserDTO userFound = userDAO.getOneByEmail(user.getEmail());
     if (userFound != null) {
       dalServices.rollback();
-      return null;
+      throw new ConflictException("Email already exists");
     }
     if (user.getRole().equals(UserDTO.Role.STUDENT)) {
       user.setAcademicYear(academicYear.getAcademicYear());

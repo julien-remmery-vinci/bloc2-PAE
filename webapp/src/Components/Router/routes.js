@@ -14,6 +14,7 @@ import CompanyPage from "../Pages/companies/CompanyPage";
 import StudentInfoPage from "../Pages/StudentInfoPage";
 import AddInternshipPage from "../Pages/stage/AddInternshipPage";
 import InternshipSupervisorPage from "../Pages/InternshipSupervisorPage";
+import ErrorPage from "../Pages/ErrorPage";
 
 // Define routes
 const routes = {
@@ -33,6 +34,7 @@ const routes = {
     '/student-info': StudentInfoPage,
     '/stage/add': AddInternshipPage,
     '/intership-supervisor': InternshipSupervisorPage,
+    '/error': ErrorPage,
 };
 
 export default routes;

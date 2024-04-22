@@ -17,17 +17,21 @@ async function renderInternshipSupervisorPage() {
   const internshipSupervisor = await getAllInternshipSupervisor();
   const mainElement = document.querySelector('main');
   const divElement = document.createElement('div');
-  divElement.className = 'd-flex flex-row justify-content-around align-items-center vh-90';
+  divElement.className = 'd-flex flex-row justify-content-around align-items-center';
+  divElement.style.overflow = 'auto';
+  divElement.style.height = '80vh'
 
   // Create table
   const table = document.createElement('table');
-  table.className = 'table';
+  table.className = 'table table-bordered';
 
   // Create table body
   const tbody = document.createElement('tbody');
 
   // Create table header
   const thead = document.createElement('thead');
+  thead.style.position = 'sticky';
+  thead.style.top = '0';
   const headerRow = document.createElement('tr');
   ['Nom ▼', 'Prénom ▼', 'Email', 'Numéro de téléphone', 'Nom de l\'entreprise ▼'].forEach((text, index) => {
     const th = document.createElement('th');

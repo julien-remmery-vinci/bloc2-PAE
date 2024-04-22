@@ -40,16 +40,13 @@ public class ContactRessource {
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize(roles = {Role.STUDENT})
+  @Authorize(roles = {Role.STUDENT, Role.TEACHER})
   public List<ContactDTO> getContacts(@Context ContainerRequest request) {
     UserDTO user = (UserDTO) request.getProperty("user");
-    if (user == null) {
-      throw new NotFoundException("User not found");
-    }
     if (user.getRole() == UserDTO.Role.STUDENT) {
-      return contactUCC.getContactsByStudentId(user);
+      return contactUCC.getContactsByStudentId(user.getIdUser());
     }
-    return contactUCC.getContacts(user);
+    return contactUCC.getAllContacts();
   }
 
   /**
@@ -141,6 +138,24 @@ public class ContactRessource {
     return contact;
   }
 
+  @POST
+  @Path("/{id}/follow")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(roles = {Role.STUDENT})
+  public ContactDTO followContact(@Context ContainerRequest request,
+      @PathParam("id") int idContact) {
+    if (idContact < 0) {
+      throw new BadRequestException("Invalid id");
+    }
+    ContactDTO contact = contactUCC.followContact(idContact,
+        ((UserDTO) request.getProperty("user")).getIdUser());
+    if (contact == null) {
+      throw new NotFoundException("Contact not found");
+    }
+    return contact;
+  }
+
   /**
    * Add a contact.
    *
@@ -161,7 +176,6 @@ public class ContactRessource {
     return contactUCC.addContact(contact);
   }
 
-
   /**
    * Get all contacts by company.
    *
@@ -179,7 +193,6 @@ public class ContactRessource {
     return contactUCC.getContactsByCompany(idCompany);
   }
 
-
   /**
    * Get all contacts by student.
    *
@@ -194,7 +207,6 @@ public class ContactRessource {
     if (idStudent < 0) {
       throw new BadRequestException("Invalid id");
     }
-    return contactUCC.getContactsByStudentIdBis(idStudent);
+    return contactUCC.getContactsByStudentId(idStudent);
   }
-
 }
