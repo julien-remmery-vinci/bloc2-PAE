@@ -326,6 +326,37 @@ public class ContactUCCTest {
     Mockito.when(contactDAO.getContactsByStudentId(idUser)).thenReturn(contacts);
     assertNotNull(contactUCC.getContactsByStudentId(idUser));
   }
+
+  @Test
+  @DisplayName("Test follow a contact which doesn't exist")
+  void testFollowContactNotFound() {
+    Mockito.when(contactDAO.getOneById(1)).thenReturn(null);
+    assertThrows(NotFoundException.class, () -> contactUCC.followContact(idContact, idUser));
+  }
+
+  @Test
+  @DisplayName("Test follow a contact which doesnt belong to the user")
+  void testFollowContactWrongUser() {
+    contact.setIdStudent(2);
+    assertThrows(NotFoundException.class, () -> contactUCC.followContact(idContact, idUser));
+  }
+
+  @Test
+  @DisplayName("Test follow a contact which has the wrong state")
+  void testFollowContactWrongState() {
+    contact.setState(State.ADMITTED);
+    assertThrows(PreconditionFailedException.class, () -> contactUCC.followContact(idContact, idUser));
+  }
+
+  @Test
+  @DisplayName("Test follow a contact when everything is correct")
+  void testFollowContact() {
+    contact.setState(State.UNSUPERVISED);
+    assertAll(
+        () -> assertEquals(contact.getIdContact(), contactUCC.followContact(idContact, idUser).getIdContact()),
+        () -> assertEquals(State.STARTED, contact.getState())
+    );
+  }
 }
 
 
