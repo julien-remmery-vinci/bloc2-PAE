@@ -10,6 +10,7 @@ import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorDTO;
 import be.vinci.pae.business.internshipsupervisor.InternshipSupervisorUCC;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.internshipsupervisor.InternshipSupervisorDAO;
+import be.vinci.pae.exceptions.ConflictException;
 import be.vinci.pae.exceptions.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,7 @@ public class InternshipSupervisorUCCTest {
     internshipSupervisor = (InternshipSupervisor) factory.getInternshipSupervisor();
     internshipSupervisor.setIdInternshipSupervisor(1);
     internshipSupervisor.setIdCompany(1);
+    internshipSupervisor.setEmail("email");
     company = (Company) factory.getCompany();
     company.setIdCompany(1);
   }
@@ -75,11 +77,22 @@ public class InternshipSupervisorUCCTest {
   }
 
   @Test
+  @DisplayName("Test add internship supervisor when supervisor email already exists")
+  void testAddInternshipSupervisorEmailAlreadyExists() {
+    Mockito.when(companyDAO.getCompanyById(1)).thenReturn(company);
+    Mockito.when(internshipSupervisorDAO.getSupervisorByEmail("email"))
+        .thenReturn(internshipSupervisor);
+    assertThrows(ConflictException.class,
+        () -> internshipSupervisorUCC.addInternshipSupervisor(internshipSupervisor));
+  }
+
+  @Test
   @DisplayName("Test add internship supervisor")
   void testAddInternshipSupervisor() {
     Mockito.when(companyDAO.getCompanyById(1)).thenReturn(company);
     Mockito.when(internshipSupervisorDAO.addInternshipSupervisor(internshipSupervisor))
         .thenReturn(internshipSupervisor);
+    Mockito.when(internshipSupervisorDAO.getSupervisorByEmail("email")).thenReturn(null);
     assertNotNull(internshipSupervisorUCC.addInternshipSupervisor(internshipSupervisor));
   }
 
