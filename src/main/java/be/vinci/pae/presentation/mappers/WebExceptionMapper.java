@@ -30,11 +30,12 @@ public class WebExceptionMapper implements ExceptionMapper<Throwable> {
           .build();
     }
     if (exception instanceof WebApplicationException) {
-      logger.error(sw.toString());
+      logger.warn(sw.toString());
       return Response.status(((WebApplicationException) exception).getResponse().getStatus())
           .entity(exception.getMessage())
           .build();
     }
+    logger.error(sw.toString());
     return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
         .entity(exception.getMessage())
         .build();
