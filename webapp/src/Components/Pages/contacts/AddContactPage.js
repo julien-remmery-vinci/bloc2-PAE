@@ -110,7 +110,15 @@ function buildPage() {
       defaultOptionDesignation.value = 'default';
       designations.appendChild(defaultOptionDesignation);
     } else {
-      const designationList = companyList.filter((c) => c.tradeName === e.target.value).sort((a, b) => a.designation.localeCompare(b.designation));
+      const designationList = companyList.filter((c) => c.tradeName === e.target.value).sort((a, b) => {
+        if (a.designation === null) {
+          return -1;
+        }
+        if (b.designation === null) {
+          return 1;
+        }
+        return a.designation.localeCompare(b.designation);
+      });
       designationList.forEach(name => {
         if (name.designation === null) {
           const option = document.createElement('option');
