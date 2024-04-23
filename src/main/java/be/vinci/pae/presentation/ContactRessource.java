@@ -202,7 +202,7 @@ public class ContactRessource {
   @GET
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize(roles = {Role.TEACHER})
+  @Authorize(roles = {Role.TEACHER, Role.ADMIN})
   public List<ContactDTO> getContactsByStudentId(@PathParam("id") int idStudent) {
     if (idStudent < 0) {
       throw new BadRequestException("Invalid id");
