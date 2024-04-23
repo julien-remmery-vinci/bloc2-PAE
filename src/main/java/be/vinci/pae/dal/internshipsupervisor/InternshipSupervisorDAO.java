@@ -38,4 +38,12 @@ public interface InternshipSupervisorDAO {
    * @return the list of all supervisors
    */
   List<InternshipSupervisorDTO> getAllSupervisors();
+
+  /**
+   * Get an internship supervisor by its email.
+   *
+   * @param email the email of the internship supervisor
+   * @return the internship supervisor or null if not found
+   */
+  InternshipSupervisorDTO getSupervisorByEmail(String email);
 }

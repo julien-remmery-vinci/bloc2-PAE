@@ -4,6 +4,7 @@ import be.vinci.pae.business.company.CompanyDTO;
 import be.vinci.pae.dal.DALServices;
 import be.vinci.pae.dal.company.CompanyDAO;
 import be.vinci.pae.dal.internshipsupervisor.InternshipSupervisorDAO;
+import be.vinci.pae.exceptions.ConflictException;
 import be.vinci.pae.exceptions.NotFoundException;
 import jakarta.inject.Inject;
 import java.util.List;
@@ -44,6 +45,11 @@ public class InternshipSupervisorUCCImpl implements InternshipSupervisorUCC {
       CompanyDTO companyDTO = companyDAO.getCompanyById(internshipSupervisor.getIdCompany());
       if (companyDTO == null) {
         throw new NotFoundException("L'entreprise n'existe pas.");
+      }
+      InternshipSupervisorDTO internshipSupervisorDTO = internshipSupervisorDAO
+          .getSupervisorByEmail(internshipSupervisor.getEmail());
+      if (internshipSupervisorDTO != null) {
+        throw new ConflictException("Un superviseur avec cet email existe déjà.");
       }
       internshipSupervisor = internshipSupervisorDAO.addInternshipSupervisor(internshipSupervisor);
       internshipSupervisor.setCompany(companyDTO);
