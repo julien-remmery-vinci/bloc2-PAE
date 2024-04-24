@@ -237,7 +237,6 @@ public class ContactUCCTest {
   @Test
   @DisplayName("test for blacklistContacts method")
   void blacklistContactsTest() {
-    int idCompany = 1;
     List<ContactDTO> contacts = new ArrayList<>();
     ContactDTO contact = factory.getContact();
     contact.setState(State.ADMITTED);
@@ -245,6 +244,7 @@ public class ContactUCCTest {
     ContactDTO contact1 = factory.getContact();
     contact1.setState(State.TURNED_DOWN);
     contacts.add(contact1);
+    int idCompany = 1;
     Mockito.when(contactDAO.getContactsByCompany(idCompany)).thenReturn(contacts);
     assertNotNull(contactUCC.blacklistContacts(idCompany));
   }
