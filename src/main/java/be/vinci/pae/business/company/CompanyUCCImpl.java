@@ -77,9 +77,7 @@ public class CompanyUCCImpl implements CompanyUCC {
           company.getDesignation());
       if (existingCompany != null) {
         if (existingCompany.getDesignation() != null) {
-          if (existingCompany.getDesignation().equals(company.getDesignation())) {
-            throw new ConflictException("L'appellation existe déjà pour cette entreprise");
-          }
+          throw new ConflictException("L'appellation existe déjà pour cette entreprise");
         }
         throw new ConflictException("L'entreprise existe déjà");
       }
