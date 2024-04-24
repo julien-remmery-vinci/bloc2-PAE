@@ -71,9 +71,8 @@ public class ContactUCCImpl implements ContactUCC {
         throw new PreconditionFailedException("Vous avez déjà un contact accepté");
       }
       contact.setAcademicYear(academicYear.getAcademicYear());
-      if (contactDAO.getCompanyContact(
-          contact.getIdStudent(), contact.getIdCompany(), contact.getAcademicYear())
-          != null) {
+      if (contactDAO.getCompanyContact(contact.getIdStudent(), contact.getIdCompany(),
+          contact.getAcademicYear()) != null) {
         throw new PreconditionFailedException(
             "Vous avez déjà un contact avec cette entreprise pour cette année académique");
       }
