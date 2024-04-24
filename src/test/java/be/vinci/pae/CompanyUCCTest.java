@@ -92,7 +92,7 @@ public class CompanyUCCTest {
   }
 
   @Test
-  @DisplayName("test to add a company that already exists")
+  @DisplayName("test to add a company that already exists, only tradename")
   void testAddCompanyNull() {
     assertThrows(ConflictException.class, () -> companyUCC.addCompany(company));
   }
@@ -100,13 +100,7 @@ public class CompanyUCCTest {
   @Test
   @DisplayName("test to add a company that already exists with this name and designation")
   void testAddMatchingExistingCompany() {
-    assertThrows(ConflictException.class, () -> companyUCC.addCompany(company));
-  }
-
-  @Test
-  @DisplayName("test to add a company that already exists with this name and other designation")
-  void testAddNotMatchingExistingCompany() {
-    company.setDesignation(null);
+    company.setDesignation("Test");
     assertThrows(ConflictException.class, () -> companyUCC.addCompany(company));
   }
 
