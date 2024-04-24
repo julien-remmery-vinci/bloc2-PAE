@@ -345,7 +345,8 @@ public class ContactUCCTest {
   @DisplayName("Test follow a contact which has the wrong state")
   void testFollowContactWrongState() {
     contact.setState(State.ADMITTED);
-    assertThrows(PreconditionFailedException.class, () -> contactUCC.followContact(idContact, idUser));
+    assertThrows(PreconditionFailedException.class,
+        () -> contactUCC.followContact(idContact, idUser));
   }
 
   @Test
@@ -353,7 +354,8 @@ public class ContactUCCTest {
   void testFollowContact() {
     contact.setState(State.UNSUPERVISED);
     assertAll(
-        () -> assertEquals(contact.getIdContact(), contactUCC.followContact(idContact, idUser).getIdContact()),
+        () -> assertEquals(contact.getIdContact(),
+            contactUCC.followContact(idContact, idUser).getIdContact()),
         () -> assertEquals(State.STARTED, contact.getState())
     );
   }
