@@ -140,9 +140,9 @@ public class InternshipUCCTest {
   @DisplayName("Test to add an internship when the internship supervisor doesn't exist")
   void testAddInternshipSupervisorNotFound() {
     Mockito.when(
-            internshipSupervisorDAO.getInternshipSupervisorById
-                    (internship.getIdInternshipSupervisor()))
-            .thenReturn(null);
+            internshipSupervisorDAO.getInternshipSupervisorById(
+                internship.getIdInternshipSupervisor()))
+        .thenReturn(null);
     assertThrows(NotFoundException.class, () -> internshipUCC.addInternship(internship));
   }
 
@@ -150,11 +150,11 @@ public class InternshipUCCTest {
   @DisplayName("Test to add an internship when the company doesn't exist")
   void testAddInternshipCompanyNotFound() {
     Mockito.when(
-            internshipSupervisorDAO.getInternshipSupervisorById
-                    (internship.getIdInternshipSupervisor()))
+            internshipSupervisorDAO.getInternshipSupervisorById(
+                internship.getIdInternshipSupervisor()))
         .thenReturn(internshipSupervisor);
     Mockito.when(companyDAO.getCompanyById(internship.getIdCompany()))
-            .thenReturn(null);
+        .thenReturn(null);
     assertThrows(NotFoundException.class, () -> internshipUCC.addInternship(internship));
   }
 
@@ -162,8 +162,8 @@ public class InternshipUCCTest {
   @DisplayName("Test to add an internship when the student already has an internship")
   void testAddInternshipStudentAlreadyHasInternship() {
     Mockito.when(
-            internshipSupervisorDAO.getInternshipSupervisorById
-                    (internship.getIdInternshipSupervisor()))
+            internshipSupervisorDAO.getInternshipSupervisorById(
+                internship.getIdInternshipSupervisor()))
         .thenReturn(internshipSupervisor);
     Mockito.when(companyDAO.getCompanyById(internship.getIdCompany())).thenReturn(company);
     Mockito.when(internshipDAO.getInternshipByStudentId(internship.getIdStudent()))
@@ -176,8 +176,8 @@ public class InternshipUCCTest {
   void testAddInternshipCompanyAndInternshipSupervisorDontMatch() {
     internshipSupervisor.setIdCompany(2);
     Mockito.when(
-            internshipSupervisorDAO.getInternshipSupervisorById
-                    (internship.getIdInternshipSupervisor()))
+            internshipSupervisorDAO.getInternshipSupervisorById(
+                internship.getIdInternshipSupervisor()))
         .thenReturn(internshipSupervisor);
     Mockito.when(internshipDAO.getInternshipByStudentId(internship.getIdStudent()))
         .thenReturn(null);
@@ -190,8 +190,8 @@ public class InternshipUCCTest {
   void testAddInternshipContactAndCompanyDontMatch() {
     contact.setIdCompany(2);
     Mockito.when(
-            internshipSupervisorDAO.getInternshipSupervisorById
-                    (internship.getIdInternshipSupervisor()))
+            internshipSupervisorDAO.getInternshipSupervisorById(
+                internship.getIdInternshipSupervisor()))
         .thenReturn(internshipSupervisor);
     Mockito.when(internshipDAO.getInternshipByStudentId(internship.getIdStudent()))
         .thenReturn(null);
@@ -206,8 +206,8 @@ public class InternshipUCCTest {
   @DisplayName("Test to add an internship")
   void testAddInternship() {
     Mockito.when(
-            internshipSupervisorDAO.getInternshipSupervisorById
-                    (internship.getIdInternshipSupervisor()))
+            internshipSupervisorDAO.getInternshipSupervisorById(
+                internship.getIdInternshipSupervisor()))
         .thenReturn(internshipSupervisor);
     Mockito.when(internshipDAO.getInternshipByStudentId(internship.getIdStudent()))
         .thenReturn(null);

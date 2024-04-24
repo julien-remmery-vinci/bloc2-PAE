@@ -138,6 +138,13 @@ public class ContactRessource {
     return contact;
   }
 
+  /**
+   * Follow a contact.
+   *
+   * @param request
+   * @param idContact
+   * @return
+   */
   @POST
   @Path("/{id}/follow")
   @Consumes(MediaType.APPLICATION_JSON)
