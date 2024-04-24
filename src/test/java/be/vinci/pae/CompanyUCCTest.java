@@ -97,6 +97,16 @@ public class CompanyUCCTest {
   }
 
   @Test
+  @DisplayName("test to add a company that already exists with this name and designation")
+  void testAddExistingCompany() {
+    company.setTradeName("Test");
+    company.setDesignation("Test");
+    Mockito.when(companyDAO.getCompanyByNameAndDesignation(company.getTradeName(),
+        company.getDesignation())).thenReturn(company);
+    assertThrows(ConflictException.class, () -> companyUCC.addCompany(company));
+  }
+
+  @Test
   @DisplayName("test to add a company")
   void testAddCompany() {
     company.setIdCompany(4);
