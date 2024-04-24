@@ -44,6 +44,8 @@ public class CompanyUCCTest {
     company.setTradeName("Test");
     company.setBlacklisted(false);
     Mockito.when(companyDAO.getCompanyById(1)).thenReturn(company);
+    Mockito.when(companyDAO.getCompanyByTradeName("Test")).thenReturn(company);
+    Mockito.when(companyDAO.getCompanyByNameAndDesignation("Test", "Test")).thenReturn(company);
     Mockito.when(companyDAO.getCompanyByNameAndDesignation("Test", null)).thenReturn(company);
   }
 
@@ -99,10 +101,6 @@ public class CompanyUCCTest {
   @Test
   @DisplayName("test to add a company that already exists with this name and designation")
   void testAddMatchingExistingCompany() {
-    company.setTradeName("Test");
-    company.setDesignation("Test");
-    Mockito.when(companyDAO.getCompanyByNameAndDesignation(company.getTradeName(),
-        company.getDesignation())).thenReturn(company);
     assertThrows(ConflictException.class, () -> companyUCC.addCompany(company));
   }
 
@@ -110,8 +108,6 @@ public class CompanyUCCTest {
   @DisplayName("test to add a company that already exists with this name and other designation")
   void testAddNotMatchingExistingCompany() {
     company.setDesignation(null);
-    Mockito.when(companyDAO.getCompanyByNameAndDesignation(company.getTradeName(),
-        company.getDesignation())).thenReturn(company);
     assertThrows(ConflictException.class, () -> companyUCC.addCompany(company));
   }
 

@@ -24,6 +24,14 @@ public interface CompanyDAO {
   CompanyDTO getCompanyById(int id);
 
   /**
+   * Get a company by its trade name.
+   *
+   * @param tradeName the trade name of the company
+   * @return the company, null if no company was found
+   */
+  CompanyDTO getCompanyByTradeName(String tradeName);
+
+  /**
    * Get a list of companies by their name.
    *
    * @param name        the name of the company
