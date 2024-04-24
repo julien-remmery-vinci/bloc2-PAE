@@ -61,13 +61,12 @@ public class ContactUCCTest {
   void setUp() {
     contact = (Contact) factory.getContact();
     contact.setIdContact(idContact);
+    contact.setIdCompany(1);
     contact.setIdStudent(idUser);
     contact.setState(State.STARTED);
     Mockito.when(contactDAO.getOneById(1)).thenReturn(contact);
 
     company = (Company) factory.getCompany();
-    company.setDesignation("company");
-    company.setIdCompany(1);
 
     Mockito.when(companyDAO.getCompanyById(1)).thenReturn(company);
 
@@ -79,7 +78,6 @@ public class ContactUCCTest {
   @Test
   @DisplayName("Test addContact with all conditions met")
   void testAddContact() {
-    contact.setIdCompany(1);
     contact.setAcademicYear("2021-2022");
     Mockito.when(contactDAO.addContact(contact)).thenReturn(contact);
     Mockito.when(contactDAO.getContactAccepted(idUser)).thenReturn(null);
@@ -92,18 +90,19 @@ public class ContactUCCTest {
   }
 
   @Test
-  @DisplayName("Test addContact with company already in contact")
-  void testAddContactCompanyAlreadyInContact() {
-    contact.setIdCompany(1);
-    Mockito.when(contactDAO.getCompanyContact(contact.getIdStudent(), contact.getIdCompany(),
-        academicYear.getAcademicYear())).thenReturn(contact);
-    assertThrows(PreconditionFailedException.class, () -> contactUCC.addContact(contact));
+  @DisplayName("Test addContact with existing contact with the same company and academic year")
+  void testAddContactExistingContactSameCompanyAndAcademicYear() {
+    ContactDTO contact1 = factory.getContact();
+    contact1.setIdCompany(1);
+    contact1.setIdStudent(idUser);
+    Mockito.when(contactDAO.getCompanyContact(idUser, 1,
+        academicYear.getAcademicYear())).thenReturn(contact1);
+    assertThrows(PreconditionFailedException.class, () -> contactUCC.addContact(contact1));
   }
 
   @Test
   @DisplayName("Test addContact when there is already a contact accepted")
   void testAddContactAlreadyAccepted() {
-    contact.setIdCompany(1);
     Mockito.when(contactDAO.getContactAccepted(idUser)).thenReturn(contact);
     assertThrows(PreconditionFailedException.class, () -> contactUCC.addContact(contact));
   }
@@ -243,6 +242,9 @@ public class ContactUCCTest {
     ContactDTO contact = factory.getContact();
     contact.setState(State.ADMITTED);
     contacts.add(contact);
+    ContactDTO contact1 = factory.getContact();
+    contact1.setState(State.TURNED_DOWN);
+    contacts.add(contact1);
     Mockito.when(contactDAO.getContactsByCompany(idCompany)).thenReturn(contacts);
     assertNotNull(contactUCC.blacklistContacts(idCompany));
   }
@@ -294,12 +296,13 @@ public class ContactUCCTest {
   void testAcceptContactMultipleContacts() {
     contact.setState(State.ADMITTED);
     ContactDTO anotherContact = factory.getContact();
-    anotherContact.setIdContact(2);
-    anotherContact.setIdStudent(idUser);
     anotherContact.setState(State.ADMITTED);
+    ContactDTO anotherContact1 = factory.getContact();
+    anotherContact1.setState(State.TURNED_DOWN);
     List<ContactDTO> contacts = new ArrayList<>();
     contacts.add(contact);
     contacts.add(anotherContact);
+    contacts.add(anotherContact1);
     Mockito.when(contactDAO.getContactsByStudentId(idUser)).thenReturn(contacts);
 
     ContactDTO acceptedContact = contactUCC.acceptContact(idContact, idUser);

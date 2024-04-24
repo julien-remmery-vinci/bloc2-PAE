@@ -133,7 +133,7 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-public ContactDTO followContact(int id, int idUser) {
+  public ContactDTO followContact(int id, int idUser) {
     try {
       dalServices.open();
       Contact contact = (Contact) contactDAO.getOneById(id);
