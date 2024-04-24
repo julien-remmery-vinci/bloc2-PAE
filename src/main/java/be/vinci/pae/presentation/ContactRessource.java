@@ -141,9 +141,9 @@ public class ContactRessource {
   /**
    * Follow a contact.
    *
-   * @param request
-   * @param idContact
-   * @return
+   * @param request   the context's request
+   * @param idContact the contact's id
+   * @return the contact
    */
   @POST
   @Path("/{id}/follow")
