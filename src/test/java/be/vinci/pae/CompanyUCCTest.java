@@ -46,7 +46,6 @@ public class CompanyUCCTest {
     Mockito.when(companyDAO.getCompanyById(1)).thenReturn(company);
     Mockito.when(companyDAO.getCompanyByTradeName("Test")).thenReturn(company);
     Mockito.when(companyDAO.getCompanyByNameAndDesignation("Test", "Test")).thenReturn(company);
-    Mockito.when(companyDAO.getCompanyByNameAndDesignation("Test", null)).thenReturn(company);
   }
 
   @Test
