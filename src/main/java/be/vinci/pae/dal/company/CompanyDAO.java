@@ -26,7 +26,8 @@ public interface CompanyDAO {
   /**
    * Get a list of companies by their name.
    *
-   * @param name the name of the company
+   * @param name        the name of the company
+   * @param designation the designation of the company
    * @return the list of companies
    */
   CompanyDTO getCompanyByNameAndDesignation(String name, String designation);
