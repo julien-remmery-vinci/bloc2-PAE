@@ -119,14 +119,15 @@ async function renderNavbar() {
     if(userRole === 'étudiant') navbar.innerHTML = studentNavbar;
     else if(userRole === 'professeur') navbar.innerHTML = teacherNavbar;
     else if(userRole === 'administratif') navbar.innerHTML = adminNavbar;
+
     const links = document.querySelectorAll('.nav-link');
     links.forEach(link => {
       link.addEventListener('click', () => {
-        links.forEach(l => l.classList.remove('active'));
-        links.forEach(l => l.classList.remove('text-white'));
-        link.classList.add('active');
-        link.classList.remove('text-grey');
-        link.classList.add('text-white');
+          links.forEach(l => l.classList.remove('active'));
+          links.forEach(l => l.classList.remove('text-white'));
+          link.classList.add('active');
+          link.classList.remove('text-grey');
+          link.classList.add('text-white');
       });
     });
   }
@@ -134,6 +135,9 @@ async function renderNavbar() {
     const logo = document.querySelector('#logo');
     logo.innerHTML = `<img src="${logo2}" alt="logo" width=30% height=30%>`;
     logo.addEventListener('click', () => {
+      const links = document.querySelectorAll('.nav-link');
+      links.forEach(l => l.classList.remove('active'));
+      links.forEach(l => l.classList.remove('text-white'));
       Navigate('/');
     })
 }
