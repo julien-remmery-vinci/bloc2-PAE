@@ -103,7 +103,7 @@ function getForm() {
     const submit = document.createElement('input');
     submit.type = 'submit';
     submit.value = 'Enregistrer';
-    submit.className = 'btn btn-primary';
+    submit.className = 'btn btn-primary mt-2 right';
     const form = document.createElement('form');
     form.className = 'p-5';
     form.addEventListener('submit', onSubmit);

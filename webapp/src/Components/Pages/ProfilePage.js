@@ -231,6 +231,8 @@ function renderProfilPage() {
         sauver.className = 'btn btn-success';
         sauver.addEventListener('click', onSaveProfile);
         form.appendChild(sauver);
+      } else {
+        existingButton.style.display = 'block';
       }
     });
     form.appendChild(title);
