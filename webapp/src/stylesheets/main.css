@@ -133,3 +133,8 @@ button:hover {
   background-color: #D3D3D3!important;
   border: none;
 }
+
+#cancelButton {
+  background-color: grey!important;
+  border: none;
+}
