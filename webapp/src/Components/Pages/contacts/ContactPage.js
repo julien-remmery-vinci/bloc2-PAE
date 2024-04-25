@@ -73,8 +73,6 @@ async function buildPage() {
   const tableHeadRow = document.createElement('tr');
   const headings = ['Entreprise', 'État', 'Raison de refus'];
   const contacts = await getContacts();
-  const hasAccepted = contacts.some(contact => contact.state === 'accepté');
-  if(!hasAccepted) table.classList.add('table-hover');
   const hasPrisOrAccepted = contacts.some(
       contact => contact.state === 'pris' || contact.state === 'accepté' || contact.state === 'refusé');
   const hasRefused = contacts.some(contact => contact.state === 'refusé');
@@ -107,21 +105,38 @@ async function buildPage() {
     if (contact.company.designation !== null) {
       companyCell.textContent += `,  ${contact.company.designation}`;
     }
-    if(!hasAccepted) {
-      row.classList.add('clickable-row');
-      row.addEventListener('click', (event) => {
+
+    if(contact.state === 'accepté') {
+      companyCell.classList.add('clickable-row');
+      companyCell.addEventListener('click', (event) => {
         event.preventDefault();
-        let url = window.location.href;
-        if (contact.state === 'initié') {
-          url += `/meet?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}`;
-        }
-        else if (contact.state === 'pris') {
-          url += `/refusal?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}&meetplace=${contact.meetPlace}&companyid=${contact.company.idCompany}&userid=${contact.idStudent};`
-        }
-        else if (contact.state === 'accepté') {
-          url = '/stage';
-        }
-        Navigate(url);
+        Navigate('/stage');
+      });
+    }
+    else if (contact.state === 'initié') {
+      companyCell.classList.add('clickable-row');
+      companyCell.addEventListener('click', (event) => {
+        event.preventDefault();
+        Navigate('/contact/meet', contact);
+      });
+      companyCell.addEventListener('mouseover', () => {
+        companyCell.style.backgroundColor = 'lightgrey';
+      });
+      companyCell.addEventListener('mouseout', () => {
+        companyCell.style.backgroundColor = '';
+      });
+    }
+    else if (contact.state === 'pris') {
+      companyCell.classList.add('clickable-row');
+      companyCell.addEventListener('click', (event) => {
+        event.preventDefault();
+        Navigate('/contact/refusal', contact);
+      });
+      companyCell.addEventListener('mouseover', () => {
+        companyCell.style.backgroundColor = 'lightgrey';
+      });
+      companyCell.addEventListener('mouseout', () => {
+        companyCell.style.backgroundColor = '';
       });
     }
     row.appendChild(companyCell);
