@@ -68,9 +68,68 @@
 
 .nav-link:hover {
   background-color: #90B8F9;
+  border: none;
 }
 
 .navbar:hover {
   background-color: #90B8F9;
+  border: none;
 }
 
+button {
+  background-color: #4E7CC7!important;
+  border: none;
+}
+
+button:hover {
+  background-color: #90B8F9!important;
+  border: none;
+}
+
+#removePic {
+  background-color: red!important;
+}
+
+#modifyPic {
+  background-color: green!important;
+}
+
+#blacklist {
+  background-color: red!important;
+  border: none;
+}
+
+#saveButton {
+  background-color: green!important;
+  border: none;
+}
+
+#reset {
+  background-color: #FFC107!important;
+  border: none;
+}
+
+#submitPassword {
+  background-color: green!important;
+  border: none;
+}
+
+#sauver {
+  background-color: green!important;
+  border: none;
+}
+
+#annuler {
+  background-color: grey!important;
+  border: none;
+}
+
+.greybutton {
+  background-color: #ACAEAA!important;
+  border: none;
+}
+
+.greybutton:hover {
+  background-color: #D3D3D3!important;
+  border: none;
+}

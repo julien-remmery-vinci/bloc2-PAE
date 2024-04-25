@@ -202,6 +202,7 @@ async function buildPage() {
   addContactButton.className = 'btn btn-primary';
   addContactButton.style.marginLeft = '10%';
   addContactButton.style.marginBottom = '2%';
+  addContactButton.id = 'bluebutton'
   addContactButton.style.width = '25%';
   if(contacts.find(contact => contact.state === 'accepté') !== undefined) {
     addContactButton.disabled = true;
