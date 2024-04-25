@@ -31,6 +31,9 @@ const renderBreadcrumb = (path) => {
     item.textContent = name;
     item.style.cursor = 'pointer';
     item.addEventListener('click', () => {
+      const links = document.querySelectorAll('.nav-link');
+      links.forEach(l => l.classList.remove('active'));
+      links.forEach(l => l.classList.remove('text-white'));
       Navigate(url);
     });
     list.appendChild(item);
