@@ -25,6 +25,10 @@ function buildPage() {
     leftDiv.appendChild(getContactInfos());
     const rightDiv = document.createElement('div');
     rightDiv.style.width = '50%';
+    const title = document.createElement('h3');
+    title.textContent = 'Accepter ou refuser un contact';
+    title.style.textAlign = 'center';
+    main.appendChild(title)
     rightDiv.appendChild(getForm());
     mainDiv.appendChild(leftDiv);
     mainDiv.appendChild(rightDiv);
