@@ -47,16 +47,17 @@ function buildPage() {
   colDiv1.className = 'col-6';
   const colDiv2 = document.createElement('div');
   colDiv2.className = 'col-6';
-
-  rowDiv.appendChild(colDiv1);
-  containerDiv.appendChild(rowDiv);
-  main.appendChild(containerDiv);
-
   const title = document.createElement('h3');
   title.textContent = 'Ajouter un nouveau contact';
   title.style.textAlign = 'center';
   title.style.marginBottom = '5%';
   main.appendChild(title);
+  rowDiv.appendChild(colDiv1);
+  containerDiv.appendChild(rowDiv);
+  main.appendChild(containerDiv);
+
+  
+  
 
   const company = document.createElement('label');
   company.textContent = 'Entreprise';
