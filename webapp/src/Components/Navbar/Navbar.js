@@ -19,10 +19,10 @@ async function renderNavbar() {
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/login">Se connecter</a>
+                        <a class="nav-link btn btn-primary me-2 text-grey" aria-current="page" href="#" data-uri="/login">Se connecter</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/register">S'enregistrer</a>
+                        <a class="nav-link btn btn-primary me-2 text-grey" aria-current="page" href="#" data-uri="/register">S'enregistrer</a>
                     </li>
                 </ul>
             </div>
@@ -40,16 +40,16 @@ async function renderNavbar() {
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/profile">Profil</a>
+                        <a class="nav-link btn btn-primary me-2 text-grey" aria-current="page" href="#" data-uri="/profile">Profil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/contact">Contacts</a>
+                        <a class="nav-link btn btn-primary me-2 text-grey" aria-current="page" href="#" data-uri="/contact">Contacts</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/stage">Stage</a>
+                        <a class="nav-link btn btn-primary me-2 text-grey" aria-current="page" href="#" data-uri="/stage">Stage</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/logout">Déconnexion</a>
+                        <a class="nav-link btn btn-primary me-2 text-grey" aria-current="page" href="#" data-uri="/logout">Déconnexion</a>
                     </li>
                 </ul>
             </div>
@@ -67,19 +67,19 @@ async function renderNavbar() {
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/profile">Profil</a>
+                        <a class="nav-link btn btn-primary me-2 text-grey" aria-current="page" href="#" data-uri="/profile">Profil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/search">Recherche</a>
+                        <a class="nav-link btn btn-primary me-2 text-grey" aria-current="page" href="#" data-uri="/search">Recherche</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/intership-supervisor">Responsables</a>
+                        <a class="nav-link btn btn-primary me-2 text-grey" aria-current="page" href="#" data-uri="/intership-supervisor">Responsables</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/dashboard">Statistiques</a>
+                        <a class="nav-link btn btn-primary me-2 text-grey" aria-current="page" href="#" data-uri="/dashboard">Statistiques</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/logout">Déconnexion</a>
+                        <a class="nav-link btn btn-primary me-2 text-grey" aria-current="page" href="#" data-uri="/logout">Déconnexion</a>
                     </li>
                 </ul>
             </div>
@@ -97,13 +97,13 @@ async function renderNavbar() {
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/profile">Profil</a>
+                        <a class="nav-link btn btn-primary me-2 text-grey" aria-current="page" href="#" data-uri="/profile">Profil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/search">Recherche</a>
+                        <a class="nav-link btn btn-primary me-2 text-grey" aria-current="page" href="#" data-uri="/search">Recherche</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active btn btn-primary me-2 text-white" aria-current="page" href="#" data-uri="/logout">Déconnexion</a>
+                        <a class="nav-link btn btn-primary me-2 text-grey" aria-current="page" href="#" data-uri="/logout">Déconnexion</a>
                     </li>
                 </ul>
             </div>
@@ -112,12 +112,23 @@ async function renderNavbar() {
 `;
 
   const navbar = document.querySelector('#navbarWrapper');
+
   if(!isAuthenticated()) navbar.innerHTML = defaultNavbar;
   else {
     const userRole = getAuthenticatedUser().role;
     if(userRole === 'étudiant') navbar.innerHTML = studentNavbar;
     else if(userRole === 'professeur') navbar.innerHTML = teacherNavbar;
     else if(userRole === 'administratif') navbar.innerHTML = adminNavbar;
+    const links = document.querySelectorAll('.nav-link');
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        links.forEach(l => l.classList.remove('active'));
+        links.forEach(l => l.classList.remove('text-white'));
+        link.classList.add('active');
+        link.classList.remove('text-grey');
+        link.classList.add('text-white');
+      });
+    });
   }
 
     const logo = document.querySelector('#logo');
