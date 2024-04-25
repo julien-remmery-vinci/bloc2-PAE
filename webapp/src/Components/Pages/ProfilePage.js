@@ -174,7 +174,7 @@ async function modifyProfilePicture() {
     body: formData
   });
   if(response.status !== 200) {
-    displayToast('Erreur lors de la modification de l\'image', 'danger')
+    displayToast(await response.text(), 'danger')
   } else {
     const data = await response.json();
     setAuthenticatedUser(data);
@@ -191,7 +191,7 @@ async function removeProfilePicture() {
     }
   });
   if(response.status !== 200) {
-    displayToast('Erreur lors de la suppression de l\'image', 'danger')
+    displayToast(await response.text(), 'danger')
   } else {
     const data = await response.json();
     setAuthenticatedUser(data);
@@ -341,7 +341,7 @@ async function onSaveProfile(e) {
   const response = await fetch('http://localhost:3000/users/update', options);
 
   if (response.status !== 200) {
-    displayToast('Erreur lors de la modification des informations', 'danger');
+    displayToast(await response.text(), 'danger');
   }
 
   const sauver = document.querySelector('#sauver');
@@ -372,7 +372,7 @@ async function onSavePassword(e) {
       options);
 
   if (response.status !== 204) {
-    displayToast('Erreur lors de la modification du mot de passe', 'danger');
+    displayToast(await response.text(), 'danger');
   }
   if (response.status === 204) {
     displayToast('Mot de passe modifié avec succès', 'success');

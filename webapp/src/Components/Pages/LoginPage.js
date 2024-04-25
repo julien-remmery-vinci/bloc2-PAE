@@ -1,5 +1,10 @@
 import { getRememberMe, isAuthenticated, setAuthenticatedUser, setRememberMe, setToken } from '../../utils/auths';
-import { clearPage, renderPageTitle, renderBreadcrumb } from '../../utils/render';
+import {
+  clearPage,
+  renderPageTitle,
+  renderBreadcrumb,
+  displayToast
+} from '../../utils/render';
 import Navbar from '../Navbar/Navbar';
 import Navigate from '../Router/Navigate';
 
@@ -178,12 +183,10 @@ async function onLogin(e) {
       return;
     }
 
-    if (!response.ok) throw new Error(`fetch error : ${response.status} : ${response.statusText} `);
+    if (!response.ok) displayToast(await response.type, 'error');
 
     // Get the authenticated user
     const authenticatedUser = await response.json();
-
-    console.log('Authenticated user : ', authenticatedUser);
 
     setToken(authenticatedUser.token);
     setAuthenticatedUser(authenticatedUser.user);

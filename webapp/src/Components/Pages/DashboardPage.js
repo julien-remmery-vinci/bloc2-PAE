@@ -1,7 +1,7 @@
 import Chart from 'chart.js/auto';
 import {getToken, isAuthenticated} from "../../utils/auths";
 import Navigate from "../Router/Navigate";
-import {clearPage, renderBreadcrumb} from "../../utils/render";
+import {clearPage, displayToast, renderBreadcrumb} from "../../utils/render";
 
 let companies = [];
 let filteredCompanies;
@@ -339,7 +339,7 @@ async function getCompanies() {
     }
   });
   if(response.status !== 200) {
-    // TODO handle error
+    displayToast(await response.text(), 'danger')
   }
   return response.json();
 }
