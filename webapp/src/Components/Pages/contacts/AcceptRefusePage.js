@@ -143,8 +143,9 @@ async function onSubmit(event) {
     } else {
         fetch(`http://localhost:3000/contacts/${contact.idContact}/refuse`, options)
         .then(request => {
-            if(request.status === 401) {
-                displayToast('Vous n\'êtes pas autorisé à effectuer cette action', 'danger');
+            if (request.status === 401 || request.status === 403 || request.status === 500) {
+                const requestError = request.text();
+                displayToast(requestError, 'danger');
             } else {
                 Navigate('/contact');
             }

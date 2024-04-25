@@ -32,7 +32,7 @@ function followContact(contact, stateCell) {
       document.getElementById(`unfollowButton${contact.idContact}`).hidden = false;
       stateCell.textContent = 'initié';
     } else {
-      displayToast('Erreur lors de la modification du contact', 'danger');
+      displayToast(await response.text(), 'danger');
     }
   };
 }
@@ -53,7 +53,7 @@ function unfollowContact(contact, stateCell) {
       document.getElementById(`unfollowButton${contact.idContact}`).hidden = true;
       stateCell.textContent = 'non suivi';
     } else {
-      displayToast('Erreur lors de la modification du contact', 'danger');
+      displayToast(await response.text(), 'danger');
     }
   };
 }

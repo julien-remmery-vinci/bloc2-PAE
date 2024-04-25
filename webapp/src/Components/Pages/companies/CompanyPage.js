@@ -224,7 +224,8 @@ async function blacklistCompany(idCompany) {
   });
 
   if(response.status !== 200) {
-    displayToast('Erreur lors du blacklist de l\'entreprise', 'danger');
+    const responseError = await response.text();
+    displayToast(responseError, 'danger');
     document.getElementById('motivation').hidden = true;
     document.getElementById('blacklist').addEventListener('click', () => {
       const motivation = document.getElementById('motivation');

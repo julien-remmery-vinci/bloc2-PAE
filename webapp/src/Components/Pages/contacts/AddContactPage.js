@@ -1,4 +1,4 @@
-import {clearPage, renderBreadcrumb} from "../../../utils/render";
+import {clearPage, displayToast, renderBreadcrumb} from "../../../utils/render";
 import {
   getToken, isAuthenticated
 } from "../../../utils/auths";
@@ -259,6 +259,7 @@ async function getCompanies() {
   if (response.status === 200) {
     return response.json();
   }
+  displayToast(await response.text(), 'error');
   return undefined;
 }
 
@@ -323,8 +324,7 @@ async function createSubmit(e) {
     document.querySelector('#createCompanyButton').hidden = !document.querySelector('#createCompanyButton').hidden;
     alert.hidden = true;
   } else {
-    alert.hidden = false;
-    alert.textContent = await response.text();
+    displayToast(await response.text(), 'error');
   }
 }
 // function to submit the form
@@ -372,8 +372,7 @@ async function onSubmit(e) {
     Navigate('/contact');
 
   } else {
-    alert.hidden = false;
-    alert.textContent = await response.text();
+    displayToast(await response.text(), 'error');
   }
 }
 
