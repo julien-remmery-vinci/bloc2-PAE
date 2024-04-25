@@ -139,7 +139,7 @@ async function onSubmit(event) {
         }),
     };
     if (contactState === 'true') {
-        Navigate('/Stage/add', contact);
+        Navigate('/stage/add', contact);
     } else {
         fetch(`http://localhost:3000/contacts/${contact.idContact}/refuse`, options)
         .then(request => {
