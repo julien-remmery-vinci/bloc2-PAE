@@ -66,6 +66,13 @@
   user-select: none;
 }
 
+.nav-link:hover {
+  background-color: #90B8F9;
+}
+
+.nav-link:active {
+  background-color: #90B8F9;
+}
 
 
 
