@@ -71,17 +71,18 @@ async function buildPage() {
   const tableHead = document.createElement('thead');
   tableHead.classList.add('thead-dark');
   const tableHeadRow = document.createElement('tr');
-  const headings = ['Entreprise', 'État', 'Raison de refus'];
+  const headings = ['Entreprise', 'État'];
   const contacts = await getContacts();
-  const hasPrisOrAccepted = contacts.some(
-      contact => contact.state === 'pris' || contact.state === 'accepté' || contact.state === 'refusé');
+  const hasAccepted = contacts.some(contact => contact.state === 'accepté');
+  if(!hasAccepted) table.classList.add('table-hover');
   const hasRefused = contacts.some(contact => contact.state === 'refusé');
+  const hasAdmitted = contacts.some(contact => contact.state === 'pris');
 
-  if (hasPrisOrAccepted) {
+  if (hasAccepted || hasAdmitted || hasRefused) {
     headings.splice(2, 0, 'Lieu de rencontre');
   }
 
-  if (hasRefused && (!hasPrisOrAccepted || hasPrisOrAccepted)) {
+  if (hasRefused) {
     headings.splice(3, 0, 'Raison du refus');
   }
 
@@ -150,20 +151,21 @@ async function buildPage() {
     const meetPlaceCell = document.createElement('td');
     if (contact.state === 'pris' || contact.state === 'accepté') {
       meetPlaceCell.textContent = contact.meetPlace;
-    } else if (hasPrisOrAccepted) {
+    } else if (hasAdmitted || hasAccepted || hasRefused) {
       meetPlaceCell.textContent = '/';
     } else {
-      meetPlaceCell.textContent = '';
+      meetPlaceCell.hidden = true;
     }
     row.appendChild(meetPlaceCell);
 
     // row refusal
     const refusalCell = document.createElement('td');
     if (contact.state === 'refusé') {
-      meetPlaceCell.textContent = contact.meetPlace;
       refusalCell.textContent = contact.refusalReason;
-    } else {
+    } else if (hasRefused) {
       refusalCell.textContent = '/';
+    } else {
+      refusalCell.hidden = true;
     }
 
     row.appendChild(refusalCell);
