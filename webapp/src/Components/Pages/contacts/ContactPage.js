@@ -73,6 +73,9 @@ async function buildPage() {
   const tableHeadRow = document.createElement('tr');
   const headings = ['Entreprise', 'État', 'Raison de refus'];
   const contacts = await getContacts();
+  const hasAccepted = contacts.some(contact => contact.state === 'accepté');
+  console.log(hasAccepted)
+  if(!hasAccepted) table.classList.add('table-hover');
   const hasPrisOrAccepted = contacts.some(
       contact => contact.state === 'pris' || contact.state === 'accepté' || contact.state === 'refusé');
   const hasRefused = contacts.some(contact => contact.state === 'refusé');
@@ -101,27 +104,27 @@ async function buildPage() {
 
     // row company
     const companyCell = document.createElement('td');
-    const companyLink = document.createElement('a');
-    companyLink.textContent = contact.company.tradeName;
-    companyLink.href = '#';
+    companyCell.textContent = contact.company.tradeName;
     if (contact.company.designation !== null) {
-      companyLink.textContent += `,  ${contact.company.designation}`;
+      companyCell.textContent += `,  ${contact.company.designation}`;
     }
-    companyLink.addEventListener('click', (event) => {
-      event.preventDefault();
-      let url = window.location.href;
-      if (contact.state === 'initié') {
-        url += `/meet?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}`;
-      }
-      else if (contact.state === 'pris') {
-        url += `/refusal?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}&meetplace=${contact.meetPlace}&companyid=${contact.company.idCompany}&userid=${contact.idStudent};`
-      }
-      else if (contact.state === 'accepté') {
-        url = '/stage';
-      }
-      Navigate(url);
-    });
-    companyCell.appendChild(companyLink);
+    if(!hasAccepted) {
+      row.classList.add('clickable-row');
+      row.addEventListener('click', (event) => {
+        event.preventDefault();
+        let url = window.location.href;
+        if (contact.state === 'initié') {
+          url += `/meet?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}`;
+        }
+        else if (contact.state === 'pris') {
+          url += `/refusal?id=${contact.idContact}&tradename=${contact.company.tradeName}&designation=${contact.company.designation}&meetplace=${contact.meetPlace}&companyid=${contact.company.idCompany}&userid=${contact.idStudent};`
+        }
+        else if (contact.state === 'accepté') {
+          url = '/stage';
+        }
+        Navigate(url);
+      });
+    }
     row.appendChild(companyCell);
 
     // row state
@@ -188,6 +191,7 @@ async function buildPage() {
   addContactButton.style.width = '25%';
   if(contacts.find(contact => contact.state === 'accepté') !== undefined) {
     addContactButton.disabled = true;
+    addContactButton.className = 'btn btn-secondary';
     addContactButton.innerHTML += `
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16">
       <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2M5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1"/>
