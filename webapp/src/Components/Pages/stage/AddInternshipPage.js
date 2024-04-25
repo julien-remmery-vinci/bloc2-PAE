@@ -2,10 +2,16 @@ import {clearPage, displayToast} from "../../../utils/render";
 import {isAuthenticated, getToken} from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
-const InternshipPage = () => {
+let contact;
+const InternshipPage = (data) => {
     if (!isAuthenticated()) {
       Navigate('/login');
-    } else {
+    }
+    else if(data === undefined) {
+      Navigate('/contact');
+    }
+    else {
+      contact = data;
       clearPage();
       renderInternshipPage();
       document.title = "Ajouter un Stage";
@@ -58,14 +64,13 @@ async function renderInternshipPage() {
     submitButton.style.marginTop = '5%';
     submitButton.addEventListener('click', (e) => {
         e.preventDefault();
-        const queryParams = new URLSearchParams(window.location.search);
         let subjectInternship = document.querySelector('#subject').value;
         if(subjectInternship === ''){ 
             subjectInternship = null;
         }
         const internship = {
-            idCompany: queryParams.get('idCompany'),
-            idContact: queryParams.get('idContact'),
+            idCompany: contact.idCompany,
+            idContact: contact.idContact,
             internshipProject: subjectInternship,
             idInternshipSupervisor: document.querySelector('select').value,
             signatureDate: dateInput.value,
@@ -79,7 +84,6 @@ async function renderInternshipPage() {
 }
 
 function getInternshipInfos() {
-    const queryParams = new URLSearchParams(window.location.search);
     const contactInfosDiv = document.createElement('div');
     contactInfosDiv.className = 'p-5';
     const entrepriseName = document.createElement('label');
@@ -87,16 +91,16 @@ function getInternshipInfos() {
     contactInfosDiv.appendChild(entrepriseName);
     const entrepriseNameValue = document.createElement('input');
     entrepriseNameValue.type = 'text';
-    entrepriseNameValue.value = queryParams.get('tradename');
+    entrepriseNameValue.value = contact.company.tradeName;
     entrepriseNameValue.readOnly = true;
     entrepriseNameValue.className = 'bg-info form-control';
     contactInfosDiv.appendChild(entrepriseNameValue);
-    if(queryParams.get('designation') !== 'null'){
+    if(contact.designation !== 'null'){
         const entrepriseDesignation = document.createElement('label');
         entrepriseDesignation.textContent = 'Appellation';
         const entrepriseDesignationValue = document.createElement('input');
         entrepriseDesignationValue.type = 'text';
-        entrepriseDesignationValue.value = queryParams.get('designation');
+        entrepriseDesignationValue.value = contact.designation;
         entrepriseDesignationValue.readOnly = true;
         entrepriseDesignationValue.className = 'bg-info form-control';
         contactInfosDiv.appendChild(entrepriseDesignation);
@@ -135,8 +139,7 @@ async function getSupervisorInfos() {
 }
 
 async function getSupervisors(){
-  const queryParams = new URLSearchParams(window.location.search);
-  const supervisors = await fetch(`http://localhost:3000/internshipSupervisors/company/${queryParams.get('idCompany')}`, {
+  const supervisors = await fetch(`http://localhost:3000/internshipSupervisors/company/${contact.idCompany}`, {
       method: 'GET',
       headers: {
           'Content-Type': 'application/json',
@@ -223,7 +226,7 @@ function addNewSupervisorForm() {
             lastName: lastNameInput.value,
             email: emailValue,
             phoneNumber: phoneInput.value,
-            idCompany: new URLSearchParams(window.location.search).get('idCompany'),
+            idCompany: contact.idCompany,
         };
         addSupervisor(supervisor);
     });

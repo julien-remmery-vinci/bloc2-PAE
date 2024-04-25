@@ -5,10 +5,16 @@ import {
 } from "../../../utils/auths";
 import Navigate from "../../Router/Navigate";
 
-const AcceptRefusePage = () => {
+let contact;
+const AcceptRefusePage = (data) => {
     if (!isAuthenticated()) {
         Navigate('/login');
-    } else {
+    }
+    else if(data === undefined) {
+        Navigate('/contact');
+    }
+    else {
+        contact = data;
         clearPage();
         document.title = "Accepter ou refuser un contact";
         renderBreadcrumb({"Accueil": "/", "Contacts": "/contact", "Accepter ou refuser un contact": "/contact/refusal"})
@@ -25,6 +31,10 @@ function buildPage() {
     leftDiv.appendChild(getContactInfos());
     const rightDiv = document.createElement('div');
     rightDiv.style.width = '50%';
+    const title = document.createElement('h3');
+    title.textContent = 'Accepter ou refuser un contact';
+    title.style.textAlign = 'center';
+    main.appendChild(title)
     rightDiv.appendChild(getForm());
     mainDiv.appendChild(leftDiv);
     mainDiv.appendChild(rightDiv);
@@ -33,7 +43,6 @@ function buildPage() {
 
 // Display contact informations
 function getContactInfos() {
-    const queryParams = new URLSearchParams(window.location.search);
     const contactInfosDiv = document.createElement('div');
     contactInfosDiv.className = 'p-5';
     const entrepriseName = document.createElement('label');
@@ -41,17 +50,17 @@ function getContactInfos() {
     contactInfosDiv.appendChild(entrepriseName);
     const entrepriseNameValue = document.createElement('input');
     entrepriseNameValue.type = 'text';
-    entrepriseNameValue.value = queryParams.get('tradename');
+    entrepriseNameValue.value = contact.company.tradeName;
     entrepriseNameValue.readOnly = true;
     entrepriseNameValue.className = 'form-control';
     entrepriseNameValue.disabled = true;
     contactInfosDiv.appendChild(entrepriseNameValue);
-    if(queryParams.get('designation') !== 'null'){
+    if(contact.designation !== 'null'){
         const entrepriseDesignation = document.createElement('label');
         entrepriseDesignation.textContent = 'Appellation';
         const entrepriseDesignationValue = document.createElement('input');
         entrepriseDesignationValue.type = 'text';
-        entrepriseDesignationValue.value = queryParams.get('designation');
+        entrepriseDesignationValue.value = contact.designation;
         entrepriseDesignationValue.readOnly = true;
         entrepriseDesignationValue.className = 'form-control';
         entrepriseDesignationValue.disabled = true;
@@ -63,7 +72,7 @@ function getContactInfos() {
     contactInfosDiv.appendChild(contactMeetPlace);
     const entrepriseMeetPlaceValue = document.createElement('input');
     entrepriseMeetPlaceValue.type = 'text';
-    entrepriseMeetPlaceValue.value = queryParams.get('meetplace');
+    entrepriseMeetPlaceValue.value = contact.meetPlace;
     entrepriseMeetPlaceValue.readOnly = true;
     entrepriseMeetPlaceValue.className = 'form-control';
     entrepriseMeetPlaceValue.disabled = true;
@@ -117,7 +126,6 @@ function getForm() {
 
 async function onSubmit(event) {
     event.preventDefault();
-    const queryParams = new URLSearchParams(window.location.search);
     const contactState = document.querySelector('select').value;
     const refusalReason = document.querySelector('textarea').value;
     const options = {
@@ -131,12 +139,9 @@ async function onSubmit(event) {
         }),
     };
     if (contactState === 'true') {
-        // TODO add accept contact
-        let url = window.location.href;
-        url = `/stage/add?idStudent=${queryParams.get('userid')}&idContact=${queryParams.get('id')}&idCompany=${queryParams.get('companyid')}&tradename=${queryParams.get('tradename')}&designation=${queryParams.get('designation')}`;
-        Navigate(url);
+        Navigate('/stage/add', contact);
     } else {
-        fetch(`http://localhost:3000/contacts/${queryParams.get('id')}/refuse`, options)
+        fetch(`http://localhost:3000/contacts/${contact.idContact}/refuse`, options)
         .then(request => {
             if (request.status === 401 || request.status === 403 || request.status === 500) {
                 const requestError = request.text();
