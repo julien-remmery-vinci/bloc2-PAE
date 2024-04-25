@@ -74,7 +74,6 @@ async function buildPage() {
   const headings = ['Entreprise', 'État', 'Raison de refus'];
   const contacts = await getContacts();
   const hasAccepted = contacts.some(contact => contact.state === 'accepté');
-  console.log(hasAccepted)
   if(!hasAccepted) table.classList.add('table-hover');
   const hasPrisOrAccepted = contacts.some(
       contact => contact.state === 'pris' || contact.state === 'accepté' || contact.state === 'refusé');
