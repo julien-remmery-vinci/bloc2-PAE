@@ -28,6 +28,8 @@ const HomePage = () => {
 function studentHomePage() {
     const main = document.querySelector('main');
 
+    main.style.overflowX = 'hidden';
+
     const title = document.createElement('h1');
     title.innerText = `Bienvenue sur votre espace étudiant, ${user.firstname} !`;
     title.id = 'title';
