@@ -60,7 +60,7 @@ function renderStats() {
   const select = document.createElement('select');
   select.id = 'academicYear';
   select.className = 'form-select';
-  select.style.width = '40%';
+  select.style.width = '50%';
   select.style.margin = '10px auto';
   select.style.display = 'block';
   select.style.fontSize = '1.2em';
