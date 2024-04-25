@@ -332,14 +332,14 @@ async function onSubmit(e) {
   const company = document.querySelector('#companySelect').value;
   const designation = document.querySelector('#designation').value;
   const alert = document.querySelector('#alert');
-  if(companyList.find(c => c.tradeName === company).blacklisted) {
-    alert.hidden = false;
-    alert.textContent = 'Cette entreprise est blacklistée';
-    return;
-  }
   if (company === 'default' || designation === 'default') {
     alert.hidden = false;
     alert.textContent = 'Veuillez sélectionner une entreprise et une appellation';
+    return;
+  }
+  if(companyList.find(c => c.tradeName === company).blacklisted) {
+    alert.hidden = false;
+    alert.textContent = 'Cette entreprise est blacklistée';
     return;
   }
 
