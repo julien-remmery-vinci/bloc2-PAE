@@ -145,7 +145,7 @@ async function buildPage() {
     const refusalCell = document.createElement('td');
     if (contact.state === 'refusé') {
       refusalCell.textContent = contact.refusalReason;
-    } else if (hasAdmitted || hasAccepted || hasRefused) {
+    } else if (hasRefused) {
       refusalCell.textContent = '/';
     } else {
       refusalCell.hidden = true;
