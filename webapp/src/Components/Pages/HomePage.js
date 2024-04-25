@@ -115,6 +115,9 @@ function studentHomePage() {
  */
 function teacherHomePage() {
     const main = document.querySelector('main');
+
+    main.style.overflowX = 'hidden';
+
     const title = document.createElement('h1');
     title.innerText = `Bienvenue sur votre espace professeur, ${user.firstname} !`;
     title.id = 'title';
@@ -199,6 +202,9 @@ function teacherHomePage() {
  */
 function adminHomePage() {
     const main = document.querySelector('main');
+
+    main.style.overflowX = 'hidden';
+
     const title = document.createElement('h1');
     title.innerText = `Bienvenue sur votre espace administratif, ${user.firstname} !`;
     title.id = 'title';
