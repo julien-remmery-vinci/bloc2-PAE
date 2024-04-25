@@ -1,5 +1,10 @@
 import {getToken, isAuthenticated} from '../../utils/auths';
-import {clearPage, renderBreadcrumb, renderPageTitle} from '../../utils/render';
+import {
+  clearPage,
+  displayToast,
+  renderBreadcrumb,
+  renderPageTitle
+} from '../../utils/render';
 import Navigate from '../Router/Navigate';
 
 
@@ -11,7 +16,8 @@ async function fetchUsers() {
   });
 if (response.status === 200) {
   return response.json();
-  } 
+  }
+  displayToast(await response.text(), 'error');
   return undefined;
 }
 let users;

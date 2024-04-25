@@ -249,21 +249,22 @@ async function onRegister(e) {
 
     if (response.status !== 200) {
       if (response.status === 409) {
-        displayToast('Cet email est déjà utilisé', 'danger');
+        emailError.textContent= 'Cet email est déjà utilisé';
+        emailError.hidden = false;
         return;
       }
       if (response.status === 400) {
-        displayToast('Cet email n\'est pas valide', 'danger');
+        emailError.textContent = 'Cet email est invalide';
+        emailError.hidden= false;
         return;
       }
-      displayToast('Erreur lors de l\'inscription', 'danger');
+      displayToast(await response.text(), 'error');
     } else {
+      emailError.hidden= true;
       const authenticatedUser = await response.json();
       setToken(authenticatedUser.token);
       setAuthenticatedUser(authenticatedUser.user);
-
-      console.log('Newly registered & authenticated user : ', authenticatedUser);
-
+      displayToast('Inscription réussie', 'success');
       Navbar();
       Navigate('/');
     }
