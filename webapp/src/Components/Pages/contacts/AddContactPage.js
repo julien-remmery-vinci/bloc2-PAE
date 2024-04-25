@@ -47,16 +47,17 @@ function buildPage() {
   colDiv1.className = 'col-6';
   const colDiv2 = document.createElement('div');
   colDiv2.className = 'col-6';
-
-  rowDiv.appendChild(colDiv1);
-  containerDiv.appendChild(rowDiv);
-  main.appendChild(containerDiv);
-
   const title = document.createElement('h3');
   title.textContent = 'Ajouter un nouveau contact';
   title.style.textAlign = 'center';
   title.style.marginBottom = '5%';
   main.appendChild(title);
+  rowDiv.appendChild(colDiv1);
+  containerDiv.appendChild(rowDiv);
+  main.appendChild(containerDiv);
+
+  
+  
 
   const company = document.createElement('label');
   company.textContent = 'Entreprise';
@@ -332,14 +333,14 @@ async function onSubmit(e) {
   const company = document.querySelector('#companySelect').value;
   const designation = document.querySelector('#designation').value;
   const alert = document.querySelector('#alert');
-  if(companyList.find(c => c.tradeName === company).blacklisted) {
-    alert.hidden = false;
-    alert.textContent = 'Cette entreprise est blacklistée';
-    return;
-  }
   if (company === 'default' || designation === 'default') {
     alert.hidden = false;
     alert.textContent = 'Veuillez sélectionner une entreprise et une appellation';
+    return;
+  }
+  if(companyList.find(c => c.tradeName === company).blacklisted) {
+    alert.hidden = false;
+    alert.textContent = 'Cette entreprise est blacklistée';
     return;
   }
 

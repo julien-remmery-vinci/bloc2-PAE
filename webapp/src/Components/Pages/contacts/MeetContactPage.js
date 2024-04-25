@@ -10,10 +10,16 @@ import {
 } from '../../../utils/render';
 import Navigate from '../../Router/Navigate';
 
-const MeetContactPage = () => {
+let contact;
+const MeetContactPage = (data) => {
   if (!isAuthenticated()) {
     Navigate('/login');
-  } else {
+  }
+  else if (data === undefined) {
+    Navigate('/contact');
+  }
+  else {
+    contact = data;
     clearPage();
     document.title = "Rencontrer un contact";
     renderBreadcrumb({"Accueil": "/", "Contacts": "/contacts", "Rencontrer un contact": "/contact/meet"})
@@ -44,13 +50,12 @@ function renderMeetContactPage() {
         <button type="submit" class="btn btn-primary">Enregistrer</button>
       </form>
     `;
-  const queryParams = new URLSearchParams(window.location.search);
     const form = document.querySelector('form');
     form.addEventListener('submit', submitFunc);
-    document.getElementById('entreprise').value = queryParams.get('tradename');
+    document.getElementById('entreprise').value = contact.company.tradeName;
     const appelationDiv = document.getElementById('appelationDiv');
-    if (queryParams.get('designation') !== 'null') {
-      document.getElementById('appellation').value = queryParams.get('designation');
+    if (contact.designation !== 'null') {
+      document.getElementById('appellation').value = contact.designation;
     } else {
       appelationDiv.style.display = 'none';
     }
@@ -58,13 +63,12 @@ function renderMeetContactPage() {
 
 async function submitFunc (event) {
   event.preventDefault();
-  const queryParams = new URLSearchParams(window.location.search);
   const form = event.target;
   const formData = new FormData(form);
   const lieu = formData.get('lieu');
   console.log(lieu)
   try {
-    const response = await fetch(`http://localhost:3000/contacts/${queryParams.get('id')}/meet`, {
+    const response = await fetch(`http://localhost:3000/contacts/${contact.idContact}/meet`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
