@@ -79,7 +79,7 @@ async function submitFunc (event) {
     if (response.status === 200) {
       Navigate('/contact');
     } else {
-      displayToast('Erreur lors de la rencontre du contact', 'danger');
+      displayToast(await response.text(), 'danger');
     }
   } catch (error) {
     console.error(error);
