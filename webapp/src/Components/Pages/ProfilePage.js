@@ -54,12 +54,14 @@ function renderPictureInfos() {
   modifyButton.addEventListener('click', displayImageInput);
   modifyButton.className = 'btn btn-success mt-2';
   modifyButton.id = 'modifyPic';
+  modifyButton.style.marginRight = '10px';
 
   const removeButton = document.createElement('button');
   removeButton.textContent = 'Supprimer';
   removeButton.addEventListener('click', removeProfilePicture);
   removeButton.className = 'btn btn-danger mt-2';
   removeButton.id = 'removePic';
+  removeButton.style.marginRight = '10px';
 
   img.addEventListener('mouseover', () => {
     img.style.cursor = 'pointer';
@@ -225,12 +227,24 @@ function renderProfilPage() {
     input.addEventListener('input', () => {
       const existingButton = document.querySelector('#sauver');
       if (!existingButton) {
+        const div = document.createElement('div');
+        div.style.display = 'flex';
         const sauver = document.createElement('button');
         sauver.textContent = 'Sauver';
         sauver.id = 'sauver';
         sauver.className = 'btn btn-success';
         sauver.addEventListener('click', onSaveProfile);
-        form.appendChild(sauver);
+        div.appendChild(sauver);
+        const annuler = document.createElement('button');
+        annuler.textContent = 'Annuler';
+        annuler.className = 'btn btn-secondary ms-2';
+        annuler.id = 'annuler';
+        annuler.addEventListener('click', () => {
+          sauver.style.display = 'none';
+          input.value = `${authenticatedUser[field]}`;
+        });
+        div.appendChild(annuler);
+        form.appendChild(div);
       } else {
         existingButton.style.display = 'block';
       }
@@ -272,7 +286,7 @@ function renderProfilPage() {
       const passwordHtml = `
         <div class="input-group">
           <input id="${key}" type="password" placeholder="${value}" class="form-control mb-3" required>
-          <button class="btn btn-outline-secondary mb-3" type="button" id="${key}Hide">
+          <button class="btn btn-outline-secondary mb-3 greybutton" type="button" id="${key}Hide">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash" viewBox="0 0 16 16">
                     <path
                       d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486z" />
@@ -306,6 +320,7 @@ function renderProfilPage() {
 
     const cancelButton = document.createElement('button');
     cancelButton.textContent = 'Annuler';
+    cancelButton.id = 'annuler';
     cancelButton.className = 'btn btn-secondary ms-2';
     cancelButton.addEventListener('click', () => {
       passwordDiv.remove();
