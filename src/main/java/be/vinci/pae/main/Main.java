@@ -1,7 +1,6 @@
 package be.vinci.pae.main;
 
 import be.vinci.pae.presentation.filters.LogFilter;
-import be.vinci.pae.presentation.mappers.JsonProcessingExceptionMapper;
 import be.vinci.pae.presentation.mappers.WebExceptionMapper;
 import be.vinci.pae.utils.ApplicationBinder;
 import be.vinci.pae.utils.Config;
@@ -36,7 +35,6 @@ public class Main {
 
     final ResourceConfig rc = new ResourceConfig().packages("be.vinci.pae.presentation")
         .register(ApplicationBinder.class)
-        .register(JsonProcessingExceptionMapper.class)
         .register(LogFilter.class)
         .register(WebExceptionMapper.class)
         .register(MultiPartFeature.class);
