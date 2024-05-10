@@ -171,7 +171,11 @@ async function buildPage() {
     row.appendChild(refusalCell);
 
     // row follow/unfollow
-    if(contacts.find(c => c.state === 'accepté') === undefined) {
+    if(contacts.find(c => c.state === 'accepté') === undefined
+        && (contact.state === 'non suivi'
+        || contact.state === 'initié'
+        || contact.state === 'accepté'
+        || contact.state === 'pris')) {
       const followCell = document.createElement('td');
       const followButton = document.createElement('button');
       const unfollowButton = document.createElement('button');
