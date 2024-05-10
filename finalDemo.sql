@@ -476,3 +476,47 @@ GROUP BY c.contact_academicyear;
 SELECT contact_state, COUNT(contact_idcontact)
 FROM pae.contacts
 GROUP BY contact_state;
+
+--Comptage du nombre d'utilisateurs par rôle et par année académique
+SELECT u.user_role, c.contact_academicyear, COUNT(u.user_iduser)
+FROM pae.users u,
+     pae.contacts c
+WHERE u.user_iduser = c.contact_idcontact
+GROUP BY u.user_role, c.contact_academicyear;
+
+--Année académique et comptage du nombre de stages par année académique
+SELECT c.contact_academicyear, COUNT(i.internship_idinternship)
+FROM pae.internships i,
+     pae.contacts c
+WHERE i.internship_idcontact = c.contact_idcontact
+GROUP BY c.contact_academicyear;
+
+--Entreprise, année académique, et comptage du nombre de stages par entreprise et par année académique
+SELECT c.contact_academicyear, co.company_tradename, COUNT(i.internship_idinternship)
+FROM pae.internships i,
+     pae.contacts c,
+     pae.companies co
+WHERE i.internship_idcontact = c.contact_idcontact
+GROUP BY c.contact_academicyear, co.company_tradename;
+
+--Année académique et comptage du nombre de contacts par année académique
+SELECT c.contact_academicyear, COUNT(c.contact_idcontact)
+FROM pae.contacts c
+GROUP BY c.contact_academicyear;
+
+--Etats (en format lisible pour le client) et comptage du nombre de contacts dans chacun des états
+SELECT c.contact_state, COUNT(contact_idcontact)
+FROM pae.contacts c
+GROUP BY contact_state;
+
+--Année académique, états (en format lisible par le client) et comptage du nombre de contacts dans chacun des états par année académique
+SELECT c.contact_academicyear, c.contact_state, COUNT(c.contact_idcontact)
+FROM pae.contacts c
+GROUP BY c.contact_academicyear, c.contact_state;
+
+--Entreprise, états (en format lisible par le client) et comptage du nombre de contacts dans chacun des états par entreprise
+SELECT co.company_tradename, c.contact_state, COUNT(c.contact_idcontact)
+FROM pae.contacts c,
+     pae.companies co
+WHERE c.contact_idcompany = co.company_idcompany
+GROUP BY co.company_tradename, c.contact_state;
