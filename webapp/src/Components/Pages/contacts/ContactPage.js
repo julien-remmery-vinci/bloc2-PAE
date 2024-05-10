@@ -149,12 +149,12 @@ async function buildPage() {
 
     // row meetPlace
     const meetPlaceCell = document.createElement('td');
-    if (contact.state === 'pris' || contact.state === 'accepté') {
-      meetPlaceCell.textContent = contact.meetPlace;
-    } else if (hasAdmitted || hasAccepted || hasRefused) {
-      meetPlaceCell.textContent = '/';
-    } else {
+    if (contact.state === 'initié') {
       meetPlaceCell.hidden = true;
+    } else if (contact.meetPlace){
+      meetPlaceCell.textContent = contact.meetPlace;
+    } else {
+      meetPlaceCell.textContent = '/';
     }
     row.appendChild(meetPlaceCell);
 
