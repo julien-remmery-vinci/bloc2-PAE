@@ -149,7 +149,9 @@ async function buildPage() {
 
     // row meetPlace
     const meetPlaceCell = document.createElement('td');
-    if (contact.meetPlace) {
+    if (contact.state === 'initié') {
+      meetPlaceCell.hidden = true;
+    } else if (contact.meetPlace){
       meetPlaceCell.textContent = contact.meetPlace;
     } else {
       meetPlaceCell.textContent = '/';
