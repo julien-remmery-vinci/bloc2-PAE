@@ -34,11 +34,11 @@ function renderMeetContactPage() {
       <form class="container mt-5">
         <div class="mb-3">
           <label for="entreprise" class="form-label">Entreprise</label>
-          <input type="text" class="form-control" id="entreprise" name="entreprise" value="Nom de l'entreprise" readonly>
+          <input type="text" class="form-control" id="entreprise" name="entreprise" value="${contact.company.tradeName}" readonly>
         </div>
         <div class="mb-3" id="appelationDiv">
           <label for="appellation" class="form-label">Appellation</label>
-          <input type="text" class="form-control" id="appellation" name="appellation" value="Appellation par défaut" readonly>
+          <input type="text" class="form-control" id="appellation" name="appellation" readonly>
         </div>
         <div class="mb-3">
           <label for="lieu" class="form-label">Lieu de rencontre</label>
@@ -52,10 +52,9 @@ function renderMeetContactPage() {
     `;
     const form = document.querySelector('form');
     form.addEventListener('submit', submitFunc);
-    document.getElementById('entreprise').value = contact.company.tradeName;
     const appelationDiv = document.getElementById('appelationDiv');
-    if (contact.designation !== 'null') {
-      document.getElementById('appellation').value = contact.designation;
+    if (contact.company.designation) {
+      document.getElementById('appellation').value = contact.company.designation;
     } else {
       appelationDiv.style.display = 'none';
     }
