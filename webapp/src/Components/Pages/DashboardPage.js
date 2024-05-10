@@ -318,6 +318,7 @@ function renderSearch() {
   reset.style.width = '15%';
   reset.style.margin = '10px auto';
   reset.style.display = 'block';
+  reset.id = 'reset';
   reset.style.fontSize = '1.2em';
   reset.style.borderRadius = '5px';
   reset.style.padding = '5px';

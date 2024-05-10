@@ -187,7 +187,7 @@ VALUES ('Skile', 'Elle', 'elle.skile@student.vinci.be',
 
 INSERT INTO pae.users (user_lastname, user_firstname, user_email, user_password, user_phoneNumber, user_registerDate,
                        user_role, user_academicYear, user_version)
-VALUES ('Ilotie', 'basile', 'basile.ilotie@student.vinci.be',
+VALUES ('Ilotie', 'Basile', 'basile.ilotie@student.vinci.be',
         '$2a$10$4rLzRMZtodzqV.uQ0ulhaeNV.7/nW4.HpvZ3RJDoboqWc9AkAkuSy', '0491 00 00 11', '21-09-21', 'STUDENT',
         '2021-2022', 1);
 
@@ -407,7 +407,7 @@ VALUES (4, 24, 'ACCEPTED', 'A distance', '2022-2023', 1);
 
 INSERT INTO pae.contacts (contact_idCompany, contact_idStudent, contact_state, contact_meetPlace, contact_refusalReason,
                           contact_academicYear, contact_version)
-VALUES (4, 12, 'TURNED_DOWN', 'A distance', 'Choix atre étudiant', '2022-2023', 1);
+VALUES (4, 12, 'TURNED_DOWN', 'A distance', 'Choix autre étudiant', '2022-2023', 1);
 
 -- Insertion des données dans la table stages
 INSERT INTO pae.internships (internship_idstudent, internship_internshipproject, internship_signaturedate, internship_idcontact, internship_idinternshipsupervisor, internship_idcompany, internship_version)

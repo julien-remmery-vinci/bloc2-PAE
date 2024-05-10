@@ -76,6 +76,7 @@ function studentHomePage() {
     internship.appendChild(text);
     const button = document.createElement('button');
     button.className = 'btn btn-primary';
+    button.id = 'bluebutton';
     button.textContent = 'Accéder à votre stage';
     internship.appendChild(button);
     internship.style.width = '18rem';
@@ -94,6 +95,7 @@ function studentHomePage() {
     contacts.appendChild(text2);
     const button2 = document.createElement('button');
     button2.className = 'btn btn-primary';
+    button2.id = 'bluebutton';
     button2.textContent = 'Accéder à vos contacts';
     contacts.appendChild(button2);
     contacts.style.width = '18rem';
@@ -113,6 +115,9 @@ function studentHomePage() {
  */
 function teacherHomePage() {
     const main = document.querySelector('main');
+
+    main.style.overflowX = 'hidden';
+
     const title = document.createElement('h1');
     title.innerText = `Bienvenue sur votre espace professeur, ${user.firstname} !`;
     title.id = 'title';
@@ -197,6 +202,9 @@ function teacherHomePage() {
  */
 function adminHomePage() {
     const main = document.querySelector('main');
+
+    main.style.overflowX = 'hidden';
+
     const title = document.createElement('h1');
     title.innerText = `Bienvenue sur votre espace administratif, ${user.firstname} !`;
     title.id = 'title';

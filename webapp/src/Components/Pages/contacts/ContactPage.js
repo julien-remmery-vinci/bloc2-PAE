@@ -149,12 +149,12 @@ async function buildPage() {
 
     // row meetPlace
     const meetPlaceCell = document.createElement('td');
-    if (contact.state === 'pris' || contact.state === 'accepté') {
-      meetPlaceCell.textContent = contact.meetPlace;
-    } else if (hasAdmitted || hasAccepted || hasRefused) {
-      meetPlaceCell.textContent = '/';
-    } else {
+    if (contact.state === 'initié' && !contacts.some(c => c.state !== 'initié')) {
       meetPlaceCell.hidden = true;
+    } else if (contact.meetPlace){
+      meetPlaceCell.textContent = contact.meetPlace;
+    } else {
+      meetPlaceCell.textContent = '/';
     }
     row.appendChild(meetPlaceCell);
 
@@ -171,7 +171,11 @@ async function buildPage() {
     row.appendChild(refusalCell);
 
     // row follow/unfollow
-    if(contacts.find(c => c.state === 'accepté') === undefined) {
+    if(contacts.find(c => c.state === 'accepté') === undefined
+        && (contact.state === 'non suivi'
+        || contact.state === 'initié'
+        || contact.state === 'accepté'
+        || contact.state === 'pris')) {
       const followCell = document.createElement('td');
       const followButton = document.createElement('button');
       const unfollowButton = document.createElement('button');
@@ -204,6 +208,7 @@ async function buildPage() {
   addContactButton.className = 'btn btn-primary';
   addContactButton.style.marginLeft = '10%';
   addContactButton.style.marginBottom = '2%';
+  addContactButton.id = 'bluebutton'
   addContactButton.style.width = '25%';
   if(contacts.find(contact => contact.state === 'accepté') !== undefined) {
     addContactButton.disabled = true;
