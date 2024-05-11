@@ -452,37 +452,10 @@ VALUES (22,'Un métier : chef de projet', '2022-10-19',29,6,5,1);
 INSERT INTO pae.internships (internship_idstudent, internship_internshipproject, internship_signaturedate, internship_idcontact, internship_idinternshipsupervisor, internship_idcompany, internship_version)
 VALUES (24,'sBMS project - Java Development', '2022-10-17',33,2,4,1);
 
--- Nombre d'utilisateurs
-SELECT COUNT(user_iduser)
-FROM pae.users;
-
--- Nombre d'entreprises
-SELECT COUNT(company_idcompany)
-FROM pae.companies;
-
--- Nombre de stages par année académique
-SELECT c.contact_academicyear, COUNT(i.internship_idinternship)
-FROM pae.internships i,
-     pae.contacts c
-WHERE i.internship_idContact = c.contact_idContact
-GROUP BY c.contact_academicYear;
-
--- Nombre de contacts par année académique
-SELECT c.contact_academicyear, COUNT(c.contact_idcontact)
-FROM pae.contacts c
-GROUP BY c.contact_academicyear;
-
--- Nombre contacts dans chacun des états
-SELECT contact_state, COUNT(contact_idcontact)
-FROM pae.contacts
-GROUP BY contact_state;
-
---Comptage du nombre d'utilisateurs par rôle et par année académique
-SELECT u.user_role, c.contact_academicyear, COUNT(u.user_iduser)
-FROM pae.users u,
-     pae.contacts c
-WHERE u.user_iduser = c.contact_idcontact
-GROUP BY u.user_role, c.contact_academicyear;
+-- Comptage du nombre d'utilisateurs par rôle et par année académique
+SELECT u.user_role, COALESCE(u.user_academicyear, 'Non spécifié') AS user_academicyear, COUNT(u.user_iduser)
+FROM pae.users u
+GROUP BY u.user_role, u.user_academicyear;
 
 --Année académique et comptage du nombre de stages par année académique
 SELECT c.contact_academicyear, COUNT(i.internship_idinternship)
@@ -492,12 +465,12 @@ WHERE i.internship_idcontact = c.contact_idcontact
 GROUP BY c.contact_academicyear;
 
 --Entreprise, année académique, et comptage du nombre de stages par entreprise et par année académique
-SELECT c.contact_academicyear, co.company_tradename, COUNT(i.internship_idinternship)
-FROM pae.internships i,
-     pae.contacts c,
-     pae.companies co
-WHERE i.internship_idcontact = c.contact_idcontact
-GROUP BY c.contact_academicyear, co.company_tradename;
+SELECT co.company_tradename, co.company_designation, c.contact_academicyear, COALESCE(COUNT(i.internship_idinternship), 0) AS nb_stages
+FROM pae.contacts c
+         LEFT OUTER JOIN pae.internships i ON i.internship_idcontact = c.contact_idcontact
+         LEFT OUTER JOIN pae.companies co ON c.contact_idcompany = co.company_idcompany
+GROUP BY co.company_tradename, co.company_designation, c.contact_academicyear
+ORDER BY co.company_tradename, c.contact_academicyear;
 
 --Année académique et comptage du nombre de contacts par année académique
 SELECT c.contact_academicyear, COUNT(c.contact_idcontact)
@@ -505,18 +478,53 @@ FROM pae.contacts c
 GROUP BY c.contact_academicyear;
 
 --Etats (en format lisible pour le client) et comptage du nombre de contacts dans chacun des états
-SELECT c.contact_state, COUNT(contact_idcontact)
+SELECT
+    CASE
+        WHEN c.contact_state = 'ACCEPTED' THEN 'Accepté'
+        WHEN c.contact_state = 'TURNED_DOWN' THEN 'Refusé'
+        WHEN c.contact_state = 'ADMITTED' THEN 'Pris'
+        WHEN c.contact_state = 'STARTED' THEN 'Initié'
+        WHEN c.contact_state = 'UNSUPERVISED' THEN 'Non suivi'
+        WHEN c.contact_state = 'ON_HOLD' THEN 'Suspendu'
+        WHEN c.contact_state = 'BLACKLISTED' THEN 'Blacklisté'
+        ELSE 'Inconnu'
+        END AS Etat,
+    COUNT(contact_idcontact)
 FROM pae.contacts c
 GROUP BY contact_state;
 
 --Année académique, états (en format lisible par le client) et comptage du nombre de contacts dans chacun des états par année académique
-SELECT c.contact_academicyear, c.contact_state, COUNT(c.contact_idcontact)
+SELECT c.contact_academicyear,
+       CASE
+           WHEN c.contact_state = 'ACCEPTED' THEN 'Accepté'
+           WHEN c.contact_state = 'TURNED_DOWN' THEN 'Refusé'
+           WHEN c.contact_state = 'ADMITTED' THEN 'Pris'
+           WHEN c.contact_state = 'STARTED' THEN 'Initié'
+           WHEN c.contact_state = 'UNSUPERVISED' THEN 'Non suivi'
+           WHEN c.contact_state = 'ON_HOLD' THEN 'Suspendu'
+           WHEN c.contact_state = 'BLACKLISTED' THEN 'Blacklisté'
+           ELSE 'Inconnu'
+           END AS Etat,
+       COUNT(c.contact_idcontact)
 FROM pae.contacts c
-GROUP BY c.contact_academicyear, c.contact_state;
+GROUP BY c.contact_academicyear, c.contact_state
+ORDER BY c.contact_academicyear, c.contact_state;
 
---Entreprise, états (en format lisible par le client) et comptage du nombre de contacts dans chacun des états par entreprise
-SELECT co.company_tradename, c.contact_state, COUNT(c.contact_idcontact)
+--Entreprise, états (en format lisible pour le client) et comptage du nombre de contacts dans chacun des états par entreprise
+SELECT co.company_tradename,
+       CASE
+           WHEN c.contact_state = 'ACCEPTED' THEN 'Accepté'
+           WHEN c.contact_state = 'TURNED_DOWN' THEN 'Refusé'
+           WHEN c.contact_state = 'ADMITTED' THEN 'Pris'
+           WHEN c.contact_state = 'STARTED' THEN 'Initié'
+           WHEN c.contact_state = 'UNSUPERVISED' THEN 'Non suivi'
+           WHEN c.contact_state = 'ON_HOLD' THEN 'Suspendu'
+           WHEN c.contact_state = 'BLACKLISTED' THEN 'Blacklisté'
+           ELSE 'Inconnu'
+           END AS Etat,
+       COUNT(c.contact_idcontact)
 FROM pae.contacts c,
      pae.companies co
 WHERE c.contact_idcompany = co.company_idcompany
-GROUP BY co.company_tradename, c.contact_state;
+GROUP BY co.company_tradename, c.contact_state
+ORDER BY co.company_tradename, c.contact_state;
