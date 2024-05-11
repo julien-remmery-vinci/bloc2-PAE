@@ -225,8 +225,9 @@ function renderProfilPage() {
     document.body.appendChild(popup);
 
     input.addEventListener('input', () => {
-      const existingButton = document.querySelector('#sauver');
-      if (!existingButton) {
+      const existingSaveButton = document.querySelector('#sauver');
+      const existingCancelButton = document.querySelector('#annuler');
+      if (!existingSaveButton) {
         const div = document.createElement('div');
         div.style.display = 'flex';
         const sauver = document.createElement('button');
@@ -239,14 +240,17 @@ function renderProfilPage() {
         annuler.textContent = 'Annuler';
         annuler.className = 'btn btn-secondary ms-2';
         annuler.id = 'annuler';
-        annuler.addEventListener('click', () => {
+        annuler.addEventListener('click', (e) => {
+          e.preventDefault()
           sauver.style.display = 'none';
+          annuler.style.display = 'none';
           input.value = `${authenticatedUser[field]}`;
         });
         div.appendChild(annuler);
         form.appendChild(div);
       } else {
-        existingButton.style.display = 'block';
+        existingSaveButton.style.display = 'block';
+        existingCancelButton.style.display = 'block';
       }
     });
     form.appendChild(title);
@@ -361,6 +365,8 @@ async function onSaveProfile(e) {
 
   const sauver = document.querySelector('#sauver');
   sauver.style.display = 'none';
+  const annuler = document.querySelector('#annuler');
+  annuler.style.display = 'none';
 }
 
 async function onSavePassword(e) {
