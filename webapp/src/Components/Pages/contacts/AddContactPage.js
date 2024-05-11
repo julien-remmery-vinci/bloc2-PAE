@@ -372,7 +372,7 @@ async function onSubmit(e) {
     Navigate('/contact');
 
   } else {
-    displayToast(await response.text(), 'error');
+    displayToast(await response.text(), 'danger');
   }
 }
 
