@@ -452,11 +452,9 @@ VALUES (22,'Un métier : chef de projet', '2022-10-19',29,6,5,1);
 INSERT INTO pae.internships (internship_idstudent, internship_internshipproject, internship_signaturedate, internship_idcontact, internship_idinternshipsupervisor, internship_idcompany, internship_version)
 VALUES (24,'sBMS project - Java Development', '2022-10-17',33,2,4,1);
 
---Comptage du nombre d'utilisateurs par rôle et par année académique
-SELECT u.user_role, u.user_academicyear, COUNT(u.user_iduser)
-FROM pae.users u,
-     pae.contacts c
-WHERE u.user_iduser = c.contact_idcontact
+-- Comptage du nombre d'utilisateurs par rôle et par année académique
+SELECT u.user_role, COALESCE(u.user_academicyear, 'Non spécifié') AS user_academicyear, COUNT(u.user_iduser)
+FROM pae.users u
 GROUP BY u.user_role, u.user_academicyear;
 
 --Année académique et comptage du nombre de stages par année académique
@@ -467,13 +465,13 @@ WHERE i.internship_idcontact = c.contact_idcontact
 GROUP BY c.contact_academicyear;
 
 --Entreprise, année académique, et comptage du nombre de stages par entreprise et par année académique
-SELECT co.company_tradename, co.company_designation, c.contact_academicyear, COUNT(i.internship_idinternship) AS nb_stages
-FROM pae.internships i,
-     pae.contacts c,
-     pae.companies co
-WHERE i.internship_idcontact = c.contact_idcontact AND c.contact_idcompany = co.company_idcompany
+SELECT co.company_tradename, co.company_designation, c.contact_academicyear, COALESCE(COUNT(i.internship_idinternship), 0) AS nb_stages
+FROM pae.contacts c
+         LEFT OUTER JOIN pae.internships i ON i.internship_idcontact = c.contact_idcontact
+         LEFT OUTER JOIN pae.companies co ON c.contact_idcompany = co.company_idcompany
 GROUP BY co.company_tradename, co.company_designation, c.contact_academicyear
 ORDER BY co.company_tradename, c.contact_academicyear;
+
 --Année académique et comptage du nombre de contacts par année académique
 SELECT c.contact_academicyear, COUNT(c.contact_idcontact)
 FROM pae.contacts c
