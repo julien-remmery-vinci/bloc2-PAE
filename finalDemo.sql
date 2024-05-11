@@ -187,7 +187,7 @@ VALUES ('Skile', 'Elle', 'elle.skile@student.vinci.be',
 
 INSERT INTO pae.users (user_lastname, user_firstname, user_email, user_password, user_phoneNumber, user_registerDate,
                        user_role, user_academicYear, user_version)
-VALUES ('Ilotie', 'basile', 'basile.ilotie@student.vinci.be',
+VALUES ('Ilotie', 'Basile', 'basile.ilotie@student.vinci.be',
         '$2a$10$4rLzRMZtodzqV.uQ0ulhaeNV.7/nW4.HpvZ3RJDoboqWc9AkAkuSy', '0491 00 00 11', '21-09-21', 'STUDENT',
         '2021-2022', 1);
 
@@ -407,7 +407,7 @@ VALUES (4, 24, 'ACCEPTED', 'A distance', '2022-2023', 1);
 
 INSERT INTO pae.contacts (contact_idCompany, contact_idStudent, contact_state, contact_meetPlace, contact_refusalReason,
                           contact_academicYear, contact_version)
-VALUES (4, 12, 'TURNED_DOWN', 'A distance', 'Choix atre étudiant', '2022-2023', 1);
+VALUES (4, 12, 'TURNED_DOWN', 'A distance', 'Choix autre étudiant', '2022-2023', 1);
 
 -- Insertion des données dans la table stages
 INSERT INTO pae.internships (internship_idstudent, internship_internshipproject, internship_signaturedate, internship_idcontact, internship_idinternshipsupervisor, internship_idcompany, internship_version)
@@ -476,3 +476,47 @@ GROUP BY c.contact_academicyear;
 SELECT contact_state, COUNT(contact_idcontact)
 FROM pae.contacts
 GROUP BY contact_state;
+
+--Comptage du nombre d'utilisateurs par rôle et par année académique
+SELECT u.user_role, c.contact_academicyear, COUNT(u.user_iduser)
+FROM pae.users u,
+     pae.contacts c
+WHERE u.user_iduser = c.contact_idcontact
+GROUP BY u.user_role, c.contact_academicyear;
+
+--Année académique et comptage du nombre de stages par année académique
+SELECT c.contact_academicyear, COUNT(i.internship_idinternship)
+FROM pae.internships i,
+     pae.contacts c
+WHERE i.internship_idcontact = c.contact_idcontact
+GROUP BY c.contact_academicyear;
+
+--Entreprise, année académique, et comptage du nombre de stages par entreprise et par année académique
+SELECT c.contact_academicyear, co.company_tradename, COUNT(i.internship_idinternship)
+FROM pae.internships i,
+     pae.contacts c,
+     pae.companies co
+WHERE i.internship_idcontact = c.contact_idcontact
+GROUP BY c.contact_academicyear, co.company_tradename;
+
+--Année académique et comptage du nombre de contacts par année académique
+SELECT c.contact_academicyear, COUNT(c.contact_idcontact)
+FROM pae.contacts c
+GROUP BY c.contact_academicyear;
+
+--Etats (en format lisible pour le client) et comptage du nombre de contacts dans chacun des états
+SELECT c.contact_state, COUNT(contact_idcontact)
+FROM pae.contacts c
+GROUP BY contact_state;
+
+--Année académique, états (en format lisible par le client) et comptage du nombre de contacts dans chacun des états par année académique
+SELECT c.contact_academicyear, c.contact_state, COUNT(c.contact_idcontact)
+FROM pae.contacts c
+GROUP BY c.contact_academicyear, c.contact_state;
+
+--Entreprise, états (en format lisible par le client) et comptage du nombre de contacts dans chacun des états par entreprise
+SELECT co.company_tradename, c.contact_state, COUNT(c.contact_idcontact)
+FROM pae.contacts c,
+     pae.companies co
+WHERE c.contact_idcompany = co.company_idcompany
+GROUP BY co.company_tradename, c.contact_state;
