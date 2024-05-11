@@ -55,12 +55,12 @@ function getContactInfos() {
     entrepriseNameValue.className = 'form-control';
     entrepriseNameValue.disabled = true;
     contactInfosDiv.appendChild(entrepriseNameValue);
-    if(contact.designation !== 'null'){
+    if(contact.company.designation){
         const entrepriseDesignation = document.createElement('label');
         entrepriseDesignation.textContent = 'Appellation';
         const entrepriseDesignationValue = document.createElement('input');
         entrepriseDesignationValue.type = 'text';
-        entrepriseDesignationValue.value = contact.designation;
+        entrepriseDesignationValue.value = contact.company.designation;
         entrepriseDesignationValue.readOnly = true;
         entrepriseDesignationValue.className = 'form-control';
         entrepriseDesignationValue.disabled = true;
