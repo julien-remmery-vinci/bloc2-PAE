@@ -16,7 +16,8 @@ public class InternshipImpl implements Internship {
 
   private String internshipProject;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "fr_BE", timezone = "Europe/Brussels")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd",
+      locale = "fr_BE", timezone = "Europe/Brussels")
   private Date signatureDate;
 
   private int idContact;
